@@ -38,7 +38,7 @@ public class TripleCultistCutscene : CutsceneBase
 		frames++;
 		for (int i = 0; i < 3; i++)
 		{
-			cultists[i].GetComponent<Animator>().SetBool("isMoving", true);
+			cultists[i].GetComponent<Animator>().SetBool("isMoving", value: true);
 			float num = 4 + i * 4;
 			if (i == 2)
 			{
@@ -49,7 +49,7 @@ public class TripleCultistCutscene : CutsceneBase
 		if (frames == 30)
 		{
 			kris.InitiateBattle(27);
-			EndCutscene(false);
+			EndCutscene(enablePlayerMovement: false);
 		}
 	}
 

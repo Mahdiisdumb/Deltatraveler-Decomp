@@ -1,4 +1,7 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -7,92 +10,73 @@ public class ExceptionHandlerUI : MonoBehaviour
 {
 	private VideoPlayer video;
 
-	private string[] randomText = new string[1] { "* Whoops! Looks like a crash...\n* Please report this to the\n  developers." };
-
-	private readonly string[] videos = new string[3] { "overworld/npcs/v_ralsei", "battle/attacks/bullets/jerry/v_favorites", "mariobros/v_ario" };
-
-	private bool listed;
-
-	private bool holding;
+	private static readonly string[] videos = new string[3] { "overworld/npcs/v_ralsei", "battle/attacks/bullets/jerry/v_favorites", "mariobros/v_ario" };
 
 	private int delay;
 
 	private void Awake()
 	{
-		video = GameObject.Find("v_ralsei").GetComponent<VideoPlayer>();
-		listed = false;
-		holding = false;
+		video = GameObject.Find("Video").GetComponent<VideoPlayer>();
 		delay = 0;
-		base.transform.GetChild(0).GetComponent<Text>().text = randomText[Random.Range(0, randomText.Length)];
 	}
 
 	private void Start()
 	{
-		Util.GameManager().StopMusic();
-		base.transform.GetChild(3).GetComponent<Text>().text = base.transform.GetChild(3).GetComponent<Text>().text.Replace("ver", Object.FindObjectOfType<GameManager>().GetVersionBuild());
-		if (Random.Range(1, 666) == 1)
+		base.transform.GetChild(3).GetComponent<Text>().text = base.transform.GetChild(3).GetComponent<Text>().text.Replace("ver", Application.version);
+		if (UnityEngine.Random.Range(1, 666) != 1)
 		{
-			video.clip = Resources.Load<VideoClip>("overworld/lostcore_objects/gaster_beatboxing");
+			video.clip = Resources.Load<VideoClip>(videos[UnityEngine.Random.Range(0, videos.Length)]);
+			video.aspectRatio = VideoAspectRatio.Stretch;
 		}
-		else
+		if (ExceptionHandler.cond != null)
 		{
-			video.clip = Resources.Load<VideoClip>(videos[Random.Range(0, videos.Length)]);
+			string text = ExceptionHandler.cond + "\n" + ExceptionHandler.stack;
+			base.transform.GetChild(0).GetComponent<Text>().alignment = TextAnchor.UpperLeft;
+			base.transform.GetChild(0).GetComponent<Text>().text = text.Trim().Replace("\n", "\n- ");
+			base.transform.GetChild(0).GetComponent<Text>().fontSize = 13;
+			base.transform.GetChild(0).GetComponent<TextOutline>().extent = 1f;
+			base.transform.GetChild(1).GetComponent<Text>().text = "A crash log has been saved\nto the game's \"logs\" folder.";
+			base.transform.GetChild(1).GetComponent<Text>().enabled = true;
 		}
+		if (Util.GameManager().IsTestMode())
+		{
+			base.transform.GetChild(1).GetComponent<Text>().text = "This may be the result of debug mode.\nContact the developers if this is\na legitimate error.";
+			base.transform.GetChild(1).GetComponent<Text>().enabled = true;
+		}
+		Util.GameManager().Disable();
 	}
 
 	private void Update()
 	{
-		if (!listed)
-		{
-			Object.FindObjectOfType<ExceptionHandler>().ListException();
-		}
-		if (UTInput.GetButtonDown("Z"))
-		{
-			Object.FindObjectOfType<GameManager>().StopMusic();
-			Time.timeScale = 1f;
-			SceneManager.LoadScene(0, LoadSceneMode.Single);
-			ExceptionHandler.alreadyCrashed = false;
-		}
-		if (UTInput.GetButtonDown("C"))
-		{
-			video.playbackSpeed = 1f;
-		}
-		if (delay == 30 && UTInput.GetButton("X"))
-		{
-			if (UTInput.GetAxis("Horizontal") != 0f)
-			{
-				if (!holding)
-				{
-					holding = true;
-					video.playbackSpeed += Mathf.Ceil(UTInput.GetAxis("Horizontal")) * 0.5f;
-				}
-			}
-			else
-			{
-				holding = false;
-			}
-			if (UTInput.GetAxis("Vertical") != 0f)
-			{
-				video.playbackSpeed += UTInput.GetAxis("Vertical") * (1f / 60f);
-			}
-			video.playbackSpeed = Mathf.Clamp(video.playbackSpeed, 0.2f, 5f);
-		}
 		if (delay < 30)
 		{
 			delay++;
+			if (delay == 30)
+			{
+				base.transform.GetChild(2).GetComponent<Text>().enabled = true;
+				if (UTInput.joystickIsActive)
+				{
+					base.transform.GetChild(2).GetComponent<Text>().text = "[press any button to restart the game]";
+				}
+			}
+			return;
 		}
-	}
-
-	public void ListException(string condition, string stackTrace)
-	{
-		listed = true;
-		if (condition != null)
+		bool flag = Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame;
+		bool flag2 = false;
+		foreach (GamepadButton value in Enum.GetValues(typeof(GamepadButton)))
 		{
-			string text = condition + "\n" + stackTrace;
-			text = text.Replace("\n", "\n- ");
-			base.transform.GetChild(1).GetComponent<Text>().text = "Exception: " + text.Substring(0, text.Length - 2);
-			base.transform.GetChild(1).GetComponent<Text>().fontSize = 13;
-			base.transform.GetChild(4).GetComponent<Text>().enabled = true;
+			if (Gamepad.current != null && Gamepad.current[value].wasPressedThisFrame)
+			{
+				flag2 = true;
+				break;
+			}
+		}
+		if (flag || flag2)
+		{
+			Time.timeScale = 1f;
+			SceneManager.LoadScene(0, LoadSceneMode.Single);
+			ExceptionHandler.Reset();
+			Util.GameManager().Enable();
 		}
 	}
 }

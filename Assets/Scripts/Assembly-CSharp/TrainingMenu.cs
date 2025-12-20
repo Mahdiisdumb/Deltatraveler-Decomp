@@ -22,8 +22,8 @@ public class TrainingMenu : SpecialACT
 
 	private void Awake()
 	{
-		PlayerPrefs.GetInt("JerryDefeated", 0);
-		int num = 1;
+		PersistentSAVE.GetInt("jerry", 0);
+		_ = 1;
 		allowedKrisWeapons.Insert(9, 41);
 	}
 
@@ -92,7 +92,6 @@ public class TrainingMenu : SpecialACT
 			return;
 		}
 		Util.GameManager().SetPartyMembers(weapons[1] != -1, weapons[2] != -1);
-		Util.GameManager().SetMiniPartyMember(miniPartyMember);
 		for (int i = 0; i < 3; i++)
 		{
 			if (weapons[i] > -1)
@@ -101,8 +100,8 @@ public class TrainingMenu : SpecialACT
 			}
 			Util.GameManager().SetHP(i, Util.GameManager().GetMaxHP(i));
 		}
-		Object.FindObjectOfType<BattleManager>().UpdatePartyMembers();
-		Object.FindObjectOfType<BattleManager>().AdvanceToEnemyTurn();
+		Util.FindObjectOfType<BattleManager>().UpdatePartyMembers();
+		Util.FindObjectOfType<BattleManager>().AdvanceToEnemyTurn();
 		Object.Destroy(base.gameObject);
 	}
 
@@ -126,10 +125,8 @@ public class TrainingMenu : SpecialACT
 				base.transform.Find(i.ToString()).GetComponent<Text>().text = Items.ItemName(weapons[i]);
 			}
 		}
-		miniPartyMember = Util.GameManager().GetMiniPartyMember();
-		base.transform.Find("3").GetComponent<Text>().text = miniPartyMembers[miniPartyMember];
-		Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
-		Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
+		Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
+		Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
 		Image[] componentsInChildren = GetComponentsInChildren<Image>();
 		for (int j = 0; j < componentsInChildren.Length; j++)
 		{

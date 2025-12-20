@@ -46,7 +46,7 @@ public class StepEncounterer : MonoBehaviour
 			{
 				Util.GameManager().SetPersistentFlag(4, 1);
 			}
-			Object.FindObjectOfType<OverworldPlayer>().InitiateBattle(num);
+			Util.OverworldPlayer().InitiateBattle(num);
 			frames = 0;
 			playingAnimation = false;
 			Object.Destroy(exc.gameObject);
@@ -64,12 +64,12 @@ public class StepEncounterer : MonoBehaviour
 				steps = 0;
 				playingAnimation = true;
 				frames = 0;
-				Util.GameManager().DisablePlayerMovement(false);
+				Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 				Util.GameManager().PlayGlobalSFX("sounds/snd_encounter");
 				exc = new GameObject("Exclaim").AddComponent<SpriteRenderer>();
 				exc.sprite = Resources.Load<Sprite>("overworld/npcs/spr_exc_0");
-				exc.sortingOrder = Object.FindObjectOfType<OverworldPlayer>().GetComponent<SpriteRenderer>().sortingOrder;
-				exc.transform.parent = Object.FindObjectOfType<OverworldPlayer>().transform;
+				exc.sortingOrder = Util.OverworldPlayer().GetComponent<SpriteRenderer>().sortingOrder;
+				exc.transform.parent = Util.OverworldPlayer().transform;
 				exc.transform.localPosition = new Vector3(0f, 1.15f);
 			}
 		}

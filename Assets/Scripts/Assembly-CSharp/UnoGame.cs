@@ -94,7 +94,7 @@ public class UnoGame
 		pointSystem = rules[0];
 		stackDrawCards = rules[1];
 		challengePlusFour = rules[2];
-		bool flag = rules[3];
+		_ = rules[3];
 		ShuffleCards();
 		for (int l = 0; l < playerCount; l++)
 		{
@@ -189,14 +189,14 @@ public class UnoGame
 		}
 		if (!card.CanBePlacedOn(topCard))
 		{
-			string text2 = ((topCard != null) ? topCard.GetCardName() : null);
+			string text2 = topCard?.GetCardName();
 			if (text2 == null)
 			{
 				text2 = "empty stack???";
 			}
 			else if (topCard.IsWildCard())
 			{
-				text2 = string.Concat(text2, " [", topCard.GetCardColor(), "]");
+				text2 = text2 + " [" + topCard.GetCardColor()?.ToString() + "]";
 			}
 			throw new InvalidOperationException("Card " + card.GetCardName() + " cannot be placed on " + text2);
 		}

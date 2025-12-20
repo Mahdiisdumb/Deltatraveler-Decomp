@@ -107,11 +107,11 @@ public class JerryDefeatCutscene : CutsceneBase
 				frames = 0;
 				state = 3;
 				List<string> list = new List<string> { "* This...^05 bandana that I've been\n  wearing.", "* It possesses a special power\n  that has let me build up\n  more power in battle.", "* I probably don't need this\n  thing anymore.", "* My swordsmanship has gotten a\n  lot more...^05 epic.", "* So take it." };
-				if (gm.NumItemFreeSpace() > 0)
+				if (gm.NumItemFreeSpace(equipment: true) > 0)
 				{
 					gotItem = true;
-					gm.AddItem(40);
-					list.AddRange(new string[1] { "* (You got the " + Items.ItemName(40) + ".)" });
+					gm.AddEquipment(40);
+					list.AddRange(new string[1] { "* (You got the " + Items.ItemName(40) + ".)^05\n* (It was added to your\n  EQUIPMENT.)" });
 				}
 				else
 				{
@@ -132,7 +132,7 @@ public class JerryDefeatCutscene : CutsceneBase
 				}
 				else if (AtLine(8) && !gotItem)
 				{
-					Object.FindObjectOfType<JerryObjectHandler>().PlaceObject(false);
+					Util.FindObjectOfType<JerryObjectHandler>().PlaceObject(sword: false);
 					SetSprite(jerry, "overworld/npcs/underfell/spr_jerry_uf_0");
 				}
 				return;
@@ -377,9 +377,9 @@ public class JerryDefeatCutscene : CutsceneBase
 		base.StartCutscene(par);
 		endState = int.Parse(par[0].ToString());
 		RevokePlayerControl();
-		Object.FindObjectOfType<StepEncounterer>().enabled = false;
+		Util.FindObjectOfType<StepEncounterer>().enabled = false;
 		gm.StopMusic();
-		gm.SetPartyMembers(true, true);
+		gm.SetPartyMembers(susie: true, noelle: true);
 		attackWhenSpare = (int)Util.GameManager().GetFlag(269) == 1;
 		ditched = (int)Util.GameManager().GetFlag(271) == 1;
 		kris.transform.position = new Vector3(-1.7f, 12.43f);
@@ -413,9 +413,9 @@ public class JerryDefeatCutscene : CutsceneBase
 		{
 			state = -1;
 			gm.SetFlag(272, 1);
-			Object.FindObjectOfType<JerryObjectHandler>().PlaceObject(true);
+			Util.FindObjectOfType<JerryObjectHandler>().PlaceObject(sword: true);
 			SetSprite(kris, "spr_kr_sit");
 		}
-		PlayerPrefs.SetInt("JerryDefeated", 1);
+		PersistentSAVE.SetInt("jerry", 1);
 	}
 }

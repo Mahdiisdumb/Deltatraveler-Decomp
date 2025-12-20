@@ -38,7 +38,7 @@ public class EmanatingSOUL : MonoBehaviour
 		else
 		{
 			float num = (float)frames / 20f;
-			num = Mathf.Sin(num * (float)Math.PI * 0.5f);
+			num = Mathf.Sin(num * MathF.PI * 0.5f);
 			sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, Mathf.Lerp(1f, 0f, num));
 		}
 		if (reverse)

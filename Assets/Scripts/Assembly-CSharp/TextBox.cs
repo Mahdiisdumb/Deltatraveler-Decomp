@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TextBox : UIComponent
 {
+	private readonly int[] TEXTBOX_PORTRAIT_OFFSETS = new int[3] { 0, 116, -221 };
+
 	private string[] dialog;
 
 	private int boxPos;
@@ -18,7 +20,7 @@ public class TextBox : UIComponent
 
 	private string[] textSounds;
 
-	private Dictionary<int, Queue<string>> textRemarks;
+	private List<Remark> textRemarks;
 
 	private string font;
 
@@ -30,17 +32,15 @@ public class TextBox : UIComponent
 
 	private string[] portraits;
 
-	private Vector3[] portTextLocations;
-
-	private GameObject portrait;
+	private Portrait portrait;
 
 	private int currentPortrait;
 
-	private int portFrames;
-
 	private TextRemark remark;
 
-	private Vector3[][] remarkLocations;
+	private Vector3[] remarkLocations;
+
+	private Queue<Remark> remarkQueue;
 
 	private int toNewTextFrames;
 
@@ -62,9 +62,7 @@ public class TextBox : UIComponent
 
 	private int lastSpeed;
 
-	private int portraitSpeed = 6;
-
-	private bool infinitePortrait;
+	private int frostedOffsetType;
 
 	private void Awake()
 	{
@@ -73,36 +71,23 @@ public class TextBox : UIComponent
 		firstString = false;
 		isControllable = true;
 		disabled = false;
-		portFrames = -1;
-		portTextLocations = new Vector3[6]
+		remarkLocations = new Vector3[2]
 		{
-			new Vector2(4f, 142f),
-			new Vector2(4f, -168f),
-			new Vector2(120f, 142f),
-			new Vector2(120f, -168f),
-			new Vector2(-217f, 156f),
-			new Vector2(-217f, -154f)
-		};
-		remarkLocations = new Vector3[2][]
-		{
-			new Vector3[2]
-			{
-				new Vector3(95f, 142f),
-				new Vector3(95f, -168f)
-			},
-			new Vector3[2]
-			{
-				new Vector3(165f, 142f),
-				new Vector3(165f, -168f)
-			}
+			new Vector3(-320f, 210f),
+			new Vector3(-320f, -100f)
 		};
 		font = "DTM-Mono";
-		textRemarks = new Dictionary<int, Queue<string>>();
+		textRemarks = new List<Remark>();
+		remarkQueue = new Queue<Remark>();
+		if (SceneManager.GetActiveScene().buildIndex == 123)
+		{
+			frostedOffsetType = 1;
+		}
 	}
 
 	private void Update()
 	{
-		if (!text || lastString < 0)
+		if (!this.text || lastString < 0)
 		{
 			return;
 		}
@@ -117,101 +102,90 @@ public class TextBox : UIComponent
 				toNewTextFrames = 9;
 			}
 		}
-		if ((bool)text.GetGameObject())
+		if ((bool)this.text.GetGameObject())
 		{
-			if (text.IsPlaying())
+			if (this.text.IsPlaying())
 			{
 				if ((UTInput.GetButton("X") || UTInput.GetButton("C")) && canSkip)
 				{
-					text.SkipText();
+					this.text.SkipText();
 				}
 			}
-			else if (textRemarks.ContainsKey(currentString) && !canLoadSelection)
+			else
 			{
-				if (!remark)
-				{
-					remark = Object.Instantiate(Resources.Load<GameObject>("ui/TextRemark"), menu.transform).GetComponent<TextRemark>();
-					remark.StartRemark(remarkLocations[portrait ? 1 : 0][boxPos], textRemarks[currentString].Dequeue());
-				}
-				if ((UTInput.GetButtonDown("X") || UTInput.GetButton("C")) && remark.CanAdvance())
-				{
-					remark.Skip();
-				}
-				if (!remark.CanAdvance())
-				{
-					remark = null;
-					if (textRemarks[currentString].Count == 0)
-					{
-						textRemarks.Remove(currentString);
-					}
-				}
-			}
-			else if ((UTInput.GetButtonDown("Z") || UTInput.GetButton("C") || forceAdvance) && !disabled)
-			{
-				forceAdvance = false;
-				text.DestroyOldText();
 				if ((bool)portrait)
 				{
-					Object.Destroy(portrait);
+					portrait.Stop();
 				}
-				TextRemark[] componentsInChildren = menu.GetComponentsInChildren<TextRemark>();
-				for (int i = 0; i < componentsInChildren.Length; i++)
+				if (remarkQueue.Count > 0 && !canLoadSelection)
 				{
-					Object.Destroy(componentsInChildren[i].gameObject);
-				}
-				portFrames = -1;
-				infinitePortrait = false;
-				if (currentString <= lastString)
-				{
-					toNewTextFrames = 9;
-					if (!PortraitIsEmpty(currentString) && !PortraitIsEmpty(currentString - 1))
+					if (!remark)
 					{
-						string[] array = portraits[currentString].Split('_');
-						string[] array2 = portraits[currentString - 1].Split('_');
-						if (array[0] != array2[0])
+						remark = Object.Instantiate(Resources.Load<GameObject>("ui/TextRemark"), menu.transform).GetComponent<TextRemark>();
+						remark.StartRemark(remarkLocations[boxPos], remarkQueue.Dequeue());
+					}
+					if ((UTInput.GetButtonDown("X") || UTInput.GetButton("C")) && remark.CanAdvance())
+					{
+						remark.Skip();
+					}
+					if (!remark.CanAdvance())
+					{
+						remark = null;
+					}
+				}
+				else if ((UTInput.GetButtonDown("Z") || UTInput.GetButton("C") || forceAdvance) && !disabled)
+				{
+					forceAdvance = false;
+					this.text.DestroyOldText();
+					if ((bool)portrait)
+					{
+						Object.Destroy(portrait.gameObject);
+					}
+					TextRemark[] componentsInChildren = menu.GetComponentsInChildren<TextRemark>();
+					for (int i = 0; i < componentsInChildren.Length; i++)
+					{
+						Object.Destroy(componentsInChildren[i].gameObject);
+					}
+					if (currentString <= lastString)
+					{
+						toNewTextFrames = 9;
+						if (!PortraitIsEmpty(currentString) && !PortraitIsEmpty(currentString - 1))
+						{
+							string text = portraits[currentString];
+							string text2 = portraits[currentString - 1];
+							if (text.Contains(";"))
+							{
+								text = text.Split(';')[1];
+							}
+							if (text2.Contains(";"))
+							{
+								text2 = text2.Split(';')[1];
+							}
+							string[] array = text.Split('_');
+							string[] array2 = text2.Split('_');
+							if (array[0] != array2[0])
+							{
+								toNewTextFrames = 3;
+							}
+						}
+						else if (!PortraitIsEmpty(currentString) && PortraitIsEmpty(currentString - 1))
 						{
 							toNewTextFrames = 3;
 						}
+						if (UTInput.GetButton("X") || UTInput.GetButton("C"))
+						{
+							toNewTextFrames = 9;
+						}
 					}
-					else if (!PortraitIsEmpty(currentString) && PortraitIsEmpty(currentString - 1))
+					else if (!selectionEnabled)
 					{
-						toNewTextFrames = 3;
+						Object.Destroy(base.gameObject);
 					}
-					if (UTInput.GetButton("X") || UTInput.GetButton("C"))
+					else
 					{
-						toNewTextFrames = 9;
+						canLoadSelection = true;
 					}
 				}
-				else if (!selectionEnabled)
-				{
-					Object.Destroy(base.gameObject);
-				}
-				else
-				{
-					canLoadSelection = true;
-				}
-			}
-		}
-		if (portFrames > -1 || infinitePortrait)
-		{
-			portFrames++;
-			if (portFrames == portraitSpeed)
-			{
-				Sprite sprite = Resources.Load<Sprite>("overworld/npcs/portraits/spr_" + portraits[currentPortrait] + "_1");
-				if ((bool)sprite)
-				{
-					portrait.GetComponent<Image>().sprite = sprite;
-				}
-			}
-			if (portFrames == portraitSpeed * 2)
-			{
-				portrait.GetComponent<Image>().sprite = Resources.Load<Sprite>("overworld/npcs/portraits/spr_" + portraits[currentPortrait] + "_0");
-				portFrames = 0;
-			}
-			if (!text.IsPlaying() && !infinitePortrait)
-			{
-				portrait.GetComponent<Image>().sprite = Resources.Load<Sprite>("overworld/npcs/portraits/spr_" + portraits[currentPortrait] + "_0");
-				portFrames = -1;
 			}
 		}
 		if (toNewTextFrames >= 10)
@@ -223,7 +197,7 @@ public class TextBox : UIComponent
 		{
 			return;
 		}
-		Vector3 vector = Vector3.zero;
+		Vector2 vector = Vector2.zero;
 		string theText = "* No text here.";
 		string theSound = lastSound;
 		int speed = lastSpeed;
@@ -239,28 +213,34 @@ public class TextBox : UIComponent
 		{
 			speed = (lastSpeed = textSpeeds[currentString]);
 		}
-		text.StartText(theText, mainTextPos, theSound, speed, font);
-		if (text.GetText().font.name == "sans")
+		this.text.StartText(theText, mainTextPos, theSound, speed, font);
+		if (this.text.GetText().font.name == "sans")
 		{
-			vector = new Vector3(0f, -4f);
+			vector = new Vector2(0f, -5f);
 		}
 		if (!PortraitIsEmpty(currentString))
 		{
-			text.GetGameObject().transform.localPosition = portTextLocations[2 + boxPos] + vector;
+			vector.x += TEXTBOX_PORTRAIT_OFFSETS[1];
+			if (frostedOffsetType != 0)
+			{
+				vector.x += 2f;
+			}
+			this.text.GetGameObject().transform.localPosition = mainTextPos + vector;
 			StartPortrait();
 		}
 		else
 		{
 			if ((bool)portrait)
 			{
-				Object.Destroy(portrait);
+				Object.Destroy(portrait.gameObject);
 			}
-			text.GetGameObject().transform.localPosition = portTextLocations[boxPos] + vector;
+			this.text.GetGameObject().transform.localPosition = mainTextPos + vector;
 		}
 		currentString++;
+		QueueRemarks();
 		if ((UTInput.GetButton("X") || UTInput.GetButton("C")) && canSkip)
 		{
-			text.SkipText();
+			this.text.SkipText();
 		}
 	}
 
@@ -268,38 +248,25 @@ public class TextBox : UIComponent
 	{
 		if (portrait != null)
 		{
-			Object.Destroy(portrait);
+			Object.Destroy(portrait.gameObject);
 		}
 		currentPortrait = currentString;
-		Sprite sprite = Resources.Load<Sprite>("overworld/npcs/portraits/spr_" + portraits[currentPortrait] + "_0");
-		if (!sprite)
+		string portString = portraits[currentPortrait];
+		portrait = Portrait.CreatePortrait(portString);
+		portrait.transform.SetParent(text.transform, worldPositionStays: true);
+		portrait.transform.localPosition = mainTextPos + new Vector2(TEXTBOX_PORTRAIT_OFFSETS[2], 12f);
+		portrait.transform.localScale = Vector3.one;
+		portrait.Play();
+	}
+
+	private void QueueRemarks()
+	{
+		foreach (Remark textRemark in textRemarks)
 		{
-			portraits[currentPortrait] = "portrait_default";
-			sprite = Resources.Load<Sprite>("overworld/npcs/portraits/spr_" + portraits[currentPortrait] + "_0");
-		}
-		portrait = new GameObject("PORTRAIT_" + portraits[currentPortrait]);
-		portrait.transform.SetParent(text.transform);
-		portrait.AddComponent<RectTransform>();
-		portrait.AddComponent<Image>();
-		float num = 2f;
-		if (portraits[currentPortrait] == "no_realistic")
-		{
-			num = 1f;
-		}
-		portrait.GetComponent<RectTransform>().sizeDelta = new Vector2(sprite.rect.width * num / 48f, sprite.rect.height * num / 48f);
-		portrait.GetComponent<Image>().sprite = sprite;
-		portrait.transform.localPosition = portTextLocations[4 + boxPos];
-		portFrames = 0;
-		portraitSpeed = 6;
-		infinitePortrait = false;
-		if (portraits[currentPortrait] == "spamton_laugh")
-		{
-			portraitSpeed = 3;
-			infinitePortrait = true;
-		}
-		else if (portraits[currentPortrait] == "spamton_insane" || portraits[currentPortrait] == "spamton_stare")
-		{
-			portrait.AddComponent<SpamtonPortraitShake>();
+			if (textRemark.line == currentString)
+			{
+				remarkQueue.Enqueue(textRemark);
+			}
 		}
 	}
 
@@ -326,7 +293,26 @@ public class TextBox : UIComponent
 			new Vector2(4f, 142f),
 			new Vector2(4f, -168f)
 		};
-		menu.GetComponent<UIBackground>().setUpInfo("menu", array[location], new Vector2(578f, 152f));
+		Vector2 defSize = new Vector2(578f, 152f);
+		if (frostedOffsetType == 1)
+		{
+			array[0].x = 0f;
+			array[1].x = 0f;
+			array[1].y += 2f;
+			array[2] += new Vector2(-2f, 0f);
+			array[3] += new Vector2(-2f, 2f);
+			defSize = new Vector2(584f, 156f);
+		}
+		else if (frostedOffsetType == 2)
+		{
+			defSize = new Vector2(584f, 166f);
+			defSize.y = 166f;
+			array[0] += new Vector2(-1f, -5f);
+			array[1] += new Vector2(-1f, 7f);
+			array[2] += new Vector2(-2f, -16f);
+			array[3] += new Vector2(-2f, -4f);
+		}
+		menu.GetComponent<UIBackground>().setUpInfo("menu", array[location], defSize);
 		menu.GetComponent<UIBackground>().CreateElement();
 		menu.AddComponent<AudioSource>();
 		menu.AddComponent<AudioSource>();
@@ -334,6 +320,10 @@ public class TextBox : UIComponent
 		text = menu.GetComponent<TextUT>();
 		mainTextPos = array[location + 2];
 		giveControl = giveBackControl;
+		if (SceneManager.GetActiveScene().buildIndex == 123)
+		{
+			menu.AddComponent<FrostedBox>().Create(this);
+		}
 	}
 
 	public void CreateBox(string[] stuffToSay, string[] sound, int[] speed, int location, bool giveBackControl, string[] portraitNames, string font)
@@ -392,11 +382,11 @@ public class TextBox : UIComponent
 	{
 		if (GameObject.Find("Player").transform.position[1] - GameObject.Find("Camera").transform.position[1] < -0.9f)
 		{
-			CreateBox(stuffToSay, sound, speed, 0, true);
+			CreateBox(stuffToSay, sound, speed, 0, giveBackControl: true);
 		}
 		else
 		{
-			CreateBox(stuffToSay, sound, speed, 1, true);
+			CreateBox(stuffToSay, sound, speed, 1, giveBackControl: true);
 		}
 	}
 
@@ -404,11 +394,11 @@ public class TextBox : UIComponent
 	{
 		if (GameObject.Find("Player").transform.position[1] - GameObject.Find("Camera").transform.position[1] < -0.9f)
 		{
-			CreateBox(stuffToSay, sound, speed, 0, true, portraitNames);
+			CreateBox(stuffToSay, sound, speed, 0, giveBackControl: true, portraitNames);
 		}
 		else
 		{
-			CreateBox(stuffToSay, sound, speed, 1, true, portraitNames);
+			CreateBox(stuffToSay, sound, speed, 1, giveBackControl: true, portraitNames);
 		}
 	}
 
@@ -431,12 +421,7 @@ public class TextBox : UIComponent
 
 	public void CreateBox(string[] stuffToSay)
 	{
-		CreateBox(stuffToSay, true);
-	}
-
-	public void CreateBox(TextSet textSet)
-	{
-		CreateBox(textSet.stuffToSay, textSet.sound, textSet.speed, textSet.location, textSet.giveBackControl, textSet.portraitNames, textSet.font);
+		CreateBox(stuffToSay, giveBackControl: true);
 	}
 
 	public bool AtLastText()
@@ -456,9 +441,9 @@ public class TextBox : UIComponent
 	private void OnDestroy()
 	{
 		Object.Destroy(menu);
-		if (giveControl && (bool)Object.FindObjectOfType<GameManager>())
+		if (giveControl && (bool)Util.GameManager())
 		{
-			Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
+			Util.GameManager().EnablePlayerMovement();
 		}
 	}
 
@@ -543,11 +528,11 @@ public class TextBox : UIComponent
 		return true;
 	}
 
-	public Image GetPortrait()
+	public Portrait GetPortrait()
 	{
 		if ((bool)portrait)
 		{
-			return portrait.GetComponent<Image>();
+			return portrait;
 		}
 		return null;
 	}
@@ -571,6 +556,11 @@ public class TextBox : UIComponent
 		return text;
 	}
 
+	public Vector2 GetTextPos()
+	{
+		return mainTextPos;
+	}
+
 	public void EnableGasterText()
 	{
 		text.EnableGasterEffect();
@@ -586,8 +576,23 @@ public class TextBox : UIComponent
 		DisablePlayerControlOnDestroy();
 	}
 
-	public void AddRemark(int line, string[] text)
+	public void AddRemark(Remark remark)
 	{
-		textRemarks.Add(line, new Queue<string>(text));
+		textRemarks.Add(remark);
+	}
+
+	public void AddRemarks(List<Remark> remarks)
+	{
+		textRemarks.AddRange(remarks);
+	}
+
+	public void SetFrostedOffset(int frostedOffset)
+	{
+		frostedOffsetType = frostedOffset;
+	}
+
+	public int GetFrostedOffset()
+	{
+		return frostedOffsetType;
 	}
 }

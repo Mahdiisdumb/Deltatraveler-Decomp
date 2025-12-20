@@ -38,7 +38,7 @@ public class DoggoPrefightCutscene : CutsceneBase
 		if (state == 1 && !txt)
 		{
 			kris.InitiateBattle(57);
-			EndCutscene(false);
+			EndCutscene(enablePlayerMovement: false);
 		}
 	}
 

@@ -24,7 +24,7 @@ public class Snowball : MonoBehaviour
 
 	private void Update()
 	{
-		GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+		GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
 		if (hit)
 		{
 			timer++;
@@ -74,7 +74,7 @@ public class Snowball : MonoBehaviour
 			speed = num * 2f / 3f + (1f / size + 0.1f);
 			if (!hit)
 			{
-				Object.FindObjectOfType<SnowballHole>().ResetFlag();
+				Util.FindObjectOfType<SnowballHole>().ResetFlag();
 			}
 			hit = true;
 			direction = (Vector2)base.transform.position - collision.GetContact(0).point;
@@ -87,7 +87,7 @@ public class Snowball : MonoBehaviour
 				completed = true;
 				speed = 0f;
 				Util.GameManager().PlayGlobalSFX("sounds/snd_won");
-				Object.FindObjectOfType<SnowballHole>().RaiseFlag(timer, size);
+				Util.FindObjectOfType<SnowballHole>().RaiseFlag(timer, size);
 			}
 			else
 			{
@@ -124,9 +124,9 @@ public class Snowball : MonoBehaviour
 
 	public void OnDestroy()
 	{
-		if ((bool)Object.FindObjectOfType<SnowballSpawner>() && (int)Util.GameManager().GetFlag(87) < 9)
+		if ((bool)Util.FindObjectOfType<SnowballSpawner>() && (int)Util.GameManager().GetFlag(87) < 9)
 		{
-			Object.FindObjectOfType<SnowballSpawner>().SpawnSnowball();
+			Util.FindObjectOfType<SnowballSpawner>().SpawnSnowball();
 		}
 	}
 }

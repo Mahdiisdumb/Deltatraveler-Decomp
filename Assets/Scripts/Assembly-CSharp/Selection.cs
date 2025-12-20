@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Selection : UIComponent
@@ -40,7 +39,7 @@ public class Selection : UIComponent
 
 	private bool wrap;
 
-	public static Color[] selectionColors = new Color[12]
+	public static readonly Color[] SELECTION_COLORS = new Color[12]
 	{
 		new Color(1f, 1f, 0f),
 		new Color32(105, byte.MaxValue, 105, byte.MaxValue),
@@ -63,7 +62,7 @@ public class Selection : UIComponent
 		isEnabled = false;
 		waitUntilUp = false;
 		wrap = false;
-		if (!Object.FindObjectOfType<BattleManager>())
+		if (!Util.FindObjectOfType<BattleManager>())
 		{
 			if (UTInput.GetAxis("Horizontal") != 0f)
 			{
@@ -81,7 +80,7 @@ public class Selection : UIComponent
 	{
 		if (isEnabled && !waitUntilUp)
 		{
-			if ((bool)soul && isUsingSoul && (bool)Object.FindObjectOfType<BattleManager>())
+			if ((bool)soul && isUsingSoul && (bool)Util.FindObjectOfType<BattleManager>())
 			{
 				soul.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f);
 			}
@@ -148,7 +147,7 @@ public class Selection : UIComponent
 					if (!isUsingSoul)
 					{
 						texts[(int)prevIndex[0], (int)prevIndex[1]].GetComponent<Text>().color = new Color(1f, 1f, 1f);
-						texts[(int)index[0], (int)index[1]].GetComponent<Text>().color = selectionColors[(int)Util.GameManager().GetFlag(223)];
+						texts[(int)index[0], (int)index[1]].GetComponent<Text>().color = SELECTION_COLORS[(int)Util.GameManager().GetFlag(223)];
 					}
 					else
 					{
@@ -223,8 +222,8 @@ public class Selection : UIComponent
 				texts[i, j].transform.SetParent(base.transform);
 				texts[i, j].transform.localPosition = mainPos + new Vector3(mainDif[0] * (float)j, mainDif[1] * (float)i);
 				texts[i, j].GetComponent<Text>().text = sels[i, j];
-				texts[i, j].GetComponent<Text>().font = Util.PackManager().GetFont(Resources.Load<Font>("fonts/" + font), font);
-				if ((bool)Object.FindObjectOfType<BattleManager>())
+				texts[i, j].GetComponent<Text>().font = Resources.Load<Font>("fonts/" + font);
+				if ((bool)Util.FindObjectOfType<BattleManager>())
 				{
 					texts[i, j].transform.localScale = new Vector3(1f, 1f, 1f);
 				}
@@ -240,13 +239,13 @@ public class Selection : UIComponent
 			soul.transform.SetParent(base.transform);
 			soul.transform.localPosition = mainPos + soulDif;
 			soul.GetComponent<Image>().color = SOUL.GetSOULColorByID(Util.GameManager().GetFlagInt(312));
-			if ((bool)Object.FindObjectOfType<BattleManager>())
+			if ((bool)Util.FindObjectOfType<BattleManager>())
 			{
 				soul.transform.localScale = new Vector3(1f, 1f, 1f);
 				soul.GetComponent<Image>().sprite = Resources.Load<Sprite>("battle/spr_soul");
 				soul.GetComponent<RectTransform>().sizeDelta = new Vector2(16f, 16f);
 				SOUL sOUL = null;
-				SOUL[] array = Object.FindObjectsOfType<SOUL>();
+				SOUL[] array = Util.FindObjectsOfType<SOUL>();
 				foreach (SOUL sOUL2 in array)
 				{
 					if (sOUL2.IsPlayer())
@@ -264,14 +263,10 @@ public class Selection : UIComponent
 					}
 				}
 			}
-			else if (SceneManager.GetActiveScene().buildIndex == 123)
-			{
-				soul.GetComponent<Image>().sprite = Resources.Load<Sprite>("overworld/spr_soul_ow_bnp");
-			}
 		}
 		else
 		{
-			texts[0, 0].GetComponent<Text>().color = selectionColors[(int)Util.GameManager().GetFlag(223)];
+			texts[0, 0].GetComponent<Text>().color = SELECTION_COLORS[(int)Util.GameManager().GetFlag(223)];
 		}
 		isEnabled = true;
 		playAudio = makeSound;
@@ -287,7 +282,7 @@ public class Selection : UIComponent
 			}
 			else
 			{
-				texts[(int)index[0], (int)index[1]].GetComponent<Text>().color = selectionColors[(int)Util.GameManager().GetFlag(223)];
+				texts[(int)index[0], (int)index[1]].GetComponent<Text>().color = SELECTION_COLORS[(int)Util.GameManager().GetFlag(223)];
 			}
 			isEnabled = true;
 		}
@@ -316,12 +311,12 @@ public class Selection : UIComponent
 
 	public void CreateSelections(string[,] sels, Vector2 firstPos, Vector2 difference, SelectableBehaviour originClass, int origId)
 	{
-		CreateSelections(sels, firstPos, difference, new Vector2(-19f, 94f), "DTM-Mono", true, true, originClass, origId);
+		CreateSelections(sels, firstPos, difference, new Vector2(-19f, 94f), "DTM-Mono", useSoul: true, makeSound: true, originClass, origId);
 	}
 
 	public void CreateSelections(string[,] sels, Vector2 firstPos, Vector2 difference, bool useSoul, SelectableBehaviour originClass, int origId)
 	{
-		CreateSelections(sels, firstPos, difference, new Vector2(-19f, 94f), "DTM-Mono", useSoul, true, originClass, origId);
+		CreateSelections(sels, firstPos, difference, new Vector2(-19f, 94f), "DTM-Mono", useSoul, makeSound: true, originClass, origId);
 	}
 
 	public void Reset()
@@ -366,7 +361,7 @@ public class Selection : UIComponent
 		}
 		else
 		{
-			texts[0, 0].GetComponent<Text>().color = selectionColors[(int)Util.GameManager().GetFlag(223)];
+			texts[0, 0].GetComponent<Text>().color = SELECTION_COLORS[(int)Util.GameManager().GetFlag(223)];
 		}
 	}
 
@@ -379,7 +374,7 @@ public class Selection : UIComponent
 		}
 		else
 		{
-			texts[(int)newIndex[0], (int)newIndex[1]].GetComponent<Text>().color = selectionColors[(int)Util.GameManager().GetFlag(223)];
+			texts[(int)newIndex[0], (int)newIndex[1]].GetComponent<Text>().color = SELECTION_COLORS[(int)Util.GameManager().GetFlag(223)];
 		}
 	}
 
@@ -423,5 +418,10 @@ public class Selection : UIComponent
 	public void SetWrap(bool wrap)
 	{
 		this.wrap = wrap;
+	}
+
+	public int GetID()
+	{
+		return id;
 	}
 }

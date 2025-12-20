@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class DeltaSelection : UIComponent
@@ -89,11 +88,7 @@ public class DeltaSelection : UIComponent
 		textObjects.Add(Vector2.right, base.transform.Find("Right").GetComponent<Text>());
 		textObjects.Add(Vector2.up, base.transform.Find("Up").GetComponent<Text>());
 		textObjects.Add(Vector2.down, base.transform.Find("Down").GetComponent<Text>());
-		if (SceneManager.GetActiveScene().buildIndex == 123)
-		{
-			soul.GetComponent<Image>().sprite = Resources.Load<Sprite>("overworld/spr_soul_ow_bnp");
-		}
-		else if ((bool)Object.FindObjectOfType<BattleManager>())
+		if ((bool)Util.FindObjectOfType<BattleManager>())
 		{
 			soul.GetComponent<Image>().sprite = Resources.Load<Sprite>("battle/spr_soul");
 			soul.GetComponent<RectTransform>().sizeDelta = new Vector2(16f, 16f);
@@ -128,7 +123,7 @@ public class DeltaSelection : UIComponent
 				{
 					textObjects[vector].color = Color.white;
 				}
-				textObjects[index].color = Selection.selectionColors[(int)Util.GameManager().GetFlag(223)];
+				textObjects[index].color = Selection.SELECTION_COLORS[(int)Util.GameManager().GetFlag(223)];
 				float x = textObjects[index].transform.localPosition.x - 18f;
 				float y = textObjects[index].transform.localPosition.y + 55f;
 				if (index == Vector2.up || index == Vector2.down)

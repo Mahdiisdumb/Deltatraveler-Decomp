@@ -48,7 +48,7 @@ public class BatBoomerangBullet : BulletBase
 		}
 		base.transform.eulerAngles = new Vector3(0f, 0f, frames * 12 * decreaseAngle);
 		int num = ((!right) ? 1 : (-1));
-		base.transform.position = new Vector3((2.5f - Mathf.Sin((float)(frames * 3) * ((float)Math.PI / 180f)) * xLimitMulti) * (float)num, base.transform.position.y + yVelocity);
+		base.transform.position = new Vector3((2.5f - Mathf.Sin((float)(frames * 3) * (MathF.PI / 180f)) * xLimitMulti) * (float)num, base.transform.position.y + yVelocity);
 		if (frames == 60)
 		{
 			UnityEngine.Object.Destroy(base.gameObject);

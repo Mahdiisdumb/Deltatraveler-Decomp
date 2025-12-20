@@ -19,8 +19,10 @@ public class StringInList : PropertyAttribute
 		if (method != null)
 		{
 			List = method.Invoke(null, null) as string[];
-			return;
 		}
-		Debug.LogError("NO SUCH METHOD " + methodName + " FOR " + type);
+		else
+		{
+			Debug.LogError("NO SUCH METHOD " + methodName + " FOR " + type);
+		}
 	}
 }

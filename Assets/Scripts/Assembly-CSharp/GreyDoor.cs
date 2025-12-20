@@ -28,24 +28,24 @@ public class GreyDoor : Interactable
 		frames++;
 		if (frames == 30)
 		{
-			UnityEngine.Object.FindObjectOfType<Fade>().FadeOut(10);
+			Util.FindObjectOfType<Fade>().FadeOut(10);
 		}
-		else if (frames >= 31 && !UnityEngine.Object.FindObjectOfType<Fade>().IsPlaying())
+		else if (frames >= 31 && !Util.FindObjectOfType<Fade>().IsPlaying())
 		{
-			UnityEngine.Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
+			Util.GameManager().EnablePlayerMovement();
 			Vector2 dir = (vertical ? Vector2.up : Vector2.right);
 			if (downOrLeft)
 			{
 				dir *= -1f;
 			}
-			UnityEngine.Object.FindObjectOfType<GameManager>().LoadArea(newScene, true, newPos, dir);
+			Util.GameManager().LoadArea(newScene, fadeIn: true, newPos, dir);
 			activated = false;
 		}
 	}
 
 	public override void DoInteract()
 	{
-		Util.GameManager().DisablePlayerMovement(true);
+		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
 		GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("overworld/spr_grey_door_open");
 		GetComponent<AudioSource>().Play();
 		activated = true;

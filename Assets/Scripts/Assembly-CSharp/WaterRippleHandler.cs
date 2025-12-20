@@ -16,8 +16,8 @@ public class WaterRippleHandler : MonoBehaviour
 
 	private void Awake()
 	{
-		players.Add(Object.FindObjectOfType<OverworldPlayer>().transform);
-		OverworldPartyMember[] array = Object.FindObjectsOfType<OverworldPartyMember>();
+		players.Add(Util.OverworldPlayer().transform);
+		OverworldPartyMember[] array = Util.FindObjectsOfType<OverworldPartyMember>();
 		foreach (OverworldPartyMember overworldPartyMember in array)
 		{
 			players.Add(overworldPartyMember.transform);
@@ -35,7 +35,7 @@ public class WaterRippleHandler : MonoBehaviour
 		{
 			sr[i].sprite = sprites[frames / 5 % 4];
 			sr[i].transform.position = players[i].transform.position + new Vector3(0f, -0.76f);
-			if ((bool)players[i].GetComponent<OverworldPartyMember>())
+			if ((bool)players[i] && (bool)players[i].GetComponent<OverworldPartyMember>())
 			{
 				sr[i].transform.position -= players[i].GetComponent<OverworldPartyMember>().GetPositionOffset();
 			}
@@ -45,27 +45,33 @@ public class WaterRippleHandler : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<OverworldPlayer>())
+		if ((bool)collision)
 		{
-			collision.GetComponent<OverworldPlayer>().EnableStepSounds("sounds/snd_splash");
-			inWater[0] = true;
-		}
-		else if ((bool)collision.GetComponent<OverworldPartyMember>())
-		{
-			inWater[(collision.transform == players[1].transform) ? 1 : 2] = true;
+			if ((bool)collision.GetComponent<OverworldPlayer>())
+			{
+				collision.GetComponent<OverworldPlayer>().EnableStepSounds("sounds/snd_splash");
+				inWater[0] = true;
+			}
+			else if ((bool)collision.GetComponent<OverworldPartyMember>() && (bool)players[1])
+			{
+				inWater[(collision.transform == players[1].transform) ? 1 : 2] = true;
+			}
 		}
 	}
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<OverworldPlayer>())
+		if ((bool)collision)
 		{
-			collision.GetComponent<OverworldPlayer>().DisableStepSounds();
-			inWater[0] = false;
-		}
-		else if ((bool)collision.GetComponent<OverworldPartyMember>())
-		{
-			inWater[(collision.transform == players[1].transform) ? 1 : 2] = false;
+			if ((bool)collision.GetComponent<OverworldPlayer>())
+			{
+				collision.GetComponent<OverworldPlayer>().DisableStepSounds();
+				inWater[0] = false;
+			}
+			else if ((bool)collision.GetComponent<OverworldPartyMember>() && (bool)players[1])
+			{
+				inWater[(collision.transform == players[1].transform) ? 1 : 2] = false;
+			}
 		}
 	}
 }

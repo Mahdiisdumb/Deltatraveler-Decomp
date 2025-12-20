@@ -23,7 +23,7 @@ namespace MarioBrosMayhem
 			if (spawnLife >= 100 && !spawned && !startedSpawn && !collected)
 			{
 				startedSpawn = true;
-				SpawnFromNearestPipe(true);
+				SpawnFromNearestPipe(disableCollisions: true);
 			}
 		}
 
@@ -52,7 +52,7 @@ namespace MarioBrosMayhem
 
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
-			if (!respawning && spawned)
+			if ((bool)collision && !respawning && spawned)
 			{
 				if ((bool)collision.GetComponent<Player>() && collision.GetComponent<Player>().CanInteract())
 				{
@@ -64,7 +64,7 @@ namespace MarioBrosMayhem
 				}
 				if (!respawning && (bool)collision.GetComponent<EnterPipe>() && ((base.transform.position.x > 0f && movingRight) || (base.transform.position.x < 0f && !movingRight)))
 				{
-					EnterPipe(true);
+					EnterPipe(serverCall: true);
 				}
 			}
 		}
@@ -87,7 +87,7 @@ namespace MarioBrosMayhem
 			spawnSound = "";
 			controller.DisableCollisions();
 			base.transform.position += new Vector3(0f, 0.25f);
-			Player playerObject = Object.FindObjectOfType<MarioBrosNetworkManager>().GetPlayerObject(playerId);
+			Player playerObject = Util.FindObjectOfType<MarioBrosNetworkManager>().GetPlayerObject(playerId);
 			if ((bool)playerObject)
 			{
 				if (playerObject.IsBig())
@@ -98,7 +98,7 @@ namespace MarioBrosMayhem
 				playerObject.IncreaseHealth();
 				int points = ((!num) ? 1200 : 800);
 				playerObject.AddPoints(points);
-				Object.FindObjectOfType<MarioBrosNetworkManager>().CreateScoreGraphic(points, base.transform.position);
+				Util.FindObjectOfType<MarioBrosNetworkManager>().CreateScoreGraphic(points, base.transform.position);
 			}
 			sprite.enabled = false;
 		}

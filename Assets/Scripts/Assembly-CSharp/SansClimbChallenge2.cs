@@ -12,7 +12,7 @@ public class SansClimbChallenge2 : AttackBase
 		maxFrames = 560;
 		bbSize = new Vector2(375f, 140f);
 		soulPos = new Vector2(-0.055f, -2.83f);
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 		course = Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/sans/SansClimbChallenge2"), base.transform).transform;
 		course.Find("Wall").GetComponent<SpriteRenderer>().color = UIBackground.borderColors[(int)Util.GameManager().GetFlag(223)];
 		blasterPrefab = Resources.Load<GameObject>("battle/attacks/bullets/GasterBlaster");
@@ -30,7 +30,7 @@ public class SansClimbChallenge2 : AttackBase
 			}
 			if (frames == 25 || frames == 475)
 			{
-				Object.Instantiate(blasterPrefab, new Vector3(-9.1f, -2.43f), Quaternion.Euler(0f, 0f, -90f)).GetComponent<GasterBlaster>().Activate(2, 2, 90f, new Vector2(-5.29f, -2.43f), (frames == 25) ? 45 : 60, false, (frames == 25) ? 5 : 0);
+				Object.Instantiate(blasterPrefab, new Vector3(-9.1f, -2.43f), Quaternion.Euler(0f, 0f, -90f)).GetComponent<GasterBlaster>().Activate(2, 2, 90f, new Vector2(-5.29f, -2.43f), (frames == 25) ? 45 : 60, inSpearAttack: false, (frames == 25) ? 5 : 0);
 			}
 			if (frames == 160)
 			{
@@ -38,7 +38,7 @@ public class SansClimbChallenge2 : AttackBase
 			}
 			if (frames == 330)
 			{
-				Object.Instantiate(blasterPrefab, new Vector3(8.1f, 2.41f), Quaternion.Euler(0f, 0f, 180f)).GetComponent<GasterBlaster>().Activate(2, 2, 180f, new Vector2(2.98f, -0.35f), 50, false, -10);
+				Object.Instantiate(blasterPrefab, new Vector3(8.1f, 2.41f), Quaternion.Euler(0f, 0f, 180f)).GetComponent<GasterBlaster>().Activate(2, 2, 180f, new Vector2(2.98f, -0.35f), 50, inSpearAttack: false, -10);
 			}
 			float num = (float)(frames % 90) / 45f;
 			if (num > 1f)

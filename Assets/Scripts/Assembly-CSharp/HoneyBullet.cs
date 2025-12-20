@@ -15,13 +15,13 @@ public class HoneyBullet : BulletBase
 		base.SOULHit();
 		sr.color = new Color(0.5f, 0.5f, 0.5f, 1f);
 		GetComponent<BoxCollider2D>().enabled = false;
-		if ((bool)Object.FindObjectOfType<BeeController>())
+		if ((bool)Util.FindObjectOfType<BeeController>())
 		{
-			Object.FindObjectOfType<BeeController>().StartFiringBees();
+			Util.FindObjectOfType<BeeController>().StartFiringBees();
 		}
-		if ((bool)Object.FindObjectOfType<MightyBear>())
+		if ((bool)Util.FindObjectOfType<MightyBear>())
 		{
-			Object.FindObjectOfType<MightyBear>().PissOffBees();
+			Util.FindObjectOfType<MightyBear>().PissOffBees();
 		}
 	}
 }

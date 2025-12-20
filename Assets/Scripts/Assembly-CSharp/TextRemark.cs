@@ -5,17 +5,19 @@ public class TextRemark : MonoBehaviour
 {
 	private Text text;
 
-	private Image portrait;
+	private Portrait portrait;
 
 	private bool playing;
 
 	private int frames;
 
-	private float xStart;
+	private Vector3 posStart;
+
+	private Remark remark;
 
 	private void Awake()
 	{
-		text = GetComponent<Text>();
+		text = GetComponentInChildren<Text>();
 		playing = false;
 		frames = 0;
 	}
@@ -25,117 +27,67 @@ public class TextRemark : MonoBehaviour
 		if (playing)
 		{
 			frames++;
-			if (frames == 5)
+			if (frames == remark.GetFrames())
 			{
 				playing = false;
 			}
-			float num = (float)frames / 5f;
+			float num = (float)frames / (float)remark.GetFrames();
+			MonoBehaviour.print(num);
 			Color color = new Color(1f, 1f, 1f, num);
 			text.color = color;
 			if ((bool)portrait)
 			{
-				portrait.color = color;
+				portrait.SetColor(color);
 			}
-			base.transform.localPosition = new Vector3(Mathf.RoundToInt(Mathf.Lerp(xStart, xStart - 15f, num)), base.transform.localPosition.y);
+			Vector3 b = posStart + new Vector3(remark.GetDir().x, remark.GetDir().y) * remark.GetSpeed() * remark.GetFrames();
+			base.transform.localPosition = Vector3.Lerp(posStart, b, num);
 		}
 	}
 
-	public void StartRemark(Vector3 position, string remk)
+	public void StartRemark(Vector3 position, Remark remk)
 	{
-		string text = "";
-		string text2 = "br";
-		string[] array = remk.Split('`');
-		string str;
-		if (array.Length == 3)
+		remark = remk;
+		position += new Vector3(remk.pos.x, 0f - remk.pos.y);
+		text.text = Util.Unescape(remk.text);
+		if ((bool)portrait)
 		{
-			str = array[2];
-			text = array[1];
-			text2 = array[0];
+			Object.Destroy(portrait.gameObject);
 		}
-		else if (array.Length == 2)
+		if (remk.portrait != "")
 		{
-			str = array[1];
-			text2 = array[0];
-		}
-		else
-		{
-			str = remk;
-		}
-		str = Util.Unescape(str);
-		int num = 0;
-		int num2 = 0;
-		if (text2.Length == 2)
-		{
-			char c = text2[0];
-			char c2 = text2[1];
-			switch (c)
+			portrait = Portrait.CreatePortrait(remk.portrait);
+			portrait.transform.SetParent(base.transform, worldPositionStays: false);
+			portrait.transform.localScale = Vector3.one / 2f;
+			portrait.GetComponent<Image>().rectTransform.pivot = new Vector2(0f, 1f);
+			portrait.SetImage(remk.portrait);
+			portrait.SetColor(new Color(1f, 1f, 1f, 0f));
+			if (remk.portrait.Contains("sans"))
 			{
-			case 'b':
-				num2 = -1;
-				break;
-			case 't':
-				num2 = 1;
-				break;
-			case 'c':
-				num2 = 0;
-				break;
-			}
-			switch (c2)
-			{
-			case 'l':
-				num = -1;
-				break;
-			case 'r':
-				num = 1;
-				break;
-			case 'c':
-				num = 0;
-				break;
-			}
-		}
-		position += new Vector3(num * 124, num2 * 32);
-		this.text.text = str;
-		if (text != "")
-		{
-			Sprite sprite = Resources.Load<Sprite>("overworld/npcs/portraits/spr_" + text + "_0");
-			if (!sprite)
-			{
-				sprite = Resources.Load<Sprite>("overworld/npcs/portraits/spr_portrait_default_0");
-			}
-			portrait = new GameObject("PORTRAIT_" + text).AddComponent<Image>();
-			portrait.sprite = sprite;
-			portrait.GetComponent<RectTransform>().sizeDelta = new Vector2(sprite.rect.width / 24f, sprite.rect.height / 24f);
-			portrait.color = new Color(1f, 1f, 1f, 0f);
-			portrait.transform.SetParent(base.transform);
-			portrait.transform.localPosition = new Vector3(-338f + sprite.rect.width % 2f, 28f + sprite.rect.height % 2f);
-			if (text.Contains("sans"))
-			{
-				this.text.font = Resources.Load<Font>("fonts/sans");
-				if (this.text.fontSize > 20)
+				text.font = Resources.Load<Font>("fonts/sans");
+				if (text.fontSize > 20)
 				{
-					this.text.fontSize = 32;
+					text.fontSize = 32;
 				}
 				else
 				{
-					this.text.fontSize = 16;
+					text.fontSize = 16;
 				}
 			}
-			if (text.Contains("pap"))
+			if (remk.portrait.Contains("pap"))
 			{
-				this.text.font = Resources.Load<Font>("fonts/papyrus");
-				if (this.text.fontSize > 20)
+				text.font = Resources.Load<Font>("fonts/papyrus");
+				if (text.fontSize > 20)
 				{
-					this.text.fontSize = 32;
+					text.fontSize = 32;
 				}
 				else
 				{
-					this.text.fontSize = 16;
+					text.fontSize = 16;
 				}
 			}
 		}
-		base.transform.localScale *= 0.5f;
-		base.transform.localPosition = position;
-		xStart = base.transform.localPosition.x;
+		base.transform.localPosition += position;
+		posStart = base.transform.localPosition;
 		playing = true;
 	}
 
@@ -151,8 +103,8 @@ public class TextRemark : MonoBehaviour
 		text.color = color;
 		if ((bool)portrait)
 		{
-			portrait.color = color;
+			portrait.SetColor(color);
 		}
-		base.transform.localPosition = new Vector3(xStart - 15f, base.transform.localPosition.y);
+		base.transform.localPosition = posStart + new Vector3(remark.GetDir().x, remark.GetDir().y) * remark.GetSpeed() * remark.GetFrames();
 	}
 }

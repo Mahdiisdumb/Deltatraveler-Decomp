@@ -21,7 +21,7 @@ public class ExplosionFlameBullet : BulletBase
 		if (activated)
 		{
 			GetComponent<SpriteRenderer>().flipX = !GetComponent<SpriteRenderer>().flipX;
-			base.transform.position += new Vector3(Mathf.Cos((float)angle * ((float)Math.PI / 180f)), Mathf.Sin((float)angle * ((float)Math.PI / 180f))) * ((float)speed / 48f);
+			base.transform.position += new Vector3(Mathf.Cos((float)angle * (MathF.PI / 180f)), Mathf.Sin((float)angle * (MathF.PI / 180f))) * ((float)speed / 48f);
 		}
 	}
 

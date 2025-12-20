@@ -36,14 +36,14 @@ public class DamageNumber : MonoBehaviour
 		else if (frames <= 12)
 		{
 			float num = (float)(frames - 3) / 4f;
-			float y = Mathf.Lerp(0.056f, 0.202f, Mathf.Sin(num * (float)Math.PI * 0.5f));
+			float y = Mathf.Lerp(0.056f, 0.202f, Mathf.Sin(num * MathF.PI * 0.5f));
 			if (frames >= 7)
 			{
 				num = (float)(frames - 7) / 5f;
 				y = Mathf.Lerp(0.202f, -0.225f, num * num);
 			}
 			num = (float)(frames - 3) / 7f;
-			num = Mathf.Sin(num * (float)Math.PI * 0.5f);
+			num = Mathf.Sin(num * MathF.PI * 0.5f);
 			if (frames > 10)
 			{
 				num = 1f;
@@ -53,7 +53,7 @@ public class DamageNumber : MonoBehaviour
 		}
 		else if (frames <= 20)
 		{
-			float y2 = -0.225f + Mathf.Sin(25.714285f * (float)(frames - 12) * ((float)Math.PI / 180f)) * 0.225f;
+			float y2 = -0.225f + Mathf.Sin(25.714285f * (float)(frames - 12) * (MathF.PI / 180f)) * 0.225f;
 			if (frames == 20)
 			{
 				y2 = -0.2f;
@@ -99,7 +99,7 @@ public class DamageNumber : MonoBehaviour
 			number = 9999;
 			array = new int[4] { 9, 9, 9, 9 };
 		}
-		Sprite[] array2 = Resources.LoadAll<Sprite>("battle/dr/spr_btdr_numbers");
+		Sprite[] array2 = Resources.LoadAll<Sprite>("battle/dr/stats/spr_btdr_numbers");
 		for (int i = 0; i < base.transform.childCount; i++)
 		{
 			if (i < num2)
@@ -121,9 +121,8 @@ public class DamageNumber : MonoBehaviour
 
 	public void StartWord(string word, Color color, Vector3 position)
 	{
-		string text = "battle/dr/spr_btdr_" + word;
 		base.transform.Find("Word").GetComponent<SpriteRenderer>().enabled = true;
-		base.transform.Find("Word").GetComponent<SpriteRenderer>().sprite = Util.PackManager().GetTranslatedSprite(Resources.Load<Sprite>(text), text);
+		base.transform.Find("Word").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/dr/stats/spr_btdr_" + word);
 		base.transform.Find("Word").GetComponent<SpriteRenderer>().color = color;
 		this.color = color;
 		this.position = position;

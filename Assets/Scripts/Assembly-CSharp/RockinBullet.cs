@@ -10,7 +10,7 @@ public class RockinBullet : BulletBase
 	protected override void Awake()
 	{
 		base.Awake();
-		baseDmg = (Object.FindObjectOfType<Ness>().ReduceDamage() ? 7 : 9);
+		baseDmg = (Util.FindObjectOfType<Ness>().ReduceDamage() ? 7 : 9);
 		destroyOnHit = false;
 		ChangeType(Random.Range(1, 3));
 		right = Random.Range(0, 2) == 1;
@@ -18,7 +18,7 @@ public class RockinBullet : BulletBase
 		{
 			base.transform.localScale = new Vector3(-1f, 1f, 1f);
 		}
-		bool flag = Object.FindObjectOfType<PSIMagnetBullet>();
+		bool flag = Util.FindObjectOfType<PSIMagnetBullet>();
 		base.transform.position = new Vector3(right ? (-6.76f) : 6.76f, Random.Range(flag ? 8.5f : 7.905f, 2.25f));
 	}
 

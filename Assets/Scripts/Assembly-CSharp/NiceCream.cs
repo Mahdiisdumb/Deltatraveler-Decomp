@@ -22,8 +22,8 @@ public class NiceCream : InteractSelectionBase
 		if (takenNiceCreams >= 4)
 		{
 			txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-			txt.CreateBox(lines, true);
-			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+			txt.CreateBox(lines, giveBackControl: true);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 			return;
 		}
 		base.DoInteract();
@@ -40,18 +40,18 @@ public class NiceCream : InteractSelectionBase
 		selectActivated = false;
 		if (index == Vector2.left)
 		{
-			if (Object.FindObjectOfType<GameManager>().NumItemFreeSpace() > 0)
+			if (Util.GameManager().NumItemFreeSpace(equipment: false) > 0)
 			{
-				Object.FindObjectOfType<GameManager>().AddItem(38);
+				Util.GameManager().AddItem(38);
 				takenNiceCreams++;
-				Object.FindObjectOfType<GameManager>().SetFlag(193, takenNiceCreams);
+				Util.GameManager().SetFlag(193, takenNiceCreams);
 				txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(new string[1] { "* (You got the Nice Cream.)" }, true);
+				txt.CreateBox(new string[1] { "* (You got the Nice Cream.)\n* (It was added to your ITEMs.)" }, giveBackControl: true);
 			}
 			else
 			{
 				txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(new string[1] { "* (You're carrying too much.)" }, true);
+				txt.CreateBox(new string[1] { "* (You don't have enough space\n  in your ITEMs.)" }, giveBackControl: true);
 			}
 		}
 		else if (index == Vector2.right)

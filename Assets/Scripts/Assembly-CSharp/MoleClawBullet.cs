@@ -23,7 +23,7 @@ public class MoleClawBullet : BulletBase
 	{
 		base.Awake();
 		baseDmg = 7;
-		if (UnityEngine.Object.FindObjectOfType<MondoMole>().IsLectured())
+		if (Util.FindObjectOfType<MondoMole>().IsLectured())
 		{
 			baseDmg = 6;
 		}
@@ -55,7 +55,7 @@ public class MoleClawBullet : BulletBase
 				sr.enabled = true;
 			}
 			float num = (float)frames / 30f;
-			num = Mathf.Sin(num * (float)Math.PI * 0.5f);
+			num = Mathf.Sin(num * MathF.PI * 0.5f);
 			Vector3 b = (right ? new Vector3(0.9f, -4.24f) : new Vector3(-0.9f, 0.22f));
 			if (hugMode)
 			{
@@ -93,7 +93,7 @@ public class MoleClawBullet : BulletBase
 				{
 					trackingFrames++;
 					tracking += 1f / (num2 - 2f);
-					base.transform.position = Vector3.Lerp(base.transform.position, new Vector3(right ? 2.61f : (-2.61f), UnityEngine.Object.FindObjectOfType<SOUL>().transform.position.y), tracking);
+					base.transform.position = Vector3.Lerp(base.transform.position, new Vector3(right ? 2.61f : (-2.61f), Util.FindObjectOfType<SOUL>().transform.position.y), tracking);
 					if ((float)trackingFrames == num2)
 					{
 						grazed = false;

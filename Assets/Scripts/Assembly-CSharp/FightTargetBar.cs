@@ -52,7 +52,7 @@ public class FightTargetBar : MonoBehaviour
 				ending = true;
 				if ((bool)enemy)
 				{
-					enemy.Hit(partyMember, 0f, false);
+					enemy.Hit(partyMember, 0f, playSound: false);
 					miss = true;
 				}
 			}
@@ -68,21 +68,21 @@ public class FightTargetBar : MonoBehaviour
 		base.transform.localScale *= 1.1f;
 		if (scoreMultiplier == 0f && (bool)enemy && endFrames == 1)
 		{
-			enemy.Hit(partyMember, 0f, false);
+			enemy.Hit(partyMember, 0f, playSound: false);
 			miss = true;
 		}
 		if (endFrames == 12 && !miss)
 		{
 			if (devious)
 			{
-				int num = ((!attackKris) ? 1 : 0);
-				int dmg = Mathf.RoundToInt((float)Util.GameManager().GetMaxHP(num) * Mathf.Lerp(0f, 0.3f, GetSuccessRate() / 20f));
-				Util.GameManager().Damage(num, dmg);
+				int slot = ((!attackKris) ? 1 : 0);
+				int dmg = Mathf.RoundToInt((float)Util.GameManager().GetMaxHP(slot) * Mathf.Lerp(0f, 0.3f, GetSuccessRate() / 20f));
+				Util.GameManager().Damage(slot, dmg);
 				Util.GameManager().PlayGlobalSFX("sounds/snd_hurt");
 			}
 			else if (enemyAlive)
 			{
-				enemy.Hit(partyMember, GetSuccessRate(), true);
+				enemy.Hit(partyMember, GetSuccessRate(), playSound: true);
 			}
 		}
 	}
@@ -120,7 +120,7 @@ public class FightTargetBar : MonoBehaviour
 		this.enemyAlive = enemyAlive;
 		activated = false;
 		ending = true;
-		Object.FindObjectOfType<TPBar>().AddTP(3);
+		Util.FindObjectOfType<TPBar>().AddTP(3);
 		if (enemyAlive && !devious)
 		{
 			enemy.SetPredictedDamage(partyMember, GetSuccessRate());
@@ -130,7 +130,7 @@ public class FightTargetBar : MonoBehaviour
 		endColor.a = 0f;
 		if (GetSuccessRate() == 20f)
 		{
-			Object.FindObjectOfType<TPBar>().AddTP(3);
+			Util.FindObjectOfType<TPBar>().AddTP(3);
 			GetComponent<AudioSource>().Play();
 			endColor = new Color(1f, 0.6f, 0f, 0f);
 		}

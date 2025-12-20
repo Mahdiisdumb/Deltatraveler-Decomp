@@ -17,9 +17,9 @@ public class PorkyFinalBeam : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		base.transform.position = UnityEngine.Object.FindObjectOfType<Porky>().GetPart("mech").position - new Vector3(0f, 2.122f);
+		base.transform.position = Util.FindObjectOfType<Porky>().GetPart("mech").position - new Vector3(0f, 2.122f);
 		frames++;
-		float num = Mathf.Cos((float)(frames * 24) * ((float)Math.PI / 180f));
+		float num = Mathf.Cos((float)(frames * 24) * (MathF.PI / 180f));
 		for (int i = 0; i < 2; i++)
 		{
 			balls[i].transform.localScale = Vector3.Lerp(Vector3.zero, new Vector3(11f + num, 11f + num), (float)frames / 60f);

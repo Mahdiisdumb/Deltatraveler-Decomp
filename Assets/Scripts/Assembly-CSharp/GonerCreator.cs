@@ -83,7 +83,7 @@ public class GonerCreator : MonoBehaviour
 						if (j == part[i] && (mode != i || (!selecting && mode == i)))
 						{
 							spriteRenderer.color = new Color(1f, 1f, 1f, 0.5f * partAlpha[i]);
-							float t = Mathf.Abs(Mathf.Sin((float)frames * (180f / (float)(spriteRenderer.gameObject.name.EndsWith("0") ? 50 : 65)) * ((float)Math.PI / 180f)));
+							float t = Mathf.Abs(Mathf.Sin((float)frames * (180f / (float)(spriteRenderer.gameObject.name.EndsWith("0") ? 50 : 65)) * (MathF.PI / 180f)));
 							float num2 = Mathf.Lerp(1f, 1.25f, t);
 							spriteRenderer.transform.localScale = new Vector3(num2, num2, 1f);
 						}
@@ -155,7 +155,7 @@ public class GonerCreator : MonoBehaviour
 		Util.GameManager().SetFlag(215, part[0]);
 		Util.GameManager().SetFlag(216, part[1]);
 		Util.GameManager().SetFlag(217, (part[2] == 4) ? 1 : 0);
-		UnityEngine.Object.FindObjectOfType<GonerParts>().SetPrefixes();
+		Util.FindObjectOfType<GonerParts>().SetPrefixes();
 	}
 
 	public bool PartsAreHidden()

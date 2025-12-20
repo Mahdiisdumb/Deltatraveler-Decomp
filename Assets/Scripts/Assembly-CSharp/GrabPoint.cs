@@ -27,10 +27,10 @@ public class GrabPoint : BulletBase
 	{
 		if ((bool)GetComponentInChildren<SOUL>())
 		{
-			GetComponentInChildren<SOUL>().SetControllable(true);
+			GetComponentInChildren<SOUL>().SetControllable(boo: true);
 			GetComponentInChildren<SOUL>().transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
 			GetComponentInChildren<SOUL>().transform.localScale = new Vector3(1f, 1f, 1f);
-			GetComponentInChildren<SOUL>().transform.SetParent(null, true);
+			GetComponentInChildren<SOUL>().transform.SetParent(null, worldPositionStays: true);
 		}
 	}
 }

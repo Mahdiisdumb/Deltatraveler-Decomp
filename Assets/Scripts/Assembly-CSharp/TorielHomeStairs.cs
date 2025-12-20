@@ -18,7 +18,7 @@ public class TorielHomeStairs : MonoBehaviour
 
 	private void Start()
 	{
-		kris = Object.FindObjectOfType<OverworldPlayer>();
+		kris = Util.OverworldPlayer();
 		krisLastPos = kris.transform.position;
 	}
 
@@ -39,7 +39,7 @@ public class TorielHomeStairs : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<OverworldPlayer>())
+		if ((bool)collision && (bool)collision.GetComponent<OverworldPlayer>())
 		{
 			affectingKris = true;
 		}
@@ -47,7 +47,7 @@ public class TorielHomeStairs : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<OverworldPlayer>())
+		if ((bool)collision && (bool)collision.GetComponent<OverworldPlayer>())
 		{
 			affectingKris = false;
 			kris.SetPosEffect(Vector3.zero);

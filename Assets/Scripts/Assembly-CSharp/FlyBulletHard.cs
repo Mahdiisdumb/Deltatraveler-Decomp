@@ -31,11 +31,11 @@ public class FlyBulletHard : BulletBase
 		frames++;
 		if (frames == 1)
 		{
-			velocity = Vector3.MoveTowards(base.transform.position, UnityEngine.Object.FindObjectOfType<SOUL>().transform.position, 1f / 12f) - base.transform.position;
+			velocity = Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position, 1f / 12f) - base.transform.position;
 		}
 		if (frames == 25)
 		{
-			velocity = Vector3.MoveTowards(base.transform.position, UnityEngine.Object.FindObjectOfType<SOUL>().transform.position, 1f / 12f) - base.transform.position;
+			velocity = Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position, 1f / 12f) - base.transform.position;
 		}
 		if (frames > 25 || frames < 8)
 		{
@@ -47,8 +47,8 @@ public class FlyBulletHard : BulletBase
 			{
 				idlePos = base.transform.position;
 			}
-			float num = (0f - Mathf.Cos((float)(frames - 8) * 10.588235f * ((float)Math.PI / 180f)) + 1f) * 2f / 48f;
-			float num2 = Mathf.Sin((float)(frames - 8) * 10.588235f * ((float)Math.PI / 180f)) * 4f / 48f;
+			float num = (0f - Mathf.Cos((float)(frames - 8) * 10.588235f * (MathF.PI / 180f)) + 1f) * 2f / 48f;
+			float num2 = Mathf.Sin((float)(frames - 8) * 10.588235f * (MathF.PI / 180f)) * 4f / 48f;
 			base.transform.position = idlePos + new Vector3(num2 * (float)multiX, num * (float)multiY);
 		}
 		GetComponent<SpriteRenderer>().sprite = sprites[frames / 5 % 2];

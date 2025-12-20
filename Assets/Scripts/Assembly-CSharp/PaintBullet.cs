@@ -16,13 +16,13 @@ public class PaintBullet : BulletBase
 
 	public override void SOULHit()
 	{
-		if ((bool)Object.FindObjectOfType<PaintbrushAttack>())
+		if ((bool)Util.FindObjectOfType<PaintbrushAttack>())
 		{
-			Object.FindObjectOfType<PaintbrushAttack>().GetHit();
+			Util.FindObjectOfType<PaintbrushAttack>().GetHit();
 		}
-		if ((bool)Object.FindObjectOfType<CarPaintbrushAttack>())
+		if ((bool)Util.FindObjectOfType<CarPaintbrushAttack>())
 		{
-			Object.FindObjectOfType<CarPaintbrushAttack>().GetHit();
+			Util.FindObjectOfType<CarPaintbrushAttack>().GetHit();
 		}
 	}
 }

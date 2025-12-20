@@ -61,7 +61,7 @@ public class MoleToss : SpecialACT
 			mole.PlayTossAnim(num2);
 			string text2 = "* Tossed successfully" + ((num2 <= 20) ? "...?\n" : "!\n");
 			text2 = ((num2 <= 20) ? (text2 + ((score > (float)scoreLimit) ? "* The throw was way too\n  strong." : "* It wasn't impressed at\n  all.")) : ((num2 <= 50) ? (text2 + ((score > (float)scoreLimit) ? "* The throw was somewhat\n  too strong." : "* The throw was somewhat\n  too weak.")) : ((num2 <= 80) ? (text2 + ((score > (float)scoreLimit) ? "* The throw was a bit\n  too strong." : "* The throw was a bit\n  too weak.")) : ((num2 >= 100) ? (text2 + "* The throw was perfect!") : (text2 + "* The throw was almost\n  perfect!")))));
-			Object.FindObjectOfType<BattleManager>().StartText(text2, new Vector2(-4f, -134f), "snd_txtbtl");
+			Util.FindObjectOfType<BattleManager>().StartText(text2, new Vector2(-4f, -134f), "snd_txtbtl");
 			Object.Destroy(base.gameObject);
 		}
 	}
@@ -105,21 +105,15 @@ public class MoleToss : SpecialACT
 				image.transform.localPosition = new Vector3(scoreLimit * 2 - 100, 0f);
 			}
 			image.enabled = true;
-			if (!(image.gameObject.name == "Confirm"))
+			if (image.gameObject.name == "Confirm")
 			{
-				continue;
-			}
-			if (!joystickIsActive)
-			{
-				image.enabled = false;
-				continue;
-			}
-			for (int j = 0; j < ButtonPrompts.validButtons.Length; j++)
-			{
-				if (UTInput.GetKeyOrButtonReplacement("Confirm") == ButtonPrompts.GetButtonChar(ButtonPrompts.validButtons[j]))
+				if (!joystickIsActive)
 				{
-					image.sprite = Resources.Load<Sprite>("ui/buttons/" + ButtonPrompts.GetButtonGraphic(ButtonPrompts.validButtons[j]));
-					break;
+					image.enabled = false;
+				}
+				else
+				{
+					ButtonPrompts.UpdateImageWithGraphic("Confirm", image);
 				}
 			}
 		}

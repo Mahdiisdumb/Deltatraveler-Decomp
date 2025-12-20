@@ -16,14 +16,14 @@ public class FlagEditor : MonoBehaviour
 
 	private void Awake()
 	{
-		player = Object.FindObjectOfType<OverworldPlayer>();
+		player = Util.OverworldPlayer();
 		base.transform.SetParent(GameObject.Find("Canvas").transform);
 		base.gameObject.AddComponent<UIBackground>().CreateElement("FlagEditorBG", new Vector2(0f, 0f), new Vector2(512f, 212f));
 		textParent = Object.Instantiate(Resources.Load<GameObject>("ui/debug/FlagEditorText"), base.transform).transform;
 		newFlags = new object[1000];
 		for (int i = 0; i < newFlags.Length; i++)
 		{
-			newFlags[i] = Object.FindObjectOfType<GameManager>().GetFlag(i);
+			newFlags[i] = Util.GameManager().GetFlag(i);
 		}
 		aud = base.gameObject.AddComponent<AudioSource>();
 		aud.clip = Resources.Load<AudioClip>("sounds/snd_menumove");
@@ -33,14 +33,14 @@ public class FlagEditor : MonoBehaviour
 
 	private void Start()
 	{
-		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 	}
 
 	private void Update()
 	{
 		if ((bool)player && player.CanMove())
 		{
-			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 		}
 		if (UTInput.GetButtonDown("Left"))
 		{
@@ -132,7 +132,6 @@ public class FlagEditor : MonoBehaviour
 					num2 = 2;
 				}
 				newFlags[curFlag] = num2;
-				Object.FindObjectOfType<GameManager>().SetMiniPartyMember(num2);
 				break;
 			case FlagType.IntNumber:
 				num2 += num;
@@ -164,11 +163,11 @@ public class FlagEditor : MonoBehaviour
 		{
 			for (int i = 0; i < newFlags.Length; i++)
 			{
-				Object.FindObjectOfType<GameManager>().SetFlag(i, newFlags[i]);
+				Util.GameManager().SetFlag(i, newFlags[i]);
 			}
 			if ((bool)player)
 			{
-				Object.FindObjectOfType<GameManager>().LoadArea(SceneManager.GetActiveScene().buildIndex, true, player.transform.position, player.GetDirection());
+				Util.GameManager().LoadArea(SceneManager.GetActiveScene().buildIndex, fadeIn: true, player.transform.position, player.GetDirection());
 			}
 			else
 			{

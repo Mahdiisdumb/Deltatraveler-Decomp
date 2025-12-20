@@ -46,11 +46,11 @@ public class ExplosiveOak : EnemyBase
 
 	public override void Hit(int partyMember, float rawDmg, bool playSound)
 	{
-		if ((bool)Object.FindObjectOfType<PKFreezeEffect>() || (bool)Object.FindObjectOfType<IceShock>())
+		if ((bool)Util.FindObjectOfType<PKFreezeEffect>() || (bool)Util.FindObjectOfType<IceShock>())
 		{
 			rawDmg = 5f;
 		}
-		if ((bool)Object.FindObjectOfType<PKFireEffect>())
+		if ((bool)Util.FindObjectOfType<PKFireEffect>())
 		{
 			rawDmg = 100f;
 		}
@@ -64,7 +64,7 @@ public class ExplosiveOak : EnemyBase
 
 	public override int CalculateDamage(int partyMember, float rawDmg, bool forceMagic = false)
 	{
-		if (partyMember == 2 && (bool)Object.FindObjectOfType<IceShock>())
+		if (partyMember == 2 && (bool)Util.FindObjectOfType<IceShock>())
 		{
 			return Mathf.FloorToInt((float)base.CalculateDamage(partyMember, rawDmg, forceMagic) * 0.166f);
 		}
@@ -90,27 +90,24 @@ public class ExplosiveOak : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct(i);
+			return base.PerformAssistAct_Old(i);
 		}
-		switch (i)
+		return i switch
 		{
-		case 1:
-			return new string[1] { "su_annoyed`snd_txtsus`* Uhh,^05 the hell do you\n  want me to do?" };
-		case 2:
-			return new string[1] { "no_happy`snd_txtnoe`* (Isn't it just a tree?)" };
-		default:
-			return base.PerformAssistAct(i);
-		}
+			1 => new string[1] { "su_annoyed`snd_txtsus`* Uhh,^05 the hell do you\n  want me to do?" }, 
+			2 => new string[1] { "no_happy`snd_txtnoe`* (Isn't it just a tree?)" }, 
+			_ => base.PerformAssistAct_Old(i), 
+		};
 	}
 
 	public override bool CanSpare()
 	{
 		bool flag = true;
-		EnemyBase[] array = Object.FindObjectsOfType<EnemyBase>();
+		EnemyBase[] array = Util.FindObjectsOfType<EnemyBase>();
 		foreach (EnemyBase enemyBase in array)
 		{
 			if (enemyBase != this && !enemyBase.IsDone())
@@ -153,7 +150,7 @@ public class ExplosiveOak : EnemyBase
 		obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().enabled = false;
 		for (int i = 0; i < 54; i++)
 		{
-			ExplosionFlameBullet component = Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/eb/ExplosionFlameBullet"), new Vector3(basePos.x, 1.24f), Quaternion.identity, Object.FindObjectOfType<AttackBase>().transform).GetComponent<ExplosionFlameBullet>();
+			ExplosionFlameBullet component = Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/eb/ExplosionFlameBullet"), new Vector3(basePos.x, 1.24f), Quaternion.identity, Util.FindObjectOfType<AttackBase>().transform).GetComponent<ExplosionFlameBullet>();
 			int num = i * 20;
 			component.Activate(num, num / 360);
 		}

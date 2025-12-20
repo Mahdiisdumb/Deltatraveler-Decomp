@@ -96,6 +96,8 @@ public class UnoGameManager : MonoBehaviour
 
 	private bool endGame;
 
+	private static bool papHardMode = false;
+
 	private UnoPlayer clientPlayer;
 
 	public List<int> turnOrder;
@@ -134,13 +136,13 @@ public class UnoGameManager : MonoBehaviour
 		while (deletePlayersQueue.Count > 0)
 		{
 			UnoPlayer unoPlayer = deletePlayersQueue[0];
-			SendWinCondition(unoPlayer.GetPlayerID(), false, -2);
+			SendWinCondition(unoPlayer.GetPlayerID(), win: false, -2);
 			int playerWinState = unoGame.GetPlayerWinState(unoPlayer.GetUnoPlayerID());
-			int[] array = (int[])unoGame.GetAllWinningPlaces().Clone();
+			_ = (int[])unoGame.GetAllWinningPlaces().Clone();
 			unoGame.SetPlayerDisconnect(unoPlayer.GetUnoPlayerID());
 			if (doingNextPlayerTurn && unoPlayer.GetUnoPlayerID() == unoGame.GetCurrentPlayerTurn() && unoGame.GetCurrentActivePlayerCount() > 1)
 			{
-				int nextPlayerTurn = unoGame.GetNextPlayerTurn(true);
+				int nextPlayerTurn = unoGame.GetNextPlayerTurn(set: true);
 				int playerID = players[nextPlayerTurn].GetPlayerID();
 				string playerName = players[nextPlayerTurn].GetPlayerName();
 				int playerID2 = players[unoGame.GetNextUnskippedPlayerTurn()].GetPlayerID();
@@ -226,7 +228,7 @@ public class UnoGameManager : MonoBehaviour
 			}
 			return;
 		}
-		UnoPlayer[] array = UnityEngine.Object.FindObjectsOfType<UnoPlayer>();
+		UnoPlayer[] array = Util.FindObjectsOfType<UnoPlayer>();
 		foreach (UnoPlayer unoPlayer in array)
 		{
 			if (unoPlayer == player)
@@ -253,7 +255,7 @@ public class UnoGameManager : MonoBehaviour
 		stackableDraw = astackableDraw;
 		challengableFour = achallengableFour;
 		drawCard = adrawCard;
-		MonoBehaviour.print("Point System: " + pointSystem.ToString() + "\nStackable Draw: " + stackableDraw.ToString() + "\nChallengable Four: " + challengableFour.ToString() + "\nDraw Cards: " + drawCard.ToString() + "\nMusicID: " + musicID + "\nBGColorID: " + bgColorID);
+		MonoBehaviour.print("Point System: " + pointSystem + "\nStackable Draw: " + stackableDraw + "\nChallengable Four: " + challengableFour + "\nDraw Cards: " + drawCard + "\nMusicID: " + musicID + "\nBGColorID: " + bgColorID);
 		clientIsTense = false;
 	}
 
@@ -300,13 +302,13 @@ public class UnoGameManager : MonoBehaviour
 		{
 			UnoCard unoCard2 = unoGame.PlayCard(card, drew);
 			bool flag = unoGame.GetPlayerHand(unoGame.GetCurrentPlayerTurn()).Count == 1;
-			AIPlayer[] array = UnityEngine.Object.FindObjectsOfType<AIPlayer>();
+			AIPlayer[] array = Util.FindObjectsOfType<AIPlayer>();
 			foreach (AIPlayer aIPlayer in array)
 			{
 				aIPlayer.RemoveCardFromMemory(unoGame.GetCurrentPlayerTurn(), card);
 				if (flag)
 				{
-					aIPlayer.BeginUnoCountdown(true);
+					aIPlayer.BeginUnoCountdown(forceUnfocus: true);
 				}
 			}
 			if (unoCard2.IsWildCard())
@@ -328,7 +330,7 @@ public class UnoGameManager : MonoBehaviour
 					text2 = "YELLOW\n  REVERSE";
 				}
 				text = "* " + playerName + " plays a " + text2 + ".\n* Turn order has been reversed!";
-				UnityEngine.Object.FindObjectOfType<UnoPanels>().ReverseTurnOrder();
+				Util.FindObjectOfType<UnoPanels>().ReverseTurnOrder();
 			}
 			else if (unoCard2.GetCardType() == UnoCard.CardType.Wild)
 			{
@@ -388,12 +390,12 @@ public class UnoGameManager : MonoBehaviour
 			throw new NotSupportedException("Daring got removed (SubmitTurn)");
 		case Actions.Forfeit:
 		{
-			unoGame.SetPlayerWinState(unoGame.GetCurrentPlayerTurn(), false);
+			unoGame.SetPlayerWinState(unoGame.GetCurrentPlayerTurn(), won: false);
 			int playerID4 = players[unoGame.GetCurrentPlayerTurn()].GetPlayerID();
 			string playerName3 = players[unoGame.GetCurrentPlayerTurn()].GetPlayerName();
 			ReceiveCardInfo(players[unoGame.GetCurrentPlayerTurn()], "removecards", unoGame.GetDrawPileSize());
 			DoTurn(playerID4, action, null, "* " + playerName3 + " forfeits!", -1);
-			UnityEngine.Object.FindObjectOfType<UnoPanels>().SetDone(unoGame.GetCurrentPlayerTurn());
+			Util.FindObjectOfType<UnoPanels>().SetDone(unoGame.GetCurrentPlayerTurn());
 			break;
 		}
 		}
@@ -475,11 +477,11 @@ public class UnoGameManager : MonoBehaviour
 		switch (action)
 		{
 		case Actions.Play:
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().SetLastCard(card);
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().UpdateDrawPileCount(unoGame.GetCurrentDrawCardAmount());
+			Util.FindObjectOfType<UnoBattleManager>().SetLastCard(card);
+			Util.FindObjectOfType<UnoBattleManager>().UpdateDrawPileCount(unoGame.GetCurrentDrawCardAmount());
 			break;
 		case Actions.Draw:
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().UpdateDrawCount(1);
+			Util.FindObjectOfType<UnoBattleManager>().UpdateDrawCount(1);
 			stackingImminent = false;
 			break;
 		case Actions.AcceptDare:
@@ -490,16 +492,16 @@ public class UnoGameManager : MonoBehaviour
 			throw new NotSupportedException("Daring got removed (dare ruling)");
 		case Actions.PointEnd:
 			endGame = true;
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().StopMusic();
+			Util.FindObjectOfType<UnoBattleManager>().StopMusic();
 			break;
 		case Actions.ChallengePlus4Start:
 		case Actions.ChallengePlus4Act:
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().StartHandScene(targetPlayerID);
+			Util.FindObjectOfType<UnoBattleManager>().StartHandScene(targetPlayerID);
 			break;
 		}
 		if (dialogue.StartsWith("\t"))
 		{
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().ActivateUno();
+			Util.FindObjectOfType<UnoBattleManager>().ActivateUno();
 			dialogue = dialogue.Substring(1);
 		}
 		if (dialogue.Contains("draws") && !callerSaidUno)
@@ -518,7 +520,7 @@ public class UnoGameManager : MonoBehaviour
 			}
 		}
 		string[] dialogue2 = dialogue.Split(new char[1] { '`' }, 2);
-		UnityEngine.Object.FindObjectOfType<UnoBattleManager>().StartFormattedText(dialogue2, true, playerID, targetPlayerID);
+		Util.FindObjectOfType<UnoBattleManager>().StartFormattedText(dialogue2, actionText: true, playerID, targetPlayerID);
 	}
 
 	public void FinishTurn(int specialCondition)
@@ -575,7 +577,7 @@ public class UnoGameManager : MonoBehaviour
 		}
 		if (unoGame.GetCurrentActivePlayerCount() > 1)
 		{
-			int num2 = unoGame.GetNextPlayerTurn(true);
+			int num2 = unoGame.GetNextPlayerTurn(set: true);
 			if (specialCondition == 0 && !canSayUno)
 			{
 				if (!pointSystem)
@@ -615,7 +617,7 @@ public class UnoGameManager : MonoBehaviour
 					}
 				}
 				SendEnemyCardInfo();
-				UnityEngine.Object.FindObjectOfType<PartyPanels>().SetXOffset(0, -185);
+				Util.FindObjectOfType<PartyPanels>().SetXOffset(0, -185);
 			}
 			int playerID = players[num2].GetPlayerID();
 			string playerName = players[num2].GetPlayerName();
@@ -650,7 +652,7 @@ public class UnoGameManager : MonoBehaviour
 			{
 				int lastActivePlayer = unoGame.GetLastActivePlayer();
 				int playerID3 = players[lastActivePlayer].GetPlayerID();
-				unoGame.SetPlayerWinState(unoGame.GetLastActivePlayer(), true);
+				unoGame.SetPlayerWinState(unoGame.GetLastActivePlayer(), won: true);
 				int num3 = unoGame.GetPlayerWinState(lastActivePlayer) + 1;
 				instance.SendWinCondition(playerID3, num3 > 0, num3);
 			}
@@ -675,7 +677,7 @@ public class UnoGameManager : MonoBehaviour
 		}
 		if (unoGame != null)
 		{
-			UnityEngine.Object.FindObjectOfType<UnoPanels>().UpdateTurn(unoGame.GetCurrentPlayerTurn());
+			Util.FindObjectOfType<UnoPanels>().UpdateTurn(unoGame.GetCurrentPlayerTurn());
 		}
 	}
 
@@ -687,12 +689,12 @@ public class UnoGameManager : MonoBehaviour
 		}
 		if (fullString == "drawcount")
 		{
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().UpdateDrawCount(drawSize);
+			Util.FindObjectOfType<UnoBattleManager>().UpdateDrawCount(drawSize);
 			return;
 		}
 		if (fullString == "removecards")
 		{
-			UnityEngine.Object.FindObjectOfType<CardHand>().RemoveAllCards();
+			Util.FindObjectOfType<CardHand>().RemoveAllCards();
 			return;
 		}
 		throw new ArgumentException("Invalid argument '" + fullString + "' - must be either 'drawcount' or 'removecards'");
@@ -700,7 +702,7 @@ public class UnoGameManager : MonoBehaviour
 
 	public void ReceiveCardInfo(UnoPlayer targetPlayer, UnoCard[] cards, int drawSize, UnoCard nextCard)
 	{
-		UnoBattleManager unoBattleManager = UnityEngine.Object.FindObjectOfType<UnoBattleManager>();
+		UnoBattleManager unoBattleManager = Util.FindObjectOfType<UnoBattleManager>();
 		if (targetPlayer == clientPlayer)
 		{
 			if (cards != null)
@@ -734,7 +736,7 @@ public class UnoGameManager : MonoBehaviour
 	{
 		canDeletePlayer = true;
 		doingNextPlayerTurn = true;
-		UnityEngine.Object.FindObjectOfType<UnoBattleManager>().DeactivateUno();
+		Util.FindObjectOfType<UnoBattleManager>().DeactivateUno();
 		switch (specialCondition)
 		{
 		case 1:
@@ -746,25 +748,22 @@ public class UnoGameManager : MonoBehaviour
 			stackingImminent = false;
 			break;
 		}
-		UnityEngine.Object.FindObjectOfType<UnoBattleManager>().StartFormattedText(new string[1] { flavorText }, false, playerID, nextPlayerID);
-		UnityEngine.Object.FindObjectOfType<UnoBattleManager>().UpdateDrawPileCount(unoGame.GetCurrentDrawCardAmount());
-		UnityEngine.Object.FindObjectOfType<UnoBattleManager>().UpdateNextDrawCard(nextCard);
-		AIPlayer aIPlayer;
-		if ((object)(aIPlayer = players[playerID] as AIPlayer) != null)
+		Util.FindObjectOfType<UnoBattleManager>().StartFormattedText(new string[1] { flavorText }, actionText: false, playerID, nextPlayerID);
+		Util.FindObjectOfType<UnoBattleManager>().UpdateDrawPileCount(unoGame.GetCurrentDrawCardAmount());
+		Util.FindObjectOfType<UnoBattleManager>().UpdateNextDrawCard(nextCard);
+		if (players[playerID] is AIPlayer aIPlayer)
 		{
-			ValueTuple<AIAction, int> valueTuple = aIPlayer.AITurn();
-			AIAction aIAction = valueTuple.Item1;
-			int item = valueTuple.Item2;
+			var (aIAction, num) = aIPlayer.AITurn();
 			if (unoGame.GetTopCard() != null)
 			{
-				if ((aIAction == AIAction.Play && !unoGame.GetTopCard().CanBePlacedOn(unoGame.GetPlayerHand(playerID)[item])) || (aIAction == AIAction.DrawAndPlay && !unoGame.GetTopCard().CanBePlacedOn(unoGame.GetTopDrawCard())))
+				if ((aIAction == AIAction.Play && !unoGame.GetTopCard().CanBePlacedOn(unoGame.GetPlayerHand(playerID)[num])) || (aIAction == AIAction.DrawAndPlay && !unoGame.GetTopCard().CanBePlacedOn(unoGame.GetTopDrawCard())))
 				{
-					Debug.LogError(string.Format("AI Player {0} tried playing {1} on {2} (stack size = {3}); forcing draw", aIPlayer.GetPlayerName(), unoGame.GetPlayerHand(playerID)[item].GetCardName(), unoGame.GetTopCard().GetCardName(), unoGame.GetCurrentDrawCardAmount()));
+					Debug.LogError($"AI Player {aIPlayer.GetPlayerName()} tried playing {unoGame.GetPlayerHand(playerID)[num].GetCardName()} on {unoGame.GetTopCard().GetCardName()} (stack size = {unoGame.GetCurrentDrawCardAmount()}); forcing draw");
 					aIAction = AIAction.Draw;
 				}
 				else if (aIAction == AIAction.DrawAndPlay && stackingImminent)
 				{
-					Debug.LogError(string.Format("AI Player {0} tried DrawAndPlay during stack, which is not allowed; forcing draw.", aIPlayer.GetPlayerName()));
+					Debug.LogError($"AI Player {aIPlayer.GetPlayerName()} tried DrawAndPlay during stack, which is not allowed; forcing draw.");
 					aIAction = AIAction.Draw;
 				}
 				if (aIAction == AIAction.ChallengePlusFour)
@@ -778,7 +777,7 @@ public class UnoGameManager : MonoBehaviour
 				throw new InvalidOperationException("AI player " + playerID + " (" + aIPlayer.GetPlayerName() + ") returned AIAction.Invalid");
 			}
 			List<UnoCard> playerHand = unoGame.GetPlayerHand(playerID);
-			UnoCard playedCard = ((item >= 0 && item < playerHand.Count) ? playerHand[item] : null);
+			UnoCard playedCard = ((num >= 0 && num < playerHand.Count) ? playerHand[num] : null);
 			if (aIAction == AIAction.DrawAndPlay)
 			{
 				playedCard = unoGame.GetTopDrawCard();
@@ -787,7 +786,7 @@ public class UnoGameManager : MonoBehaviour
 			{
 				if (playedCard == null)
 				{
-					throw new InvalidOperationException("Cannot play non-existing card " + item);
+					throw new InvalidOperationException("Cannot play non-existing card " + num);
 				}
 				if (playedCard.IsWildCard())
 				{
@@ -803,7 +802,7 @@ public class UnoGameManager : MonoBehaviour
 				}
 				Debug.Log(text);
 			}
-			Debug.Log(string.Concat(aIPlayer.GetPlayerName(), ": [", aIAction, (playedCard == null) ? "" : (" " + playedCard.GetCardName()), "]"));
+			Debug.Log(aIPlayer.GetPlayerName() + ": [" + aIAction.ToString() + ((playedCard == null) ? "" : (" " + playedCard.GetCardName())) + "]");
 			SubmitTurn(playerID, (Actions)aIAction, playedCard, "");
 			if (playerHand.Count == 1)
 			{
@@ -813,8 +812,8 @@ public class UnoGameManager : MonoBehaviour
 		if (!clientPlayer.IsSpeaking())
 		{
 			bool flag = clientPlayer.GetPlayerID() == unoGame.GetCurrentPlayerTurn();
-			UnityEngine.Object.FindObjectOfType<PartyPanels>().RaiseHeads(flag, false, false);
-			UnityEngine.Object.FindObjectOfType<PartyPanels>().SetRaisedPanel((!flag) ? (-1) : 0);
+			Util.FindObjectOfType<PartyPanels>().RaiseHeads(flag, susie: false, noelle: false);
+			Util.FindObjectOfType<PartyPanels>().SetRaisedPanel((!flag) ? (-1) : 0);
 		}
 	}
 
@@ -846,8 +845,8 @@ public class UnoGameManager : MonoBehaviour
 
 	public void SendWinCondition(int playerID, bool win, int place)
 	{
-		UnityEngine.Object.FindObjectOfType<UnoPanels>().SetDone(playerID);
-		UnoEnemy[] array = UnityEngine.Object.FindObjectsOfType<UnoEnemy>();
+		Util.FindObjectOfType<UnoPanels>().SetDone(playerID);
+		UnoEnemy[] array = Util.FindObjectsOfType<UnoEnemy>();
 		foreach (UnoEnemy unoEnemy in array)
 		{
 			if (unoEnemy.GetPlayer().GetPlayerID() == playerID)
@@ -865,12 +864,12 @@ public class UnoGameManager : MonoBehaviour
 		}
 		if (clientPlayer.GetPlayerID() == playerID)
 		{
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().SetWinCondition(place, false);
+			Util.FindObjectOfType<UnoBattleManager>().SetWinCondition(place, updated: false);
 			clientPlaceNo = place;
 			if (clientPlaceNo <= -1)
 			{
-				UnityEngine.Object.FindObjectOfType<UnoBattleManager>().GetPlayerSOUL().UnoDamage(0f);
-				UnityEngine.Object.FindObjectOfType<PartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
+				Util.FindObjectOfType<UnoBattleManager>().GetPlayerSOUL().UnoDamage(0f);
+				Util.FindObjectOfType<PartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
 			}
 		}
 		if (ClientHasFinished() || place <= 0)
@@ -879,7 +878,7 @@ public class UnoGameManager : MonoBehaviour
 		}
 		float num = 1f;
 		float num2 = 1f;
-		array = UnityEngine.Object.FindObjectsOfType<UnoEnemy>();
+		array = Util.FindObjectsOfType<UnoEnemy>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			if (array[i].AcceptingNewChanges())
@@ -891,11 +890,11 @@ public class UnoGameManager : MonoBehaviour
 		if (num <= 1f)
 		{
 			endGame = true;
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().StopMusic();
+			Util.FindObjectOfType<UnoBattleManager>().StopMusic();
 		}
 		num -= 1f;
 		num2 -= 1f;
-		UnityEngine.Object.FindObjectOfType<UnoBattleManager>().GetPlayerSOUL().UnoDamage(num / num2);
+		Util.FindObjectOfType<UnoBattleManager>().GetPlayerSOUL().UnoDamage(num / num2);
 	}
 
 	public void EndGame(string names)
@@ -907,7 +906,7 @@ public class UnoGameManager : MonoBehaviour
 		{
 			list.Add(new KeyValuePair<int, string>(int.Parse(array[i].Substring(0, 2)), array[i].Substring(2)));
 		}
-		UnityEngine.Object.FindObjectOfType<UnoBattleManager>().FadeEndBattle();
+		Util.FindObjectOfType<UnoBattleManager>().FadeEndBattle();
 		unoGame = null;
 	}
 
@@ -917,7 +916,7 @@ public class UnoGameManager : MonoBehaviour
 		int num2 = 0;
 		foreach (EnemyCardInfo item in fullInfo)
 		{
-			UnoEnemy[] array = UnityEngine.Object.FindObjectsOfType<UnoEnemy>();
+			UnoEnemy[] array = Util.FindObjectsOfType<UnoEnemy>();
 			foreach (UnoEnemy unoEnemy in array)
 			{
 				if (unoEnemy.GetPlayer().GetPlayerID() != item.playerID)
@@ -935,7 +934,7 @@ public class UnoGameManager : MonoBehaviour
 					}
 					else if (cardCount - unoEnemy.GetCardCount() != -7)
 					{
-						unoEnemy.Hit(0, 0f, true);
+						unoEnemy.Hit(0, 0f, playSound: true);
 					}
 				}
 				if (unoEnemy.AcceptingNewChanges() && !unoEnemy.IsKilled())
@@ -943,18 +942,18 @@ public class UnoGameManager : MonoBehaviour
 					num++;
 				}
 			}
-			if (item.playerID == clientPlayer.GetPlayerID() && UnityEngine.Object.FindObjectOfType<UnoBattleManager>().GetState() != 9 && item.winCondition != UnoEnemy.WinCondition.Neutral && GetUnoMusic(musicID).Length > 1)
+			if (item.playerID == clientPlayer.GetPlayerID() && Util.FindObjectOfType<UnoBattleManager>().GetState() != 9 && item.winCondition != UnoEnemy.WinCondition.Neutral && GetUnoMusic(musicID).Length > 1)
 			{
 				num2 = 1;
 			}
 		}
 		if (num > 1 && !endGame)
 		{
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().PlayMusic(GetUnoMusic(musicID)[num2].Key, GetUnoMusic(musicID)[num2].Value);
+			Util.FindObjectOfType<UnoBattleManager>().PlayMusic(GetUnoMusic(musicID)[num2].Key, GetUnoMusic(musicID)[num2].Value);
 		}
 		else
 		{
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().StopMusic();
+			Util.FindObjectOfType<UnoBattleManager>().StopMusic();
 		}
 	}
 
@@ -962,7 +961,7 @@ public class UnoGameManager : MonoBehaviour
 	{
 		if (targetPlayer == clientPlayer)
 		{
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().EnableChallenge();
+			Util.FindObjectOfType<UnoBattleManager>().EnableChallenge();
 		}
 	}
 
@@ -970,7 +969,7 @@ public class UnoGameManager : MonoBehaviour
 	{
 		if (clientPlayer.GetPlayerID() == playerID)
 		{
-			UnityEngine.Object.FindObjectOfType<UnoBattleManager>().SetWinCondition(place, true);
+			Util.FindObjectOfType<UnoBattleManager>().SetWinCondition(place, updated: true);
 			clientPlaceNo = place;
 		}
 	}
@@ -1055,7 +1054,7 @@ public class UnoGameManager : MonoBehaviour
 
 	public static bool IsPlayersReady()
 	{
-		UnoPlayer[] array = UnityEngine.Object.FindObjectsOfType<UnoPlayer>();
+		UnoPlayer[] array = Util.FindObjectsOfType<UnoPlayer>();
 		foreach (UnoPlayer unoPlayer in array)
 		{
 			if (unoPlayer != null && unoPlayer.GetPlayerID() != 0 && !unoPlayer.IsReady())
@@ -1156,9 +1155,9 @@ public class UnoGameManager : MonoBehaviour
 
 	public void SetupPlayers()
 	{
-		bool flag = MusicChooser.musicID == MusicChooser.FRANKNESS_ID;
+		papHardMode = MusicChooser.musicID == MusicChooser.FRANKNESS_ID;
 		turnOrder = new List<int>();
-		if (!flag)
+		if (!papHardMode)
 		{
 			if (PLAYER_GOES_FIRST)
 			{
@@ -1190,11 +1189,11 @@ public class UnoGameManager : MonoBehaviour
 			0,
 			1,
 			2,
-			flag ? 4 : 3
+			papHardMode ? 4 : 3
 		};
 		int[] array3 = new int[4] { 2, 0, 0, 1 };
 		int[] obj = new int[4] { -1, 1, 2, 0 };
-		obj[3] = (flag ? 4 : 3);
+		obj[3] = (papHardMode ? 4 : 3);
 		int[] array4 = obj;
 		for (int i = 0; i < 4; i++)
 		{
@@ -1430,5 +1429,10 @@ public class UnoGameManager : MonoBehaviour
 			return unoMusicArray[i];
 		}
 		return unoMusicArray[0];
+	}
+
+	public static bool IsPapyrusHardMode()
+	{
+		return papHardMode;
 	}
 }

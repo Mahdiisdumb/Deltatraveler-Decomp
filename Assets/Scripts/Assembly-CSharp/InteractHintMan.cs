@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class InteractHintMan : InteractSelectionBase
 {
@@ -11,7 +10,7 @@ public class InteractHintMan : InteractSelectionBase
 
 	private bool playEggSound;
 
-	protected UIBackground shopBG;
+	protected MiniShopUI shopBG;
 
 	protected override void Update()
 	{
@@ -42,51 +41,35 @@ public class InteractHintMan : InteractSelectionBase
 		if ((int)Util.GameManager().GetFlag(152) == 1)
 		{
 			txt.CreateBox(new string[3] { "* To be honest,^05 I started this\n  job in the hopes to see\n  something interesting.", "* You may have given me the\n  best reward that I could\n  ask for.", "* But don't you have anything\n  better that you could be\n  doing?" });
-			Util.GameManager().DisablePlayerMovement(false);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 		}
 		else if ((int)Util.GameManager().GetFlag(151) == 1)
 		{
 			List<string> list = new List<string> { "* Now what's this...?", "* You came over here to show\n  me this little cave mole?", "* I never even told you that\n  I liked moles...", "* I suppose I could reward you\n  with something..." };
-			if (Util.GameManager().NumItemFreeSpace() == 0)
+			Util.GameManager().SetFlag(152, 1);
+			playEggSound = true;
+			list.AddRange(new string[3] { "* Something that a strange man\n  wanted to pay me with for\n  a hint.", "* (You got the Egg.)\n* (It was added to your\n  KEY ITEMs.)", "* (... It's just an\n  egg?)" });
+			if ((int)Util.GameManager().GetFlag(153) == 1)
 			{
-				list.Add("* But you don't have any\n  free space,^05 so come back\n  later,^05 okay?");
-				txt.CreateBox(list.ToArray());
+				list.AddRange(new string[2] { "* But didn't we see\n  a bunch of eggs\n  earlier?", "* This isn't really\n  all that groundbreaking." });
 			}
-			else
-			{
-				Util.GameManager().SetFlag(152, 1);
-				playEggSound = true;
-				list.AddRange(new string[3] { "* Something that a strange man\n  wanted to pay me with for\n  a hint.", "* (You got the Egg.)", "* (... It's just an\n  egg?)" });
-				if ((int)Util.GameManager().GetFlag(153) == 1)
-				{
-					list.AddRange(new string[2] { "* But didn't we see\n  a bunch of eggs\n  earlier?", "* This isn't really\n  all that groundbreaking." });
-				}
-				txt.CreateBox(list.ToArray(), new string[9] { "snd_text", "snd_text", "snd_text", "snd_text", "snd_text", "snd_text", "snd_txtnoe", "snd_txtsus", "snd_txtsus" }, new int[1], true, new string[9] { "", "", "", "", "", "", "no_confused", "su_smirk_sweat", "su_annoyed" });
-				Util.GameManager().AddItem(16);
-			}
-			Util.GameManager().DisablePlayerMovement(false);
+			txt.CreateBox(list.ToArray(), new string[9] { "snd_text", "snd_text", "snd_text", "snd_text", "snd_text", "snd_text", "snd_txtnoe", "snd_txtsus", "snd_txtsus" }, new int[1], giveBackControl: true, new string[9] { "", "", "", "", "", "", "no_confused", "su_smirk_sweat", "su_annoyed" });
+			Util.GameManager().SetFlag(286, 1);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 		}
 		else
 		{
 			string[] array = new string[3] { "* Now wait a minute,^05 youngster!", "* I could give you a great\n  hint for just 30G.", "* You'd like a hint,^05 wouldn't\n  you?" };
-			talkingFromAbove = Object.FindObjectOfType<OverworldPlayer>().transform.position.y > base.transform.position.y;
+			talkingFromAbove = Util.OverworldPlayer().transform.position.y > base.transform.position.y;
 			if (talkingFromAbove)
 			{
 				GetComponent<SpriteRenderer>().sprite = sprites[1];
 				array[0] = "* How unorthodox...^05\n* You must REALLY need a\n  hint.";
 				array[1] = "* I could give you a great\n  hint for just 20G.";
 			}
-			shopBG = new GameObject("ShopMenu").AddComponent<UIBackground>();
-			shopBG.transform.parent = GameObject.Find("Canvas").transform;
-			shopBG.CreateElement("space", new Vector2(189f, 2f), new Vector2(202f, 108f));
-			Text component = Object.Instantiate(Resources.Load<GameObject>("ui/SelectionBase"), shopBG.transform).GetComponent<Text>();
-			component.gameObject.name = "SpaceInfo";
-			component.transform.localScale = new Vector3(1f, 1f, 1f);
-			component.transform.localPosition = new Vector3(116f, -71f);
-			component.text = "$ - " + Object.FindObjectOfType<GameManager>().GetGold() + "G\nSPACE - " + (8 - Object.FindObjectOfType<GameManager>().NumItemFreeSpace()) + "/8";
-			component.lineSpacing = 1.3f;
-			txt.CreateBox(array, false);
-			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+			shopBG = Object.Instantiate(Resources.Load<GameObject>("ui/MiniShopUI"), GameObject.Find("Canvas").transform).GetComponent<MiniShopUI>();
+			txt.CreateBox(array, giveBackControl: false);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 			txt.EnableSelectionAtEnd();
 		}
 	}
@@ -96,25 +79,25 @@ public class InteractHintMan : InteractSelectionBase
 		if (index == Vector2.left)
 		{
 			int num = (talkingFromAbove ? 20 : 30);
-			if (Object.FindObjectOfType<GameManager>().GetGold() < num)
+			if (Util.GameManager().GetGold() < num)
 			{
 				List<string> list = new List<string>();
 				list.Add("* You don't have enough\n  money for one!");
 				list.Add("* Though...^05 a young person\n  like you is very unusual\n  these days.");
 				list.Add("* If you happen to need a\n  hint and have enough money,^05\n  c'mon back!");
 				list.Add("* I'm here all the time...");
-				if ((int)Object.FindObjectOfType<GameManager>().GetFlag(13) >= 3)
+				if ((int)Util.GameManager().GetFlag(13) >= 3)
 				{
 					list.Add("* ...Unless you're able to\n  draw blood.");
 				}
 				txt = new GameObject("InteractHintMan", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(list.ToArray(), true);
+				txt.CreateBox(list.ToArray(), giveBackControl: true);
 			}
 			else
 			{
 				GameManager gameManager = Util.GameManager();
 				gameManager.RemoveGold(num);
-				shopBG.transform.Find("SpaceInfo").GetComponent<Text>().text = "$ - " + gameManager.GetGold() + "G\nSPACE - " + (8 - gameManager.NumItemFreeSpace()) + "/8";
+				shopBG.UpdateText();
 				bool flag = (int)gameManager.GetFlag(87) >= 5 && (int)gameManager.GetFlag(13) == 0;
 				List<string> list2 = new List<string>();
 				string[] array = new string[1] { "* Error i wasted your\n  monie" };
@@ -126,7 +109,7 @@ public class InteractHintMan : InteractSelectionBase
 				}
 				list2.AddRange(array);
 				txt = new GameObject("InteractHintMan", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(list2.ToArray(), true);
+				txt.CreateBox(list2.ToArray(), giveBackControl: true);
 			}
 		}
 		else if (index == Vector2.right)
@@ -144,12 +127,12 @@ public class InteractHintMan : InteractSelectionBase
 			}
 			list3.Add("* If you happen to need a\n  hint,^05 c'mon back!");
 			list3.Add("* I'm here all the time...");
-			if ((int)Object.FindObjectOfType<GameManager>().GetFlag(13) >= 3)
+			if ((int)Util.GameManager().GetFlag(13) >= 3)
 			{
 				list3.Add("* ...Unless you're able to\n  draw blood.");
 			}
 			txt = new GameObject("InteractHintMan", typeof(TextBox)).GetComponent<TextBox>();
-			txt.CreateBox(list3.ToArray(), true);
+			txt.CreateBox(list3.ToArray(), giveBackControl: true);
 		}
 		selectActivated = false;
 	}

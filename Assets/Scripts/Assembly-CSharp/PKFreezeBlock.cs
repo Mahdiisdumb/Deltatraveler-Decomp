@@ -22,13 +22,13 @@ public class PKFreezeBlock : BulletBase
 		baseDmg = 10;
 		destroyOnHit = false;
 		sr.color = new Color(1f, 1f, 1f, 0f);
-		spawnSnow = !Object.FindObjectOfType<Ness>();
+		spawnSnow = !Util.FindObjectOfType<Ness>();
 		snowFrames = Random.Range(0, 17);
-		if (!spawnSnow && (bool)Object.FindObjectOfType<Ness>())
+		if (!spawnSnow && (bool)Util.FindObjectOfType<Ness>())
 		{
-			spawnSnow = Object.FindObjectOfType<Ness>().IsKilled();
+			spawnSnow = Util.FindObjectOfType<Ness>().IsKilled();
 		}
-		if (spawnSnow && (bool)Object.FindObjectOfType<PaulaRandomPatternsAttack>())
+		if (spawnSnow && (bool)Util.FindObjectOfType<PaulaRandomPatternsAttack>())
 		{
 			spawnSnow = false;
 		}
@@ -116,7 +116,7 @@ public class PKFreezeBlock : BulletBase
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<PKFireFlame>() || (bool)collision.GetComponent<LightningBullet>() || (bool)collision.GetComponent<FireballBullet>())
+		if (((bool)collision && (bool)collision.GetComponent<PKFireFlame>()) || (bool)collision.GetComponent<LightningBullet>() || (bool)collision.GetComponent<FireballBullet>())
 		{
 			Object.Destroy(base.gameObject);
 		}

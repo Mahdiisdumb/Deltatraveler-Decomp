@@ -52,10 +52,10 @@ public class SnowdrakeHomingBlade : BulletBase
 		{
 			return;
 		}
-		bool num = Vector3.Distance(base.transform.position, UnityEngine.Object.FindObjectOfType<SOUL>().transform.position) <= 2.5f;
-		MonoBehaviour.print(Vector3.Distance(base.transform.position, UnityEngine.Object.FindObjectOfType<SOUL>().transform.position));
+		bool num = Vector3.Distance(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position) <= 2.5f;
+		MonoBehaviour.print(Vector3.Distance(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position));
 		Quaternion rotation = base.transform.rotation;
-		base.transform.right = base.transform.position - UnityEngine.Object.FindObjectOfType<SOUL>().transform.position;
+		base.transform.right = base.transform.position - Util.FindObjectOfType<SOUL>().transform.position;
 		Quaternion b = base.transform.rotation;
 		if (base.transform.rotation.eulerAngles.y == -180f)
 		{
@@ -78,7 +78,7 @@ public class SnowdrakeHomingBlade : BulletBase
 		{
 			velocity -= num3;
 		}
-		base.transform.position += new Vector3(0f - Mathf.Cos(curRotation * ((float)Math.PI / 180f)), 0f - Mathf.Sin(curRotation * ((float)Math.PI / 180f))) * velocity / 48f;
+		base.transform.position += new Vector3(0f - Mathf.Cos(curRotation * (MathF.PI / 180f)), 0f - Mathf.Sin(curRotation * (MathF.PI / 180f))) * velocity / 48f;
 		positions.Add(base.transform.position);
 		rotations.Add(curRotation);
 		bool flag = curBlades == maxBlades;

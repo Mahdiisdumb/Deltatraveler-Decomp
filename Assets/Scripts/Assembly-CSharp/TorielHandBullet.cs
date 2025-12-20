@@ -33,12 +33,12 @@ public class TorielHandBullet : BulletBase
 		if (isTop)
 		{
 			position.x += speed / 48f;
-			position.y = -0.573f - Mathf.Cos((float)Math.PI * (Mathf.Abs(position.x) / 4.8f)) * 0.758f;
+			position.y = -0.573f - Mathf.Cos(MathF.PI * (Mathf.Abs(position.x) / 4.8f)) * 0.758f;
 		}
 		else
 		{
 			position.x -= speed / 48f;
-			position.y = -2.72f + Mathf.Cos((float)Math.PI * (Mathf.Abs(position.x) / 4.8f)) * 0.32f;
+			position.y = -2.72f + Mathf.Cos(MathF.PI * (Mathf.Abs(position.x) / 4.8f)) * 0.32f;
 		}
 		base.transform.position = position;
 		if (Mathf.Abs(position.x) >= 3f)
@@ -49,13 +49,13 @@ public class TorielHandBullet : BulletBase
 
 	public override void SOULHit()
 	{
-		if ((bool)UnityEngine.Object.FindObjectOfType<TorielHandAttack>())
+		if ((bool)Util.FindObjectOfType<TorielHandAttack>())
 		{
-			UnityEngine.Object.FindObjectOfType<TorielHandAttack>().SetToDestroy();
+			Util.FindObjectOfType<TorielHandAttack>().SetToDestroy();
 		}
-		if ((bool)UnityEngine.Object.FindObjectOfType<TorielDualHandAttack>())
+		if ((bool)Util.FindObjectOfType<TorielDualHandAttack>())
 		{
-			UnityEngine.Object.FindObjectOfType<TorielDualHandAttack>().SetToDestroy();
+			Util.FindObjectOfType<TorielDualHandAttack>().SetToDestroy();
 		}
 	}
 }

@@ -10,7 +10,7 @@ public class OverworldWhimsun : OverworldEnemyBase
 
 	protected override void Awake()
 	{
-		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(108) == 1)
+		if ((int)Util.GameManager().GetFlag(108) == 1)
 		{
 			hardMode = true;
 		}
@@ -32,7 +32,7 @@ public class OverworldWhimsun : OverworldEnemyBase
 	{
 		base.DetectPlayer();
 		dif = CalculateDifference(6f);
-		SetFaceDirection(false);
+		SetFaceDirection(reverse: false);
 	}
 
 	public override void StopRunning()
@@ -51,21 +51,21 @@ public class OverworldWhimsun : OverworldEnemyBase
 		{
 			if (runFromPlayer)
 			{
-				if (Vector3.Distance(base.transform.position, Object.FindObjectOfType<OverworldPlayer>().transform.position) < 2f)
+				if (Vector3.Distance(base.transform.position, Util.OverworldPlayer().transform.position) < 2f)
 				{
 					startRunning = true;
 				}
-				if (Vector3.Distance(base.transform.position, Object.FindObjectOfType<OverworldPlayer>().transform.position) < 4f && startRunning)
+				if (Vector3.Distance(base.transform.position, Util.OverworldPlayer().transform.position) < 4f && startRunning)
 				{
-					speed = Object.FindObjectOfType<OverworldPlayer>().GetSpeed() + 2f;
+					speed = Util.OverworldPlayer().GetSpeed() + 2f;
 					base.RunAlgorithm();
-					SetFaceDirection(true);
+					SetFaceDirection(reverse: true);
 				}
 				else
 				{
 					startRunning = false;
 					dif = CalculateDifference(6f);
-					SetFaceDirection(false);
+					SetFaceDirection(reverse: false);
 				}
 			}
 			else if (chargeFrames < 5)
@@ -80,7 +80,7 @@ public class OverworldWhimsun : OverworldEnemyBase
 			else
 			{
 				base.RunAlgorithm();
-				SetFaceDirection(false);
+				SetFaceDirection(reverse: false);
 			}
 		}
 		else

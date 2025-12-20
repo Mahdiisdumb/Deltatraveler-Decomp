@@ -42,7 +42,7 @@ public class PapXOPuzzleENd : CutsceneBase
 			}
 			else
 			{
-				SetMoveAnim(papyrus, true);
+				SetMoveAnim(papyrus, isMoving: true);
 				ChangeDirection(papyrus, Vector2.right);
 				ChangeDirection(kris, papyrus.transform.position - kris.transform.position);
 				ChangeDirection(susie, papyrus.transform.position - susie.transform.position);
@@ -81,7 +81,7 @@ public class PapXOPuzzleENd : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		papyrus = Object.FindObjectOfType<InteractPapyrusTextbox>();
+		papyrus = Util.FindObjectOfType<InteractPapyrusTextbox>();
 		papyrus.StopStare();
 	}
 }

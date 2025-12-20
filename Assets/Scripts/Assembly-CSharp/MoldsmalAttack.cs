@@ -15,7 +15,7 @@ public class MoldsmalAttack : AttackBase
 		base.Awake();
 		maxFrames = 120;
 		bbSize = new Vector2(165f, 140f);
-		Moldsmal[] array = Object.FindObjectsOfType<Moldsmal>();
+		Moldsmal[] array = Util.FindObjectsOfType<Moldsmal>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			if (!array[i].IsDone())
@@ -24,7 +24,7 @@ public class MoldsmalAttack : AttackBase
 				moldsmalCount++;
 			}
 		}
-		Moldessa[] array2 = Object.FindObjectsOfType<Moldessa>();
+		Moldessa[] array2 = Util.FindObjectsOfType<Moldessa>();
 		for (int i = 0; i < array2.Length; i++)
 		{
 			if (!array2[i].IsDone())

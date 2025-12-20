@@ -14,7 +14,7 @@ public class AsgoreBall : MonoBehaviour
 		increaseVelocity = Random.Range(0.00020833332f, 0.0026041667f);
 		xMove = Random.Range(-1f / 24f, 1f / 24f);
 		base.transform.localScale = new Vector3(num, num, 1f);
-		Color color = Object.FindObjectOfType<BreathingBG>().GetColor();
+		Color color = Util.FindObjectOfType<BreathingBG>().GetColor();
 		color.r += 0.5f;
 		color.g += 0.5f;
 		color.b += 0.5f;

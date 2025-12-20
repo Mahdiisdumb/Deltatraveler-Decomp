@@ -15,28 +15,28 @@ public class JerryFinisher : SpecialACT
 	{
 		if (!activated)
 		{
-			if (!UnityEngine.Object.FindObjectOfType<BattleManager>().GetBattleText().GetGameObject())
+			if (!Util.FindObjectOfType<BattleManager>().GetBattleText().GetGameObject())
 			{
 				base.transform.position = new Vector3(-3.958f, -0.168f);
-				UnityEngine.Object.FindObjectOfType<PartyPanels>().ActivateManualManipulation();
-				UnityEngine.Object.FindObjectOfType<PartyPanels>().transform.Find("KrisSprite").GetComponent<Image>().enabled = false;
+				Util.FindObjectOfType<PartyPanels>().ActivateManualManipulation();
+				Util.FindObjectOfType<PartyPanels>().transform.Find("Party0Sprite").GetComponent<Image>().enabled = false;
 				GameObject.Find("BattleFadeObj").GetComponent<Fade>().FadeOut(20, Color.black);
 				activated = true;
 			}
-			else if (!playMusic && UnityEngine.Object.FindObjectOfType<BattleManager>().GetCurrentStringNum() == 1)
+			else if (!playMusic && Util.FindObjectOfType<BattleManager>().GetCurrentStringNum() == 1)
 			{
 				playMusic = true;
-				UnityEngine.Object.FindObjectOfType<BattleManager>().PlayMusic("music/mus_armstrong", 1f, true);
-				UnityEngine.Object.FindObjectOfType<PartyPanels>().RaiseHeads(true, false, true);
-				UnityEngine.Object.FindObjectOfType<Jerry>().SetFace("curious");
+				Util.FindObjectOfType<BattleManager>().PlayMusic("music/mus_armstrong", 1f, hasIntro: true);
+				Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: true, susie: false, noelle: true);
+				Util.FindObjectOfType<Jerry>().SetFace("curious");
 			}
-			else if (playMusic && UnityEngine.Object.FindObjectOfType<BattleManager>().GetCurrentStringNum() == 4)
+			else if (playMusic && Util.FindObjectOfType<BattleManager>().GetCurrentStringNum() == 4)
 			{
 				playMusic = false;
 				Util.GameManager().PlayGlobalSFX("sounds/snd_spellcast");
 				Util.GameManager().PlayTimedHealSound();
 				Util.GameManager().Heal(0, 99);
-				UnityEngine.Object.FindObjectOfType<PartyPanels>().RaiseHeads(true, false, false);
+				Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: true, susie: false, noelle: false);
 			}
 			return;
 		}
@@ -51,7 +51,7 @@ public class JerryFinisher : SpecialACT
 				component.sortingOrder = 455;
 			}
 			float num = (float)frames / 90f;
-			GetComponent<AudioSource>().volume = Mathf.Lerp(0.5f, 1f, 1f - Mathf.Cos(num * (float)Math.PI * 0.5f));
+			GetComponent<AudioSource>().volume = Mathf.Lerp(0.5f, 1f, 1f - Mathf.Cos(num * MathF.PI * 0.5f));
 			GetComponent<AudioSource>().pitch = Mathf.Lerp(0.5f, 1.2f, num * num);
 			if (frames == 60)
 			{
@@ -64,14 +64,14 @@ public class JerryFinisher : SpecialACT
 		{
 			GetComponent<SpriteRenderer>().sprite = krisSprites[2];
 			GetComponentInChildren<KrisFire>().Activate();
-			UnityEngine.Object.FindObjectOfType<BattleCamera>().GiantBlastShake();
+			Util.FindObjectOfType<BattleCamera>().GiantBlastShake();
 			base.transform.Find("PowerEffect").GetComponent<SpriteRenderer>().enabled = true;
 			SpriteRenderer component2 = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/lostcore/EyeFlash"), new Vector3(-0.082f, 0.27f), Quaternion.identity, base.transform).GetComponent<SpriteRenderer>();
 			component2.color = Color.red;
 			component2.sortingOrder = 460;
 			GetComponent<AudioSource>().Stop();
 			Util.GameManager().PlayGlobalSFX("sounds/snd_scytheburst");
-			UnityEngine.Object.FindObjectOfType<Jerry>().StartFinale();
+			Util.FindObjectOfType<Jerry>().StartFinale();
 		}
 		float num2 = (float)(frames - 90) / 15f;
 		if (num2 <= 1f)
@@ -82,17 +82,17 @@ public class JerryFinisher : SpecialACT
 		if (frames == 110)
 		{
 			GameObject.Find("BattleFadeObj").GetComponent<Fade>().FadeIn(20, Color.black);
-			Util.GameManager().SetPartyMembers(false, false);
-			UnityEngine.Object.FindObjectOfType<BattleManager>().UpdatePartyMembers();
-			UnityEngine.Object.FindObjectOfType<PartyPanels>().DeactivateManualManipulation();
-			UnityEngine.Object.FindObjectOfType<PartyPanels>().SetXPositions();
-			UnityEngine.Object.FindObjectOfType<PartyPanels>().SetSprite(0, "spr_kr_power_charge_end");
-			UnityEngine.Object.FindObjectOfType<PartyPanels>().transform.Find("KrisSprite").GetComponent<Image>().enabled = true;
+			Util.GameManager().SetPartyMembers(susie: false, noelle: false);
+			Util.FindObjectOfType<BattleManager>().UpdatePartyMembers();
+			Util.FindObjectOfType<PartyPanels>().DeactivateManualManipulation();
+			Util.FindObjectOfType<PartyPanels>().SetXPositions();
+			Util.FindObjectOfType<PartyPanels>().SetSprite(0, "spr_kr_power_charge_end");
+			Util.FindObjectOfType<PartyPanels>().transform.Find("Party0Sprite").GetComponent<Image>().enabled = true;
 		}
 		if (frames == 130)
 		{
-			UnityEngine.Object.FindObjectOfType<KrisFire>().transform.parent = null;
-			UnityEngine.Object.FindObjectOfType<KrisFire>().AttachToPartyPanel();
+			Util.FindObjectOfType<KrisFire>().transform.parent = null;
+			Util.FindObjectOfType<KrisFire>().AttachToPartyPanel();
 		}
 		if (frames >= 130)
 		{

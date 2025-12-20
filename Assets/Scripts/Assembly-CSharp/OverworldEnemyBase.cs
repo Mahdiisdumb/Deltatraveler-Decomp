@@ -104,7 +104,7 @@ public class OverworldEnemyBase : MonoBehaviour
 		}
 		if (counterFlagID > -1)
 		{
-			if ((int)Object.FindObjectOfType<GameManager>().GetFlag(53) == 1 && counterFlagID < 53 && !flag)
+			if ((int)Util.GameManager().GetFlag(53) == 1 && counterFlagID < 53 && !flag)
 			{
 				Object.Destroy(base.gameObject);
 			}
@@ -159,7 +159,7 @@ public class OverworldEnemyBase : MonoBehaviour
 				}
 				if (battleFrames == 30)
 				{
-					Object.FindObjectOfType<OverworldPlayer>().InitiateBattle(battleId);
+					Util.OverworldPlayer().InitiateBattle(battleId);
 					disabled = true;
 				}
 			}
@@ -178,7 +178,7 @@ public class OverworldEnemyBase : MonoBehaviour
 	{
 		if ((bool)rigidbody2D)
 		{
-			rigidbody2D.velocity = Vector2.zero;
+			rigidbody2D.linearVelocity = Vector2.zero;
 		}
 	}
 
@@ -191,12 +191,12 @@ public class OverworldEnemyBase : MonoBehaviour
 
 	protected Vector3 CalculateDifference(float speed)
 	{
-		return Vector3.MoveTowards(base.transform.position, Object.FindObjectOfType<OverworldPlayer>().transform.position, speed / 48f) - base.transform.position;
+		return Vector3.MoveTowards(base.transform.position, Util.OverworldPlayer().transform.position, speed / 48f) - base.transform.position;
 	}
 
 	protected virtual void RunAlgorithm()
 	{
-		Vector3 vector = Vector3.MoveTowards(base.transform.position, Object.FindObjectOfType<OverworldPlayer>().transform.position, speed / 48f);
+		Vector3 vector = Vector3.MoveTowards(base.transform.position, Util.OverworldPlayer().transform.position, speed / 48f);
 		dif = vector - base.transform.position;
 		if (runFromPlayer)
 		{
@@ -230,11 +230,11 @@ public class OverworldEnemyBase : MonoBehaviour
 		{
 			return;
 		}
-		if ((bool)Object.FindObjectOfType<SAVEPoint>() && Object.FindObjectOfType<SAVEPoint>().IsSaving())
+		if ((bool)Util.FindObjectOfType<SAVEPoint>() && Util.FindObjectOfType<SAVEPoint>().IsSaving())
 		{
-			Object.FindObjectOfType<SAVEPoint>().CancelSave();
+			Util.FindObjectOfType<SAVEPoint>().CancelSave();
 		}
-		UIComponent[] array = Object.FindObjectsOfType<UIComponent>();
+		UIComponent[] array = Util.FindObjectsOfType<UIComponent>();
 		foreach (UIComponent uIComponent in array)
 		{
 			if (!(uIComponent.GetType() == typeof(ActionPartyPanels)))
@@ -243,15 +243,15 @@ public class OverworldEnemyBase : MonoBehaviour
 				Object.Destroy(uIComponent.gameObject);
 			}
 		}
-		SelectableUIComponent[] array2 = Object.FindObjectsOfType<SelectableUIComponent>();
+		SelectableUIComponent[] array2 = Util.FindObjectsOfType<SelectableUIComponent>();
 		foreach (SelectableUIComponent obj in array2)
 		{
 			obj.CancelControlReturn();
 			Object.Destroy(obj.gameObject);
 		}
 		initiateBattle = true;
-		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
-		OverworldEnemyBase[] array3 = Object.FindObjectsOfType<OverworldEnemyBase>();
+		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+		OverworldEnemyBase[] array3 = Util.FindObjectsOfType<OverworldEnemyBase>();
 		foreach (OverworldEnemyBase overworldEnemyBase in array3)
 		{
 			if (overworldEnemyBase != this)
@@ -298,7 +298,7 @@ public class OverworldEnemyBase : MonoBehaviour
 
 	public int GetDefeatStatus()
 	{
-		return (int)Object.FindObjectOfType<GameManager>().GetFlag(defeatFlagID);
+		return (int)Util.GameManager().GetFlag(defeatFlagID);
 	}
 
 	public int GetCounter()
@@ -311,7 +311,7 @@ public class OverworldEnemyBase : MonoBehaviour
 			}
 			return 1;
 		}
-		return (int)Object.FindObjectOfType<GameManager>().GetFlag(counterFlagID);
+		return (int)Util.GameManager().GetFlag(counterFlagID);
 	}
 
 	public int GetDefeatFlagID()

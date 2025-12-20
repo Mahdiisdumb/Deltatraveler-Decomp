@@ -31,7 +31,7 @@ public class FrogBulletHard : BulletBase
 			frames++;
 			if (frames == 20)
 			{
-				base.transform.right = base.transform.position - UnityEngine.Object.FindObjectOfType<SOUL>().transform.position;
+				base.transform.right = base.transform.position - Util.FindObjectOfType<SOUL>().transform.position;
 				angle = base.transform.eulerAngles.z;
 				if (onWalls)
 				{
@@ -53,7 +53,7 @@ public class FrogBulletHard : BulletBase
 		}
 		if (onWalls)
 		{
-			if (UnityEngine.Object.FindObjectOfType<SOUL>().transform.position.y >= 0f)
+			if (Util.FindObjectOfType<SOUL>().transform.position.y >= 0f)
 			{
 				increaseTrajectory = true;
 			}
@@ -62,7 +62,7 @@ public class FrogBulletHard : BulletBase
 				increaseTrajectory = false;
 			}
 		}
-		else if (UnityEngine.Object.FindObjectOfType<SOUL>().transform.position.x >= 0f)
+		else if (Util.FindObjectOfType<SOUL>().transform.position.x >= 0f)
 		{
 			increaseTrajectory = true;
 		}
@@ -74,7 +74,7 @@ public class FrogBulletHard : BulletBase
 		{
 			increaseTrajectory = !increaseTrajectory;
 		}
-		Vector3 vector = new Vector3(0f - Mathf.Cos(angle * ((float)Math.PI / 180f)), 0f - Mathf.Sin(angle * ((float)Math.PI / 180f))) * 6.5f / 48f;
+		Vector3 vector = new Vector3(0f - Mathf.Cos(angle * (MathF.PI / 180f)), 0f - Mathf.Sin(angle * (MathF.PI / 180f))) * 6.5f / 48f;
 		angle += (increaseTrajectory ? 1 : (-1));
 		base.transform.position += vector;
 		if (base.transform.position.y <= -2.6f || base.transform.position.y >= -0.74f)

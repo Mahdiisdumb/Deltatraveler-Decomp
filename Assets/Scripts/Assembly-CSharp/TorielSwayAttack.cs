@@ -42,7 +42,7 @@ public class TorielSwayAttack : TorielAttackBase
 			for (int i = 0; i < 3; i++)
 			{
 				Transform transform = Object.Instantiate(flamePrefab, new Vector3(0f, -0.3f), Quaternion.identity, base.transform).transform;
-				transform.GetComponent<FlameBullet>().SetBaseDamage(Object.FindObjectOfType<PartyPanels>().GetTargettedMembers()[0] ? 2 : 5);
+				transform.GetComponent<FlameBullet>().SetBaseDamage(Util.FindObjectOfType<PartyPanels>().GetTargettedMembers()[0] ? 2 : 5);
 				if (i == 0)
 				{
 					if (Random.Range(0, 2) == 1)

@@ -20,7 +20,7 @@ public class CutsceneStart : OverworldManipulator
 		base.Awake();
 		if (flag > -1)
 		{
-			if ((int)Object.FindObjectOfType<GameManager>().GetFlag(flag) >= 1)
+			if ((int)Util.GameManager().GetFlag(flag) >= 1)
 			{
 				Object.Destroy(base.gameObject);
 				return;
@@ -49,7 +49,7 @@ public class CutsceneStart : OverworldManipulator
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.transform.tag == "Player" && !started)
+		if ((bool)collision && collision.transform.tag == "Player" && !started)
 		{
 			started = true;
 			cutscene = CutsceneHandler.GetCutscene(cutsceneId);

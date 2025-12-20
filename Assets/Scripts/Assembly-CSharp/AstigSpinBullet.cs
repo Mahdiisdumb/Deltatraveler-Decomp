@@ -45,7 +45,7 @@ public class AstigSpinBullet : BulletBase
 		angleFrames += ((!reverseSpin) ? 1 : (-1));
 		waveFrames++;
 		centerPos += tradjectory;
-		base.transform.position = centerPos + new Vector3(0f, Mathf.Sin(15.652174f * (float)waveFrames * ((float)Math.PI / 180f)) / 24f);
+		base.transform.position = centerPos + new Vector3(0f, Mathf.Sin(15.652174f * (float)waveFrames * (MathF.PI / 180f)) / 24f);
 		bool flag = false;
 		float a = 1f;
 		if ((double)base.transform.position.x < -2.48)
@@ -57,7 +57,7 @@ public class AstigSpinBullet : BulletBase
 		for (int i = 0; i < base.transform.childCount; i++)
 		{
 			AstigSpinBullet component = base.transform.GetChild(i).GetComponent<AstigSpinBullet>();
-			component.transform.localPosition = new Vector3(Mathf.Cos((float)(angleFrames * 4) * ((float)Math.PI / 180f)), Mathf.Sin((float)(angleFrames * 4) * ((float)Math.PI / 180f))) * component.GetDistanceFromCenter();
+			component.transform.localPosition = new Vector3(Mathf.Cos((float)(angleFrames * 4) * (MathF.PI / 180f)), Mathf.Sin((float)(angleFrames * 4) * (MathF.PI / 180f))) * component.GetDistanceFromCenter();
 			if (flag)
 			{
 				component.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, a);

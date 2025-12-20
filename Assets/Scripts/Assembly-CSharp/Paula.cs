@@ -50,13 +50,13 @@ public class Paula : EnemyBase
 		attacks = new int[6] { 69, 70, 71, 72, 73, 74 };
 		defaultChatPos = new Vector2(182f, 126f);
 		defaultChatSize = "RightWide";
-		bm = UnityEngine.Object.FindObjectOfType<BattleManager>();
+		bm = Util.FindObjectOfType<BattleManager>();
 	}
 
 	protected override void Start()
 	{
 		base.Start();
-		if (!UnityEngine.Object.FindObjectOfType<Ness>())
+		if (!Util.FindObjectOfType<Ness>())
 		{
 			ActivatePhase2();
 			x = 0f;
@@ -91,7 +91,7 @@ public class Paula : EnemyBase
 		if (!gotHit && hp > 0)
 		{
 			animFrames++;
-			float num = (Mathf.Cos((float)(animFrames * (heavyBreathing ? 4 : 3)) * ((float)Math.PI / 180f)) + 1f) / 2f;
+			float num = (Mathf.Cos((float)(animFrames * (heavyBreathing ? 4 : 3)) * (MathF.PI / 180f)) + 1f) / 2f;
 			GetPart("body").transform.localPosition = new Vector3(0f, Mathf.Lerp(1.272f, 1.22f - (heavyBreathing ? 0.065f : 0f), 1f - num));
 			GetPart("body").GetChild(0).transform.localPosition = new Vector3(0f, Mathf.Lerp(1.683f, 1.65f - (heavyBreathing ? 0.05f : 0f), 1f - num));
 			if ((float)hp / (float)maxHp <= 0.1f)
@@ -146,7 +146,7 @@ public class Paula : EnemyBase
 		}
 		if (GetActNames()[i] == "Talk")
 		{
-			if (UnityEngine.Object.FindObjectOfType<Ness>().ReduceDamage())
+			if (Util.FindObjectOfType<Ness>().ReduceDamage())
 			{
 				if (stage == 1)
 				{
@@ -165,7 +165,7 @@ public class Paula : EnemyBase
 		}
 		if (GetActNames()[i] == "Apologize")
 		{
-			if (UnityEngine.Object.FindObjectOfType<Ness>().ReduceDamage())
+			if (Util.FindObjectOfType<Ness>().ReduceDamage())
 			{
 				if (stage == 0)
 				{
@@ -186,7 +186,7 @@ public class Paula : EnemyBase
 				{
 					actNames = new string[4]
 					{
-						GetBMString("act_check", 0),
+						EnemyBase.CHECK_NAME,
 						"X-Slash;Physical Damage`40",
 						"S!Red Buster;Deals RED Damage`60",
 						"N!Dual Heal;Heals Everyone`50"
@@ -214,14 +214,14 @@ public class Paula : EnemyBase
 			{
 				UnityEngine.Object.DestroyImmediate(GameObject.Find("EnemyHP2"));
 			}
-			UnityEngine.Object.FindObjectOfType<Ness>().CastHeal();
-			Hit(0, -(maxHp - hp), true);
+			Util.FindObjectOfType<Ness>().CastHeal();
+			Hit(0, -(maxHp - hp), playSound: true);
 		}
 	}
 
 	public override bool IsShaking()
 	{
-		if ((bool)UnityEngine.Object.FindObjectOfType<Ness>() && UnityEngine.Object.FindObjectOfType<Ness>().IsShaking())
+		if ((bool)Util.FindObjectOfType<Ness>() && Util.FindObjectOfType<Ness>().IsShaking())
 		{
 			return true;
 		}
@@ -232,7 +232,7 @@ public class Paula : EnemyBase
 	{
 		if (partyMember == 0 && CanSpare())
 		{
-			UnityEngine.Object.FindObjectOfType<Ness>().ProtectPaula();
+			Util.FindObjectOfType<Ness>().ProtectPaula();
 		}
 		base.SetPredictedDamage(partyMember, rawDmg);
 	}
@@ -245,7 +245,7 @@ public class Paula : EnemyBase
 		}
 		if (partyMember == 0 && CanSpare() && rawDmg > 0f)
 		{
-			UnityEngine.Object.FindObjectOfType<Ness>().Hit(partyMember, rawDmg, playSound);
+			Util.FindObjectOfType<Ness>().Hit(partyMember, rawDmg, playSound);
 			return;
 		}
 		if (partyMember > 0 && CanSpare())
@@ -260,11 +260,11 @@ public class Paula : EnemyBase
 		}
 		if (hp <= 0)
 		{
-			UnityEngine.Object.FindObjectOfType<BreathingBG>().SetColor(new Color(0f, 0f, 0f, 0f));
-			UnityEngine.Object.FindObjectOfType<BattleManager>().StopMusic();
-			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
-			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
-			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
+			Util.FindObjectOfType<BreathingBG>().SetColor(new Color(0f, 0f, 0f, 0f));
+			Util.FindObjectOfType<BattleManager>().StopMusic();
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
 			obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Paula/spr_b_paula_kill_0");
 			moveBody = 20;
 			killed = false;
@@ -309,7 +309,7 @@ public class Paula : EnemyBase
 		this.x = x;
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		return new string[1] { "* But she couldn't think\n  of anything to do." };
 	}
@@ -335,13 +335,13 @@ public class Paula : EnemyBase
 		satisfied = 0;
 		actNames = new string[3]
 		{
-			GetBMString("act_check", 0),
+			EnemyBase.CHECK_NAME,
 			REDBUSTER_NAME,
 			DUALHEAL_NAME
 		};
 		Util.GameManager().SetFlag(172, 2);
-		UnityEngine.Object.FindObjectOfType<PartyPanels>().SetSprite(1, "spr_su_down_depressed_0");
-		UnityEngine.Object.FindObjectOfType<PartyPanels>().SetSprite(2, "spr_no_down_depressed_0");
+		Util.FindObjectOfType<PartyPanels>().SetSprite(1, "depressed/spr_su_down_0_depressed");
+		Util.FindObjectOfType<PartyPanels>().SetSprite(2, "depressed/spr_no_down_0_depressed");
 		renderSpareBar = false;
 	}
 

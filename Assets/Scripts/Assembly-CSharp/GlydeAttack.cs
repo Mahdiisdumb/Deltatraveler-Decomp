@@ -20,8 +20,8 @@ public class GlydeAttack : AttackBase
 		base.Awake();
 		bbSize = new Vector2(165f, 140f);
 		maxFrames = 90000;
-		glyde = UnityEngine.Object.FindObjectOfType<Glyde>();
-		jerry = UnityEngine.Object.FindObjectOfType<Jerry>();
+		glyde = Util.FindObjectOfType<Glyde>();
+		jerry = Util.FindObjectOfType<Jerry>();
 	}
 
 	protected override void Update()
@@ -55,15 +55,15 @@ public class GlydeAttack : AttackBase
 				}
 				if (frames >= 105 && frames <= 115)
 				{
-					float t = (Mathf.Cos((float)((frames - 105) * 18) * ((float)Math.PI / 180f)) + 1f) / 2f;
+					float t = (Mathf.Cos((float)((frames - 105) * 18) * (MathF.PI / 180f)) + 1f) / 2f;
 					jerry.GetEnemyObject().transform.localScale = new Vector3(Mathf.Lerp(1f, 1.1f, t), Mathf.Lerp(1f, 0.9f, t), 1f);
 				}
 				if (frames == 150)
 				{
-					jerry.Chat(new string[2] { "Finally...", "That egotistical \nasswipe is finally \ndead." }, "RightWide", "snd_text", new Vector2(191f, 60f), true, 0);
+					jerry.Chat(new string[2] { "Finally...", "That egotistical \nasswipe is finally \ndead." }, "RightWide", "snd_text", new Vector2(191f, 60f), canSkip: true, 0);
 				}
 			}
-			else if (frames > 150 && !UnityEngine.Object.FindObjectOfType<TextBubble>())
+			else if (frames > 150 && !Util.FindObjectOfType<TextBubble>())
 			{
 				frames = 0;
 				state = 2;
@@ -92,24 +92,24 @@ public class GlydeAttack : AttackBase
 					.sortingOrder = 24;
 				jerry.GetPart("sword").localPosition = new Vector3(-2.66f, 0.57f);
 				jerry.GetPart("sword").eulerAngles = new Vector3(0f, 0f, 63f);
-				jerry.Chat(new string[6] { "And what's this?", "A human?", "Everything's falling \ninto place...", "With a human SOUL \ncaptured...", "Everyone will finally \ngive me the respect \nI deserve.", "It's time to die,^05 \nhuman." }, "RightWide", "snd_text", new Vector2(191f, 60f), true, 0);
+				jerry.Chat(new string[6] { "And what's this?", "A human?", "Everything's falling \ninto place...", "With a human SOUL \ncaptured...", "Everyone will finally \ngive me the respect \nI deserve.", "It's time to die,^05 \nhuman." }, "RightWide", "snd_text", new Vector2(191f, 60f), canSkip: true, 0);
 			}
 		}
 		else if (state == 3)
 		{
-			if ((bool)UnityEngine.Object.FindObjectOfType<TextBubble>())
+			if ((bool)Util.FindObjectOfType<TextBubble>())
 			{
-				if (UnityEngine.Object.FindObjectOfType<TextBubble>().GetCurrentStringNum() == 3 && face == 0)
+				if (Util.FindObjectOfType<TextBubble>().GetCurrentStringNum() == 3 && face == 0)
 				{
 					face++;
 					jerry.GetPart("body").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Jerry/spr_b_jerry_introtalk_1");
 				}
-				else if (UnityEngine.Object.FindObjectOfType<TextBubble>().GetCurrentStringNum() == 5 && face == 1)
+				else if (Util.FindObjectOfType<TextBubble>().GetCurrentStringNum() == 5 && face == 1)
 				{
 					face++;
 					jerry.GetPart("body").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Jerry/spr_b_jerry_introtalk_2");
 				}
-				else if (UnityEngine.Object.FindObjectOfType<TextBubble>().GetCurrentStringNum() == 6 && face == 2)
+				else if (Util.FindObjectOfType<TextBubble>().GetCurrentStringNum() == 6 && face == 2)
 				{
 					face++;
 					jerry.SetPose(0);
@@ -118,7 +118,7 @@ public class GlydeAttack : AttackBase
 			}
 			else
 			{
-				UnityEngine.Object.FindObjectOfType<BattleManager>().PlayMusic("music/mus_jerry", 1f, true);
+				Util.FindObjectOfType<BattleManager>().PlayMusic("music/mus_jerry", 1f, hasIntro: true);
 				UnityEngine.Object.Destroy(base.gameObject);
 			}
 		}
@@ -129,7 +129,7 @@ public class GlydeAttack : AttackBase
 			if (fakeJerryFrames == 5)
 			{
 				glyde.ForceKill();
-				UnityEngine.Object.FindObjectOfType<BattleManager>().StopMusic();
+				Util.FindObjectOfType<BattleManager>().StopMusic();
 				state = 1;
 				frames = 0;
 			}

@@ -1,15 +1,7 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EarthboundFirstCutscenePt2 : CutsceneBase
 {
-	public override Dictionary<string, string[]> GetDefaultStrings()
-	{
-		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
-		dictionary.Add("part_0", new string[10] { "* W-^05what just happened???", "* Everything went all\n  white...!", "* ...^05 but I don't\n  feel weird anymore.", "* Me...^10 neither...", "* Kris,^05 I think the\n  spell worked!", "* But how the hell\n  do we get back to\n  that forest...?", "* Maybe we find another\n  grey door?", "* Might as well.", "* Not like we'll really\n  get anywhere just\n  standing in this cave.", "* C'mon,^05 let's go." });
-		return dictionary;
-	}
-
 	private void Update()
 	{
 		if (!isPlaying)
@@ -24,7 +16,7 @@ public class EarthboundFirstCutscenePt2 : CutsceneBase
 				noelle.SetSprite("spr_no_surprise");
 				kris.EnableAnimator();
 				kris.ChangeDirection(Vector2.right);
-				StartText(GetStringArray("part_0"), new string[10] { "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtnoe", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[11], new string[10] { "no_scared", "su_surprised", "su_inquisitive", "no_silent", "no_surprised_happy", "su_side", "no_curious", "su_annoyed", "su_smirk_sweat", "su_neutral" }, 0);
+				StartText(new string[10] { "* W-^05what just happened???", "* Everything went all\n  white...!", "* ...^05 but I don't\n  feel weird anymore.", "* Me...^10 neither...", "* Kris,^05 I think the\n  spell worked!", "* But how the hell\n  do we get back to\n  that forest...?", "* Maybe we find another\n  grey door?", "* Might as well.", "* Not like we'll really\n  get anywhere just\n  standing in this cave.", "* C'mon,^05 let's go." }, new string[10] { "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtnoe", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[11], new string[10] { "no_scared", "su_surprised", "su_inquisitive", "no_silent", "no_surprised_happy", "su_side", "no_curious", "su_annoyed", "su_smirk_sweat", "su_neutral" }, 0);
 				state = 1;
 			}
 		}
@@ -35,7 +27,7 @@ public class EarthboundFirstCutscenePt2 : CutsceneBase
 				kris.ChangeDirection(Vector2.down);
 				gm.PlayMusic("music/mus_cave");
 				gm.SetCheckpoint(51);
-				Object.FindObjectOfType<SectionTitleCard>().Activate();
+				Util.FindObjectOfType<SectionTitleCard>().Activate();
 				EndCutscene();
 			}
 			else if (txt.GetCurrentStringNum() == 3)

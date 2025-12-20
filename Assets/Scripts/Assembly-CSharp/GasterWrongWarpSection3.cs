@@ -6,10 +6,10 @@ public class GasterWrongWarpSection3 : CutsceneBase
 	{
 		if (state == 0 && !txt)
 		{
-			gm.SetPartyMembers(true, true);
+			gm.SetPartyMembers(susie: true, noelle: true);
 			Util.GameManager().SetFlag(178, 1);
 			Util.GameManager().LockMenu();
-			Util.GameManager().LoadArea(87, false, new Vector2(10.04f, -15.3f), Vector2.left);
+			Util.GameManager().LoadArea(87, fadeIn: false, new Vector2(10.04f, -15.3f), Vector2.left);
 			state = 1;
 		}
 	}

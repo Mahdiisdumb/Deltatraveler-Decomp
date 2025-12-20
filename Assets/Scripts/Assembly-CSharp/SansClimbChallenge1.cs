@@ -10,7 +10,7 @@ public class SansClimbChallenge1 : AttackBase
 		maxFrames = 470;
 		bbSize = new Vector2(375f, 140f);
 		soulPos = new Vector2(-0.055f, -2.83f);
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 		course = Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/sans/SansClimbChallenge1"), base.transform).transform;
 	}
 

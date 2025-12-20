@@ -81,8 +81,8 @@ public class SpinRobo : EnemyBase
 			if (dyingFrames == 30)
 			{
 				Object.Instantiate(Resources.Load<GameObject>("vfx/EnemyExplosion")).transform.position += new Vector3(basePos.x, 0f);
-				Object.FindObjectOfType<BattleManager>().GetBattleFade().FadeIn(10, Color.white);
-				Object.FindObjectOfType<BattleCamera>().GiantBlastShake();
+				Util.FindObjectOfType<BattleManager>().GetBattleFade().FadeIn(10, Color.white);
+				Util.FindObjectOfType<BattleCamera>().GiantBlastShake();
 				obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().enabled = false;
 				isDying = false;
 			}
@@ -104,11 +104,11 @@ public class SpinRobo : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct(i);
+			return base.PerformAssistAct_Old(i);
 		}
 		switch (i)
 		{
@@ -125,7 +125,7 @@ public class SpinRobo : EnemyBase
 			}
 			return new string[1] { "* Noelle spun around like\n  an ice skater." };
 		default:
-			return base.PerformAssistAct(i);
+			return base.PerformAssistAct_Old(i);
 		}
 	}
 
@@ -156,7 +156,7 @@ public class SpinRobo : EnemyBase
 
 	public override bool[] GetTargets()
 	{
-		if (spinTime && Object.FindObjectOfType<GameManager>().GetHP(0) > 0)
+		if (spinTime && Util.GameManager().GetHP(0) > 0)
 		{
 			return new bool[3] { true, false, false };
 		}

@@ -158,7 +158,7 @@ namespace MarioBrosMayhem
 					num2 = raycastHit2D.distance;
 					if (collisions.climbingSlope)
 					{
-						velocity.y = Mathf.Tan(collisions.slopeAngle * ((float)Math.PI / 180f)) * Mathf.Abs(velocity.x);
+						velocity.y = Mathf.Tan(collisions.slopeAngle * (MathF.PI / 180f)) * Mathf.Abs(velocity.x);
 					}
 					collisions.left = num == -1f;
 					collisions.right = num == 1f;
@@ -181,7 +181,7 @@ namespace MarioBrosMayhem
 					num2 = raycastHit2D.distance;
 					if (collisions.climbingSlope)
 					{
-						velocity.x = velocity.y / Mathf.Tan(collisions.slopeAngle * ((float)Math.PI / 180f)) * Mathf.Abs(velocity.x);
+						velocity.x = velocity.y / Mathf.Tan(collisions.slopeAngle * (MathF.PI / 180f)) * Mathf.Abs(velocity.x);
 						float num3 = velocity.x / collisions.velocityOld.x;
 						velocity.x /= num3;
 						velocity.y /= num3;
@@ -239,11 +239,11 @@ namespace MarioBrosMayhem
 		private void ClimbSlope(ref Vector3 velocity, float slopeAngle)
 		{
 			float num = Mathf.Abs(velocity.x);
-			float num2 = Mathf.Sin(slopeAngle * ((float)Math.PI / 180f)) * num;
+			float num2 = Mathf.Sin(slopeAngle * (MathF.PI / 180f)) * num;
 			if (velocity.y <= num2)
 			{
-				velocity.y = Mathf.Sin(slopeAngle * ((float)Math.PI / 180f)) * num;
-				velocity.x = Mathf.Cos(slopeAngle * ((float)Math.PI / 180f)) * num * Mathf.Sign(velocity.x);
+				velocity.y = Mathf.Sin(slopeAngle * (MathF.PI / 180f)) * num;
+				velocity.x = Mathf.Cos(slopeAngle * (MathF.PI / 180f)) * num * Mathf.Sign(velocity.x);
 				collisions.down = true;
 				collisions.climbingSlope = true;
 				collisions.slopeAngle = slopeAngle;
@@ -257,11 +257,11 @@ namespace MarioBrosMayhem
 			if ((bool)raycastHit2D)
 			{
 				float num2 = Vector2.Angle(raycastHit2D.normal, Vector2.up);
-				if (num2 != 0f && num2 <= maxDescendAngle && Mathf.Sign(raycastHit2D.normal.x) == num && raycastHit2D.distance - 0.015f <= Mathf.Tan(num2 * ((float)Math.PI / 180f)) * Mathf.Abs(velocity.x))
+				if (num2 != 0f && num2 <= maxDescendAngle && Mathf.Sign(raycastHit2D.normal.x) == num && raycastHit2D.distance - 0.015f <= Mathf.Tan(num2 * (MathF.PI / 180f)) * Mathf.Abs(velocity.x))
 				{
 					float num3 = Mathf.Abs(velocity.x);
-					float num4 = Mathf.Sin(num2 * ((float)Math.PI / 180f)) * num3;
-					velocity.x = Mathf.Cos(num2 * ((float)Math.PI / 180f)) * num3 * Mathf.Sign(velocity.x);
+					float num4 = Mathf.Sin(num2 * (MathF.PI / 180f)) * num3;
+					velocity.x = Mathf.Cos(num2 * (MathF.PI / 180f)) * num3 * Mathf.Sign(velocity.x);
 					velocity.y -= num4;
 					float num5 = velocity.x / collisions.velocityOld.x;
 					velocity.x /= num5;

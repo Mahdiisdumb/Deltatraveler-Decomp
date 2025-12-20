@@ -52,7 +52,7 @@ public class GreaterDogDefeatCutscene : CutsceneBase
 					LookAt(kris, qc);
 					LookAt(susie, qc);
 					LookAt(noelle, qc);
-					SetMoveAnim(qc, false);
+					SetMoveAnim(qc, isMoving: false);
 				}
 				if (frames == 5)
 				{
@@ -94,7 +94,7 @@ public class GreaterDogDefeatCutscene : CutsceneBase
 			else if (!qc.enabled)
 			{
 				qc.enabled = true;
-				SetMoveAnim(qc, true);
+				SetMoveAnim(qc, isMoving: true);
 				ChangeDirection(qc, Vector2.right);
 				qc.GetComponent<SpriteRenderer>().sortingOrder = 5;
 			}
@@ -104,7 +104,7 @@ public class GreaterDogDefeatCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				SetMoveAnim(qc, true);
+				SetMoveAnim(qc, isMoving: true);
 			}
 			qc.transform.position += new Vector3(0.125f, 0f);
 			LookAt(kris, qc);
@@ -167,9 +167,9 @@ public class GreaterDogDefeatCutscene : CutsceneBase
 		WeirdChecker.RoomModifications(gm);
 		if (oblitEnd != "")
 		{
-			new GameObject("LesserDogDefeatCutsceneOblitEnd").AddComponent<TextBox>().CreateBox(new string[2] { "* (...)", oblitEnd }, true);
+			new GameObject("LesserDogDefeatCutsceneOblitEnd").AddComponent<TextBox>().CreateBox(new string[2] { "* (...)", oblitEnd }, giveBackControl: true);
 			gm.PlayMusic("zoneMusic");
-			EndCutscene(false);
+			EndCutscene(enablePlayerMovement: false);
 		}
 		else
 		{

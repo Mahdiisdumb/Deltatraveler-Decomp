@@ -24,7 +24,7 @@ public class IceSpot : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (!inEncounter && (bool)collision.GetComponent<OverworldPlayer>() && !player)
+		if (!inEncounter && (bool)collision && (bool)collision.GetComponent<OverworldPlayer>() && !player)
 		{
 			MonoBehaviour.print("icespot: player entered");
 			player = collision.GetComponent<OverworldPlayer>();
@@ -53,7 +53,7 @@ public class IceSpot : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if (!inEncounter && (bool)collision.GetComponent<OverworldPlayer>() && (bool)player)
+		if (!inEncounter && (bool)collision && (bool)collision.GetComponent<OverworldPlayer>() && (bool)player)
 		{
 			MonoBehaviour.print("icespot: player left");
 			if (Util.GameManager().SusieInParty())

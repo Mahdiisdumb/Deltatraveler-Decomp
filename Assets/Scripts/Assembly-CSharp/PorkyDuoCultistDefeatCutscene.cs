@@ -96,7 +96,7 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", false);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 				StartText(new string[2] { "* Damn it,^05 he got\n  away.", "* ... Why didn't you\n  do ANYTHING,^05 Ralsei???" }, new string[2] { "snd_txtsus", "snd_txtsus" }, new int[18], new string[2] { "su_neutral", "su_pissed" }, 0);
 				state = 2;
 				frames = 0;
@@ -117,8 +117,8 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 			}
 			if (frames == 30)
 			{
-				Object.FindObjectOfType<RalseiSmokinAFatOne>().GetComponent<Animator>().enabled = false;
-				Object.FindObjectOfType<RalseiSmokinAFatOne>().GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("overworld/npcs/spr_ralsei_lookover");
+				Util.FindObjectOfType<RalseiSmokinAFatOne>().GetComponent<Animator>().enabled = false;
+				Util.FindObjectOfType<RalseiSmokinAFatOne>().GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("overworld/npcs/spr_ralsei_lookover");
 			}
 			if (frames == 45)
 			{
@@ -132,14 +132,14 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 			{
 				if (txt.GetCurrentStringNum() == 3)
 				{
-					Object.FindObjectOfType<RalseiSmokinAFatOne>().GetComponent<Animator>().enabled = true;
+					Util.FindObjectOfType<RalseiSmokinAFatOne>().GetComponent<Animator>().enabled = true;
 				}
 			}
 			else
 			{
-				susie.SetSelfAnimControl(true);
-				noelle.SetSelfAnimControl(true);
-				kris.SetSelfAnimControl(true);
+				susie.SetSelfAnimControl(setAnimControl: true);
+				noelle.SetSelfAnimControl(setAnimControl: true);
+				kris.SetSelfAnimControl(setAnimControl: true);
 				gm.PlayMusic("zoneMusic");
 				Object.Instantiate(Resources.Load<GameObject>("overworld/npcs/StalkerFlowey"), new Vector3(92.91f, 22.05f), Quaternion.identity);
 				EndCutscene();
@@ -195,7 +195,7 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 				}
 				else
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", false);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 					string text = "* And I couldn't find\n  Paula anywhere.";
 					string text2 = "su_side_sweat";
 					if (selectIndex == 3)
@@ -236,7 +236,7 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 			else if (susie.transform.position != new Vector3(87.09f, 32.18f))
 			{
 				noelle.ChangeDirection(Vector2.down);
-				susie.GetComponent<Animator>().SetBool("isMoving", true);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 				susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(87.09f, 32.18f), 1f / 12f);
 			}
 			else
@@ -245,7 +245,7 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 				if (frames == 1)
 				{
 					kris.ChangeDirection(Vector2.down);
-					susie.GetComponent<Animator>().SetBool("isMoving", false);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 					susie.DisableAnimator();
 					susie.SetSprite("spr_su_kneel");
 					susie.GetComponent<SpriteRenderer>().flipX = true;
@@ -271,12 +271,12 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 			}
 			else if (susie.transform.position != new Vector3(86.23f, 32.98f))
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", true);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 				susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(86.23f, 32.98f), 1f / 12f);
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", false);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 				gm.PlayGlobalSFX("sounds/snd_item");
 				StartText(new string[3] { "* (Susie gave you a lightning\n  badge.)", "* (You pinned the badge onto\n  your shirt.)", "* Let's go see if\n  we can do anything\n  with it in town." }, new string[3] { "snd_text", "snd_text", "snd_txtsus" }, new int[18], new string[3] { "", "", "su_side" }, 0);
 				state = 8;
@@ -285,9 +285,9 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 		}
 		if (state == 8 && !txt)
 		{
-			susie.SetSelfAnimControl(true);
-			noelle.SetSelfAnimControl(true);
-			kris.SetSelfAnimControl(true);
+			susie.SetSelfAnimControl(setAnimControl: true);
+			noelle.SetSelfAnimControl(setAnimControl: true);
+			kris.SetSelfAnimControl(setAnimControl: true);
 			gm.PlayMusic("zoneMusic");
 			EndCutscene();
 		}
@@ -432,7 +432,7 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 			PlaySFX("sounds/snd_heavyswing");
 			susie.transform.position = new Vector3(94.5f, 40.03f);
 			susie.ChangeDirection(Vector2.down);
-			susie.GetComponent<Animator>().SetBool("isMoving", true);
+			susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 			susie.GetComponent<Animator>().Play("walk");
 			susie.GetComponent<Animator>().SetFloat("speed", 1f);
 			soul = new GameObject("Stupid", typeof(FakeActionSOUL), typeof(SpriteRenderer)).transform;
@@ -520,7 +520,7 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 				kris.ChangeDirection(Vector2.up);
 				noelle.DisableAnimator();
 				noelle.SetSprite("spr_no_left_shocked_0");
-				cam.SetFollowPlayer(false);
+				cam.SetFollowPlayer(follow: false);
 				StartText(new string[2] { "* ...", "* ... I..." }, new string[3] { "snd_txtnoe", "snd_txtnoe", "snd_txtnoe" }, new int[18], new string[3] { "no_shocked", "no_shocked", "no_shocked" }, 0);
 				state = 9;
 			}
@@ -530,6 +530,7 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
+		susie = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
 		endState = int.Parse(par[0].ToString());
 		gm.SetFlag(106, endState);
 		MonoBehaviour.print((int)gm.GetFlag(13));
@@ -553,7 +554,7 @@ public class PorkyDuoCultistDefeatCutscene : CutsceneBase
 				bringUpIceShockUse = (int)gm.GetFlag(129) == 1;
 			}
 		}
-		gm.SetPartyMembers(true, true);
+		gm.SetPartyMembers(susie: true, noelle: true);
 		GameObject.Find("CultistCutscene1").transform.position = new Vector3(0f, 500f);
 		GameObject.Find("CultistCutscene2").transform.position = new Vector3(0f, 500f);
 		GameObject.Find("Porky").transform.position = new Vector3(0f, 500f);

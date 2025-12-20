@@ -22,7 +22,7 @@ public class PersistentFlagEditor : MonoBehaviour
 
 	private void Awake()
 	{
-		player = Object.FindObjectOfType<OverworldPlayer>();
+		player = Util.OverworldPlayer();
 		holdingHoriz = false;
 		holdingVert = false;
 		dir = 0;
@@ -34,7 +34,7 @@ public class PersistentFlagEditor : MonoBehaviour
 		newFlags = new object[100];
 		for (int i = 0; i < newFlags.Length; i++)
 		{
-			newFlags[i] = Object.FindObjectOfType<GameManager>().GetSessionFlag(i);
+			newFlags[i] = Util.GameManager().GetSessionFlag(i);
 		}
 		aud = base.gameObject.AddComponent<AudioSource>();
 		aud.clip = Resources.Load<AudioClip>("sounds/snd_menumove");
@@ -44,14 +44,14 @@ public class PersistentFlagEditor : MonoBehaviour
 
 	private void Start()
 	{
-		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 	}
 
 	private void Update()
 	{
 		if ((bool)player && player.CanMove())
 		{
-			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 		}
 		if (UTInput.GetAxis("Horizontal") == -1f && !holdingHoriz)
 		{
@@ -145,11 +145,11 @@ public class PersistentFlagEditor : MonoBehaviour
 		{
 			for (int i = 0; i < newFlags.Length; i++)
 			{
-				Object.FindObjectOfType<GameManager>().SetPersistentFlag(i, newFlags[i]);
+				Util.GameManager().SetPersistentFlag(i, newFlags[i]);
 			}
 			if ((bool)player)
 			{
-				Object.FindObjectOfType<GameManager>().LoadArea(SceneManager.GetActiveScene().buildIndex, true, player.transform.position, player.GetDirection());
+				Util.GameManager().LoadArea(SceneManager.GetActiveScene().buildIndex, fadeIn: true, player.transform.position, player.GetDirection());
 			}
 			else
 			{

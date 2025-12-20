@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PicnicBasket : InteractSelectionBase
 {
@@ -11,7 +10,7 @@ public class PicnicBasket : InteractSelectionBase
 
 	private bool eggSoundPlayed;
 
-	protected UIBackground shopBG;
+	protected MiniShopUI shopBG;
 
 	private bool disabled;
 
@@ -30,7 +29,7 @@ public class PicnicBasket : InteractSelectionBase
 		{
 			Object.Destroy(shopBG.gameObject);
 		}
-		else if ((bool)txt && disabled && txt.GetCurrentStringNum() == 3 && !eggSoundPlayed)
+		else if ((bool)txt && disabled && txt.GetCurrentStringNum() == 3 && !eggSoundPlayed && Util.GameManager().GetFlagInt(286) == 0)
 		{
 			eggSoundPlayed = true;
 			Util.GameManager().PlayGlobalSFX("sounds/snd_egg");
@@ -42,32 +41,33 @@ public class PicnicBasket : InteractSelectionBase
 		if (disabled)
 		{
 			txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-			if (Util.GameManager().GetItemList().Contains(16))
+			if (Util.GameManager().GetFlagInt(286) == 1)
 			{
-				Util.GameManager().RemoveItem(Util.GameManager().GetItemList().IndexOf(16));
-				txt.CreateBox(new string[5] { "* (It appears someone has\n  taken all the food.)", "* (...)", "* (You put the Egg in the\n  empty egg basket.)", "* (Strangely,^05 you noticed a shiny\n  bat somehow hiding behind it.)", "* (You got the Aluminum Bat.)" });
-				Util.GameManager().AddItem(31);
+				if (Util.GameManager().NumItemFreeSpace(equipment: true) == 0)
+				{
+					txt.CreateBox(new string[4] { "* (It appears someone has\n  taken all the food.)", "* (...)", "* (You wanted to place the Egg\n  that you're carrying here...)", "* (But you felt that you should\n  make room in your EQUIPMENT\n  first.)" });
+				}
+				else
+				{
+					Util.GameManager().SetFlag(286, 0);
+					txt.CreateBox(new string[5] { "* (It appears someone has\n  taken all the food.)", "* (...)", "* (You put the Egg in the\n  empty egg basket.)", "* (Strangely,^05 you noticed a shiny\n  bat somehow hiding behind it.)", "* (You got the Aluminum Bat.)" });
+					Util.GameManager().AddEquipment(31);
+				}
 			}
 			else
 			{
 				txt.CreateBox(new string[1] { "* (It appears someone has\n  taken all the food.)" });
 			}
-			Util.GameManager().DisablePlayerMovement(false);
-			return;
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 		}
-		if (!txt && enabled)
+		else
 		{
-			shopBG = new GameObject("ShopMenu").AddComponent<UIBackground>();
-			shopBG.transform.parent = GameObject.Find("Canvas").transform;
-			shopBG.CreateElement("space", new Vector2(189f, 2f), new Vector2(202f, 108f));
-			Text component = Object.Instantiate(Resources.Load<GameObject>("ui/SelectionBase"), shopBG.transform).GetComponent<Text>();
-			component.gameObject.name = "SpaceInfo";
-			component.transform.localScale = new Vector3(1f, 1f, 1f);
-			component.transform.localPosition = new Vector3(116f, -71f);
-			component.text = "$ - " + Object.FindObjectOfType<GameManager>().GetGold() + "G\nSPACE - " + (8 - Object.FindObjectOfType<GameManager>().NumItemFreeSpace()) + "/8";
-			component.lineSpacing = 1.3f;
+			if (!txt && enabled)
+			{
+				shopBG = Object.Instantiate(Resources.Load<GameObject>("ui/MiniShopUI"), GameObject.Find("Canvas").transform).GetComponent<MiniShopUI>();
+			}
+			base.DoInteract();
 		}
-		base.DoInteract();
 	}
 
 	protected override void HandleTextExist()
@@ -97,9 +97,9 @@ public class PicnicBasket : InteractSelectionBase
 			if (index == Vector2.left || index == Vector2.right)
 			{
 				txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-				if (Util.GameManager().NumItemFreeSpace() == 0)
+				if (Util.GameManager().NumItemFreeSpace(equipment: false) == 0)
 				{
-					txt.CreateBox(new string[1] { "* (You're carrying too much.)" });
+					txt.CreateBox(new string[1] { "* (You don't have enough space\n  in your ITEMs.)" });
 					break;
 				}
 				banana = index == Vector2.right;
@@ -107,46 +107,57 @@ public class PicnicBasket : InteractSelectionBase
 				txt.CreateBox(new string[2]
 				{
 					Items.ItemDescription(banana ? 29 : 30),
-					string.Format("* (Costs {0}G.)\n* (Will you pay?)", banana ? 35 : 20)
-				}, false);
+					$"* (Costs {(banana ? 35 : 20)}G.)\n* (Will you pay?)"
+				}, giveBackControl: false);
 				txt.EnableSelectionAtEnd();
 			}
 			else
 			{
-				Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
+				Util.GameManager().EnablePlayerMovement();
 			}
 			break;
 		case 1:
 			if (index == Vector2.left || index == Vector2.right)
 			{
 				txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-				int id2 = (banana ? 29 : 30);
+				int item = (banana ? 29 : 30);
 				int num = (banana ? 35 : 20);
-				string text = string.Format("* You took the {0} without\n  paying.", banana ? "Banana" : "Boiled Egg");
+				string text = string.Format("* You took the {0} without\n  paying.\n* It was added to your ITEMs.", banana ? "Banana" : "Boiled Egg");
+				string text2 = "* Perhaps you can guess which\n  inventory it was added to.";
+				bool flag = false;
 				if (index == Vector2.left)
 				{
 					if (Util.GameManager().GetGold() == 0)
 					{
 						text = string.Format("* You didn't have any gold,^05\n  so you took the {0}\n  anyway.", banana ? "Banana" : "Boiled Egg");
+						flag = true;
 					}
 					else if (Util.GameManager().GetGold() < num)
 					{
 						text = string.Format("* You didn't have enough gold,^05\n  so you left {0}G and took\n  the {1} anyway.", Util.GameManager().GetGold(), banana ? "Banana" : "Boiled Egg");
 						Util.GameManager().SetGold(0);
+						flag = true;
 					}
 					else
 					{
-						text = string.Format("* You bought the {0}.", banana ? "Banana" : "Boiled Egg");
+						text = string.Format("* You bought the {0}.\n* It was added to your ITEMs.", banana ? "Banana" : "Boiled Egg");
 						Util.GameManager().RemoveGold(num);
 					}
 				}
-				Util.GameManager().AddItem(id2);
-				shopBG.transform.Find("SpaceInfo").GetComponent<Text>().text = "$ - " + Util.GameManager().GetGold() + "G\nSPACE - " + (8 - Util.GameManager().NumItemFreeSpace()) + "/8";
-				txt.CreateBox(new string[1] { text });
+				Util.GameManager().AddItem(item);
+				shopBG.UpdateText();
+				if (flag)
+				{
+					txt.CreateBox(new string[2] { text, text2 });
+				}
+				else
+				{
+					txt.CreateBox(new string[1] { text });
+				}
 			}
 			else
 			{
-				Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
+				Util.GameManager().EnablePlayerMovement();
 			}
 			break;
 		}

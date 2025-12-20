@@ -19,7 +19,7 @@ public class SimplePelletAttack : AttackBase
 		base.Update();
 		if (isStarted && frames % (hardmode ? 4 : 5) == 1)
 		{
-			float f = (float)UnityEngine.Random.Range(-90, 90) * ((float)Math.PI / 180f);
+			float f = (float)UnityEngine.Random.Range(-90, 90) * (MathF.PI / 180f);
 			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/flowey/FloweyPelletStandard"), new Vector3(Mathf.Sin(f) * 2f, Mathf.Cos(f) + 3f), Quaternion.identity, base.transform);
 		}
 	}

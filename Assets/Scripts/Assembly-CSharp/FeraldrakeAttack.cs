@@ -75,11 +75,11 @@ public class FeraldrakeAttack : AttackBase
 				}
 				if (diagonal)
 				{
-					float num2 = Mathf.Sqrt(2f) / 2f;
+					_ = Mathf.Sqrt(2f) / 2f;
 				}
 				for (int i = 0; i < 4; i++)
 				{
-					Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/snowdin/FeraldrakeCrossBullet"), base.transform).GetComponent<FeraldrakeCrossBullet>().Activate(Object.FindObjectOfType<SOUL>().transform.position, array[i], i == 0);
+					Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/snowdin/FeraldrakeCrossBullet"), base.transform).GetComponent<FeraldrakeCrossBullet>().Activate(Util.FindObjectOfType<SOUL>().transform.position, array[i], i == 0);
 				}
 				diagonal = !diagonal;
 			}
@@ -88,7 +88,7 @@ public class FeraldrakeAttack : AttackBase
 				crossSpawnFrames++;
 			}
 		}
-		else if (!Object.FindObjectOfType<Feraldrake>().Roaring() && !Object.FindObjectOfType<TextBubble>() && !bb.IsPlaying())
+		else if (!Util.FindObjectOfType<Feraldrake>().Roaring() && !Util.FindObjectOfType<TextBubble>() && !bb.IsPlaying())
 		{
 			StartAttack();
 		}
@@ -96,7 +96,7 @@ public class FeraldrakeAttack : AttackBase
 
 	public override void StartAttack()
 	{
-		if (!Object.FindObjectOfType<Feraldrake>().Roaring() && !Object.FindObjectOfType<TextBubble>() && !bb.IsPlaying())
+		if (!Util.FindObjectOfType<Feraldrake>().Roaring() && !Util.FindObjectOfType<TextBubble>() && !bb.IsPlaying())
 		{
 			base.StartAttack();
 			bb.StartMovement(new Vector2(185f, 190f));

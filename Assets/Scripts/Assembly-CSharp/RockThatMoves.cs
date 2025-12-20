@@ -16,25 +16,29 @@ public class RockThatMoves : MonoBehaviour
 	[SerializeField]
 	private Sprite barrierNewSprite;
 
+	private OverworldPlayer player;
+
 	private void Awake()
 	{
 		position = base.transform.position;
-		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(21) == 1 && (flag == 19 || flag == 20))
+		if ((int)Util.GameManager().GetFlag(21) == 1 && (flag == 19 || flag == 20))
 		{
 			position = new Vector3(xLimit, position.y);
 			base.transform.position = position;
 		}
-		else if (flag != -1 && float.Parse(Object.FindObjectOfType<GameManager>().GetFlag(flag).ToString()) != 0f)
+		else if (flag != -1 && float.Parse(Util.GameManager().GetFlag(flag).ToString()) != 0f)
 		{
-			position = new Vector3(float.Parse(Object.FindObjectOfType<GameManager>().GetFlag(flag).ToString()), position.y);
+			position = new Vector3(float.Parse(Util.GameManager().GetFlag(flag).ToString()), position.y);
 			base.transform.position = position;
 		}
+		player = Object.FindAnyObjectByType<OverworldPlayer>();
 	}
 
 	private void LateUpdate()
 	{
 		if (base.transform.position.y == position.y && base.transform.position.x > position.x)
 		{
+			base.transform.position = position + new Vector3(player.GetSpeed() / 48f, 0f);
 			position = base.transform.position;
 		}
 		if (position.x >= xLimit)
@@ -51,7 +55,8 @@ public class RockThatMoves : MonoBehaviour
 		base.transform.localPosition = Vector3.zero;
 		if (flag != -1)
 		{
-			Object.FindObjectOfType<GameManager>().SetFlag(flag, position.x);
+			Util.GameManager().SetFlag(flag, position.x);
 		}
+		GetComponent<Rigidbody2D>().linearVelocityX = 0f;
 	}
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GauntletSpearBullet : ActionBulletBase
 {
-	private Vector3 direction = new Vector3(0f - Mathf.Sin((float)Math.PI / 6f), 0f - Mathf.Cos((float)Math.PI / 6f));
+	private Vector3 direction = new Vector3(0f - Mathf.Sin(MathF.PI / 6f), 0f - Mathf.Cos(MathF.PI / 6f));
 
 	private float velocity;
 

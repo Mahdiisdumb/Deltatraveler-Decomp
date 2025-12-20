@@ -11,7 +11,7 @@ public class JerrySword : BulletBase
 	protected override void Awake()
 	{
 		base.Awake();
-		baseDmg = Mathf.RoundToInt((float)Object.FindObjectOfType<Jerry>().GetDamageValue() * 1.25f);
+		baseDmg = Mathf.RoundToInt((float)Util.FindObjectOfType<Jerry>().GetDamageValue() * 1.25f);
 		destroyOnHit = false;
 		tpGrazeValue = 2f;
 		tpBuildRate = 0.5f;

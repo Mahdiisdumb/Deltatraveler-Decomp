@@ -20,8 +20,8 @@ public class NoellePathWaterfall : MonoBehaviour
 		}
 		noelle = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
 		noelle.UseUnhappySprites();
-		noelle.SetSelfAnimControl(false);
-		noelle.GetComponent<Animator>().SetBool("isMoving", true);
+		noelle.SetSelfAnimControl(setAnimControl: false);
+		noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
 		noelle.GetComponent<Animator>().SetFloat("speed", 1.5f);
 		useRunAnim = GameManager.GetOptions().runAnimations.value == 1;
 	}
@@ -68,7 +68,7 @@ public class NoellePathWaterfall : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (!activated && (bool)collision.GetComponent<OverworldPlayer>())
+		if (!activated && (bool)collision && (bool)collision.GetComponent<OverworldPlayer>())
 		{
 			activated = true;
 			noelle.transform.position = new Vector3(3.729f, 11.33f);

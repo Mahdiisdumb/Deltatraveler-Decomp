@@ -99,11 +99,11 @@ public class Moldsmal : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct(i);
+			return base.PerformAssistAct_Old(i);
 		}
 		if (i == 1)
 		{
@@ -115,6 +115,6 @@ public class Moldsmal : EnemyBase
 			}
 			return new string[1] { "* Moldsmal is still\n  AFFECTIONATE.\n^05* Cannot consume." };
 		}
-		return base.PerformAssistAct(i);
+		return base.PerformAssistAct_Old(i);
 	}
 }

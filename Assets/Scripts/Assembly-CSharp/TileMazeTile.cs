@@ -40,6 +40,8 @@ public class TileMazeTile : MonoBehaviour
 
 	private int frames;
 
+	private TileMaze maze;
+
 	private SpriteRenderer sr;
 
 	private SpriteRenderer arrow;
@@ -61,6 +63,7 @@ public class TileMazeTile : MonoBehaviour
 		whiteTile = base.transform.GetChild(1).GetComponent<SpriteRenderer>();
 		piranha = base.transform.GetChild(2).GetComponent<SpriteRenderer>();
 		spear = base.transform.GetChild(3).GetComponent<SpriteRenderer>();
+		maze = GetComponentInParent<TileMaze>();
 	}
 
 	private void Update()
@@ -227,15 +230,15 @@ public class TileMazeTile : MonoBehaviour
 			hitWithSpear = true;
 			hp = 6;
 		}
-		hp = Util.GameManager().GetHP(0) - Util.GameManager().HandleDamageCalculations(hp, 1f, false)[0];
+		hp = Util.GameManager().GetHP(0) - Util.GameManager().HandleDamageCalculations(hp, 1f, applyDamageImmediately: false)[0];
 		hp += Util.GameManager().GetLV() / 6;
 		Util.GameManager().Damage(0, hp);
-		Object.Instantiate(Resources.Load<GameObject>("battle/dr/DamageNumber"), new Vector3(500f, 0f), Quaternion.identity).GetComponent<DamageNumber>().StartNumber(hp, Color.white, Object.FindObjectOfType<OverworldPlayer>().transform.position);
+		Object.Instantiate(Resources.Load<GameObject>("battle/dr/DamageNumber"), new Vector3(500f, 0f), Quaternion.identity).GetComponent<DamageNumber>().StartNumber(hp, Color.white, Util.OverworldPlayer().transform.position);
 		Util.GameManager().PlayGlobalSFX("sounds/snd_hurt");
-		Object.FindObjectOfType<CameraController>().StartHitShake();
-		Object.FindObjectOfType<ActionPartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
-		Object.FindObjectOfType<ActionPartyPanels>().SetActivated(true);
-		Object.FindObjectOfType<ActionPartyPanels>().Raise();
+		Util.FindObjectOfType<CameraController>().StartHitShake();
+		Util.FindObjectOfType<ActionPartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
+		Util.FindObjectOfType<ActionPartyPanels>().SetActivated(activated: true);
+		Util.FindObjectOfType<ActionPartyPanels>().Raise();
 	}
 
 	public void PlaySFX(string clip)
@@ -246,18 +249,22 @@ public class TileMazeTile : MonoBehaviour
 
 	public void ChangeTile(TileColor tileColor)
 	{
+		if (!maze)
+		{
+			maze = GetComponentInParent<TileMaze>();
+		}
 		this.tileColor = tileColor;
 		int num = (int)tileColor;
 		if (num > 7)
 		{
 			num = 7;
 		}
-		string text = (new string[8] { "pink", "green", "red", "yellow", "orange", "purple", "blue", "white" })[num];
-		sprites = Resources.LoadAll<Sprite>("overworld/snow_objects/tilemaze/spr_colortile_" + text);
+		_ = (new string[8] { "pink", "green", "red", "yellow", "orange", "purple", "blue", "white" })[num];
+		sprites = maze.GetTileSprites(tileColor);
 		sr.sprite = sprites[0];
 		if (tileColor == TileColor.Yellow || tileColor == TileColor.Blue)
 		{
-			zapSprites = Resources.LoadAll<Sprite>("overworld/snow_objects/tilemaze/spr_colortile_zap_" + text);
+			zapSprites = maze.GetZapTileSprites(tileColor);
 		}
 	}
 

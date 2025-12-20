@@ -20,11 +20,11 @@ public class MondoMoleDefeatCutscene : CutsceneBase
 			{
 				gm.PlayGlobalSFX("sounds/snd_hypnosis");
 			}
-			Object.FindObjectOfType<MondoMoleNPC>().GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, (float)(30 - frames) / 30f);
+			Util.FindObjectOfType<MondoMoleNPC>().GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, (float)(30 - frames) / 30f);
 			if (frames == 40)
 			{
 				frames = 0;
-				Object.Destroy(Object.FindObjectOfType<MondoMoleNPC>().gameObject);
+				Object.Destroy(Util.FindObjectOfType<MondoMoleNPC>().gameObject);
 				state = ((!moleTimeBaby) ? 1 : 2);
 			}
 		}
@@ -57,18 +57,19 @@ public class MondoMoleDefeatCutscene : CutsceneBase
 			}
 			else
 			{
-				susie.SetSelfAnimControl(true);
+				susie.SetSelfAnimControl(setAnimControl: true);
 				susie.ChangeDirection(Vector2.left);
-				noelle.SetSelfAnimControl(true);
+				noelle.SetSelfAnimControl(setAnimControl: true);
 				noelle.ChangeDirection(Vector2.left);
-				kris.SetSelfAnimControl(true);
+				kris.SetSelfAnimControl(setAnimControl: true);
 				kris.ChangeDirection(Vector2.down);
-				cam.SetFollowPlayer(true);
+				cam.SetFollowPlayer(follow: true);
 				if ((bool)mole)
 				{
-					mole.SetSelfAnimControl(true);
+					mole.SetSelfAnimControl(setAnimControl: true);
+					kris.AddPartyMember(mole);
 				}
-				Object.FindObjectOfType<SAVEPoint>().transform.position = new Vector3(56f, 0.368f);
+				Util.FindObjectOfType<SAVEPoint>().transform.position = new Vector3(56f, 0.368f);
 				Object.Instantiate(Resources.Load<GameObject>("overworld/npcs/StalkerFlowey"), new Vector3(50.07f, -7.45f), Quaternion.identity);
 				EndCutscene();
 			}
@@ -79,7 +80,7 @@ public class MondoMoleDefeatCutscene : CutsceneBase
 			if (frames == 1)
 			{
 				mole.transform.position = new Vector3(46.25f, -1.37f);
-				mole.GetComponent<Animator>().SetBool("isMoving", true);
+				mole.GetComponent<Animator>().SetBool("isMoving", value: true);
 				mole.ChangeDirection(Vector2.right);
 			}
 			if (mole.transform.position != new Vector3(49.78f, -0.39f))
@@ -88,7 +89,7 @@ public class MondoMoleDefeatCutscene : CutsceneBase
 			}
 			else
 			{
-				mole.GetComponent<Animator>().SetBool("isMoving", false);
+				mole.GetComponent<Animator>().SetBool("isMoving", value: false);
 			}
 			if (frames == 20)
 			{
@@ -148,10 +149,10 @@ public class MondoMoleDefeatCutscene : CutsceneBase
 			gm.SetFlag(151, 1);
 			mole = Object.Instantiate(Resources.Load<GameObject>("overworld/npcs/MoleFriend")).GetComponent<MoleFriend>();
 			mole.Deactivate();
-			mole.SetSelfAnimControl(false);
+			mole.SetSelfAnimControl(setAnimControl: false);
 			moleTimeBaby = true;
 		}
-		OverworldEnemyBase[] array = Object.FindObjectsOfType<OverworldEnemyBase>();
+		OverworldEnemyBase[] array = Util.FindObjectsOfType<OverworldEnemyBase>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			array[i].ActivateHandled();
@@ -189,8 +190,8 @@ public class MondoMoleDefeatCutscene : CutsceneBase
 		}
 		else
 		{
-			Object.FindObjectOfType<MondoMoleNPC>().CreateDeadEnemy(false);
-			Object.Destroy(Object.FindObjectOfType<MondoMoleNPC>().gameObject);
+			Util.FindObjectOfType<MondoMoleNPC>().CreateDeadEnemy(age: false);
+			Object.Destroy(Util.FindObjectOfType<MondoMoleNPC>().gameObject);
 			gm.StopMusic();
 			WeirdChecker.AdvanceTo(gm, 6);
 			state = 3;

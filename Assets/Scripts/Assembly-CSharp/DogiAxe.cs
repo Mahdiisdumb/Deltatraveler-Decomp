@@ -14,7 +14,7 @@ public class DogiAxe : BulletBase
 		base.Awake();
 		baseDmg = 8;
 		destroyOnHit = false;
-		rage = UnityEngine.Object.FindObjectOfType<Dogamy>().IsKilled();
+		rage = Util.FindObjectOfType<Dogamy>().IsKilled();
 		if (rage)
 		{
 			baseDmg = 12;
@@ -30,14 +30,14 @@ public class DogiAxe : BulletBase
 			int num2 = (rage ? 30 : 37);
 			float b = (rage ? (-1.81f) : (-1.6f));
 			frames = (frames + 1) % num;
-			float t = Mathf.Sin((float)frames / (float)(num2 - 1) * 180f * ((float)Math.PI / 180f));
+			float t = Mathf.Sin((float)frames / (float)(num2 - 1) * 180f * (MathF.PI / 180f));
 			if (frames < num2)
 			{
 				base.transform.position = new Vector3(base.transform.position.x + 0.037727274f * base.transform.localScale.x, Mathf.Lerp(-2.264f, b, t));
 			}
 			else if (frames == num2)
 			{
-				UnityEngine.Object.FindObjectOfType<BattleCamera>().BlastShake();
+				Util.FindObjectOfType<BattleCamera>().BlastShake();
 				aud.Play();
 			}
 		}

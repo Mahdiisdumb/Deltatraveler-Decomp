@@ -90,7 +90,7 @@ public class UndyneEndCutscene : CutsceneBase
 				{
 					if (AtLine(3))
 					{
-						SetSprite(susie, "spr_su_point_right_unhappy", true);
+						SetSprite(susie, "spr_su_point_right_unhappy", flipX: true);
 					}
 					else if (AtLine(4))
 					{
@@ -229,9 +229,9 @@ public class UndyneEndCutscene : CutsceneBase
 			if (frames == 1)
 			{
 				PlaySFX("sounds/snd_escaped");
-				SetMoveAnim(kris, true);
-				SetMoveAnim(susie, true);
-				SetMoveAnim(noelle, true);
+				SetMoveAnim(kris, isMoving: true);
+				SetMoveAnim(susie, isMoving: true);
+				SetMoveAnim(noelle, isMoving: true);
 				ChangeDirection(kris, Vector2.up);
 			}
 			if (frames < 55)
@@ -258,7 +258,7 @@ public class UndyneEndCutscene : CutsceneBase
 					krisLookFrames++;
 					if (krisLookFrames == 1)
 					{
-						SetMoveAnim(kris, false);
+						SetMoveAnim(kris, isMoving: false);
 					}
 					if (krisLookFrames == 10)
 					{
@@ -281,19 +281,19 @@ public class UndyneEndCutscene : CutsceneBase
 					undyne.transform.position = new Vector3(14.61f, 4.79f);
 					SetSprite(kris, "spr_kr_surprise_upright");
 					SetSprite(noelle, "spr_no_surprise_up");
-					SetSprite(susie, "spr_su_surprise_up", true);
+					SetSprite(susie, "spr_su_surprise_up", flipX: true);
 					SetSprite(undyne, "overworld/npcs/waterfall/spr_undyne_a_jump_0");
 					PlaySFX("sounds/snd_crash");
-					cam.SetFollowPlayer(true);
+					cam.SetFollowPlayer(follow: true);
 					cam.StartHitShake();
 				}
 				if (frames == 75)
 				{
 					undyne.enabled = true;
-					SetMoveAnim(undyne, true);
-					SetMoveAnim(kris, true, 1.5f);
-					SetMoveAnim(susie, true, 1.5f);
-					SetMoveAnim(noelle, true, 1.5f);
+					SetMoveAnim(undyne, isMoving: true);
+					SetMoveAnim(kris, isMoving: true, 1.5f);
+					SetMoveAnim(susie, isMoving: true, 1.5f);
+					SetMoveAnim(noelle, isMoving: true, 1.5f);
 					kris.EnableAnimator();
 					susie.EnableAnimator();
 					noelle.EnableAnimator();
@@ -314,7 +314,7 @@ public class UndyneEndCutscene : CutsceneBase
 					}
 					else
 					{
-						SetMoveAnim(kris, false);
+						SetMoveAnim(kris, isMoving: false);
 					}
 					if (susie.transform.position.y > -0.36f)
 					{
@@ -327,7 +327,7 @@ public class UndyneEndCutscene : CutsceneBase
 					}
 					else
 					{
-						SetMoveAnim(susie, false);
+						SetMoveAnim(susie, isMoving: false);
 					}
 					if (noelle.transform.position.y > -2.34f)
 					{
@@ -340,7 +340,7 @@ public class UndyneEndCutscene : CutsceneBase
 					}
 					else
 					{
-						SetMoveAnim(noelle, false);
+						SetMoveAnim(noelle, isMoving: false);
 					}
 					if (undyne.transform.position.y > -1.24f)
 					{
@@ -353,7 +353,7 @@ public class UndyneEndCutscene : CutsceneBase
 					}
 					else
 					{
-						SetMoveAnim(undyne, false);
+						SetMoveAnim(undyne, isMoving: false);
 					}
 				}
 			}
@@ -373,14 +373,14 @@ public class UndyneEndCutscene : CutsceneBase
 			}
 			else
 			{
-				SetMoveAnim(susie, false);
-				SetMoveAnim(noelle, false);
+				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(noelle, isMoving: false);
 			}
 			frames++;
 			if (frames == 1)
 			{
-				SetMoveAnim(susie, true, 0.5f);
-				SetMoveAnim(noelle, true, 0.5f);
+				SetMoveAnim(susie, isMoving: true, 0.5f);
+				SetMoveAnim(noelle, isMoving: true, 0.5f);
 			}
 			if (frames == 75)
 			{
@@ -434,16 +434,16 @@ public class UndyneEndCutscene : CutsceneBase
 			}
 			if (frames >= 18 && frames <= 28)
 			{
-				SetMoveAnim(undyne, true);
+				SetMoveAnim(undyne, isMoving: true);
 				undyne.transform.position -= new Vector3(1f / 24f, 0f);
 			}
 			else
 			{
-				SetMoveAnim(undyne, false);
+				SetMoveAnim(undyne, isMoving: false);
 			}
 			if (frames == 43)
 			{
-				SetSprite(susie, "spr_su_surprise_right", true);
+				SetSprite(susie, "spr_su_surprise_right", flipX: true);
 				PlaySFX("sounds/snd_grab");
 				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/SOULRemoveEffect"), kris.transform.position, Quaternion.identity);
 				cam.StartHitShake();
@@ -480,7 +480,7 @@ public class UndyneEndCutscene : CutsceneBase
 			{
 				susie.EnableAnimator();
 				susie.GetComponent<SpriteRenderer>().flipX = false;
-				SetSprite(noelle, "spr_no_think_right_panic", true);
+				SetSprite(noelle, "spr_no_think_right_panic", flipX: true);
 			}
 			if (frames == 45)
 			{
@@ -504,7 +504,7 @@ public class UndyneEndCutscene : CutsceneBase
 			{
 				if (AtLine(2))
 				{
-					SetSprite(susie, "spr_su_wtf", true);
+					SetSprite(susie, "spr_su_wtf", flipX: true);
 				}
 				else if (AtLine(3))
 				{
@@ -514,7 +514,7 @@ public class UndyneEndCutscene : CutsceneBase
 				{
 					ChangeDirection(undyne, Vector2.right);
 					SetSprite(noelle, "spr_no_surprise_left");
-					SetSprite(susie, "spr_su_surprise_right", true);
+					SetSprite(susie, "spr_su_surprise_right", flipX: true);
 					SetSprite(kris, "spr_kr_taunt_undyne_0");
 				}
 			}
@@ -524,7 +524,7 @@ public class UndyneEndCutscene : CutsceneBase
 				PlayAnimation(kris, "idle");
 				ChangeDirection(kris, Vector2.up);
 				state = 51;
-				SetSprite(noelle, "spr_no_panic_right", true);
+				SetSprite(noelle, "spr_no_panic_right", flipX: true);
 				GameObject.Find("Canvas").GetComponent<Canvas>().sortingOrder = 200;
 				StartText(new string[1] { oblit ? "* Kris,^05 stop!!!" : "* Kris,^05 wait!!!^05\n* Don't jump without\n  us!" }, new string[1] { "snd_txtnoe" }, new int[1], new string[1] { "no_scared" }, 0);
 				txt.Disable();
@@ -537,14 +537,14 @@ public class UndyneEndCutscene : CutsceneBase
 			{
 				greyDoor.sprite = Resources.Load<Sprite>("overworld/spr_grey_door_1");
 				PlaySFX("sounds/snd_elecdoor_shutheavy");
-				cam.SetFollowPlayer(false);
+				cam.SetFollowPlayer(follow: false);
 				frames = 45;
 			}
 			if (frames >= 45 && frames <= 65)
 			{
 				kris.GetComponent<Animator>().SetFloat("speed", 0f);
 				kris.GetComponent<Animator>().Play("RunUp", 0, 0f);
-				kris.transform.position = Vector3.Lerp(new Vector3(18.83f, -1.5f), new Vector3(18.83f, -2.3600001f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
+				kris.transform.position = Vector3.Lerp(new Vector3(18.83f, -1.5f), new Vector3(18.83f, -2.3600001f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
 			}
 			else if (frames >= 65 && frames <= 75)
 			{
@@ -568,7 +568,7 @@ public class UndyneEndCutscene : CutsceneBase
 			if (frames <= 15)
 			{
 				float num2 = (float)frames / 15f;
-				num2 = Mathf.Sin(num2 * (float)Math.PI * 0.5f);
+				num2 = Mathf.Sin(num2 * MathF.PI * 0.5f);
 				kris.transform.position = Vector3.Lerp(new Vector3(18.83f, -0.22f), new Vector3(18.83f, 0.45000002f), num2);
 			}
 			if (frames < 50)
@@ -633,11 +633,16 @@ public class UndyneEndCutscene : CutsceneBase
 			}
 			if (frames == 120)
 			{
-				PlayerPrefs.SetInt("CompletionState", 3);
+				PersistentSAVE.SetInt("completion", 3);
+				for (int i = 0; i < 6; i++)
+				{
+					PersistentSAVE.SetInt("last-saved-pm-" + i, gm.GetPartyMember(i));
+				}
+				PersistentSAVE.SetInt("kris-eye-title", gm.GetFlagInt(204));
 				gm.SetFramerate(60);
 				text = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("ui/zelda/TextZelda"), GameObject.Find("Canvas").transform).GetComponent<TextZelda>();
 				text.transform.localScale *= 2f;
-				text.StartTextBox(new string[1] { "To be continued..." }, false);
+				text.StartTextBox(new string[1] { "To be continued..." }, skipText: false);
 				state = 54;
 				frames = 0;
 			}
@@ -737,9 +742,9 @@ public class UndyneEndCutscene : CutsceneBase
 	{
 		base.StartCutscene(par);
 		RevokePlayerControl();
-		cam.SetFollowPlayer(false);
+		cam.SetFollowPlayer(follow: false);
 		ChangeDirection(kris, Vector2.right);
-		SetMoveAnim(kris, false);
+		SetMoveAnim(kris, isMoving: false);
 		knowAboutDestab = gm.GetFlagInt(154) != 0;
 		oblit = Util.GameManager().GetFlagInt(13) >= 10;
 		gm.UnlockMenu();

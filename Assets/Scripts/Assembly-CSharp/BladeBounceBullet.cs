@@ -29,7 +29,7 @@ public class BladeBounceBullet : BulletBase
 	public void SetValues(float speed, float angle)
 	{
 		base.transform.localEulerAngles = new Vector3(0f, 0f, angle);
-		dir = new Vector3(0f - Mathf.Sin(angle * ((float)Math.PI / 180f)), Mathf.Cos(angle * ((float)Math.PI / 180f))) / 48f;
+		dir = new Vector3(0f - Mathf.Sin(angle * (MathF.PI / 180f)), Mathf.Cos(angle * (MathF.PI / 180f))) / 48f;
 		this.speed = speed;
 	}
 }

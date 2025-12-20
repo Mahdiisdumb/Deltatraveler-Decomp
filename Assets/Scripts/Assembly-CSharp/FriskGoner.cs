@@ -21,7 +21,7 @@ public class FriskGoner : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<OverworldPlayer>())
+		if ((bool)collision && (bool)collision.GetComponent<OverworldPlayer>())
 		{
 			vanish = true;
 		}
@@ -29,7 +29,7 @@ public class FriskGoner : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<OverworldPlayer>())
+		if ((bool)collision && (bool)collision.GetComponent<OverworldPlayer>())
 		{
 			vanish = false;
 		}

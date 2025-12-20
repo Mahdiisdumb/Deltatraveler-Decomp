@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class CutsceneBase : TranslatableSelectableBehaviour
+public class CutsceneBase : SelectableBehaviour
 {
 	protected GameManager gm;
 
@@ -10,6 +10,8 @@ public class CutsceneBase : TranslatableSelectableBehaviour
 	protected int state;
 
 	protected bool isPlaying;
+
+	protected bool initialized;
 
 	protected TextBox txt;
 
@@ -25,6 +27,8 @@ public class CutsceneBase : TranslatableSelectableBehaviour
 
 	protected OverworldPlayer kris;
 
+	protected OverworldPlayer player;
+
 	protected OverworldPartyMember susie;
 
 	protected OverworldPartyMember noelle;
@@ -33,25 +37,29 @@ public class CutsceneBase : TranslatableSelectableBehaviour
 
 	protected void Awake()
 	{
-		stringSubFolder = "cutscene";
 		frames = 0;
 		state = 0;
-		cam = UnityEngine.Object.FindObjectOfType<CameraController>();
+		cam = Util.FindObjectOfType<CameraController>();
 		aud = base.gameObject.AddComponent<AudioSource>();
-		kris = UnityEngine.Object.FindObjectOfType<OverworldPlayer>();
-		susie = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
-		noelle = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
-		gm = UnityEngine.Object.FindObjectOfType<GameManager>();
-		fade = UnityEngine.Object.FindObjectOfType<Fade>();
+		kris = (player = Util.OverworldPlayer());
+		if ((bool)GameObject.Find("Susie"))
+		{
+			susie = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
+		}
+		if ((bool)GameObject.Find("Noelle"))
+		{
+			noelle = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
+		}
+		gm = Util.GameManager();
+		fade = Util.FindObjectOfType<Fade>();
 	}
 
 	public virtual void StartCutscene(params object[] par)
 	{
 		int num = 0;
-		SetStrings(GetDefaultStrings(), GetType());
-		if ((bool)UnityEngine.Object.FindObjectOfType<OverworldPlayer>())
+		if ((bool)Util.OverworldPlayer())
 		{
-			UnityEngine.Object.FindObjectOfType<OverworldPlayer>().SetCollision(false);
+			Util.OverworldPlayer().SetCollision(onoff: false);
 		}
 		try
 		{
@@ -70,7 +78,7 @@ public class CutsceneBase : TranslatableSelectableBehaviour
 			EndCutscene();
 			return;
 		}
-		gm.DisablePlayerMovement(true);
+		gm.DisablePlayerMovement(deactivatePartyMembers: true);
 		isPlaying = true;
 	}
 
@@ -84,9 +92,9 @@ public class CutsceneBase : TranslatableSelectableBehaviour
 		isPlaying = false;
 		if (enablePlayerMovement)
 		{
-			if ((bool)UnityEngine.Object.FindObjectOfType<OverworldPlayer>())
+			if ((bool)Util.OverworldPlayer())
 			{
-				UnityEngine.Object.FindObjectOfType<OverworldPlayer>().SetCollision(true);
+				Util.OverworldPlayer().SetCollision(onoff: true);
 			}
 			gm.EnablePlayerMovement();
 		}
@@ -99,23 +107,12 @@ public class CutsceneBase : TranslatableSelectableBehaviour
 		txt = new GameObject("CutsceneText").AddComponent<TextBox>();
 		if (pos == -1)
 		{
-			txt.CreateBox(text, sounds, speeds, false, portraits);
+			txt.CreateBox(text, sounds, speeds, giveBackControl: false, portraits);
 		}
 		else
 		{
-			txt.CreateBox(text, sounds, speeds, pos, false, portraits);
+			txt.CreateBox(text, sounds, speeds, pos, giveBackControl: false, portraits);
 		}
-	}
-
-	protected void StartText(TextSet textSet)
-	{
-		diagCheck = -1;
-		txt = new GameObject("CutsceneText").AddComponent<TextBox>();
-		if (textSet.location == -1)
-		{
-			textSet.location = 0;
-		}
-		txt.CreateBox(textSet);
 	}
 
 	protected void StartSelection(string optionA, string optionB, int defaultNextState, int pos)
@@ -129,7 +126,7 @@ public class CutsceneBase : TranslatableSelectableBehaviour
 				num = 310;
 			}
 			sels = txt.GetUIBox().AddComponent<Selection>();
-			sels.CreateSelections(new string[1, 2] { { optionA, optionB } }, new Vector2(-116f, -283 + num), new Vector2(192f, 0f), new Vector2(-15f, 94f), "DTM-Mono", true, false, this, defaultNextState);
+			sels.CreateSelections(new string[1, 2] { { optionA, optionB } }, new Vector2(-116f, -283 + num), new Vector2(192f, 0f), new Vector2(-15f, 94f), "DTM-Mono", useSoul: true, makeSound: false, this, defaultNextState);
 		}
 	}
 
@@ -285,18 +282,30 @@ public class CutsceneBase : TranslatableSelectableBehaviour
 
 	protected void RestorePlayerControl()
 	{
-		kris.SetSelfAnimControl(true);
-		susie.SetSelfAnimControl(true);
-		noelle.SetSelfAnimControl(true);
-		cam.SetFollowPlayer(true);
+		kris.SetSelfAnimControl(setAnimControl: true);
+		foreach (OverworldPartyMember partyMember in kris.GetPartyMembers())
+		{
+			partyMember.SetSelfAnimControl(setAnimControl: true);
+		}
+		cam.SetFollowPlayer(follow: true);
 	}
 
 	protected void RevokePlayerControl()
 	{
-		gm.DisablePlayerMovement(true);
-		kris.SetSelfAnimControl(false);
-		susie.SetSelfAnimControl(false);
-		noelle.SetSelfAnimControl(false);
-		cam.SetFollowPlayer(false);
+		gm.DisablePlayerMovement(deactivatePartyMembers: true);
+		kris.SetSelfAnimControl(setAnimControl: false);
+		foreach (OverworldPartyMember partyMember in kris.GetPartyMembers())
+		{
+			partyMember.SetSelfAnimControl(setAnimControl: false);
+		}
+		if ((bool)susie)
+		{
+			susie.SetSelfAnimControl(setAnimControl: false);
+		}
+		if ((bool)noelle)
+		{
+			noelle.SetSelfAnimControl(setAnimControl: false);
+		}
+		cam.SetFollowPlayer(follow: false);
 	}
 }

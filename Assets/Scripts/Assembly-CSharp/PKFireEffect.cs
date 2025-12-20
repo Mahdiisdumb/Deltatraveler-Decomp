@@ -26,7 +26,7 @@ public class PKFireEffect : SpecialAttackEffect
 			{
 				if (!enemies[num].IsDone())
 				{
-					enemies[num].Hit(3, 15f, true);
+					enemies[num].Hit(3, 15f, playSound: true);
 				}
 			}
 			else if (enemies.Length <= num)
@@ -71,6 +71,6 @@ public class PKFireEffect : SpecialAttackEffect
 	{
 		frames = 0;
 		damageEnemies = true;
-		enemies = Object.FindObjectOfType<BattleManager>().GetEnemies();
+		enemies = Util.FindObjectOfType<BattleManager>().GetEnemies();
 	}
 }

@@ -269,7 +269,7 @@ public class Gyftrot : EnemyBase
 		}
 		if (GetActNames()[i] == "N!Undecorate")
 		{
-			return Undecorate(false);
+			return Undecorate(susie: false);
 		}
 		if (GetActNames()[i] == "SN!Gift")
 		{
@@ -322,12 +322,12 @@ public class Gyftrot : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		switch (i)
 		{
 		case 1:
-			return Undecorate(true);
+			return Undecorate(susie: true);
 		case 2:
 			if (rage > 0)
 			{
@@ -336,7 +336,7 @@ public class Gyftrot : EnemyBase
 			}
 			return new string[1] { "* Noelle tried to calm Gyftrot\n  down.\n* Nothing happened." };
 		default:
-			return base.PerformAssistAct(i);
+			return base.PerformAssistAct_Old(i);
 		}
 	}
 
@@ -408,7 +408,7 @@ public class Gyftrot : EnemyBase
 
 	public override int CalculateDamage(int partyMember, float rawDmg, bool forceMagic = false)
 	{
-		if (partyMember == 2 && (bool)Object.FindObjectOfType<IceShock>())
+		if (partyMember == 2 && (bool)Util.FindObjectOfType<IceShock>())
 		{
 			return base.CalculateDamage(partyMember, rawDmg, forceMagic) / 10;
 		}

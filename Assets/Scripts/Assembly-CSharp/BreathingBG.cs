@@ -28,7 +28,7 @@ public class BreathingBG : MonoBehaviour
 		for (int i = 0; i < segments; i++)
 		{
 			GameObject obj = new GameObject("Segment" + i, typeof(SpriteRenderer));
-			obj.transform.SetParent(base.transform, false);
+			obj.transform.SetParent(base.transform, worldPositionStays: false);
 			obj.transform.localScale = new Vector3(1f, Mathf.Lerp(1f / (float)segments, 1f, (float)i / (float)segments));
 			SpriteRenderer component = obj.GetComponent<SpriteRenderer>();
 			component.sprite = Resources.Load<Sprite>("spr_pixel_bot");
@@ -47,9 +47,9 @@ public class BreathingBG : MonoBehaviour
 		}
 		num2 = num2 * num2 * num2 * (num2 * (6f * num2 - 15f) + 10f);
 		base.transform.localScale = Vector3.Lerp(new Vector3(700f, lowHeight, 1f), new Vector3(700f, highHeight, 1f), num2);
-		if ((bool)Object.FindObjectOfType<SOUL>() && soulColor)
+		if ((bool)Util.FindObjectOfType<SOUL>() && soulColor)
 		{
-			color = Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().color;
+			color = Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().color;
 			color.a = 8f / 85f;
 		}
 		SpriteRenderer[] componentsInChildren = GetComponentsInChildren<SpriteRenderer>();

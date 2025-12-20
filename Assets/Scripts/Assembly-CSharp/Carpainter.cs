@@ -29,12 +29,12 @@ public class Carpainter : EnemyBase
 		dyingTxt = new string[1] { "* Mr. Carpainter appears to be\n  losing motivation." };
 		satisfyTxt = flavorTxt;
 		actNames = new string[3] { "Talk", "SN!Convince", "S!Refuse" };
-		sActionName = "Talk";
-		nActionName = "Talk";
+		susieMiniACTs[0].SetName("Talk");
+		noelleMiniACTs[0].SetName("Talk");
 		defaultChatSize = "RightSmall";
 		exp = 1;
 		gold = 18;
-		geno = (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(13) >= 5;
+		geno = (int)Util.GameManager().GetFlag(13) >= 5;
 		canSpareViaFight = geno;
 		attacks = new int[2] { 38, 39 };
 	}
@@ -51,9 +51,9 @@ public class Carpainter : EnemyBase
 		if (!gotHit)
 		{
 			animFrames++;
-			float t = (Mathf.Cos((float)(animFrames * 12) * ((float)Math.PI / 180f)) + 1f) / 2f;
-			float t2 = (Mathf.Cos((float)((animFrames - 3) * 12) * ((float)Math.PI / 180f)) + 1f) / 2f;
-			float t3 = (Mathf.Cos((float)((animFrames - 6) * 12) * ((float)Math.PI / 180f)) + 1f) / 2f;
+			float t = (Mathf.Cos((float)(animFrames * 12) * (MathF.PI / 180f)) + 1f) / 2f;
+			float t2 = (Mathf.Cos((float)((animFrames - 3) * 12) * (MathF.PI / 180f)) + 1f) / 2f;
+			float t3 = (Mathf.Cos((float)((animFrames - 6) * 12) * (MathF.PI / 180f)) + 1f) / 2f;
 			GetPart("torso").transform.localPosition = new Vector3(0.059f, Mathf.Lerp(0.789f, 0.647f, t));
 			GetPart("torso").transform.Find("arms").localPosition = new Vector3(-0.061f, Mathf.Lerp(0.879f, 0.824f, t2));
 			GetPart("torso").transform.Find("arms").localScale = new Vector3(Mathf.Lerp(1f, 1.05f, t3), 1f, 1f);
@@ -68,17 +68,17 @@ public class Carpainter : EnemyBase
 			lookingForAvoid = true;
 			return new string[2] { "su_annoyed`snd_txtsus`* Keep your cult shit\n  away from us.", "* (Susie encouraged you to <color=#FFFF00FF>avoid\n  getting hit</color> this turn!)" };
 		}
-		if (GetActNames()[i] != "Check")
+		if (GetActNames()[i] != EnemyBase.CHECK_NAME)
 		{
 			int points = 5;
 			string text = "* You tried to convince\n  Mr. Carpainter away from\n  Happy-Happyism.";
 			string text2 = "* He seems to be listening.";
 			if (GetActNames()[i].StartsWith("SN!Convince"))
 			{
-				points = ((UnityEngine.Object.FindObjectOfType<GameManager>().GetMiniPartyMember() == 1) ? 20 : 15);
+				points = ((Util.GameManager().GetPartyMember(3) == 3) ? 20 : 15);
 				text = "* Everyone tried to convince\n  Mr. Carpainter away from\n  Happy-Happyism.";
 			}
-			else if (UnityEngine.Object.FindObjectOfType<GameManager>().GetMiniPartyMember() == 1)
+			else if (Util.GameManager().GetPartyMember(3) == 3)
 			{
 				text = "* Paula reminded Mr. Carpainter\n  of his sins.";
 				points = 10;
@@ -94,7 +94,7 @@ public class Carpainter : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		string text = "* You defied the laws of the\n  game and used K-ACTION.";
 		string text2 = "* He seems to be listening.";
@@ -123,7 +123,7 @@ public class Carpainter : EnemyBase
 			if (geno)
 			{
 				killed = false;
-				UnityEngine.Object.FindObjectOfType<BattleManager>().StopMusic();
+				Util.FindObjectOfType<BattleManager>().StopMusic();
 				exp = 100;
 				obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/" + enemyName.Replace(".", "") + "/spr_b_" + fileName + "_die_0");
 			}

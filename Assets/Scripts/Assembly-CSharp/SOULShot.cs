@@ -14,9 +14,9 @@ public class SOULShot : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<BulletBase>() && collision.GetComponent<BulletBase>().CanGetShot())
+		if ((bool)collision && (bool)collision.GetComponent<BulletBase>() && collision.GetComponent<BulletBase>().CanGetShot())
 		{
-			collision.GetComponent<BulletBase>().GetShot(false);
+			collision.GetComponent<BulletBase>().GetShot(bigshot: false);
 			Object.Destroy(base.gameObject);
 		}
 	}

@@ -19,8 +19,8 @@ public class TorielConfrontationCutscene : CutsceneBase
 			susie.transform.position = Vector3.Lerp(new Vector3(0.77f, -2.73f), new Vector3(0.77f, -1.78f), (float)frames / 20f);
 			if (frames == 20)
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", false);
-				susie.GetComponent<Animator>().SetBool("isMoving", false);
+				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 			}
 			if (frames == 50)
 			{
@@ -92,7 +92,7 @@ public class TorielConfrontationCutscene : CutsceneBase
 				if (frames == 50)
 				{
 					susie.DisableAnimator();
-					susie.SetSprite("spr_su_left_unhappy_0");
+					susie.SetSprite("unhappy/spr_su_left_0_unhappy");
 					kris.GetComponent<SpriteRenderer>().enabled = false;
 					toriel.Play("GrabKris");
 				}
@@ -242,8 +242,8 @@ public class TorielConfrontationCutscene : CutsceneBase
 				}
 				if (frames == 61)
 				{
-					kris.SetSelfAnimControl(true);
-					susie.SetSelfAnimControl(true);
+					kris.SetSelfAnimControl(setAnimControl: true);
+					susie.SetSelfAnimControl(setAnimControl: true);
 					kris.ChangeDirection(Vector2.down);
 					gm.SetFlag(1, "smirk");
 					gm.SetCheckpoint(14, new Vector3(91.8f, 0.6f));
@@ -292,12 +292,12 @@ public class TorielConfrontationCutscene : CutsceneBase
 		{
 			toriel.transform.position = Vector3.zero;
 			gm.StopMusic(10f);
-			kris.SetSelfAnimControl(false);
-			susie.SetSelfAnimControl(false);
+			kris.SetSelfAnimControl(setAnimControl: false);
+			susie.SetSelfAnimControl(setAnimControl: false);
 			kris.ChangeDirection(Vector2.up);
 			susie.ChangeDirection(Vector2.up);
-			kris.GetComponent<Animator>().SetBool("isMoving", true);
-			susie.GetComponent<Animator>().SetBool("isMoving", true);
+			kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+			susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 		}
 	}
 }

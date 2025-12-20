@@ -39,7 +39,7 @@ public class BlueCultist : EnemyBase
 		defaultChatSize = "RightSmall";
 		exp = 1;
 		gold = 12;
-		geno = (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(13) >= 4;
+		geno = (int)Util.GameManager().GetFlag(13) >= 4;
 		attacks = new int[2] { 35, 36 };
 	}
 
@@ -96,7 +96,7 @@ public class BlueCultist : EnemyBase
 		else if (!gotHit)
 		{
 			animFrames++;
-			float t = (Mathf.Cos((float)(animFrames * 12) * ((float)Math.PI / 180f)) + 1f) / 2f;
+			float t = (Mathf.Cos((float)(animFrames * 12) * (MathF.PI / 180f)) + 1f) / 2f;
 			GetPart("body").transform.localPosition = new Vector3(-0.209f, Mathf.Lerp(0.922f, 1.041f, t));
 			GetPart("body").transform.Find("leftarm").eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(-8.102f, 0f, t));
 			GetPart("body").transform.Find("rightarm").eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(-8.677f, 0f, t));
@@ -107,7 +107,7 @@ public class BlueCultist : EnemyBase
 	public override void Hit(int partyMember, float rawDmg, bool playSound)
 	{
 		base.Hit(partyMember, rawDmg, playSound);
-		if (!UnityEngine.Object.FindObjectOfType<IceShock>())
+		if (!Util.FindObjectOfType<IceShock>())
 		{
 			Util.GameManager().SetFlag(129, 0);
 		}
@@ -117,7 +117,7 @@ public class BlueCultist : EnemyBase
 		}
 		if (geno)
 		{
-			BlueCultist[] array = UnityEngine.Object.FindObjectsOfType<BlueCultist>();
+			BlueCultist[] array = Util.FindObjectsOfType<BlueCultist>();
 			for (int i = 0; i < array.Length; i++)
 			{
 				array[i].SetToWorry();
@@ -136,7 +136,7 @@ public class BlueCultist : EnemyBase
 	{
 		if (GetActNames()[i] == "Paint")
 		{
-			bool flag = Util.GameManager().GetMiniPartyMember() == 1;
+			bool flag = Util.GameManager().GetPartyMember(3) == 3;
 			if (satisfied < 100)
 			{
 				AddActPoints(flag ? 75 : 25);
@@ -144,12 +144,12 @@ public class BlueCultist : EnemyBase
 			if (!painted)
 			{
 				string text = "";
-				if ((int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(102) == 1)
+				if ((int)Util.GameManager().GetFlag(102) == 1)
 				{
 					text = "_injured";
 				}
-				UnityEngine.Object.FindObjectOfType<PartyPanels>().SetSprite(0, "spr_kr_paintedblue" + text);
-				UnityEngine.Object.FindObjectOfType<PartyPanels>().SetSprite(3, "spr_paula_paintedblue");
+				Util.FindObjectOfType<PartyPanels>().SetSprite(0, "spr_kr_paintedblue" + text);
+				Util.FindObjectOfType<PartyPanels>().SetSprite(3, "spr_paula_paintedblue");
 				painted = true;
 				return new string[1] { flag ? "* You and Paula painted your\n  whole bodies blue." : "* You painted your whole body\n  blue." };
 			}
@@ -168,7 +168,7 @@ public class BlueCultist : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		switch (i)
 		{
@@ -179,7 +179,7 @@ public class BlueCultist : EnemyBase
 			AddActPoints(25);
 			return new string[1] { "* Noelle performed some ice\n  magic.\n* The cultist seemed impressed." };
 		default:
-			return base.PerformAssistAct(i);
+			return base.PerformAssistAct_Old(i);
 		}
 	}
 

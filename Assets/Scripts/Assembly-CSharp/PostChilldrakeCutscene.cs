@@ -45,7 +45,7 @@ public class PostChilldrakeCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				SetMoveAnim(qc, true);
+				SetMoveAnim(qc, isMoving: true);
 				ChangeDirection(qc, Vector2.right);
 			}
 			float x = Mathf.Lerp(38f, 38.518f, (float)frames / 6f);
@@ -84,7 +84,7 @@ public class PostChilldrakeCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				Object.FindObjectOfType<DeepMazeEventHandler>().EndOfEpisode5(false);
+				Util.FindObjectOfType<DeepMazeEventHandler>().EndOfEpisode5(relativeBunny: false);
 			}
 			if (!MoveTo(cam, cam.GetClampedPos(), 2f))
 			{
@@ -101,7 +101,7 @@ public class PostChilldrakeCutscene : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		qc = Object.FindObjectOfType<QCEnd>().GetComponent<Animator>();
+		qc = Util.FindObjectOfType<QCEnd>().GetComponent<Animator>();
 		Object.Destroy(qc.GetComponent<QCEnd>());
 		RevokePlayerControl();
 		endState = int.Parse(par[0].ToString());

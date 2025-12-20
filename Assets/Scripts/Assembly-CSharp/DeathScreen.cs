@@ -1,10 +1,20 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class DeathScreen : TranslatableBehaviour
+public class DeathScreen : MonoBehaviour
 {
+	private enum Character
+	{
+		Ralsei = 0,
+		Susie = 1,
+		Noelle = 2,
+		Asgore = 3,
+		GasterHardmode = 4,
+		SusieBomb = 5,
+		SusieBaseball = 6
+	}
+
 	private int frames;
 
 	private int stateText;
@@ -21,79 +31,85 @@ public class DeathScreen : TranslatableBehaviour
 
 	private int skipInputs;
 
-	private int character;
-
-	private string asgorePhrase = "Bepis";
-
 	private bool hardmode;
 
-	public override Dictionary<string, string[]> GetDefaultStrings()
+	private Character character;
+
+	private static readonly string[] DIALOG_RALSEI = new string[2] { "snd_txtral`This is not \nyour fate...!", "snd_txtral`Please,^20\ndon't give up!" };
+
+	private static readonly string[] DIALOG_SUSIE = new string[2] { "snd_txtsus`Come on,^20\nthat all you got!?", "snd_txtsus`Kris,^20\nget up...!" };
+
+	private static readonly string[] DIALOG_NOELLE = new string[2] { "snd_txtnoe`Kris,^20 are you \nokay?!", "snd_txtnoe`Please,^20\nwake up...!" };
+
+	private static readonly string[] DIALOG_ASGORE = new string[3] { "snd_txtasg`{0}", "snd_txtasg`{1}!^20\nStay determined...", "`" };
+
+	private static readonly string[] DIALOG_GASTER_HARDMODE = new string[3] { "#v_gaster_death_hm_0`THIS CONCLUDES OUR \n\"FRISK\" EXPERIMENT.", "#v_gaster_death_hm_1`THIS SHALL NOT \nENTER ANY OTHER \nWORLDS.", "#v_gaster_death_hm_2`THANK YOU FOR \nYOUR PARTICIPATION." };
+
+	private static readonly string[] DIALOG_SUSIE_BOMB = new string[2] { "snd_txtsus`Kris,^10 why did \nyou push that??!", "snd_txtsus`You can get up,^10 \nright???^20\nKRIS???" };
+
+	private static readonly string[] DIALOG_SUSIE_BASEBALL = new string[3] { "snd_txtsus`Holy shit,^10 that's \na home run!", "snd_txtsus`...", "snd_txtsus`I hope you're \nhappy,^10 Kris." };
+
+	private static readonly string[] ASGORE_PHRASES = new string[5] { "You cannot give \nup just yet...", "Our fate rests \nupon you...", "You're going to \nbe alright!", "Don't lose hope!", "It cannot end \nnow!" };
+
+	private string[] GetDialogue()
 	{
-		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
-		dictionary.Add("ralsei", new string[2] { "This is not \nyour fate...!", "Please,^20\ndon't give up!" });
-		dictionary.Add("susie", new string[2] { "Come on,^20\nthat all you got!?", "Kris,^20\nget up...!" });
-		dictionary.Add("noelle", new string[2] { "Kris,^20 are you \nokay?!", "Please,^20\nwake up...!" });
-		dictionary.Add("asgore", new string[3] { "{0}", "Frisk!^20\nStay determined...", "" });
-		dictionary.Add("gaster_hardmode", new string[3] { "THIS CONCLUDES OUR \n\"FRISK\" EXPERIMENT.", "THIS SHALL NOT \nENTER ANY OTHER \nWORLDS.", "THANK YOU FOR \nYOUR PARTICIPATION." });
-		dictionary.Add("susie_bomb", new string[2] { "Kris,^10 why did \nyou push that??!", "You can get up,^10 \nright???^20\nKRIS???" });
-		dictionary.Add("susie_baseball", new string[3] { "Holy shit,^10 that's \na home run!", "...", "I hope you're \nhappy,^10 Kris." });
-		dictionary.Add("asgore_phrases", new string[5] { "You cannot give \nup just yet...", "Our fate rests \nupon you...", "You're going to \nbe alright!", "Don't lose hope!", "It cannot end \nnow!" });
-		dictionary.Add("flowey_susie", new string[3] { "Kris,^20 this is just \na bad dream...", "And you're NEVER \nwaking up!", "Why don't you SAVE \nnext time,^05 idiot?!" });
-		dictionary.Add("flowey_asgore", new string[3] { "This is all just \na bad dream...", "And you're NEVER \nwaking up!", "Why don't you SAVE \nnext time,^05 idiot?!" });
-		return dictionary;
+		return character switch
+		{
+			Character.Ralsei => DIALOG_RALSEI, 
+			Character.Susie => DIALOG_SUSIE, 
+			Character.Noelle => DIALOG_NOELLE, 
+			Character.Asgore => Localizer.FormatArray(DIALOG_ASGORE, ASGORE_PHRASES[Random.Range(0, ASGORE_PHRASES.Length)], hardmode ? "Frisk" : "Chara"), 
+			Character.GasterHardmode => DIALOG_GASTER_HARDMODE, 
+			Character.SusieBomb => DIALOG_SUSIE_BOMB, 
+			Character.SusieBaseball => DIALOG_SUSIE_BASEBALL, 
+			_ => new string[1] { "snd_text`Bepis" }, 
+		};
 	}
 
 	private void Awake()
 	{
-		SetStrings(GetDefaultStrings(), GetType());
 		text = base.gameObject.GetComponent<TextUT>();
 		text.SetLetterSpacing(15.3825f);
 		frames = 0;
 		done = false;
-		character = Random.Range(0, 3);
-		hardmode = (int)Object.FindObjectOfType<GameManager>().GetFlag(108) == 1;
+		character = (Character)Random.Range(0, 3);
+		hardmode = (int)Util.GameManager().GetFlag(108) == 1;
 		toTitle = (int)Util.GameManager().GetFlag(128) == 1;
 		toCredits = Util.GameManager().GetEnding() == 0;
 		if ((int)Util.GameManager().GetSessionFlag(7) <= -1)
 		{
 			if (toCredits && hardmode)
 			{
-				character = 4;
+				character = Character.GasterHardmode;
 			}
-			else if (hardmode || (int)Util.GameManager().GetFlag(107) == 1)
+			else if (hardmode || Util.GameManager().GetPartyMember(0) == 6)
 			{
-				character = 3;
-				string[] stringArray = GetStringArray("asgore_phrases");
-				asgorePhrase = stringArray[Random.Range(0, stringArray.Length)];
+				character = Character.Asgore;
 			}
-			else if ((character == 1 && !Object.FindObjectOfType<GameManager>().SusieInParty()) || (character == 2 && !Object.FindObjectOfType<GameManager>().NoelleInParty()))
+			else if ((character == Character.Susie && !Util.GameManager().SusieInParty()) || (character == Character.Noelle && !Util.GameManager().NoelleInParty()))
 			{
-				character = 0;
+				character = Character.Ralsei;
 			}
 		}
 		else
 		{
-			character = (int)Util.GameManager().GetSessionFlag(7);
+			character = (Character)Util.GameManager().GetSessionFlagInt(7);
 		}
 		if (hardmode)
 		{
 			GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("music/mus_gameover");
-			GetComponent<Image>().sprite = Util.PackManager().GetTranslatedSprite(Resources.Load<Sprite>("ui/spr_gameover_ut"), "ui/spr_gameover_ut");
-		}
-		else
-		{
-			GetComponent<Image>().sprite = Util.PackManager().GetTranslatedSprite(GetComponent<Image>().sprite, "ui/spr_gameover");
+			GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/spr_gameover_ut");
 		}
 	}
 
 	private void Start()
 	{
-		Object.FindObjectOfType<Fade>().transform.parent.position = Vector3.zero;
+		Util.FindObjectOfType<Fade>().transform.parent.position = Vector3.zero;
 		GameObject obj = new GameObject("SOUL");
 		obj.AddComponent<SOUL>();
-		obj.GetComponent<SOUL>().CreateSOUL(SOUL.GetSOULColorByID(Util.GameManager().GetFlagInt(312)), false, false);
-		obj.transform.position = Object.FindObjectOfType<GameManager>().GetSpawnPos();
-		numDeaths = Object.FindObjectOfType<GameManager>().GetNumDeaths();
+		obj.GetComponent<SOUL>().CreateSOUL(SOUL.GetSOULColorByID(Util.GameManager().GetFlagInt(312)), monster: false, player: false);
+		obj.transform.position = Util.GameManager().GetSpawnPos();
+		numDeaths = Util.GameManager().GetNumDeaths();
 	}
 
 	private void Update()
@@ -106,27 +122,27 @@ public class DeathScreen : TranslatableBehaviour
 			}
 			if (skipInputs >= 20 && !toTitle && !toCredits)
 			{
-				Object.FindObjectOfType<GameManager>().SpawnFromLastSave(true);
+				Util.GameManager().SpawnFromLastSave(respawn: true);
 			}
-			if ((frames < 182 && character != 4) || (character == 4 && frames < 120))
+			if ((frames < 182 && character != Character.GasterHardmode) || (character == Character.GasterHardmode && frames < 120))
 			{
 				frames++;
 				if (frames == 19 && (bool)GameObject.Find("SOUL"))
 				{
 					GameObject.Find("SOUL").GetComponent<SOUL>().Break();
 				}
-				if (toTitle && character != 4)
+				if (toTitle && character != Character.GasterHardmode)
 				{
 					if (frames == 120)
 					{
-						Object.FindObjectOfType<Fade>().FadeOut(15, Color.black);
+						Util.FindObjectOfType<Fade>().FadeOut(15, Color.black);
 					}
 					if (frames == 135)
 					{
 						SceneManager.LoadScene(6, LoadSceneMode.Single);
 					}
 				}
-				else if (character != 4)
+				else if (character != Character.GasterHardmode)
 				{
 					if (frames == 90)
 					{
@@ -139,14 +155,8 @@ public class DeathScreen : TranslatableBehaviour
 				}
 				return;
 			}
-			string[] array = new string[7] { "ralsei", "susie", "noelle", "asgore", "gaster_hardmode", "susie_bomb", "susie_baseball" };
-			string[] array2 = new string[7] { "snd_txtral", "snd_txtsus", "snd_txtnoe", "snd_txtasg", "snd_txtgas", "snd_txtsus", "snd_txtsus" };
-			string[] stringArrayFormatted = GetStringArrayFormatted(array[character], asgorePhrase);
-			if (!hardmode && character == 3)
-			{
-				stringArrayFormatted[1] = stringArrayFormatted[1].Replace("Frisk", "Chara");
-			}
-			if (stateText >= stringArrayFormatted.Length)
+			string[] dialogue = GetDialogue();
+			if (stateText >= dialogue.Length)
 			{
 				done = true;
 				frames = 0;
@@ -161,7 +171,8 @@ public class DeathScreen : TranslatableBehaviour
 			}
 			else
 			{
-				text.StartText(stringArrayFormatted[stateText], new Vector2(102f, -148f), array2[character], 1, "DTM-Mono");
+				string[] array = dialogue[stateText].Split('`');
+				text.StartText(array[1], new Vector2(102f, -148f), array[0], 1, "DTM-Mono");
 			}
 		}
 		else
@@ -172,13 +183,13 @@ public class DeathScreen : TranslatableBehaviour
 				GetComponent<Image>().color = Color.Lerp(Color.white, new Color(1f, 1f, 1f, 0f), (float)frames / 34f);
 			}
 			GetComponent<AudioSource>().volume = Mathf.Lerp(1f, 0f, (float)frames / 50f);
-			if (frames == 15 && toCredits && character == 4)
+			if (frames == 15 && toCredits && character == Character.GasterHardmode)
 			{
 				SceneManager.LoadScene(131, LoadSceneMode.Single);
 			}
 			else if (frames == 60)
 			{
-				Object.FindObjectOfType<GameManager>().SpawnFromLastSave(true);
+				Util.GameManager().SpawnFromLastSave(respawn: true);
 			}
 		}
 	}

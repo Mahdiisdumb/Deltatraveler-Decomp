@@ -8,9 +8,9 @@ public class PorkyDeath : AttackBase
 		maxFrames = 5000;
 		bbPos = new Vector2(0f, -2.37f);
 		bbSize = new Vector2(575f, 140f);
-		Object.FindObjectOfType<PartyPanels>().DeactivateTargets();
-		Object.FindObjectOfType<PartyPanels>().RaiseHeads(true, false, false);
-		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
+		Util.FindObjectOfType<PartyPanels>().DeactivateTargets();
+		Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: true, susie: false, noelle: false);
+		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
 	}
 
 	protected override void Update()
@@ -20,9 +20,9 @@ public class PorkyDeath : AttackBase
 			frames++;
 			if (frames == 150)
 			{
-				Object.FindObjectOfType<GameManager>().AddEXP(250);
-				Object.FindObjectOfType<PartyPanels>().UpdateHP(Object.FindObjectOfType<GameManager>().GetHPArray());
-				Object.FindObjectOfType<BattleManager>().FadeEndBattle(1);
+				Util.GameManager().AddEXP(250);
+				Util.FindObjectOfType<PartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
+				Util.FindObjectOfType<BattleManager>().FadeEndBattle(1);
 			}
 		}
 	}
@@ -30,6 +30,6 @@ public class PorkyDeath : AttackBase
 	public override void StartAttack()
 	{
 		base.StartAttack();
-		Object.FindObjectOfType<Porky>().Explode();
+		Util.FindObjectOfType<Porky>().Explode();
 	}
 }

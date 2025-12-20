@@ -16,53 +16,53 @@ public class PreChilldrakeCutscene : CutsceneBase
 			if (!revoked)
 			{
 				RevokePlayerControl();
-				cam.SetFollowPlayer(true);
+				cam.SetFollowPlayer(follow: true);
 				revoked = true;
 			}
 			if (flag)
 			{
 				ChangeDirection(qc, Vector2.right);
-				SetMoveAnim(qc, true);
+				SetMoveAnim(qc, isMoving: true);
 				Vector2 vector = qc.transform.position - kris.transform.position;
 				ChangeDirection(direction: (!(Mathf.Abs(vector.x) > Mathf.Abs(vector.y))) ? ((vector.y > 0f) ? Vector2.up : Vector2.down) : ((vector.x > 0f) ? Vector2.right : Vector2.left), obj: kris);
 				if (susie.transform.position.y > -16.91f)
 				{
 					ChangeDirection(susie, Vector2.down);
-					SetMoveAnim(susie, true);
+					SetMoveAnim(susie, isMoving: true);
 					MoveTo(susie, new Vector3(susie.transform.position.x, -16.91f), 6f);
 				}
 				else if (susie.transform.position.y < -18.83f)
 				{
 					ChangeDirection(susie, Vector2.up);
-					SetMoveAnim(susie, true);
+					SetMoveAnim(susie, isMoving: true);
 					MoveTo(susie, new Vector3(susie.transform.position.x, -18.83f), 6f);
 				}
 				else
 				{
 					ChangeDirection(susie, qc.transform.position - susie.transform.position);
-					SetMoveAnim(susie, false);
+					SetMoveAnim(susie, isMoving: false);
 				}
 				if (noelle.transform.position.y > -16.05f)
 				{
 					ChangeDirection(noelle, Vector2.down);
-					SetMoveAnim(noelle, true);
+					SetMoveAnim(noelle, isMoving: true);
 					MoveTo(noelle, new Vector3(noelle.transform.position.x, -16.05f), 6f);
 				}
 				else if (noelle.transform.position.y < -19.27f)
 				{
 					ChangeDirection(noelle, Vector2.up);
-					SetMoveAnim(noelle, true);
+					SetMoveAnim(noelle, isMoving: true);
 					MoveTo(noelle, new Vector3(noelle.transform.position.x, -19.27f), 6f);
 				}
 				else
 				{
 					ChangeDirection(noelle, qc.transform.position - noelle.transform.position);
-					SetMoveAnim(noelle, false);
+					SetMoveAnim(noelle, isMoving: false);
 				}
 			}
 			else
 			{
-				SetMoveAnim(qc, false);
+				SetMoveAnim(qc, isMoving: false);
 			}
 			if (flag)
 			{
@@ -74,36 +74,36 @@ public class PreChilldrakeCutscene : CutsceneBase
 			if (num)
 			{
 				ChangeDirection(kris, Vector2.right);
-				SetMoveAnim(kris, true);
+				SetMoveAnim(kris, isMoving: true);
 			}
 			else
 			{
-				SetMoveAnim(kris, false);
+				SetMoveAnim(kris, isMoving: false);
 			}
 			if (flag2)
 			{
 				ChangeDirection(susie, Vector2.right);
-				SetMoveAnim(susie, true);
+				SetMoveAnim(susie, isMoving: true);
 			}
 			else
 			{
-				SetMoveAnim(susie, false);
+				SetMoveAnim(susie, isMoving: false);
 			}
 			if (flag3)
 			{
 				ChangeDirection(noelle, Vector2.right);
-				SetMoveAnim(noelle, true);
+				SetMoveAnim(noelle, isMoving: true);
 			}
 			else
 			{
-				SetMoveAnim(noelle, false);
+				SetMoveAnim(noelle, isMoving: false);
 			}
 			if (!num && !flag2 && !flag3 && !flag)
 			{
 				frames++;
 				if (frames == 12)
 				{
-					cam.SetFollowPlayer(false);
+					cam.SetFollowPlayer(follow: false);
 					gm.StopMusic();
 					PlaySFX("sounds/snd_hurtdragon");
 					SetSprite(kris, "spr_kr_surprise");
@@ -217,7 +217,7 @@ public class PreChilldrakeCutscene : CutsceneBase
 			}
 			if ((int)Util.GameManager().GetFlag(178) == 1)
 			{
-				TorchHolder[] array = Object.FindObjectsOfType<TorchHolder>();
+				TorchHolder[] array = Util.FindObjectsOfType<TorchHolder>();
 				foreach (TorchHolder torchHolder in array)
 				{
 					if (torchHolder.GetHolderID() == 3)
@@ -228,7 +228,7 @@ public class PreChilldrakeCutscene : CutsceneBase
 			}
 			susie.EnableAnimator();
 			kris.InitiateBattle(65);
-			EndCutscene(false);
+			EndCutscene(enablePlayerMovement: false);
 		}
 	}
 
@@ -247,7 +247,7 @@ public class PreChilldrakeCutscene : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		qc = Object.FindObjectOfType<QCEnd>().GetComponent<Animator>();
+		qc = Util.FindObjectOfType<QCEnd>().GetComponent<Animator>();
 		feraldrake = GameObject.Find("Chilldrake").GetComponent<Animator>();
 		StartText(new string[2]
 		{

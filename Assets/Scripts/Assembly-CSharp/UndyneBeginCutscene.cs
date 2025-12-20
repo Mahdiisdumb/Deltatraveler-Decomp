@@ -32,11 +32,11 @@ public class UndyneBeginCutscene : CutsceneBase
 			{
 				ChangeDirection(noelle, Vector2.right);
 				noelle.transform.position += new Vector3(1f / 12f, 0f);
-				SetMoveAnim(noelle, true);
+				SetMoveAnim(noelle, isMoving: true);
 			}
 			else
 			{
-				SetMoveAnim(noelle, false);
+				SetMoveAnim(noelle, isMoving: false);
 				ChangeDirection(noelle, Vector2.up);
 			}
 			if (MoveTo(cam, new Vector3(cam.transform.position.x, 3.34f, -10f), 4f))
@@ -51,12 +51,12 @@ public class UndyneBeginCutscene : CutsceneBase
 					gm.PlayMusic("music/mus_undynescary");
 				}
 				undyne.GetComponent<AudioSource>().volume = (14.2f - undyne.transform.position.x) / 4f;
-				SetMoveAnim(undyne, true);
+				SetMoveAnim(undyne, isMoving: true);
 				ChangeDirection(undyne, Vector2.left);
 			}
 			else
 			{
-				SetMoveAnim(undyne, false);
+				SetMoveAnim(undyne, isMoving: false);
 				state = 1;
 				frames = 0;
 			}
@@ -109,7 +109,7 @@ public class UndyneBeginCutscene : CutsceneBase
 				{
 					gm.StopMusic();
 					SetSprite(noelle, "spr_no_surprise");
-					SetSprite(susie, "spr_su_wtf", true);
+					SetSprite(susie, "spr_su_wtf", flipX: true);
 					SetSprite(kris, "spr_kr_surprise");
 				}
 				else if (AtLine(5))
@@ -153,13 +153,13 @@ public class UndyneBeginCutscene : CutsceneBase
 				}
 				SetSprite(noelle, "spr_no_surprise_up");
 				SetSprite(susie, "spr_su_surprise_up");
-				SetSprite(kris, "spr_kr_surprise_upright", true);
-				SetMoveAnim(undyne, true, 0.75f);
+				SetSprite(kris, "spr_kr_surprise_upright", flipX: true);
+				SetMoveAnim(undyne, isMoving: true, 0.75f);
 			}
 			if (!MoveTo(undyne, new Vector3(5.26f, 5.374f), 2f))
 			{
 				help++;
-				SetMoveAnim(undyne, false);
+				SetMoveAnim(undyne, isMoving: false);
 				if (help == 20)
 				{
 					StartText(new string[7] { "* The COPS are after you,^05\n  huh?", "* I bet you two are also\n  harboring a HUMAN,^05 too!", "* I-^05I...^10 uhhm...", "* Now,^05 I want you two to\n  very carefully move the\n  human out of that kelp.", "* Yeah?^05\n* Or what?", "* Or else I'll go in there\n  and rip out its SOUL\n  myself!", "* Yeah,^05 well,^05 uhh..." }, new string[7] { "snd_txtund", "snd_txtund", "snd_txtnoe", "snd_txtund", "snd_txtsus", "snd_txtund", "snd_txtsus" }, new int[1], new string[7] { "und_helm", "und_helm", "no_shocked", "und_helm", "su_annoyed", "und_helm", "su_smirk_sweat" }, 0);
@@ -206,7 +206,7 @@ public class UndyneBeginCutscene : CutsceneBase
 				noelle.transform.position = new Vector3(0f, 100f);
 				susie.transform.position += new Vector3(5f / 12f, 0f);
 				PlayAnimation(susie, "DragKrisNoelle", 0f);
-				Object.FindObjectOfType<UndyneShadow>().transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+				Util.FindObjectOfType<UndyneShadow>().transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
 			}
 			if (frames == 20)
 			{
@@ -254,7 +254,7 @@ public class UndyneBeginCutscene : CutsceneBase
 						undyne.transform.position = new Vector3(5.26f, 0f);
 						undyne.enabled = true;
 						ChangeDirection(undyne, Vector2.right);
-						SetMoveAnim(undyne, true);
+						SetMoveAnim(undyne, isMoving: true);
 						undyne.GetComponent<BoxCollider2D>().enabled = true;
 						undyne.transform.Find("shadow").GetComponent<SpriteRenderer>().enabled = true;
 						undyneGround = true;
@@ -267,7 +267,7 @@ public class UndyneBeginCutscene : CutsceneBase
 			}
 			if (frames == 100)
 			{
-				gm.LoadArea(125, true, new Vector2(-7.11f, -0.73f), Vector2.right);
+				gm.LoadArea(125, fadeIn: true, new Vector2(-7.11f, -0.73f), Vector2.right);
 			}
 		}
 	}
@@ -275,7 +275,7 @@ public class UndyneBeginCutscene : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		Object.FindObjectOfType<OverworldPlayer>().SetCollision(true);
+		Util.OverworldPlayer().SetCollision(onoff: true);
 		undyne = GameObject.Find("Undyne").GetComponent<Animator>();
 		undyne.transform.position = new Vector3(14.2f, 6.38f);
 		gm.SetSessionFlag(18, 0);

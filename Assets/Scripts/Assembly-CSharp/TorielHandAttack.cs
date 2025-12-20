@@ -23,7 +23,7 @@ public class TorielHandAttack : TorielAttackBase
 		}
 		if (frames >= 8 && frames <= 56 && frames % 4 == 0)
 		{
-			Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_noise");
+			Util.GameManager().PlayGlobalSFX("sounds/snd_noise");
 			flames.Add(Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/hardmode/BouncingFlameBullet"), hand.transform.position, Quaternion.identity, base.transform).GetComponent<BouncingFlameBullet>());
 		}
 		if (frames == 56)
@@ -32,7 +32,7 @@ public class TorielHandAttack : TorielAttackBase
 			{
 				if (flames[i] != null)
 				{
-					flames[i].SetBaseDamage(Object.FindObjectOfType<PartyPanels>().GetTargettedMembers()[0] ? 2 : 5);
+					flames[i].SetBaseDamage(Util.FindObjectOfType<PartyPanels>().GetTargettedMembers()[0] ? 2 : 5);
 				}
 			}
 		}

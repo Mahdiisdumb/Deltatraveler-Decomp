@@ -32,7 +32,7 @@ public class WalkingBunnies : InteractTextBox
 
 	private void Start()
 	{
-		player = Object.FindObjectOfType<OverworldPlayer>();
+		player = Util.OverworldPlayer();
 	}
 
 	protected override void Update()

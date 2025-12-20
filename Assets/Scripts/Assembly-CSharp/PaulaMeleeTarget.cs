@@ -26,7 +26,7 @@ public class PaulaMeleeTarget : MonoBehaviour
 	{
 		int childCount = base.transform.childCount;
 		bars = new FakeTargetBar[childCount];
-		superFast = Object.FindObjectOfType<NessDeathAttack>();
+		superFast = Util.FindObjectOfType<NessDeathAttack>();
 		for (int i = 0; i < childCount; i++)
 		{
 			bars[i] = base.transform.GetChild(i).GetComponent<FakeTargetBar>();
@@ -49,9 +49,9 @@ public class PaulaMeleeTarget : MonoBehaviour
 				{
 					GetComponent<AudioSource>().Play();
 				}
-				if ((bool)Object.FindObjectOfType<AttackBase>())
+				if ((bool)Util.FindObjectOfType<AttackBase>())
 				{
-					PaulaMeleeBullet component = Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/nesspaula/PaulaMeleeBullet"), Object.FindObjectOfType<SOUL>().transform.position, Quaternion.identity, Object.FindObjectOfType<AttackBase>().transform).GetComponent<PaulaMeleeBullet>();
+					PaulaMeleeBullet component = Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/nesspaula/PaulaMeleeBullet"), Util.FindObjectOfType<SOUL>().transform.position, Quaternion.identity, Util.FindObjectOfType<AttackBase>().transform).GetComponent<PaulaMeleeBullet>();
 					if (perfect)
 					{
 						component.ToggleHard();
@@ -119,7 +119,7 @@ public class PaulaMeleeTarget : MonoBehaviour
 				flag = true;
 			}
 			float speed = 0.2f;
-			if (!Object.FindObjectOfType<PaulaRandomPatternsAttack>())
+			if (!Util.FindObjectOfType<PaulaRandomPatternsAttack>())
 			{
 				if (perfect)
 				{
@@ -134,7 +134,7 @@ public class PaulaMeleeTarget : MonoBehaviour
 			{
 				speed = 0.175f;
 			}
-			bars[i].Activate(perfect ? 0f : ((float)num3 * 0.2f), num, true, speed);
+			bars[i].Activate(perfect ? 0f : ((float)num3 * 0.2f), num, quadSounds: true, speed);
 			int num4 = Random.Range(3, 6) * 2;
 			if (num4 == 8 && num2 < 2)
 			{

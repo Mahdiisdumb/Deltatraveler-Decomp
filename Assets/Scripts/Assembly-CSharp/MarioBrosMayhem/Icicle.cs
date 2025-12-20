@@ -33,7 +33,7 @@ namespace MarioBrosMayhem
 
 		private void FixedUpdate()
 		{
-			if (!spawned && Object.FindObjectOfType<MarioBrosManager>().GetEnemyCount() > 0)
+			if (!spawned && Util.FindObjectOfType<MarioBrosManager>().GetEnemyCount() > 0)
 			{
 				spawnTimer += Time.fixedDeltaTime;
 				if (spawnTimer >= 3f)
@@ -84,7 +84,7 @@ namespace MarioBrosMayhem
 
 		private void OnTriggerStay2D(Collider2D collision)
 		{
-			if (spawned && (bool)collision.GetComponent<Player>() && collision.GetComponent<Player>().CanInteract() && (!collision.GetComponent<Player>().IsInvincible() || !spikey) && (!revvingUp || !(revTimer < 1f)))
+			if ((bool)collision && spawned && (bool)collision.GetComponent<Player>() && collision.GetComponent<Player>().CanInteract() && (!collision.GetComponent<Player>().IsInvincible() || !spikey) && (!revvingUp || !(revTimer < 1f)))
 			{
 				if (spikey)
 				{

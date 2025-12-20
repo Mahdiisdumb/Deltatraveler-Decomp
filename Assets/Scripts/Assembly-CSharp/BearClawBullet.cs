@@ -17,7 +17,7 @@ public class BearClawBullet : BulletBase
 	{
 		base.Awake();
 		baseDmg = 11;
-		if (UnityEngine.Object.FindObjectOfType<MightyBear>().IsLectured())
+		if (Util.FindObjectOfType<MightyBear>().IsLectured())
 		{
 			baseDmg = 8;
 		}
@@ -42,7 +42,7 @@ public class BearClawBullet : BulletBase
 				sr.enabled = true;
 			}
 			float num = (float)frames / 30f;
-			num = Mathf.Sin(num * (float)Math.PI * 0.5f);
+			num = Mathf.Sin(num * MathF.PI * 0.5f);
 			Vector3 b = (right ? new Vector3(0.9f, -4.24f) : new Vector3(-0.9f, 0.22f));
 			if (hugMode)
 			{
@@ -88,7 +88,7 @@ public class BearClawBullet : BulletBase
 	public void Activate(bool right, bool hugMode, float speed)
 	{
 		this.speed = speed;
-		if (UnityEngine.Object.FindObjectOfType<MightyBear>().IsLectured())
+		if (Util.FindObjectOfType<MightyBear>().IsLectured())
 		{
 			this.speed *= 0.75f;
 		}

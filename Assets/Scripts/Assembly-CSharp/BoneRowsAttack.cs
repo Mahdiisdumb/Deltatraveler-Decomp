@@ -19,8 +19,8 @@ public class BoneRowsAttack : AttackBase
 		base.Awake();
 		blasterPrefab = Resources.Load<GameObject>("battle/attacks/bullets/GasterBlaster");
 		bbSize = new Vector2(280f, 140f);
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(0);
-		harder = Object.FindObjectOfType<KarmaHandler>();
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(0);
+		harder = Util.FindObjectOfType<KarmaHandler>();
 		if (harder)
 		{
 			maxRate = 34;
@@ -44,7 +44,7 @@ public class BoneRowsAttack : AttackBase
 			{
 				maxRate--;
 			}
-			SOUL sOUL = Object.FindObjectOfType<SOUL>();
+			SOUL sOUL = Util.FindObjectOfType<SOUL>();
 			float x = 0f;
 			if (Mathf.Abs(sOUL.transform.position.x) >= 1.15f)
 			{
@@ -72,7 +72,7 @@ public class BoneRowsAttack : AttackBase
 		foreach (BoneBullet obj in componentsInChildren)
 		{
 			obj.ChangeHeight(harder ? 4 : 3);
-			obj.SetTPGrazeValue(0.5f, true);
+			obj.SetTPGrazeValue(0.5f, setReuse: true);
 		}
 		leftRow = transform.GetChild(0);
 		rightRow = transform.GetChild(1);

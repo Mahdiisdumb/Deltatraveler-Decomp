@@ -87,7 +87,7 @@ public class GauntletCannon : MonoBehaviour
 				UnityEngine.Object.Instantiate(prefab, cannon.GetChild(0).position, Quaternion.identity, base.transform.parent).GetComponent<GauntletCannonBall>().SetDirection(direction);
 			}
 			float num = (float)(frames % FIRE_SPEED) / ((float)FIRE_SPEED / 2f);
-			num = Mathf.Sin(num * (float)Math.PI * 0.5f);
+			num = Mathf.Sin(num * MathF.PI * 0.5f);
 			cannon.localScale = Vector3.Lerp(new Vector3(1.1f, 0.9f, 1f), new Vector3(1f, 1f, 1f), num);
 			int num2 = frames % AIM_TIMER;
 			bool num3 = frames / AIM_TIMER % 2 == 1;

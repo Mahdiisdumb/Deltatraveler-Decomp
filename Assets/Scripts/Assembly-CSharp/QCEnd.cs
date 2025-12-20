@@ -9,8 +9,8 @@ public class QCEnd : Interactable
 	{
 		if (!startedCutscene)
 		{
-			GetComponent<Animator>().SetFloat("dirX", 0f - (base.transform.position.x - UnityEngine.Object.FindObjectOfType<OverworldPlayer>().transform.position.x));
-			GetComponent<Animator>().SetFloat("dirY", 0f - (base.transform.position.y - UnityEngine.Object.FindObjectOfType<OverworldPlayer>().transform.position.y));
+			GetComponent<Animator>().SetFloat("dirX", 0f - (base.transform.position.x - Util.OverworldPlayer().transform.position.x));
+			GetComponent<Animator>().SetFloat("dirY", 0f - (base.transform.position.y - Util.OverworldPlayer().transform.position.y));
 		}
 	}
 
@@ -28,8 +28,8 @@ public class QCEnd : Interactable
 			return;
 		}
 		txt = new GameObject("InteractQCEnd", typeof(TextBox)).GetComponent<TextBox>();
-		txt.CreateBox(new string[3] { "* Hey,^05 y'all!", "* I...^05 don't have my lighter,^05\n  so would y'all be willing\n  to bring the torch over here?", "* It'd be a bit too difficult\n  to build this thing in the\n  dark." }, true);
-		UnityEngine.Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+		txt.CreateBox(new string[3] { "* Hey,^05 y'all!", "* I...^05 don't have my lighter,^05\n  so would y'all be willing\n  to bring the torch over here?", "* It'd be a bit too difficult\n  to build this thing in the\n  dark." }, giveBackControl: true);
+		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 	}
 
 	public override int GetEventData()

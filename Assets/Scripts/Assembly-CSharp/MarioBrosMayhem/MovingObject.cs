@@ -60,7 +60,7 @@ namespace MarioBrosMayhem
 			respawnTimer = 0f;
 			controller.DisableCollisions();
 			sprite.sortingOrder = -4;
-			EnterPipe[] array = Object.FindObjectsOfType<EnterPipe>();
+			EnterPipe[] array = Util.FindObjectsOfType<EnterPipe>();
 			foreach (EnterPipe enterPipe in array)
 			{
 				if (Mathf.Sign(enterPipe.transform.position.x) == Mathf.Sign(base.transform.position.x))
@@ -105,7 +105,7 @@ namespace MarioBrosMayhem
 
 		protected void SpawnFromNearestPipe(bool disableCollisions)
 		{
-			SpawnPipe[] array = Object.FindObjectsOfType<SpawnPipe>();
+			SpawnPipe[] array = Util.FindObjectsOfType<SpawnPipe>();
 			foreach (SpawnPipe spawnPipe in array)
 			{
 				if (Mathf.Sign(base.transform.position.x) == Mathf.Sign(spawnPipe.transform.position.x))

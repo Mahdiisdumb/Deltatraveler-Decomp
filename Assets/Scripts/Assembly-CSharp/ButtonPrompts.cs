@@ -1,13 +1,33 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.Input;
-using UnityEngine.Experimental.Input.LowLevel;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
 public class ButtonPrompts : MonoBehaviour
 {
+	public enum ButtonType
+	{
+		Normal = 0,
+		Small = 1,
+		Big = 2,
+		BigSpeech = 3
+	}
+
 	private List<Image> buttons;
+
+	private static readonly int QUESTION_MARK_INDEX = 16;
+
+	private static readonly List<string> BUTTON_NAMES = new List<string>
+	{
+		"ps4East", "ps4South", "ps4DpadDown", "ps4DpadLeft", "ps4DpadRight", "ps4DpadUp", "ps4LeftShoulder", "ps4LeftTrigger", "ps4LeftStick", "ps4Start",
+		"ps4RightShoulder", "ps4RightTrigger", "ps4RightStick", "ps4West", "ps4Touchpad", "ps4North", "questionmark", "switchSouth", "switchEast", "switchCapture",
+		"switchDpadDown", "switchHome", "switchLeftShoulder", "switchDpadLeft", "switchLeftStick", "switchSelect", "switchStart", "switchRightShoulder", "switchDpadRight", "switchRightStick",
+		"switchSL", "switchSR", "switchDpadUp", "switchWest", "switchNorth", "switchLeftTrigger", "switchRightTrigger", "xboxSouth", "xboxEast", "xboxDpadDown",
+		"xboxLeftShoulder", "xboxLeftStick", "xboxLeftTrigger", "xboxDpadLeft", "xboxStart", "xboxRightShoulder", "xboxRightStick", "xboxRightTrigger", "xboxDpadRight", "xboxSelect",
+		"xboxDpadUp", "xboxWest", "xboxNorth", "ps4Select", "ps3Start", "ps3Select", "ps5Start", "ps5Select"
+	};
 
 	public static string[] validButtons = new string[14]
 	{
@@ -15,110 +35,150 @@ public class ButtonPrompts : MonoBehaviour
 		"DpadUp", "DpadDown", "DpadLeft", "DpadRight"
 	};
 
-	public static Dictionary<int, string[]> buttonDict = new Dictionary<int, string[]>
+	public static Dictionary<GamepadButton, string> buttonChars = new Dictionary<GamepadButton, string>
 	{
 		{
-			6,
-			new string[4] { "a", "cross_0", "a_0", "\uff00" }
+			GamepadButton.South,
+			"\uff00"
 		},
 		{
-			5,
-			new string[4] { "b", "circle_0", "b_0", "！" }
+			GamepadButton.East,
+			"！"
 		},
 		{
-			7,
-			new string[4] { "x", "square_0", "x_0", "＂" }
+			GamepadButton.West,
+			"＂"
 		},
 		{
-			4,
-			new string[4] { "y", "triangle_0", "y_0", "＃" }
+			GamepadButton.North,
+			"＃"
 		},
 		{
-			10,
-			new string[4] { "left_bumper", "l1", "l_0", "＄" }
+			GamepadButton.LeftShoulder,
+			"＄"
 		},
 		{
-			11,
-			new string[4] { "right_bumper", "r1", "r_0", "％" }
+			GamepadButton.RightShoulder,
+			"％"
 		},
 		{
-			13,
-			new string[4] { "share", "touchpad", "minus_0", "＆" }
+			GamepadButton.Select,
+			"＆"
 		},
 		{
-			12,
-			new string[4] { "menu", "options", "plus_0", "＇" }
+			GamepadButton.Start,
+			"＇"
 		},
 		{
-			8,
-			new string[4] { "left_stick", "l3", "lStickClick_0", "（" }
+			GamepadButton.LeftStick,
+			"（"
 		},
 		{
-			9,
-			new string[4] { "right_stick", "r3", "rStickClick_0", "）" }
+			GamepadButton.RightStick,
+			"）"
 		},
 		{
-			0,
-			new string[4] { "up", "dpad_up", "up_0", "＊" }
+			GamepadButton.DpadUp,
+			"＊"
 		},
 		{
-			1,
-			new string[4] { "down", "dpad_down", "down_0", "＋" }
+			GamepadButton.DpadDown,
+			"＋"
 		},
 		{
-			2,
-			new string[4] { "left", "dpad_left", "left_0", "，" }
+			GamepadButton.DpadLeft,
+			"，"
 		},
 		{
-			3,
-			new string[4] { "right", "dpad_right", "right_0", "－" }
-		},
-		{
-			-1,
-			new string[4] { "questionmark", "questionmark", "questionmark", "\uffff" }
+			GamepadButton.DpadRight,
+			"－"
 		}
 	};
 
-	public static string GetButtonGraphic(string stringName)
+	public static string GetButtonStyle()
 	{
-		int key = (int)Enum.Parse(typeof(GamepadButton), stringName);
-		int num = GameManager.GetOptions().buttonStyle.value;
-		string text = "xbox";
 		if (GameManager.GetOptions().autoButton.value == 1 && Gamepad.current != null)
 		{
-			if (Gamepad.current.GetType().ToString().Contains("XInput") || Gamepad.current.name.Contains("Xbox"))
+			if (Gamepad.current.GetType().ToString().Contains("XInput") || Gamepad.current.GetType().ToString().Contains("Xbox"))
 			{
-				num = 0;
+				return "xbox";
 			}
-			else if (Gamepad.current.GetType().ToString().Contains("DualShock") || Gamepad.current.name.Contains("DualShock"))
+			if (Gamepad.current.GetType().ToString().Contains("DualSense"))
 			{
-				num = 1;
+				return "ps5";
 			}
-			else if (Gamepad.current.GetType().ToString() == "SwitchProControllerHID" || Gamepad.current.GetType().ToString() == "NPad")
+			if (Gamepad.current.GetType().ToString().Contains("DualShock3"))
 			{
-				num = 2;
+				return "ps3";
+			}
+			if (Gamepad.current.GetType().ToString().Contains("DualShock"))
+			{
+				return "ps4";
+			}
+			if (Gamepad.current.GetType().ToString().EndsWith("SwitchProControllerHID") || Gamepad.current.GetType().ToString().EndsWith("NPad"))
+			{
+				return "switch";
 			}
 		}
-		switch (num)
+		int value = GameManager.GetOptions().buttonStyle.value;
+		string result = "xbox";
+		switch (value)
 		{
 		case 1:
-			text = "ps4";
+			result = "ps4";
 			break;
 		case 2:
-			text = "switch";
+			result = "switch";
+			break;
+		case 3:
+			result = "ps5";
+			break;
+		case 4:
+			result = "ps3";
 			break;
 		}
-		if (!buttonDict.ContainsKey(key))
+		return result;
+	}
+
+	public static Sprite GetButtonGraphic(string stringName, ButtonType type = ButtonType.Normal)
+	{
+		string[] array = new string[4] { "", "_small", "_big", "_big_speech" };
+		Sprite[] array2 = Resources.LoadAll<Sprite>("ui/spr_buttons" + array[(int)type]);
+		string buttonStyle = GetButtonStyle();
+		int num = BUTTON_NAMES.IndexOf(buttonStyle + stringName);
+		if (num == -1)
 		{
-			return "button_questionmark";
+			if (buttonStyle == "ps3" || buttonStyle == "ps5")
+			{
+				num = BUTTON_NAMES.IndexOf("ps4" + stringName);
+				if (num == -1)
+				{
+					num = QUESTION_MARK_INDEX;
+				}
+			}
+			else
+			{
+				num = QUESTION_MARK_INDEX;
+			}
 		}
-		return "button_" + text + "_" + buttonDict[key][num];
+		return array2[num];
 	}
 
 	public static string GetButtonChar(string stringName)
 	{
-		int num = (int)Enum.Parse(typeof(GamepadButton), stringName);
-		return buttonDict[buttonDict.ContainsKey(num) ? num : (-1)][3];
+		GamepadButton key = (GamepadButton)Enum.Parse(typeof(GamepadButton), stringName);
+		if (!buttonChars.ContainsKey(key))
+		{
+			return "\uffff";
+		}
+		return buttonChars[key];
+	}
+
+	public static void UpdateImageWithGraphic(string keyName, Image img, float scale = 2f, ButtonType type = ButtonType.Normal)
+	{
+		Sprite sprite = (img.sprite = GetButtonGraphic(UTInput.GetButtonName(keyName), type));
+		img.rectTransform.sizeDelta = sprite.rect.size * scale;
+		img.transform.localScale = Vector3.one;
 	}
 
 	private void Awake()
@@ -126,11 +186,10 @@ public class ButtonPrompts : MonoBehaviour
 		buttons = new List<Image>();
 	}
 
-	public void AddPrompt(RectTransform p, float x, float y, string button, int size)
+	public void AddPrompt(RectTransform p, float x, float y, string button, int size, ButtonType type)
 	{
-		button = GetButtonGraphic(button);
 		Image image = new GameObject("button " + button).AddComponent<Image>();
-		image.sprite = Resources.Load<Sprite>("ui/buttons/" + button);
+		image.sprite = GetButtonGraphic(button, type);
 		image.rectTransform.SetParent(p);
 		image.rectTransform.localScale = new Vector3(1f, 1f, 1f);
 		int num = ((size != 2) ? 9 : 0);

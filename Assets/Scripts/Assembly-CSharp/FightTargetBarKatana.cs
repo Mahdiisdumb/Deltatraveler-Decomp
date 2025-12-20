@@ -32,7 +32,7 @@ public class FightTargetBarKatana : FightTargetBar
 
 	protected override void Update()
 	{
-		bool activated2 = activated;
+		_ = activated;
 		if (!ending || endFrames >= 15)
 		{
 			return;
@@ -45,12 +45,12 @@ public class FightTargetBarKatana : FightTargetBar
 			{
 				num = 0;
 			}
-			enemy = Object.FindObjectOfType<FightTarget>().GetEnemies()[num];
+			enemy = Util.FindObjectOfType<FightTarget>().GetEnemies()[num];
 		}
 		if (endFrames == 12 && enemyAlive && !miss)
 		{
 			MonoBehaviour.print("SUCCESS QUAD: " + GetSuccessRate());
-			enemy.Hit(partyMember, GetSuccessRate(), true);
+			enemy.Hit(partyMember, GetSuccessRate(), playSound: true);
 		}
 		if (endFrames < 13)
 		{
@@ -60,7 +60,7 @@ public class FightTargetBarKatana : FightTargetBar
 		{
 			if (endFrames == 13 + i && extraHits[i] != enemy && extraHits[i].GetPredictedHP() > 0)
 			{
-				extraHits[i].Hit(partyMember, 10f, true);
+				extraHits[i].Hit(partyMember, 10f, playSound: true);
 			}
 		}
 	}
@@ -124,9 +124,9 @@ public class FightTargetBarKatana : FightTargetBar
 			}
 			if (GetSuccessRate() >= 20f)
 			{
-				Object.FindObjectOfType<TPBar>().AddTP(5);
+				Util.FindObjectOfType<TPBar>().AddTP(5);
 				GetComponent<AudioSource>().Play();
-				EnemyBase[] array = Object.FindObjectsOfType<EnemyBase>();
+				EnemyBase[] array = Util.FindObjectsOfType<EnemyBase>();
 				foreach (EnemyBase enemyBase in array)
 				{
 					if (enemyBase != enemy && !enemyBase.IsDone() && enemyBase.GetPredictedHP() > 0)
@@ -151,13 +151,13 @@ public class FightTargetBarKatana : FightTargetBar
 			ending = true;
 			if ((bool)enemy && IsACompleteMiss())
 			{
-				enemy.Hit(partyMember, 0f, false);
+				enemy.Hit(partyMember, 0f, playSound: false);
 				miss = true;
 			}
 			else if ((bool)enemy)
 			{
 				int num = ((partyMember > 2) ? 1 : partyMember);
-				Object.FindObjectOfType<FightTarget>().PlayHitAnimation(enemy, partyMember, GetSuccessRate(), num);
+				Util.FindObjectOfType<FightTarget>().PlayHitAnimation(enemy, partyMember, GetSuccessRate(), num);
 			}
 		}
 	}

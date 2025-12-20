@@ -30,7 +30,7 @@ public class SansPhotobook : InteractSelectionBase
 		{
 			txt = new GameObject("SansPhotobookText", typeof(TextBox)).GetComponent<TextBox>();
 			txt.CreateBox(new string[1] { "* (You can't bring yourself to\n  look inside again.)" });
-			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 		}
 		else
 		{

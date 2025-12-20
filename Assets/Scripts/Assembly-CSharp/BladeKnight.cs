@@ -80,7 +80,7 @@ public class BladeKnight : EnemyBase
 	public override string[] PerformAct(int i)
 	{
 		lastAct = i - 1;
-		if (GetActNames()[i] == "Check")
+		if (GetActNames()[i] == EnemyBase.CHECK_NAME)
 		{
 			return new string[1] { "* BLADEKNIGHT ATK 50 DEF 50\n* It has taken arms against\n  the light." };
 		}

@@ -5,14 +5,14 @@ public class OverworldCultist : OverworldBloodEnemyBase
 	protected override void Awake()
 	{
 		speed = 12f;
-		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(defeatFlagID) == 1 && (int)Object.FindObjectOfType<GameManager>().GetFlag(13) >= 5)
+		if ((int)Util.GameManager().GetFlag(defeatFlagID) == 1 && (int)Util.GameManager().GetFlag(13) >= 5)
 		{
-			CreateDeadEnemy(true);
+			CreateDeadEnemy(age: true);
 		}
 		base.Awake();
 		runFromPlayer = true;
 		anim.SetFloat("speed", 0.5f);
-		anim.SetBool("isMoving", true);
+		anim.SetBool("isMoving", value: true);
 		anim.SetFloat("dirY", 1f);
 	}
 
@@ -21,7 +21,7 @@ public class OverworldCultist : OverworldBloodEnemyBase
 		base.Update();
 		if (initiateBattle)
 		{
-			anim.SetBool("isMoving", false);
+			anim.SetBool("isMoving", value: false);
 		}
 	}
 
@@ -42,18 +42,18 @@ public class OverworldCultist : OverworldBloodEnemyBase
 	public override void DetectPlayer()
 	{
 		base.DetectPlayer();
-		anim.SetBool("isMoving", false);
-		anim.SetFloat("dirX", Object.FindObjectOfType<OverworldPlayer>().transform.position.x - base.transform.position.x);
-		anim.SetFloat("dirY", Object.FindObjectOfType<OverworldPlayer>().transform.position.y - base.transform.position.y);
+		anim.SetBool("isMoving", value: false);
+		anim.SetFloat("dirX", Util.OverworldPlayer().transform.position.x - base.transform.position.x);
+		anim.SetFloat("dirY", Util.OverworldPlayer().transform.position.y - base.transform.position.y);
 	}
 
 	protected override void RunAlgorithm()
 	{
 		runFromPlayer = false;
 		anim.SetFloat("speed", 2f);
-		anim.SetBool("isMoving", true);
-		anim.SetFloat("dirX", Object.FindObjectOfType<OverworldPlayer>().transform.position.x - base.transform.position.x);
-		anim.SetFloat("dirY", Object.FindObjectOfType<OverworldPlayer>().transform.position.y - base.transform.position.y);
+		anim.SetBool("isMoving", value: true);
+		anim.SetFloat("dirX", Util.OverworldPlayer().transform.position.x - base.transform.position.x);
+		anim.SetFloat("dirY", Util.OverworldPlayer().transform.position.y - base.transform.position.y);
 		base.RunAlgorithm();
 	}
 }

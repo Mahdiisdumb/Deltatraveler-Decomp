@@ -24,7 +24,7 @@ public class ToriForceHandCutscenePt1 : CutsceneBase
 			{
 				if (txt.GetCurrentStringNum() == 4)
 				{
-					susie.SetSelfAnimControl(false);
+					susie.SetSelfAnimControl(setAnimControl: false);
 					gm.StopMusic();
 					susie.ChangeDirection(Vector2.up);
 				}
@@ -54,9 +54,9 @@ public class ToriForceHandCutscenePt1 : CutsceneBase
 		frames++;
 		if (frames == 1)
 		{
-			kris.SetCollision(true);
+			kris.SetCollision(onoff: true);
 			GameObject.Find("Toriel").GetComponent<SpriteRenderer>().enabled = false;
-			kris.SetSelfAnimControl(false);
+			kris.SetSelfAnimControl(setAnimControl: false);
 			kris.GetComponent<Animator>().Play("ToriRight");
 			susie.SetSprite("spr_su_surprise_right");
 		}

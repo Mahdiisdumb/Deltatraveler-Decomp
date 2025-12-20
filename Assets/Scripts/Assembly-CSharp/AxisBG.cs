@@ -12,14 +12,14 @@ public class AxisBG : MonoBehaviour
 	{
 		frames = Random.Range(25, 45);
 		particle = Resources.Load<GameObject>("vfx/BattleBGEffect/UTY/AxisParticle");
-		for (int i = 0; i < 13; i++)
+		for (int num = 625; num >= 0; num -= 36)
 		{
-			for (int j = 0; j < 21; j++)
+			for (int num2 = 480; num2 >= 0; num2 -= 36)
 			{
 				if (Random.Range(0, 2) > 0)
 				{
 					Transform obj = Object.Instantiate(particle).transform;
-					obj.localPosition = new Vector3(Mathf.Lerp(-6.6f, 6.6f, (float)j / 20f), Mathf.Lerp(-15.25f, -5.25f, (float)i / 12f));
+					obj.localPosition = new Vector3(num - 320, num2 - 720) / 48f;
 					obj.SetParent(base.transform);
 				}
 			}

@@ -34,7 +34,7 @@ public class FeraldrakeCrossBullet : BulletBase
 		if (frames <= 15)
 		{
 			float num = (float)frames / 15f;
-			num = Mathf.Sin(num * (float)Math.PI * 0.5f);
+			num = Mathf.Sin(num * MathF.PI * 0.5f);
 			distance = Mathf.Lerp(57f, 77f, num) / 48f;
 			sr.color = new Color(1f, 1f, 1f, num);
 		}
@@ -56,7 +56,7 @@ public class FeraldrakeCrossBullet : BulletBase
 		else
 		{
 			float num4 = (float)(frames - 35) / 10f;
-			num4 = Mathf.Sin(num4 * (float)Math.PI * 0.5f);
+			num4 = Mathf.Sin(num4 * MathF.PI * 0.5f);
 			distance = Mathf.Lerp(-57f, -77f, num4) / 48f;
 			sr.color = new Color(1f, 1f, 1f, 1f - num4);
 		}

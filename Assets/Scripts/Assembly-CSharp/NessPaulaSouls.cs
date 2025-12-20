@@ -46,7 +46,7 @@ public class NessPaulaSouls : MonoBehaviour
 				component.transform.position = Vector3.Lerp(initialPositions[i], finalPositions[i], (float)(frames - 11) / 18f);
 			}
 		}
-		if ((bool)Object.FindObjectOfType<BattleManager>())
+		if ((bool)Util.FindObjectOfType<BattleManager>())
 		{
 			Object.Destroy(base.gameObject);
 		}

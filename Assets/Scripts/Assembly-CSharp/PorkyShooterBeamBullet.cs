@@ -14,8 +14,8 @@ public class PorkyShooterBeamBullet : BulletBase
 
 	private void Start()
 	{
-		base.transform.up = Object.FindObjectOfType<SOUL>().transform.position - base.transform.position;
-		tradjectory = Vector3.MoveTowards(base.transform.position, Object.FindObjectOfType<SOUL>().transform.position, 0.125f) - base.transform.position;
+		base.transform.up = Util.FindObjectOfType<SOUL>().transform.position - base.transform.position;
+		tradjectory = Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position, 0.125f) - base.transform.position;
 	}
 
 	private void Update()

@@ -23,10 +23,10 @@ public class TorielFlameSpamAttack : TorielAttackBase
 		base.Update();
 		if (isStarted && !talking)
 		{
-			float t = Mathf.Abs(Mathf.Cos((float)frames * 4.8f * ((float)Math.PI / 180f)) - 1f) / 2f;
+			float t = Mathf.Abs(Mathf.Cos((float)frames * 4.8f * (MathF.PI / 180f)) - 1f) / 2f;
 			SpamFlameBullet component = UnityEngine.Object.Instantiate(flamePrefab, base.transform).GetComponent<SpamFlameBullet>();
 			component.SetGravity(Mathf.Lerp(start, end, t));
-			component.SetBaseDamage(UnityEngine.Object.FindObjectOfType<PartyPanels>().GetTargettedMembers()[0] ? 2 : 5);
+			component.SetBaseDamage(Util.FindObjectOfType<PartyPanels>().GetTargettedMembers()[0] ? 2 : 5);
 		}
 	}
 

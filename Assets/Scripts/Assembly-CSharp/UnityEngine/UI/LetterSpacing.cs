@@ -129,65 +129,67 @@ namespace UnityEngine.UI
 				int num8 = 0;
 				while (num7 < text2.Length)
 				{
-					if (flag && match != null && match.Index == num7)
+					if (text2[num7] != ' ' && text2[num7] != '\t')
 					{
-						num7 += match.Length - 1;
-						num8--;
-						num5--;
-						num4 += match.Length;
-						match = null;
-						if (enumerator.MoveNext())
+						if (flag && match != null && match.Index == num7)
 						{
-							match = (Match)enumerator.Current;
+							num7 += match.Length - 1;
+							num8--;
+							num5--;
+							num4 += match.Length;
+							match = null;
+							if (enumerator.MoveNext())
+							{
+								match = (Match)enumerator.Current;
+							}
 						}
-					}
-					else
-					{
-						int index = num4 * 6;
-						int index2 = num4 * 6 + 1;
-						int index3 = num4 * 6 + 2;
-						int index4 = num4 * 6 + 3;
-						int index5 = num4 * 6 + 4;
-						int num9 = num4 * 6 + 5;
-						if (num9 > verts.Count - 1)
+						else
 						{
-							return;
+							int index = num4 * 6;
+							int index2 = num4 * 6 + 1;
+							int index3 = num4 * 6 + 2;
+							int index4 = num4 * 6 + 3;
+							int index5 = num4 * 6 + 4;
+							int num9 = num4 * 6 + 5;
+							if (num9 > verts.Count - 1)
+							{
+								return;
+							}
+							UIVertex value = verts[index];
+							UIVertex value2 = verts[index2];
+							UIVertex value3 = verts[index3];
+							UIVertex value4 = verts[index4];
+							UIVertex value5 = verts[index5];
+							UIVertex value6 = verts[num9];
+							Vector3 vector = Vector3.zero;
+							if (forceShake && Random.Range(0, shakeFrequency) == 0)
+							{
+								vector = new Vector3(Random.Range(-1, 2), Random.Range(-1, 2));
+							}
+							else if (forceSwirl)
+							{
+								vector = new Vector3(Mathf.RoundToInt(Mathf.Cos((float)(angleBase + num5 * 2) / 3f) - 1f), Mathf.RoundToInt(Mathf.Sin((float)(angleBase + num5 * 2) / 3f)));
+							}
+							Vector3 vector2 = Vector3.right * (num2 * (float)num8 - num6) + vector;
+							value.position += vector2;
+							value2.position += vector2;
+							value3.position += vector2;
+							value4.position += vector2;
+							value5.position += vector2;
+							value6.position += vector2;
+							verts[index] = value;
+							verts[index2] = value2;
+							verts[index3] = value3;
+							verts[index4] = value4;
+							verts[index5] = value5;
+							verts[num9] = value6;
+							num4++;
 						}
-						UIVertex value = verts[index];
-						UIVertex value2 = verts[index2];
-						UIVertex value3 = verts[index3];
-						UIVertex value4 = verts[index4];
-						UIVertex value5 = verts[index5];
-						UIVertex value6 = verts[num9];
-						Vector3 vector = Vector3.zero;
-						if (forceShake && Random.Range(0, shakeFrequency) == 0)
-						{
-							vector = new Vector3(Random.Range(-1, 2), Random.Range(-1, 2));
-						}
-						else if (forceSwirl)
-						{
-							vector = new Vector3(Mathf.RoundToInt(Mathf.Cos((float)(angleBase + num5 * 2) / 3f) - 1f), Mathf.RoundToInt(Mathf.Sin((float)(angleBase + num5 * 2) / 3f)));
-						}
-						Vector3 vector2 = Vector3.right * (num2 * (float)num8 - num6) + vector;
-						value.position += vector2;
-						value2.position += vector2;
-						value3.position += vector2;
-						value4.position += vector2;
-						value5.position += vector2;
-						value6.position += vector2;
-						verts[index] = value;
-						verts[index2] = value2;
-						verts[index3] = value3;
-						verts[index4] = value4;
-						verts[index5] = value5;
-						verts[num9] = value6;
-						num4++;
 					}
 					num7++;
 					num8++;
 					num5++;
 				}
-				num4++;
 			}
 		}
 

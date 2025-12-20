@@ -51,7 +51,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 			frames++;
 			if (frames == 30)
 			{
-				gonerCreator.StartMode(0, true);
+				gonerCreator.StartMode(0, resetFrames: true);
 			}
 			if (frames < 30)
 			{
@@ -93,7 +93,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 			frames++;
 			if (frames == 30)
 			{
-				gonerCreator.StartMode(1, true);
+				gonerCreator.StartMode(1, resetFrames: true);
 			}
 			if (frames < 30)
 			{
@@ -135,7 +135,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 			frames++;
 			if (frames == 30)
 			{
-				gonerCreator.StartMode(2, true);
+				gonerCreator.StartMode(2, resetFrames: true);
 			}
 			if (frames < 30)
 			{
@@ -165,7 +165,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 				frames = 0;
 				endingFrames = 0;
 				gonerCreator.transform.position = new Vector3(0f, 0.5f);
-				gonerCreator.StartMode(3, true);
+				gonerCreator.StartMode(3, resetFrames: true);
 				GameObject.Find("BlurrySoul").transform.position = new Vector3(0f, -2.46f);
 				StartText(new string[2] { "\b              THIS^15\n\b           IS YOUR BODY.", "\b        DO YOU ACCEPT IT?" }, new string[1] { "" }, new int[1] { 2 }, new string[0], 0);
 				txt.MakeUnskippable();
@@ -313,7 +313,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 				hoveringOverOption = true;
 				frames = 0;
 				ChangeDirection(goner, Vector2.left);
-				SetMoveAnim(goner, true);
+				SetMoveAnim(goner, isMoving: true);
 				goner.GetComponent<SpriteRenderer>().sortingOrder = -60;
 				kris.transform.position = new Vector3(-8.42f, -5.16f);
 				susie.transform.position = new Vector3(-9.53f, -4.93f);
@@ -321,9 +321,9 @@ public class Section3DreamSequencePt3 : CutsceneBase
 				ChangeDirection(kris, Vector2.right);
 				ChangeDirection(susie, Vector2.right);
 				ChangeDirection(noelle, Vector2.right);
-				SetMoveAnim(kris, true);
-				SetMoveAnim(susie, true);
-				SetMoveAnim(noelle, true);
+				SetMoveAnim(kris, isMoving: true);
+				SetMoveAnim(susie, isMoving: true);
+				SetMoveAnim(noelle, isMoving: true);
 				susie.UseHappySprites();
 				if (sceneVariant == 2)
 				{
@@ -348,9 +348,9 @@ public class Section3DreamSequencePt3 : CutsceneBase
 			if (frames == 1)
 			{
 				ChangeDirection(noelle, Vector2.left);
-				SetMoveAnim(kris, false);
-				SetMoveAnim(susie, false);
-				SetMoveAnim(noelle, false);
+				SetMoveAnim(kris, isMoving: false);
+				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(noelle, isMoving: false);
 			}
 			if (frames == 5)
 			{
@@ -471,8 +471,8 @@ public class Section3DreamSequencePt3 : CutsceneBase
 				SetSprite(GameObject.Find("Doors").transform, "overworld/snow_objects/spr_bnuy_doors_1");
 				ChangeDirection(susie, Vector2.left);
 				ChangeDirection(noelle, Vector2.down);
-				SetMoveAnim(susie, true);
-				SetMoveAnim(noelle, true);
+				SetMoveAnim(susie, isMoving: true);
+				SetMoveAnim(noelle, isMoving: true);
 			}
 			if (noelle.transform.position.y > -5.84f)
 			{
@@ -487,11 +487,11 @@ public class Section3DreamSequencePt3 : CutsceneBase
 			{
 				if (!MoveTo(kris, new Vector3(-3.32f, -2.46f), 4f))
 				{
-					SetMoveAnim(kris, false);
+					SetMoveAnim(kris, isMoving: false);
 				}
 				else
 				{
-					SetMoveAnim(kris, true);
+					SetMoveAnim(kris, isMoving: true);
 				}
 				if (frames == 60)
 				{
@@ -550,7 +550,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 				PlaySFX("sounds/snd_grab");
 				gm.PlayGlobalSFX("sounds/snd_hurt");
 				Object.Instantiate(Resources.Load<GameObject>("vfx/SOULRemoveEffect"), new Vector3(-3.53f, 1.62f), Quaternion.identity);
-				cam.SetFollowPlayer(true);
+				cam.SetFollowPlayer(follow: true);
 				cam.StartHitShake();
 			}
 			if (frames == 655)
@@ -585,7 +585,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 			frames++;
 			if (frames == 30 && sceneVariant == 2)
 			{
-				new GameObject("Lol").AddComponent<TextBox>().CreateBox(new string[1] { "* You can now access new\n  ACTs in battle!" }, true);
+				new GameObject("Lol").AddComponent<TextBox>().CreateBox(new string[1] { "* You can now access new\n  ACTs in battle!" }, giveBackControl: true);
 			}
 			if (frames == 900)
 			{
@@ -596,7 +596,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 				goner.transform.position = new Vector3(-10f, 0f);
 				goner.GetComponent<SpriteRenderer>().sortingOrder = 0;
 				goner.gameObject.AddComponent<AutoSort>();
-				SetMoveAnim(goner, false);
+				SetMoveAnim(goner, isMoving: false);
 				ChangeDirection(goner, Vector2.down);
 			}
 		}
@@ -617,7 +617,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 				{
 					PlayAnimation(goner, "walk");
 					ChangeDirection(goner, Vector2.right);
-					SetMoveAnim(goner, true);
+					SetMoveAnim(goner, isMoving: true);
 				}
 				return;
 			}
@@ -636,7 +636,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 					}
 					else
 					{
-						SetMoveAnim(goner, false);
+						SetMoveAnim(goner, isMoving: false);
 					}
 				}
 				return;
@@ -651,7 +651,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 			{
 				if (frames == 180)
 				{
-					SetMoveAnim(goner, true);
+					SetMoveAnim(goner, isMoving: true);
 				}
 				if (goner.transform.position.y > -4.85f)
 				{
@@ -742,7 +742,7 @@ public class Section3DreamSequencePt3 : CutsceneBase
 			}
 			else
 			{
-				SetMoveAnim(susie, true);
+				SetMoveAnim(susie, isMoving: true);
 			}
 		}
 		else if (state == 13 && !txt)

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1940427010551936
+--- !u!1 &1518781570318081
 GameObject:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -8,14 +8,14 @@ GameObject:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Component:
-  - component: {fileID: 224890783918400116}
-  - component: {fileID: 222643484515931346}
-  - component: {fileID: 114170916305159429}
-  - component: {fileID: 82181701847574738}
-  - component: {fileID: 82306646101816556}
-  - component: {fileID: 114428742882879747}
-  - component: {fileID: 114925773970923249}
-  - component: {fileID: 114303628940015772}
+  - component: {fileID: 224038703222742283}
+  - component: {fileID: 222954278320865651}
+  - component: {fileID: 114674795947387393}
+  - component: {fileID: 82848110554683301}
+  - component: {fileID: 82326809783350382}
+  - component: {fileID: 114869347987301295}
+  - component: {fileID: 114591414338673492}
+  - component: {fileID: 114930210066462204}
   m_Layer: 5
   m_Name: TextBaseGaster
   m_TagString: Untagged
@@ -23,54 +23,56 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &224890783918400116
+--- !u!224 &224038703222742283
 RectTransform:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940427010551936}
+  m_GameObject: {fileID: 1518781570318081}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: -168, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.020833334, y: 0.020833334, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 4, y: -168}
   m_SizeDelta: {x: 528, y: 133}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &222643484515931346
+--- !u!222 &222954278320865651
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940427010551936}
+  m_GameObject: {fileID: 1518781570318081}
   m_CullTransparentMesh: 0
---- !u!114 &114170916305159429
+--- !u!114 &114674795947387393
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940427010551936}
+  m_GameObject: {fileID: 1518781570318081}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 708705254, guid: d3e719b59ab71ba3f6b398058c866280, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 5427794b5c36f004b815edecfbfdabec, type: 3}
+    m_Font: {fileID: 12800000, guid: 05fc3f587d926f04eb7d6d1d8c448795, type: 3}
     m_FontSize: 26
     m_FontStyle: 0
     m_BestFit: 0
@@ -83,17 +85,18 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1.15
   m_Text:
---- !u!82 &82181701847574738
+--- !u!82 &82848110554683301
 AudioSource:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940427010551936}
+  m_GameObject: {fileID: 1518781570318081}
   m_Enabled: 1
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -179,17 +182,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!82 &82306646101816556
+--- !u!82 &82326809783350382
 AudioSource:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940427010551936}
+  m_GameObject: {fileID: 1518781570318081}
   m_Enabled: 1
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -275,13 +279,13 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &114428742882879747
+--- !u!114 &114869347987301295
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940427010551936}
+  m_GameObject: {fileID: 1518781570318081}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8fbd20568e88655986705715bd0d87ae, type: 3}
@@ -289,25 +293,25 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   useRichText: 0
   m_spacing: 0
---- !u!114 &114925773970923249
+--- !u!114 &114591414338673492
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940427010551936}
+  m_GameObject: {fileID: 1518781570318081}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2c8553d9287aa136e7832d79dbdacfd, type: 3}
   m_Name:
   m_EditorClassIdentifier:
---- !u!114 &114303628940015772
+--- !u!114 &114930210066462204
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940427010551936}
+  m_GameObject: {fileID: 1518781570318081}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22cb302c4c3e1b4568adeb73da779565, type: 3}

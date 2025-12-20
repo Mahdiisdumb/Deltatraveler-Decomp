@@ -1,27 +1,35 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class OverworldPartyMember : Interactable
+public class OverworldPartyMember : OverworldMemberBase
 {
+	private struct Position
+	{
+		public Vector3 position;
+
+		public Vector2 direction;
+
+		public float speed;
+
+		public int moveState;
+
+		public Position(Vector3 position, Vector2 direction, float speed, int moveState)
+		{
+			this.position = position;
+			this.direction = direction;
+			this.speed = speed;
+			this.moveState = moveState;
+		}
+	}
+
 	[SerializeField]
 	private int posDistance = 10;
 
 	[SerializeField]
 	private Vector3 posOffset = Vector3.zero;
 
-	private List<Vector3> posList;
-
-	private List<Vector2> dirList;
-
-	private List<float> spdList;
-
-	private List<int> moveStateList;
-
-	protected Animator anim;
-
-	private Vector2 faceDir = Vector2.zero;
+	private List<Position> positions = new List<Position>();
 
 	private bool isMoving;
 
@@ -30,16 +38,6 @@ public class OverworldPartyMember : Interactable
 	private bool doLastMove;
 
 	private bool inSamePos;
-
-	private bool animControl = true;
-
-	private bool unhappy;
-
-	protected string curSpriteName = "";
-
-	private string customPrefix = "";
-
-	protected bool isPlayer = true;
 
 	private bool sliding;
 
@@ -55,66 +53,53 @@ public class OverworldPartyMember : Interactable
 
 	private bool acceptingIgnores;
 
-	private bool useRunAnim = true;
-
 	private bool isRunning;
 
-	protected virtual void Awake()
+	private bool isUnhappy;
+
+	protected override void Awake()
 	{
-		anim = GetComponent<Animator>();
+		base.Awake();
 		ResetPathLists();
-		if (base.gameObject.name == "Noelle" && !UnityEngine.Object.FindObjectOfType<GameManager>().SusieInParty())
-		{
-			posDistance = 10;
-		}
-		if (SceneManager.GetActiveScene().buildIndex == 123)
-		{
-			customPrefix = "hd";
-		}
-		if ((bool)UnityEngine.Object.FindObjectOfType<UndyneShadow>())
-		{
-			customPrefix = "undynes";
-		}
-		useRunAnim = GameManager.GetOptions().runAnimations.value == 1;
 	}
 
 	protected virtual void Update()
 	{
-		if ((isMoving || forceMove) && (activated || doLastMove) && !UnityEngine.Object.FindObjectOfType<OverworldPlayer>().CannotMoveBattleSpecial())
+		if ((isMoving || forceMove) && (activated || doLastMove) && !Util.OverworldPlayer().CannotMoveBattleSpecial())
 		{
 			try
 			{
-				if (locked && forceMove && lastMoveState == 1 && moveStateList.Count > 0 && moveStateList[0] == 0)
+				if (locked && forceMove && lastMoveState == 1 && positions[0].moveState == 0)
 				{
 					if (HasUnlockableStateList())
 					{
 						forceMove = false;
 						locked = false;
 						activateAfterLastMove = false;
-						if (posList.Count > posDistance)
+						if (positions.Count > posDistance)
 						{
 							ResetPathLists();
 						}
 					}
 					HandleMoveStateChange(0);
-					if (posList.Count < posDistance && acceptingIgnores)
+					if (positions.Count < posDistance && acceptingIgnores)
 					{
 						acceptingIgnores = false;
-						ignoreFrames = posDistance - posList.Count;
+						ignoreFrames = posDistance - positions.Count;
 					}
 				}
 				if (ignoreFrames > 0)
 				{
-					GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+					GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
 					ignoreFrames--;
 					anim.SetFloat("speed", 0f);
 				}
-				else if (posList.Count > 0)
+				else if (positions.Count > 0)
 				{
-					int num = Mathf.RoundToInt(Mathf.Abs(base.transform.position.x - posList[0].x) * 48f);
+					int num = Mathf.RoundToInt(Mathf.Abs(base.transform.position.x - positions[0].position.x) * 48f);
 					if (num == 0)
 					{
-						num = Mathf.RoundToInt(Mathf.Abs(base.transform.position.y - posList[0].y) * 48f);
+						num = Mathf.RoundToInt(Mathf.Abs(base.transform.position.y - positions[0].position.y) * 48f);
 					}
 					isRunning = num >= 10 && useRunAnim;
 					if (isRunning)
@@ -125,30 +110,27 @@ public class OverworldPartyMember : Interactable
 					{
 						anim.Play("walk");
 					}
-					base.transform.position = posList[0];
+					base.transform.position = positions[0].position;
 					if (animControl)
 					{
-						faceDir = dirList[0];
-						anim.SetFloat("dirX", dirList[0].x);
-						anim.SetFloat("dirY", dirList[0].y);
-						anim.SetFloat("speed", spdList[0]);
+						faceDir = positions[0].direction;
+						anim.SetFloat("dirX", positions[0].direction.x);
+						anim.SetFloat("dirY", positions[0].direction.y);
+						anim.SetFloat("speed", positions[0].speed);
 					}
-					if (moveStateList[0] != lastMoveState)
+					if (positions[0].moveState != lastMoveState)
 					{
-						HandleMoveStateChange(moveStateList[0]);
+						HandleMoveStateChange(positions[0].moveState);
 					}
-					lastMoveState = moveStateList[0];
-					posList.RemoveAt(0);
-					dirList.RemoveAt(0);
-					spdList.RemoveAt(0);
-					moveStateList.RemoveAt(0);
+					lastMoveState = positions[0].moveState;
+					positions.RemoveAt(0);
 				}
 				if (doLastMove)
 				{
 					doLastMove = false;
 					ResetPathLists();
 				}
-				if (posList.Count == 0 && activateAfterLastMove)
+				if (positions.Count == 0 && activateAfterLastMove)
 				{
 					FreeMove();
 					Activate();
@@ -166,62 +148,24 @@ public class OverworldPartyMember : Interactable
 			isMoving = false;
 			if (animControl)
 			{
-				if (lastMoveState == 1 && !UnityEngine.Object.FindObjectOfType<OverworldPlayer>().CannotMoveBattleSpecial())
+				if (lastMoveState == 1 && !Util.OverworldPlayer().CannotMoveBattleSpecial())
 				{
 					HandleMoveStateChange(0);
 				}
-				anim.SetBool("isMoving", false);
+				anim.SetBool("isMoving", value: false);
 				anim.Play("idle");
 			}
 		}
 		GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt((base.transform.position.y - posOffset.y) * -5f);
 	}
 
-	private void LateUpdate()
-	{
-		if (!anim.enabled || (!(customPrefix != "") && !unhappy))
-		{
-			return;
-		}
-		if (GetComponent<SpriteRenderer>().sprite.name != curSpriteName)
-		{
-			string text = "player/" + base.gameObject.name + "/" + GetComponent<SpriteRenderer>().sprite.name;
-			if (customPrefix != "")
-			{
-				text = "player/" + base.gameObject.name + "/" + customPrefix + "/" + GetComponent<SpriteRenderer>().sprite.name + "_" + customPrefix;
-			}
-			string text2 = text;
-			if (unhappy)
-			{
-				for (int i = 0; i < 6; i++)
-				{
-					text2 = text2.Replace("_" + i, "_unhappy_" + i);
-				}
-				if ((int)Util.GameManager().GetFlag(172) == 2 || ((int)Util.GameManager().GetFlag(172) == 1 && base.gameObject.name == "Noelle"))
-				{
-					text2 = text2.Replace("unhappy", "depressed");
-				}
-			}
-			Sprite sprite = Resources.Load<Sprite>(text2);
-			if (sprite != null)
-			{
-				GetComponent<SpriteRenderer>().sprite = sprite;
-			}
-			else
-			{
-				sprite = Resources.Load<Sprite>(text);
-				if (sprite != null)
-				{
-					GetComponent<SpriteRenderer>().sprite = sprite;
-				}
-			}
-		}
-		curSpriteName = GetComponent<SpriteRenderer>().sprite.name;
-	}
-
 	public void SetCustomSpritesetPrefix(string customPrefix)
 	{
-		this.customPrefix = customPrefix;
+		if (customPrefix == "" && isUnhappy)
+		{
+			customPrefix = "unhappy";
+		}
+		base.customPrefix = customPrefix;
 		if (customPrefix == "kr")
 		{
 			useRunAnim = false;
@@ -232,59 +176,44 @@ public class OverworldPartyMember : Interactable
 		}
 	}
 
+	public void ResetCustomSpritesetPrefix()
+	{
+		SetCustomSpritesetPrefix("");
+	}
+
 	public void AddNewPosition(Vector3 newPos, Vector2 dir, int moveState, float speed)
 	{
 		newPos += posOffset;
 		bool flag = false;
-		if (posList.Count != 0)
+		if (positions.Count != 0)
 		{
-			flag = posList[posList.Count - 1] != newPos;
+			flag = positions[positions.Count - 1].position != newPos;
 		}
-		if (posList.Count == 0)
+		if (positions.Count == 0)
 		{
-			Vector2 item = new Vector2(newPos.x - base.transform.position.x, newPos.y - base.transform.position.y);
+			Vector2 vector = new Vector2(newPos.x - base.transform.position.x, newPos.y - base.transform.position.y);
 			if (inSamePos)
 			{
-				item = faceDir;
+				vector = faceDir;
 			}
 			for (int i = 1; i <= posDistance; i++)
 			{
-				posList.Add(Vector3.Lerp(base.transform.position, newPos, (float)i / (float)posDistance));
-				if (i == posDistance)
-				{
-					dirList.Add(dir);
-				}
-				else
-				{
-					dirList.Add(item);
-				}
-				if (inSamePos)
-				{
-					spdList.Add(0f);
-				}
-				else
-				{
-					spdList.Add(1f);
-				}
-				moveStateList.Add(0);
+				positions.Add(new Position(Vector3.Lerp(base.transform.position, newPos, (float)i / (float)posDistance), (i == posDistance) ? dir : vector, (!inSamePos) ? 1 : 0, 0));
 			}
 			flag = true;
 		}
 		else if (flag)
 		{
-			posList.Add(newPos);
-			dirList.Add(dir);
-			spdList.Add(speed);
-			moveStateList.Add(moveState);
+			positions.Add(new Position(newPos, dir, speed, moveState));
 			if (moveState == 1)
 			{
-				ForceMove(true);
+				ForceMove(activateAfterLastMove: true);
 				Lock();
 			}
 		}
 		if (flag && animControl)
 		{
-			anim.SetBool("isMoving", true);
+			anim.SetBool("isMoving", value: true);
 		}
 		isMoving = flag;
 		inSamePos = false;
@@ -292,31 +221,21 @@ public class OverworldPartyMember : Interactable
 
 	public void UseUnhappySprites()
 	{
-		unhappy = true;
+		isUnhappy = true;
+		ResetCustomSpritesetPrefix();
 	}
 
 	public void UseHappySprites()
 	{
-		unhappy = false;
-	}
-
-	public void ChangeDirection(Vector2 faceDir)
-	{
-		this.faceDir = faceDir;
-		anim.SetFloat("dirX", faceDir.x);
-		anim.SetFloat("dirY", faceDir.y);
-	}
-
-	public Vector2 GetDirection()
-	{
-		return new Vector2(anim.GetFloat("dirX"), anim.GetFloat("dirY"));
+		isUnhappy = false;
+		ResetCustomSpritesetPrefix();
 	}
 
 	public void ForceMove(bool activateAfterLastMove = false)
 	{
 		forceMove = true;
 		this.activateAfterLastMove = activateAfterLastMove;
-		anim.SetBool("isMoving", true);
+		anim.SetBool("isMoving", value: true);
 	}
 
 	public void FreeMove()
@@ -370,6 +289,21 @@ public class OverworldPartyMember : Interactable
 		}
 	}
 
+	public void SetDistanceBySlotID()
+	{
+		int num = posDistance;
+		SetDistance(GetSlotID() * 10);
+		if (num != posDistance)
+		{
+			ResetPathLists(ignoreSlotChange: true);
+		}
+	}
+
+	public void SetDistance(int posDistance)
+	{
+		this.posDistance = posDistance;
+	}
+
 	public void SpawnInSamePos()
 	{
 		inSamePos = true;
@@ -384,12 +318,13 @@ public class OverworldPartyMember : Interactable
 		}
 	}
 
-	public void ResetPathLists()
+	public void ResetPathLists(bool ignoreSlotChange = false)
 	{
-		posList = new List<Vector3>();
-		dirList = new List<Vector2>();
-		spdList = new List<float>();
-		moveStateList = new List<int>();
+		positions.Clear();
+		if (GetSlotID() > -1 && !ignoreSlotChange)
+		{
+			SetDistance(GetSlotID() * 10);
+		}
 	}
 
 	private void HandleMoveStateChange(int moveState)
@@ -409,11 +344,11 @@ public class OverworldPartyMember : Interactable
 			acceptingIgnores = true;
 			string text = "";
 			text = ((faceDir.x != 0f) ? ((faceDir.x > 0f) ? "right" : "left") : ((faceDir.y > 0f) ? "up" : "down"));
-			if (base.gameObject.name == "Susie")
+			if (GetMemberID() == 1)
 			{
 				SetSprite("spr_su_iceslide_" + text);
 			}
-			else if (base.gameObject.name == "Noelle" && (int)Util.GameManager().GetFlag(172) == 0)
+			else if (GetMemberID() == 2 && (int)Util.GameManager().GetFlag(172) == 0)
 			{
 				SetSprite("spr_no_iceslide_" + text);
 			}
@@ -424,37 +359,14 @@ public class OverworldPartyMember : Interactable
 
 	private bool HasUnlockableStateList()
 	{
-		foreach (int moveState in moveStateList)
+		foreach (Position position in positions)
 		{
-			if (moveState == 1)
+			if (position.moveState == 1)
 			{
 				return false;
 			}
 		}
 		return true;
-	}
-
-	public void SetSprite(string spriteName)
-	{
-		if (GetComponent<SpriteRenderer>().sprite.name != spriteName)
-		{
-			GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("player/" + base.gameObject.name + "/" + spriteName);
-		}
-	}
-
-	public void SetSelfAnimControl(bool setAnimControl)
-	{
-		animControl = setAnimControl;
-	}
-
-	public void EnableAnimator()
-	{
-		anim.enabled = true;
-	}
-
-	public void DisableAnimator()
-	{
-		anim.enabled = false;
 	}
 
 	public void SetPositionOffset(Vector3 posOffset)
@@ -474,7 +386,7 @@ public class OverworldPartyMember : Interactable
 
 	public bool IsPlayer()
 	{
-		return isPlayer;
+		return partyMember > -1;
 	}
 
 	public bool IsLocked()
@@ -484,24 +396,11 @@ public class OverworldPartyMember : Interactable
 
 	public bool IsUnhappy()
 	{
-		return unhappy;
+		return isUnhappy;
 	}
 
 	public bool IsRunning()
 	{
 		return isRunning;
-	}
-
-	public override void DoInteract()
-	{
-	}
-
-	public override int GetEventData()
-	{
-		return -1;
-	}
-
-	public override void MakeDecision(Vector2 index, int id)
-	{
 	}
 }

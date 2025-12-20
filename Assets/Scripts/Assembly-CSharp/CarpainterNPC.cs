@@ -10,7 +10,7 @@ public class CarpainterNPC : InteractTextBox
 	protected override void Awake()
 	{
 		base.Awake();
-		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(117) == 0 && (int)Object.FindObjectOfType<GameManager>().GetFlag(116) == 1)
+		if ((int)Util.GameManager().GetFlag(117) == 0 && (int)Util.GameManager().GetFlag(116) == 1)
 		{
 			SetSprite(5);
 		}
@@ -18,7 +18,7 @@ public class CarpainterNPC : InteractTextBox
 
 	public override void DoInteract()
 	{
-		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(116) == 0)
+		if ((int)Util.GameManager().GetFlag(116) == 0)
 		{
 			if (!started)
 			{

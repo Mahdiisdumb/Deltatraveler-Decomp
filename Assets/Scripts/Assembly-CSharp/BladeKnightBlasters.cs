@@ -25,7 +25,7 @@ public class BladeKnightBlasters : AttackBase
 		base.Awake();
 		maxFrames = 1000;
 		bbSize = new Vector2(165f, 140f);
-		float num = (float)Object.FindObjectOfType<BladeKnight>().GetHP() / (float)Object.FindObjectOfType<BladeKnight>().GetMaxHP();
+		float num = (float)Util.FindObjectOfType<BladeKnight>().GetHP() / (float)Util.FindObjectOfType<BladeKnight>().GetMaxHP();
 		if (num > 0.75f)
 		{
 			frequency = 2;
@@ -86,7 +86,7 @@ public class BladeKnightBlasters : AttackBase
 			return;
 		}
 		fadeFrames++;
-		SpriteRenderer[] componentsInChildren = Object.FindObjectOfType<BladeKnight>().GetEnemyObject().transform.Find("parts").GetComponentsInChildren<SpriteRenderer>();
+		SpriteRenderer[] componentsInChildren = Util.FindObjectOfType<BladeKnight>().GetEnemyObject().transform.Find("parts").GetComponentsInChildren<SpriteRenderer>();
 		foreach (SpriteRenderer spriteRenderer in componentsInChildren)
 		{
 			if (spriteRenderer.gameObject.name != "projectile" && spriteRenderer.gameObject.name != "swing")
@@ -103,8 +103,8 @@ public class BladeKnightBlasters : AttackBase
 	public void FadeIn()
 	{
 		fadeIn = true;
-		Object.FindObjectOfType<BladeKnight>().transform.position = new Vector3(0f, Object.FindObjectOfType<BladeKnight>().transform.position.y);
-		SpriteRenderer[] componentsInChildren = Object.FindObjectOfType<BladeKnight>().GetEnemyObject().transform.Find("parts").GetComponentsInChildren<SpriteRenderer>();
+		Util.FindObjectOfType<BladeKnight>().transform.position = new Vector3(0f, Util.FindObjectOfType<BladeKnight>().transform.position.y);
+		SpriteRenderer[] componentsInChildren = Util.FindObjectOfType<BladeKnight>().GetEnemyObject().transform.Find("parts").GetComponentsInChildren<SpriteRenderer>();
 		for (int i = 0; i < componentsInChildren.Length; i++)
 		{
 			componentsInChildren[i].color = new Color(1f, 1f, 1f, 0f);
@@ -115,7 +115,7 @@ public class BladeKnightBlasters : AttackBase
 	{
 		base.StartAttack();
 		blastPrefab = Resources.Load<GameObject>("battle/attacks/bullets/GasterBlaster");
-		Object.FindObjectOfType<BladeKnight>().transform.position = new Vector3(100f, Object.FindObjectOfType<BladeKnight>().transform.position.y);
+		Util.FindObjectOfType<BladeKnight>().transform.position = new Vector3(100f, Util.FindObjectOfType<BladeKnight>().transform.position.y);
 		Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/lostcore/BladeFigureBullet"));
 	}
 }

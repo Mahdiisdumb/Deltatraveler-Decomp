@@ -7,7 +7,7 @@ public class DummyNothingAttack : AttackBase
 		base.Awake();
 		bbPos = new Vector2(0f, -2.37f);
 		bbSize = new Vector2(575f, 140f);
-		Object.FindObjectOfType<PartyPanels>().DeactivateTargets();
-		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
+		Util.FindObjectOfType<PartyPanels>().DeactivateTargets();
+		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
 	}
 }

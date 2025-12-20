@@ -21,25 +21,31 @@ public class SpikedFloorSoft : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<OverworldPlayer>())
+		if ((bool)collision)
 		{
-			krisOnSpikes = true;
-		}
-		if ((bool)collision.GetComponent<OverworldPartyMember>())
-		{
-			susieOnSpikes = true;
+			if ((bool)collision.GetComponent<OverworldPlayer>())
+			{
+				krisOnSpikes = true;
+			}
+			if ((bool)collision.GetComponent<OverworldPartyMember>())
+			{
+				susieOnSpikes = true;
+			}
 		}
 	}
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<OverworldPlayer>())
+		if ((bool)collision)
 		{
-			krisOnSpikes = false;
-		}
-		if ((bool)collision.GetComponent<OverworldPartyMember>())
-		{
-			susieOnSpikes = false;
+			if ((bool)collision.GetComponent<OverworldPlayer>())
+			{
+				krisOnSpikes = false;
+			}
+			if ((bool)collision.GetComponent<OverworldPartyMember>())
+			{
+				susieOnSpikes = false;
+			}
 		}
 	}
 }

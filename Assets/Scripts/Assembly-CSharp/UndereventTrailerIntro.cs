@@ -48,7 +48,7 @@ public class UndereventTrailerIntro : CutsceneBase
 			float num = (float)frames / 15f;
 			if (num < 1f)
 			{
-				num = Mathf.Sin(num * (float)Math.PI * 0.5f);
+				num = Mathf.Sin(num * MathF.PI * 0.5f);
 			}
 			float num2 = (float)frames / 60f;
 			if (num2 < 1f)
@@ -66,14 +66,14 @@ public class UndereventTrailerIntro : CutsceneBase
 			GameObject.Find("MAP").transform.position = new Vector3(0f, Mathf.Lerp(-10f, 0f, (float)(frames - 50) / 10f));
 			if (frames == 60)
 			{
-				kris.SetSelfAnimControl(true);
-				susie.SetSelfAnimControl(true);
+				kris.SetSelfAnimControl(setAnimControl: true);
+				susie.SetSelfAnimControl(setAnimControl: true);
 				kris.ChangeDirection(Vector2.down);
 				susie.ChangeDirection(Vector2.down);
 				kris.GetComponent<Animator>().Play("walk");
 				susie.GetComponent<Animator>().Play("walk");
-				cam.SetFollowPlayer(true);
-				gm.SetPartyMembers(true, false);
+				cam.SetFollowPlayer(follow: true);
+				gm.SetPartyMembers(susie: true, noelle: false);
 				EndCutscene();
 			}
 		}
@@ -85,17 +85,17 @@ public class UndereventTrailerIntro : CutsceneBase
 		kris.transform.position = new Vector3(0f, 0f);
 		susie.transform.position = new Vector3(-3f, 0f) + susie.GetPositionOffset();
 		noelle.transform.position = new Vector3(-6f, 0f) + noelle.GetPositionOffset();
-		kris.SetSelfAnimControl(false);
-		susie.SetSelfAnimControl(false);
-		noelle.SetSelfAnimControl(false);
-		kris.GetComponent<Animator>().SetBool("isMoving", true);
+		kris.SetSelfAnimControl(setAnimControl: false);
+		susie.SetSelfAnimControl(setAnimControl: false);
+		noelle.SetSelfAnimControl(setAnimControl: false);
+		kris.GetComponent<Animator>().SetBool("isMoving", value: true);
 		kris.ChangeDirection(Vector2.right);
-		susie.GetComponent<Animator>().SetBool("isMoving", true);
+		susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 		susie.ChangeDirection(Vector2.right);
-		noelle.GetComponent<Animator>().SetBool("isMoving", true);
+		noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
 		noelle.ChangeDirection(Vector2.right);
 		GameObject.Find("MAP").transform.position = new Vector3(0f, -10f);
-		cam.SetFollowPlayer(false);
+		cam.SetFollowPlayer(follow: false);
 		cam.transform.position = new Vector3(7.5f, 0f, -10f);
 	}
 }

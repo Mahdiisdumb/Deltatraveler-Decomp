@@ -57,25 +57,25 @@ public class IFPapyrus : InteractSelectionBase
 			Object.Instantiate(Resources.Load<GameObject>("uno/MusicChooser"), GameObject.Find("Canvas").transform);
 			startingGame = true;
 		}
-		else if (startingGame && choosingMusic && !Object.FindObjectOfType<MusicChooser>())
+		else if (startingGame && choosingMusic && !Util.FindObjectOfType<MusicChooser>())
 		{
 			txt = new GameObject("InteractTextBoxItem", typeof(TextBox)).GetComponent<TextBox>();
 			if (MusicChooser.musicID == MusicChooser.FRANKNESS_ID)
 			{
-				txt.CreateBox(new string[3] { "SO YOU ARE \nCHOOSING VIOLENCE,^05 \nEH?", "THEN I SHAN'T \nRESTRAIN MYSELF!", "NYEH HEH HEH!^05\nGET READY!" }, new string[3] { "snd_txtpap", "snd_txtpap", "snd_txtpap" }, new int[1], false, new string[3] { "ifpap_side", "ifpap_evil", "ifpap_laugh" });
-				txt.AddRemark(3, new string[1] { "br`su_inquisitive`(Oh boy...)" });
+				txt.CreateBox(new string[3] { "SO YOU ARE \nCHOOSING VIOLENCE,^05 \nEH?", "THEN I SHAN'T \nRESTRAIN MYSELF!", "NYEH HEH HEH!^05\nGET READY!" }, new string[3] { "snd_txtpap", "snd_txtpap", "snd_txtpap" }, new int[1], giveBackControl: false, new string[3] { "ifpap_side", "ifpap_evil", "ifpap_laugh" });
+				txt.AddRemark(new Remark(3, "su_inquisitive", "(Oh boy...)", "br"));
 			}
 			else
 			{
-				txt.CreateBox(new string[1] { "NYEH HEH HEH!^05\nLET US BEGIN!" }, new string[1] { "snd_txtpap" }, new int[1], false, new string[1] { "ifpap_neutral" });
+				txt.CreateBox(new string[1] { "NYEH HEH HEH!^05\nLET US BEGIN!" }, new string[1] { "snd_txtpap" }, new int[1], giveBackControl: false, new string[1] { "ifpap_neutral" });
 			}
 			choosingMusic = false;
 		}
-		else if (!txt && !tempTxt && startingGame && !Object.FindObjectOfType<MusicChooser>())
+		else if (!txt && !tempTxt && startingGame && !Util.FindObjectOfType<MusicChooser>())
 		{
 			startingGame = false;
-			Object.FindObjectOfType<GameManager>().SetPartyMembers(false, false);
-			Object.FindObjectOfType<OverworldPlayer>().InitiateBattle(75);
+			Util.GameManager().SetPartyMembers(susie: false, noelle: false);
+			Util.OverworldPlayer().InitiateBattle(75);
 		}
 		base.Update();
 	}
@@ -98,8 +98,8 @@ public class IFPapyrus : InteractSelectionBase
 		{
 			if (!txt && enabled)
 			{
-				CreateTextBox(lines, sounds, speed, true, portraits, remarks);
-				Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+				CreateTextBox(lines, sounds, speed, giveBackControl: true, portraits, remarks);
+				Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 			}
 		}
 		else
@@ -114,12 +114,12 @@ public class IFPapyrus : InteractSelectionBase
 		txt = new GameObject("InteractTextBoxItem", typeof(TextBox)).GetComponent<TextBox>();
 		if (index == Vector2.left)
 		{
-			txt.CreateBox(new string[2] { "WONDERFUL!", "WANT TO CHANGE THE \nMUSIC BEFORE\nSTARTING?" }, new string[1] { "snd_txtpap" }, new int[1], false, new string[2] { "ifpap_neutral", "ifpap_laugh" });
+			txt.CreateBox(new string[2] { "WONDERFUL!", "WANT TO CHANGE THE \nMUSIC BEFORE\nSTARTING?" }, new string[1] { "snd_txtpap" }, new int[1], giveBackControl: false, new string[2] { "ifpap_neutral", "ifpap_laugh" });
 			choosingMusic = true;
 		}
 		else if (index == Vector2.right)
 		{
-			txt.CreateBox(new string[1] { "OKAY!^05\nDO COME BACK IF \nYOU DO." }, new string[1] { "snd_txtpap" }, new int[1], true, new string[1] { "ifpap_neutral" });
+			txt.CreateBox(new string[1] { "OKAY!^05\nDO COME BACK IF \nYOU DO." }, new string[1] { "snd_txtpap" }, new int[1], giveBackControl: true, new string[1] { "ifpap_neutral" });
 		}
 		else if (index == Vector2.up)
 		{
@@ -130,7 +130,7 @@ public class IFPapyrus : InteractSelectionBase
 				"+2 CARDS FORCE THE \nNEXT PLAYER TO \nPICK UP 2 CARDS.", "AS WELL AS SKIP \nTHEIR TURN.", "HOWEVER,^05 THAT PLAYER \nCAN <color=#FFFF00FF>COUNTER WITH \nANOTHER ADD CARD</color>.", "WHICH INCREASES THE \nNUMBER OF CARDS TO \nPICK UP...", "GOING TO THE NEXT \nPERSON AFTER THAT.", "THIS ALSO APPLIES \nTO WILD +4 CARDS.", "ALLOWING YOU TO \nCHANGE THE COLOR \nAND ADD 4 CARDS", "TO THE NEXT PERSON.", "+2 AND +4 STACKING \nARE INTER-COMPATIBLE.", "HOWEVER,^05 YOU CAN \n<color=#FFFF00FF>ONLY PLAY +4 IF YOU \nCAN'T PLAY ANYTHING</color>.",
 				"IF YOU DO,^05 THE \nPLAYER THAT'S FORCED \nTO PICK UP", "CAN CHALLENGE YOUR \nDECISION.", "<color=#FFFF00FF>YOU MUST SHOW \nEVERYONE YOUR ENTIRE \nHAND.</color>", "IF THEIR CHALLENGE \nLOSES,^05 THEY MUST \nPICK UP <color=#FFFF00FF>2 EXTRA</color>.", "BUT IF IT WINS, \n<color=#FFFF00FF>YOU PICK UP THE \nCARDS INSTEAD</color>.", "THAT INCLUDES \nANYTHING THAT'S \nIN THE STACK.", "THAT WAS A LOT \nOF WORDS,^05 BUT I \nHOPE THIS HELPS.", "WAIT,^05 I THINK \nI'M FORGETTING \nSOMETHING...", "OH RIGHT!!!^05\nCALLING UNO!", "YOU MUST CALL \"UNO\" \nWHEN PLAYING YOUR \nLAST CARD.",
 				"I BELIEVE YOU \nDO A KIND OF \n^C MANEUVER...", "YOU CAN PREPARE \nONE BEFORE PLAYING \nTHE 2nd LAST CARD.", "BUT IF YOU FAIL \nTO CALL BEFORE \nSOMEONE ELSE...", "YOU MUST PICK UP \n<color=#FFFF00FF>4 MORE CARDS</color>!", "THERE WE ARE!^05\nALL OF THE RULES!"
-			}, new string[1] { "snd_txtpap" }, new int[1], true, new string[45]
+			}, new string[1] { "snd_txtpap" }, new int[1], giveBackControl: true, new string[45]
 			{
 				"ifpap_side", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral",
 				"ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral", "ifpap_neutral",
@@ -147,51 +147,51 @@ public class IFPapyrus : InteractSelectionBase
 			}
 			if (Util.GameManager().GetFlagInt(292) == 1 && Util.GameManager().GetFlagInt(309) == 1 && Util.GameManager().GetFlagInt(311) == 1)
 			{
-				txt.CreateBox(new string[2] { "WOW,^05 YOU HAVE WON \nALL OF MY PRIZES!", "I HOPE THAT YOU \nARE ENJOYING THEM." }, new string[1] { "snd_txtpap" }, new int[1], true, new string[2] { "ifpap_wacky", "ifpap_neutral" });
+				txt.CreateBox(new string[2] { "WOW,^05 YOU HAVE WON \nALL OF MY PRIZES!", "I HOPE THAT YOU \nARE ENJOYING THEM." }, new string[1] { "snd_txtpap" }, new int[1], giveBackControl: true, new string[2] { "ifpap_wacky", "ifpap_neutral" });
 				return;
 			}
 			bool flag = Util.GameManager().GetFlagInt(308) == 1 && Util.GameManager().GetFlagInt(309) == 0;
 			bool flag2 = Util.GameManager().GetFlagInt(310) == 1 && Util.GameManager().GetFlagInt(311) == 0;
 			if (flag2 || flag)
 			{
-				bool flag3 = flag2 && flag && Util.GameManager().NumItemFreeSpace() == 1;
-				bool num = Util.GameManager().NumItemFreeSpace() == 0;
+				bool flag3 = flag2 && flag && Util.GameManager().NumItemFreeSpace(equipment: false) == 1;
+				bool num = Util.GameManager().NumItemFreeSpace(equipment: false) == 0;
 				string arg = ((flag && flag2) ? "PRIZES" : "PRIZE");
 				if (num)
 				{
 					txt.CreateBox(new string[3]
 					{
-						string.Format("YOU DIDN'T EVEN \nMAKE SPACE FOR \nTHE {0}?", arg),
+						$"YOU DIDN'T EVEN \nMAKE SPACE FOR \nTHE {arg}?",
 						"THAT IS QUITE...^05 \nFRISK-LIKE OF YOU.",
 						"COME BACK WHEN \nYOU'VE ACTUALLY \nMADE ROOM."
-					}, new string[1] { "snd_txtpap" }, new int[1], true, new string[3] { "ifpap_confused", "ifpap_side", "ifpap_neutral" });
+					}, new string[1] { "snd_txtpap" }, new int[1], giveBackControl: true, new string[3] { "ifpap_confused", "ifpap_side", "ifpap_neutral" });
 				}
 				else if (flag3)
 				{
 					Util.GameManager().SetFlag(311, 1);
 					Util.GameManager().AddItem(45);
-					txt.CreateBox(new string[5] { "YOU ONLY HAVE \nROOM FOR ONE?", "THAT IS QUITE...^05 \nFRISK-LIKE OF YOU.", "WELL,^05 HERE'S ONE \nOF THEM!", "* (You got the WILD REVERSE\n  CARD.)", "COME BACK WHEN \nYOU'VE ACTUALLY MADE \nROOM FOR THE OTHER." }, new string[5] { "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_text", "snd_txtpap" }, new int[1], true, new string[5] { "ifpap_confused", "ifpap_side", "ifpap_neutral", "", "ifpap_neutral" });
+					txt.CreateBox(new string[5] { "YOU ONLY HAVE \nROOM FOR ONE?", "THAT IS QUITE...^05 \nFRISK-LIKE OF YOU.", "WELL,^05 HERE'S ONE \nOF THEM!", "* (You got the WILD REVERSE\n  CARD.)^05\n* (It was added to your ITEMs.)", "COME BACK WHEN \nYOU'VE ACTUALLY MADE \nROOM FOR THE OTHER." }, new string[5] { "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_text", "snd_txtpap" }, new int[1], giveBackControl: true, new string[5] { "ifpap_confused", "ifpap_side", "ifpap_neutral", "", "ifpap_neutral" });
 					soundAt.Add(4);
 				}
 				else
 				{
 					int num2 = 2;
-					List<string> list = new List<string> { string.Format("ALRIGHT,^05 HERE'S THE \n{0} THAT YOU \nHAVE EARNED!", arg) };
+					List<string> list = new List<string> { $"ALRIGHT,^05 HERE'S THE \n{arg} THAT YOU \nHAVE EARNED!" };
 					if (flag2)
 					{
 						Util.GameManager().SetFlag(311, 1);
 						soundAt.Add(num2++);
 						Util.GameManager().AddItem(45);
-						list.Add("* (You got the WILD REVERSE\n  CARD.)");
+						list.Add("* (You got the WILD REVERSE\n  CARD.)^05\n* (It was added to your ITEMs.)");
 					}
 					if (flag)
 					{
 						Util.GameManager().SetFlag(309, 1);
 						soundAt.Add(num2++);
 						Util.GameManager().AddItem(44);
-						list.Add("* (You got the Spaghetti.)");
+						list.Add("* (You got the Spaghetti.)^05\n* (It was added to your ITEMs.)");
 					}
-					txt.CreateBox(list.ToArray(), new string[2] { "snd_txtpap", "snd_text" }, new int[1], true, new string[2] { "ifpap_neutral", "" });
+					txt.CreateBox(list.ToArray(), new string[2] { "snd_txtpap", "snd_text" }, new int[1], giveBackControl: true, new string[2] { "ifpap_neutral", "" });
 				}
 			}
 			else
@@ -203,12 +203,12 @@ public class IFPapyrus : InteractSelectionBase
 					string arg2 = ((Util.GameManager().GetFlagInt(308) == 1) ? "ONE" : "TWO");
 					list2.AddRange(new string[2]
 					{
-						string.Format("I STILL HAVE {0} \nOF THE THREE \nPRIZES.", arg2),
+						$"I STILL HAVE {arg2} \nOF THE THREE \nPRIZES.",
 						"SEE IF YOU CAN \nSCORE HIGHER THAN \nYOU HAVE BEEN!"
 					});
 					list3.AddRange(new string[2] { "ifpap_side", "ifpap_laugh" });
 				}
-				txt.CreateBox(list2.ToArray(), new string[1] { "snd_txtpap" }, new int[1], true, list3.ToArray());
+				txt.CreateBox(list2.ToArray(), new string[1] { "snd_txtpap" }, new int[1], giveBackControl: true, list3.ToArray());
 			}
 		}
 	}

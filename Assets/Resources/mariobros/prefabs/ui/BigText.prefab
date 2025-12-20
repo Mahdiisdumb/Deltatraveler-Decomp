@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1797109401954653
+--- !u!1 &1300187189968155
 GameObject:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Component:
-  - component: {fileID: 224650501516656042}
-  - component: {fileID: 114001595588679812}
-  - component: {fileID: 222344307071643394}
+  - component: {fileID: 224581669953303626}
+  - component: {fileID: 114670514803216316}
+  - component: {fileID: 222288682780537624}
   m_Layer: 5
   m_Name: BigText
   m_TagString: Untagged
@@ -18,51 +18,56 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &224650501516656042
+--- !u!224 &224581669953303626
 RectTransform:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1797109401954653}
+  m_GameObject: {fileID: 1300187189968155}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &114001595588679812
+--- !u!114 &114670514803216316
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1797109401954653}
+  m_GameObject: {fileID: 1300187189968155}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff748925482186a15ca66cc95ae18fb3, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  m_Material: {fileID: 2100000, guid: a951542c660e10247a9ab4e8ef397154, type: 2}
+  m_Material: {fileID: 2100000, guid: b5794bc2f35bab0478fa9cfe02c28d78, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   text: sample text
   spritePath: mariobros/sprites/ui/spr_font_big
   characterSpacing: 0
   spaceSize: 8
+  lineSpacing: 0
   customCharacterSet:
   inset: {x: 4, y: -8}
---- !u!222 &222344307071643394
+  hAlignment: 0
+  vAlignment: 0
+--- !u!222 &222288682780537624
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1797109401954653}
+  m_GameObject: {fileID: 1300187189968155}
   m_CullTransparentMesh: 1

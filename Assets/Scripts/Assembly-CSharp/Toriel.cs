@@ -59,7 +59,7 @@ public class Toriel : EnemyBase
 	protected override void Update()
 	{
 		base.Update();
-		if (Object.FindObjectOfType<GameManager>().GetCombinedHP() <= 0)
+		if (Util.GameManager().GetCombinedHP() <= 0)
 		{
 			SetFace("gasp");
 		}
@@ -71,7 +71,7 @@ public class Toriel : EnemyBase
 		{
 			rawDmg = 0f;
 		}
-		if (partyMember == 0 && rawDmg > 0f)
+		if (partyMember == 6 && rawDmg > 0f)
 		{
 			if (curProgress >= 5)
 			{
@@ -88,7 +88,7 @@ public class Toriel : EnemyBase
 
 	public override string[] PerformAct(int i)
 	{
-		if (GetActNames()[i] == "Check")
+		if (GetActNames()[i] == EnemyBase.CHECK_NAME)
 		{
 			return new string[1] { "* TORIEL - ATK 80 DEF 80\n" + checkDesc };
 		}
@@ -127,13 +127,13 @@ public class Toriel : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		if (curProgress >= 5)
 		{
 			finalBlow = true;
 			prevProgressWasViolence = false;
-			Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
 			return new string[6] { "su_dejected`snd_txtsus`* Look,^05 if I actually\n  wanted to kill this\n  kid...", "su_neutral`snd_txtsus`* I would've done it\n  already.", "su_dejected`snd_txtsus`* But I didn't,^05 because\n  they never did anything\n  wrong.", "su_dejected`snd_txtsus`* I know nothing about\n  what's going on here,^05\n  to be honest.", "su_side`snd_txtsus`* If you could just\n  let me talk...", "su_smirk`snd_txtsus`* Then I can tell you\n  what the hell my\n  deal is." };
 		}
 		return new string[1] { "* Susie tried to reason with\n  Toriel,^05 but she was\n  ignored." };
@@ -199,7 +199,7 @@ public class Toriel : EnemyBase
 		else if (finalBlow)
 		{
 			text = ((!prevProgressWasViolence) ? new string[7] { "... You're right.", "I am just so...^05\nafraid.", "I am afraid of \nASGORE's plans to \nsucceed.", "I have been afraid \nfor so long.", "Perhaps it is time \nfor me to finally \nopen up.", "I apologize for what \nI have dealt onto \nyou.", "I will be happy \nto hear your story." } : new string[8] { "No,^05 I understand \nnow.", "I am being \nunreasonable to harm \nsomeone that did not \ndo anything.", "I am just so...^05\nafraid.", "I am afraid of \nASGORE's plans to \nsucceed.", "I have been afraid \nfor so long.", "Perhaps it is time \nfor me to finally \nopen up.", "I apologize for what \nI have dealt onto \nyou.", "I will be happy \nto hear your story." });
-			Object.FindObjectOfType<BattleManager>().StopMusic();
+			Util.FindObjectOfType<BattleManager>().StopMusic();
 			base.Chat(text, type, "snd_txttor", pos, canSkip, speed);
 			SetFace("surrender");
 		}

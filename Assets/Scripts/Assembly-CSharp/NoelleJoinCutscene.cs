@@ -40,7 +40,7 @@ public class NoelleJoinCutscene : CutsceneBase
 			}
 			else
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", false);
+				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
 			}
 			if (frames < 25)
 			{
@@ -48,7 +48,7 @@ public class NoelleJoinCutscene : CutsceneBase
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", false);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 			}
 			if (frames == 75)
 			{
@@ -59,7 +59,7 @@ public class NoelleJoinCutscene : CutsceneBase
 					"* There's a person on\n  the ground over there.",
 					hardmode ? "* It kinda looks like..." : "* Is it just me,^05 or\n  does that look like..."
 				}, new string[4] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[15], new string[3] { "su_side_sweat", "su_side_sweat", "su_smirk_sweat" }, 0);
-				cam.SetFollowPlayer(false);
+				cam.SetFollowPlayer(follow: false);
 				frames = 0;
 				state = 1;
 			}
@@ -73,21 +73,21 @@ public class NoelleJoinCutscene : CutsceneBase
 			{
 				kris.ChangeDirection(Vector2.right);
 				kris.transform.position = Vector3.MoveTowards(kris.transform.position, new Vector3(4.04f, y), 0.125f);
-				kris.GetComponent<Animator>().SetBool("isMoving", true);
+				kris.GetComponent<Animator>().SetBool("isMoving", value: true);
 			}
 			else
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", false);
+				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
 			}
 			if (susie.transform.position != new Vector3(5.42f, -1.87f))
 			{
 				susie.ChangeDirection(Vector2.right);
 				susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(5.42f, -1.87f), 0.125f);
-				susie.GetComponent<Animator>().SetBool("isMoving", true);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", false);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 			}
 			MonoBehaviour.print(frames);
 			if (frames == 120)
@@ -177,7 +177,7 @@ public class NoelleJoinCutscene : CutsceneBase
 				{
 					if (!hardmode)
 					{
-						susie.SetSprite("spr_su_right_unhappy_0");
+						susie.SetSprite("unhappy/spr_su_right_0_unhappy");
 					}
 					else
 					{
@@ -240,12 +240,12 @@ public class NoelleJoinCutscene : CutsceneBase
 				if (frames == 15)
 				{
 					gm.SetFlag(1, "smile");
-					susie.SetSelfAnimControl(true);
-					kris.SetSelfAnimControl(true);
+					susie.SetSelfAnimControl(setAnimControl: true);
+					kris.SetSelfAnimControl(setAnimControl: true);
 					kris.EnableAnimator();
 					kris.ChangeDirection(Vector2.down);
-					cam.SetFollowPlayer(true);
-					gm.SetPartyMembers(true, true);
+					cam.SetFollowPlayer(follow: true);
+					gm.SetPartyMembers(susie: true, noelle: true);
 					EndCutscene();
 				}
 			}
@@ -288,21 +288,21 @@ public class NoelleJoinCutscene : CutsceneBase
 			{
 				susie.ChangeDirection(Vector2.down);
 				susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(5.42f, -1.22f), 1f / 12f);
-				susie.GetComponent<Animator>().SetBool("isMoving", true);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", false);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 			}
 			if (noelle.transform.position != new Vector3(5.11f, -1.89f))
 			{
-				noelle.SetSelfAnimControl(false);
+				noelle.SetSelfAnimControl(setAnimControl: false);
 				noelle.transform.position = Vector3.MoveTowards(noelle.transform.position, new Vector3(5.11f, -1.89f), 1f / 12f);
-				noelle.GetComponent<Animator>().SetBool("isMoving", true);
+				noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
 			}
 			if (frames == 60)
 			{
@@ -424,11 +424,11 @@ public class NoelleJoinCutscene : CutsceneBase
 				if (kris.transform.position.x != 5.4f)
 				{
 					kris.transform.position = Vector3.MoveTowards(kris.transform.position, new Vector3(5.4f, -2.19f), 1f / 12f);
-					kris.GetComponent<Animator>().SetBool("isMoving", true);
+					kris.GetComponent<Animator>().SetBool("isMoving", value: true);
 				}
 				else
 				{
-					kris.GetComponent<Animator>().SetBool("isMoving", false);
+					kris.GetComponent<Animator>().SetBool("isMoving", value: false);
 				}
 				if (frames == 10)
 				{
@@ -445,7 +445,7 @@ public class NoelleJoinCutscene : CutsceneBase
 			{
 				kris.ChangeDirection(Vector2.right);
 				noelle.ChangeDirection(Vector2.right);
-				noelle.GetComponent<Animator>().SetBool("isMoving", true);
+				noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
 				noelle.transform.position = Vector3.MoveTowards(noelle.transform.position, new Vector3(7.62f, -1.89f), 0.125f);
 			}
 			else if (noelle.transform.position.y != -1.23f)
@@ -455,7 +455,7 @@ public class NoelleJoinCutscene : CutsceneBase
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
 				noelle.ChangeDirection(Vector2.left);
 				krisNPC.SetFloat("dirX", 1f);
 				if (geno)
@@ -518,10 +518,10 @@ public class NoelleJoinCutscene : CutsceneBase
 			}
 			if (frames == 60)
 			{
-				gm.SetPartyMembers(false, false);
+				gm.SetPartyMembers(susie: false, noelle: false);
 				gm.EnablePlayerMovement();
 				gm.SetCheckpoint(63);
-				gm.LoadArea(63, true, Vector2.zero, Vector2.down);
+				gm.LoadArea(63, fadeIn: true, Vector2.zero, Vector2.down);
 			}
 		}
 		if (state == 12)
@@ -548,16 +548,16 @@ public class NoelleJoinCutscene : CutsceneBase
 					GameObject.Find("Exclaim").transform.position = new Vector3(1000f, 0f);
 					susie.EnableAnimator();
 					susie.ChangeDirection(Vector2.down);
-					susie.GetComponent<Animator>().SetBool("isMoving", true);
-					kris.GetComponent<Animator>().SetBool("isMoving", true);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+					kris.GetComponent<Animator>().SetBool("isMoving", value: true);
 					krisNPC.SetFloat("dirX", -1f);
 				}
 				susie.transform.position = Vector3.Lerp(new Vector3(5.42f, -1.22f), new Vector3(5.42f, -1.83f), (float)frames / 10f);
 				kris.transform.position = Vector3.Lerp(new Vector3(5.4f, -2.19f), new Vector3(4.21f, -2.19f), (float)frames / 10f);
 				if (frames == 10)
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", false);
-					kris.GetComponent<Animator>().SetBool("isMoving", false);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+					kris.GetComponent<Animator>().SetBool("isMoving", value: false);
 				}
 				if (frames == 11)
 				{
@@ -605,13 +605,13 @@ public class NoelleJoinCutscene : CutsceneBase
 				{
 					noelle.EnableAnimator();
 					noelle.UseUnhappySprites();
-					noelle.GetComponent<Animator>().SetBool("isMoving", true);
+					noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
 				}
 				kris.transform.position = Vector3.MoveTowards(kris.transform.position, new Vector3(5.82f, -2.19f), 1f / 12f);
 				susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(100f, -1.83f), 1f / 12f);
 				noelle.transform.position = Vector3.MoveTowards(noelle.transform.position, new Vector3(20f, -4f), 1f / 24f);
-				susie.GetComponent<Animator>().SetBool("isMoving", true);
-				kris.GetComponent<Animator>().SetBool("isMoving", true);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				kris.GetComponent<Animator>().SetBool("isMoving", value: true);
 				susie.ChangeDirection(Vector2.left);
 			}
 			else
@@ -619,16 +619,16 @@ public class NoelleJoinCutscene : CutsceneBase
 				frames++;
 				if (frames == 1)
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", false);
-					kris.GetComponent<Animator>().SetBool("isMoving", false);
-					noelle.GetComponent<Animator>().SetBool("isMoving", false);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+					kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+					noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
 				}
 				if (frames == 30)
 				{
 					susie.ChangeDirection(Vector2.up);
 					krisNPC.SetFloat("dirX", 0f);
 					krisNPC.SetFloat("dirY", -1f);
-					StartText(new string[9] { "* Kris?", "* You thinkin' what\n  I'm thinkin'?", "* I think so.", "* Get them to stay\n  away,^05 else their heart\n  shatter?", "* ...^05 I wouldn't have\n  said THAT,^05 but yeah.", "* ...^10 Alright,^05 freak.", "* You have two choices.", "* You either fuck off,^05\n  or you get mutilated.", "* Take your pick." }, new string[9] { "snd_txtsus", "snd_txtsus", "snd_txtkrs", "snd_txtkrs", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[16], new string[9] { "su_neutral", "su_smile", "kr_neutral", "kr_violent", "su_inquisitive", "su_depressed", "su_depressed", "su_depressed_smile", "su_teeth" }, 0);
+					StartText(new string[9] { "* Kris?", "* You thinkin' what\n  I'm thinkin'?", "* I think so.", "* Get them to stay\n  away,^05 else their heart\n  shatter?", "* ...^05 I wouldn't have\n  said THAT,^05 but yeah.", "* ...^10 Alright,^05 freak.", "* You have two choices.", "* You either leave us\n  alone,^05 or we mutilate\n  you.", "* Take your pick." }, new string[9] { "snd_txtsus", "snd_txtsus", "snd_txtkrs", "snd_txtkrs", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[16], new string[9] { "su_neutral", "su_smile", "kr_neutral", "kr_violent", "su_inquisitive", "su_depressed", "su_depressed", "su_depressed_smile", "su_teeth" }, 0);
 					state = 14;
 					frames = 0;
 				}
@@ -663,14 +663,14 @@ public class NoelleJoinCutscene : CutsceneBase
 				}
 				if (krisAnimState > 0)
 				{
-					if (kris.transform.position != new Vector3(4.9f, -2.19f))
+					if (kris.transform.position != new Vector3(4.49f, -2.19f))
 					{
-						kris.GetComponent<Animator>().SetBool("isMoving", true);
-						kris.transform.position = Vector3.MoveTowards(kris.transform.position, new Vector3(4.9f, -2.19f), 0.125f);
+						kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+						kris.transform.position = Vector3.MoveTowards(kris.transform.position, new Vector3(4.49f, -2.19f), 0.125f);
 					}
 					else
 					{
-						kris.GetComponent<Animator>().SetBool("isMoving", false);
+						kris.GetComponent<Animator>().SetBool("isMoving", value: false);
 					}
 				}
 			}
@@ -684,13 +684,14 @@ public class NoelleJoinCutscene : CutsceneBase
 						kris.DisableAnimator();
 						kris.SetSprite("g/spr_fr_right_1_g");
 					}
-					kris.transform.position = Vector3.MoveTowards(kris.transform.position, new Vector3(100f, -2.19f), 1f / 96f);
+					kris.transform.position = Vector3.MoveTowards(kris.transform.position, new Vector3(4.81f, -2.19f), 1f / 96f);
 				}
 				else
 				{
 					if (frames == 25)
 					{
 						kris.EnableAnimator();
+						SetMoveAnim(kris, isMoving: false);
 					}
 					if (frames == 40)
 					{
@@ -736,8 +737,11 @@ public class NoelleJoinCutscene : CutsceneBase
 			int num9 = frames - 30;
 			if (num9 == 0)
 			{
-				GameObject.Find("Susie").GetComponent<SpriteRenderer>().enabled = false;
-				GameObject.Find("Noelle").GetComponent<SpriteRenderer>().enabled = false;
+				OverworldPartyMember[] array = Util.FindObjectsOfType<OverworldPartyMember>();
+				for (int i = 0; i < array.Length; i++)
+				{
+					array[i].HideSprite();
+				}
 				SpriteRenderer[] componentsInChildren = GameObject.Find("MAP").GetComponentsInChildren<SpriteRenderer>();
 				for (int i = 0; i < componentsInChildren.Length; i++)
 				{
@@ -820,15 +824,15 @@ public class NoelleJoinCutscene : CutsceneBase
 			TilemapRenderer[] componentsInChildren5 = GameObject.Find("MAP").GetComponentsInChildren<TilemapRenderer>();
 			foreach (TilemapRenderer tilemapRenderer in componentsInChildren5)
 			{
-				if (tilemapRenderer.GetComponent<Tilemap>().enabled)
+				if (((Behaviour)(object)tilemapRenderer.GetComponent<Tilemap>()).enabled)
 				{
 					tilemapRenderer.enabled = true;
 				}
 			}
-			OverworldPartyMember[] array = Object.FindObjectsOfType<OverworldPartyMember>();
+			OverworldPartyMember[] array = Util.FindObjectsOfType<OverworldPartyMember>();
 			for (int i = 0; i < array.Length; i++)
 			{
-				array[i].GetComponent<SpriteRenderer>().enabled = true;
+				array[i].ShowSprite();
 			}
 			kris.GetComponent<SpriteRenderer>().enabled = true;
 			fakeSOUL.enabled = false;
@@ -891,7 +895,7 @@ public class NoelleJoinCutscene : CutsceneBase
 			noelle.DisableAnimator();
 			noelle.SetSprite("spr_no_surprise");
 			krisNPC.enabled = true;
-			krisNPC.SetBool("isMoving", true);
+			krisNPC.SetBool("isMoving", value: true);
 		}
 		if (frames <= 28)
 		{
@@ -914,7 +918,7 @@ public class NoelleJoinCutscene : CutsceneBase
 		}
 		else
 		{
-			krisNPC.SetBool("isMoving", false);
+			krisNPC.SetBool("isMoving", value: false);
 		}
 		if (frames == 110)
 		{
@@ -935,11 +939,11 @@ public class NoelleJoinCutscene : CutsceneBase
 		susie.transform.position = new Vector3(-4.88f, -1.48f);
 		noelle.transform.position = new Vector3(7.65f, -1.89f);
 		kris.ChangeDirection(Vector2.right);
-		kris.SetSelfAnimControl(false);
-		kris.GetComponent<Animator>().SetBool("isMoving", true);
+		kris.SetSelfAnimControl(setAnimControl: false);
+		kris.GetComponent<Animator>().SetBool("isMoving", value: true);
 		susie.ChangeDirection(Vector2.right);
-		susie.SetSelfAnimControl(false);
-		susie.GetComponent<Animator>().SetBool("isMoving", true);
+		susie.SetSelfAnimControl(setAnimControl: false);
+		susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 		hardmode = (int)gm.GetFlag(108) == 1;
 		geno = (int)gm.GetFlag(13) == 3;
 		if (hardmode)

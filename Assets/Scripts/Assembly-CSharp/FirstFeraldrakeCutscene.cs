@@ -12,7 +12,7 @@ public class FirstFeraldrakeCutscene : CutsceneBase
 		}
 		if (state == 0 && !txt)
 		{
-			cam.SetFollowPlayer(false);
+			cam.SetFollowPlayer(follow: false);
 			if (!MoveTo(cam, new Vector3(20f, -4.6f, -10f), 2f))
 			{
 				frames++;
@@ -110,7 +110,7 @@ public class FirstFeraldrakeCutscene : CutsceneBase
 						Object.Destroy(txt);
 					}
 					kris.InitiateBattle(62);
-					EndCutscene(false);
+					EndCutscene(enablePlayerMovement: false);
 				}
 			}
 		}
@@ -132,10 +132,10 @@ public class FirstFeraldrakeCutscene : CutsceneBase
 	{
 		base.StartCutscene(par);
 		RevokePlayerControl();
-		SetMoveAnim(kris, false);
-		SetMoveAnim(susie, false);
-		SetMoveAnim(noelle, false);
-		cam.SetFollowPlayer(true);
+		SetMoveAnim(kris, isMoving: false);
+		SetMoveAnim(susie, isMoving: false);
+		SetMoveAnim(noelle, isMoving: false);
+		cam.SetFollowPlayer(follow: true);
 		ChangeDirection(kris, Vector2.down);
 		ChangeDirection(susie, Vector2.down);
 		ChangeDirection(noelle, Vector2.down);

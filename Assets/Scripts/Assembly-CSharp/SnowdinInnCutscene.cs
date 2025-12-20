@@ -118,7 +118,7 @@ public class SnowdinInnCutscene : CutsceneBase
 				LookAt(dess, noel);
 				if (noel.transform.position.y < -0.84f)
 				{
-					SetMoveAnim(noel, true);
+					SetMoveAnim(noel, isMoving: true);
 					noel.transform.position += new Vector3(0f, 1f / 12f);
 					return;
 				}
@@ -144,11 +144,11 @@ public class SnowdinInnCutscene : CutsceneBase
 			if (frames == 30)
 			{
 				ChangeDirection(dess, Vector2.right);
-				SetMoveAnim(dess, true);
+				SetMoveAnim(dess, isMoving: true);
 			}
 			if (frames >= 30 && !MoveTo(dess, new Vector3(1.35f, -1.36f), 4f))
 			{
-				SetMoveAnim(dess, false);
+				SetMoveAnim(dess, isMoving: false);
 				SetSprite(dess, "overworld/npcs/snowdin/spr_ds_whisper");
 				StartText(new string[3] { "* (Say,^05 Kris...)", "* (I've got a weird\n  question for you.)", "* (Are you a human?)" }, new string[3] { "snd_txtdes", "snd_txtdes", "snd_txtdes" }, new int[1], new string[3] { "dessut_sneaky", "dessut_sneaky_look", "dessut_sneaky" }, 0);
 				state = 4;
@@ -220,14 +220,14 @@ public class SnowdinInnCutscene : CutsceneBase
 			if (frames == 1)
 			{
 				noel.GetComponent<SpriteRenderer>().enabled = true;
-				SetMoveAnim(noel, true, 1.3f);
+				SetMoveAnim(noel, isMoving: true, 1.3f);
 				ChangeDirection(noel, Vector2.down);
 				PlaySFX("sounds/snd_escaped");
 			}
 			if (!MoveTo(noel, new Vector3(noel.transform.position.x, -0.75f), 6f))
 			{
 				ChangeDirection(noel, Vector2.right);
-				SetMoveAnim(noel, false);
+				SetMoveAnim(noel, isMoving: false);
 				SetSprite(noel, "player/Noel/spr_nl_right_0_unhappy");
 				SetSprite(dess, "overworld/npcs/snowdin/spr_ds_surprise_lookup");
 				StartText(new string[11]
@@ -283,7 +283,7 @@ public class SnowdinInnCutscene : CutsceneBase
 			}
 			if (dess.transform.position.y < 0.52f)
 			{
-				SetMoveAnim(dess, true);
+				SetMoveAnim(dess, isMoving: true);
 				dess.transform.position += new Vector3(0f, 0.125f);
 			}
 			else if (dess.transform.position.x > -4.29f)
@@ -307,7 +307,7 @@ public class SnowdinInnCutscene : CutsceneBase
 			{
 				noel.enabled = true;
 				ChangeDirection(noel, Vector2.right);
-				SetMoveAnim(noel, true);
+				SetMoveAnim(noel, isMoving: true);
 			}
 			if (frames >= 45)
 			{
@@ -317,7 +317,7 @@ public class SnowdinInnCutscene : CutsceneBase
 				}
 				else
 				{
-					SetMoveAnim(noel, false);
+					SetMoveAnim(noel, isMoving: false);
 				}
 			}
 			if (frames == 120)
@@ -349,7 +349,7 @@ public class SnowdinInnCutscene : CutsceneBase
 				dess.GetComponent<SpriteRenderer>().enabled = true;
 				PlaySFX("sounds/snd_escaped");
 				ChangeDirection(dess, Vector2.down);
-				SetMoveAnim(dess, true, 1.5f);
+				SetMoveAnim(dess, isMoving: true, 1.5f);
 			}
 			if (dess.transform.position.y > -0.52f)
 			{
@@ -362,7 +362,7 @@ public class SnowdinInnCutscene : CutsceneBase
 				dess.transform.position += new Vector3(1f / 6f, 0f);
 				return;
 			}
-			SetMoveAnim(dess, false);
+			SetMoveAnim(dess, isMoving: false);
 			SetSprite(noel, "player/Noel/spr_nl_left_0_unhappy");
 			StartText(new string[5] { "* Okay let's get outta\n  here Noel.", "* Uhh...^05 probably don't\n  talk to the other\n  deer.", "* Why?", "* No reason.^05\n* Now let's go.", "* Oh,^05 umm,^05 see ya\n  Kris!" }, new string[5] { "snd_txtdes", "snd_txtdes", "snd_txtnoe_ut", "snd_txtdes", "snd_txtdes" }, new int[1], new string[5] { "dessut_confused", "dessut_confused_think", "nl_confused", "dessut_murderous_side", "dessut_embarrassed" }, 0);
 			state = 9;
@@ -373,7 +373,7 @@ public class SnowdinInnCutscene : CutsceneBase
 			if (MoveTo(dess, new Vector3(-0.79f, -6.04f), 6f))
 			{
 				ChangeDirection(dess, Vector2.down);
-				SetMoveAnim(dess, true);
+				SetMoveAnim(dess, isMoving: true);
 				if (dess.transform.position.y < -2.32f)
 				{
 					SetSprite(noel, "player/Noel/spr_nl_down_0_unhappy");
@@ -408,13 +408,13 @@ public class SnowdinInnCutscene : CutsceneBase
 				susie.GetComponent<SpriteRenderer>().enabled = true;
 				susie.SetCustomSpritesetPrefix("no");
 				ChangeDirection(susie, Vector2.down);
-				SetMoveAnim(susie, true);
+				SetMoveAnim(susie, isMoving: true);
 				susie.transform.position = new Vector3(-4.21f, 2.28f);
 				PlaySFX("sounds/snd_escaped");
 			}
 			if (!MoveTo(susie, new Vector3(-4.21f, -0.43f), 6f))
 			{
-				SetMoveAnim(susie, false);
+				SetMoveAnim(susie, isMoving: false);
 				SetSprite(noel, "player/Noel/spr_nl_left_0_unhappy");
 				StartText(new string[7] { "* Kris,^05 what the hell\n  is going on???", "* Why are we back\n  in that rabbit house?", "* ...", "* Speaking of deja vu...", "* HEY!!!^05\n* WAKE UP!!!", "* W...^10 wuh...?", "* Look at this,^05 Noelle!!!" }, new string[7] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtsus" }, new int[1], new string[7] { "su_annoyed", "su_annoyed", "su_wideeye", "su_inquisitive", "su_wtf", "", "su_angry" }, 0);
 				state = 11;
@@ -470,7 +470,7 @@ public class SnowdinInnCutscene : CutsceneBase
 			if (frames == 100)
 			{
 				StartText(new string[1] { "* What are you talking\n  about?" }, new string[1] { "snd_txtnoe" }, new int[1], new string[1] { "no_confused" }, 0);
-				new GameObject("NoelTextbox").AddComponent<TextBox>().CreateBox(new string[1] { "* What are you talking\n  about?" }, new string[1] { "snd_txtnoe_ut" }, new int[1], 1, false, new string[1] { "nl_confused" });
+				new GameObject("NoelTextbox").AddComponent<TextBox>().CreateBox(new string[1] { "* What are you talking\n  about?" }, new string[1] { "snd_txtnoe_ut" }, new int[1], 1, giveBackControl: false, new string[1] { "nl_confused" });
 				state = 12;
 				frames = 0;
 			}
@@ -494,7 +494,7 @@ public class SnowdinInnCutscene : CutsceneBase
 				string[] array = new string[4] { "* What the heck...?!", "* Is that...^15 me?", "* It's like...", "* Looking into a strange\n  mirror..." };
 				StartText(array, new string[1] { "snd_txtnoe" }, new int[1] { 1 }, new string[1] { "" }, 0);
 				TextBox textBox = new GameObject("NoelTextbox").AddComponent<TextBox>();
-				textBox.CreateBox(array, new string[1] { "snd_txtnoe_ut" }, new int[1] { 1 }, 1, false, new string[1] { "" });
+				textBox.CreateBox(array, new string[1] { "snd_txtnoe_ut" }, new int[1] { 1 }, 1, giveBackControl: false, new string[1] { "" });
 				textBox.GetTextUT().transform.localPosition = new Vector3(0f, -40f);
 				Object.Destroy(txt.GetTextUT().transform.Find("menuBorder").gameObject);
 				Object.Destroy(txt.GetTextUT().transform.Find("menuBox").gameObject);
@@ -541,31 +541,31 @@ public class SnowdinInnCutscene : CutsceneBase
 			if (frames == 1)
 			{
 				ChangeDirection(noel, Vector2.down);
-				SetMoveAnim(noel, true, 1.5f);
+				SetMoveAnim(noel, isMoving: true, 1.5f);
 			}
 			MoveTo(noel, new Vector3(-0.87f, -5.7f), 6f);
 			if (frames >= 15)
 			{
 				if (MoveTo(noelle, new Vector3(-0.67f, -0.433f), 8f))
 				{
-					SetMoveAnim(noelle, true, 2f);
+					SetMoveAnim(noelle, isMoving: true, 2f);
 				}
 				else
 				{
 					ChangeDirection(noelle, Vector2.down);
-					SetMoveAnim(noelle, false);
+					SetMoveAnim(noelle, isMoving: false);
 				}
 			}
 			if (frames >= 40)
 			{
 				if (susie.transform.position.x < -2.84f)
 				{
-					SetMoveAnim(susie, true);
+					SetMoveAnim(susie, isMoving: true);
 					susie.transform.position += new Vector3(1f / 12f, 0f);
 				}
 				else if (!MoveTo(susie, new Vector3(-1.943f, -1.12f), 4f))
 				{
-					SetMoveAnim(susie, false);
+					SetMoveAnim(susie, isMoving: false);
 					ChangeDirection(susie, Vector2.down);
 				}
 			}
@@ -765,7 +765,7 @@ public class SnowdinInnCutscene : CutsceneBase
 				}
 				else if (AtLine(14))
 				{
-					SetSprite(susie, "spr_su_shrug_unhappy", true);
+					SetSprite(susie, "spr_su_shrug_unhappy", flipX: true);
 				}
 				else if (AtLine(15))
 				{

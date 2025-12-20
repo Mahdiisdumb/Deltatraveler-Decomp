@@ -17,14 +17,14 @@ public class SansDeathAttack : AttackBase
 		base.Awake();
 		bbPos = new Vector2(100f, -2.37f);
 		bbSize = new Vector2(575f, 140f);
-		Object.FindObjectOfType<PartyPanels>().DeactivateTargets();
-		Object.FindObjectOfType<PartyPanels>().RaiseHeads(false, false, false);
-		Object.FindObjectOfType<PartyPanels>().transform.position = new Vector3(100f, 0f);
-		Object.FindObjectOfType<TPBar>().transform.localPosition = new Vector3(-500f, 0f);
-		Object.FindObjectOfType<DescriptionBox>().Vanish();
+		Util.FindObjectOfType<PartyPanels>().DeactivateTargets();
+		Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: false, susie: false, noelle: false);
+		Util.FindObjectOfType<PartyPanels>().transform.position = new Vector3(100f, 0f);
+		Util.FindObjectOfType<TPBar>().transform.localPosition = new Vector3(-500f, 0f);
+		Util.FindObjectOfType<DescriptionBox>().Vanish();
 		soulPos.x = 100f;
-		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
-		sans = Object.FindObjectOfType<Sans>();
+		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
+		sans = Util.FindObjectOfType<Sans>();
 		splitHeadPart = sans.GetPart("body").Find("head").Find("splithead");
 		slicePrefab = Resources.Load<GameObject>("battle/Slice");
 		if (GameManager.GetOptions().contentSetting.value == 1)
@@ -44,7 +44,7 @@ public class SansDeathAttack : AttackBase
 			frames++;
 			if (frames <= 60)
 			{
-				BattleButton[] array = Object.FindObjectsOfType<BattleButton>();
+				BattleButton[] array = Util.FindObjectsOfType<BattleButton>();
 				foreach (BattleButton battleButton in array)
 				{
 					battleButton.GetComponent<SpriteRenderer>().color = new Color(battleButton.GetComponent<SpriteRenderer>().color.r, battleButton.GetComponent<SpriteRenderer>().color.g, battleButton.GetComponent<SpriteRenderer>().color.b, 1f - (float)frames / 60f);
@@ -64,7 +64,7 @@ public class SansDeathAttack : AttackBase
 			}
 			if (frames == 60)
 			{
-				Object.Destroy(Object.FindObjectOfType<SansBG>().gameObject);
+				Object.Destroy(Util.FindObjectOfType<SansBG>().gameObject);
 				sans.StartDeathCore();
 				sans.SetFace("split_shocked" + bloodPrefix);
 				if (GameManager.GetOptions().contentSetting.value == 1)
@@ -100,10 +100,10 @@ public class SansDeathAttack : AttackBase
 			}
 			if (frames == 180)
 			{
-				Object.FindObjectOfType<BattleManager>().PlayMusic("music/mus_f_wind", 1f, true);
+				Util.FindObjectOfType<BattleManager>().PlayMusic("music/mus_f_wind", 1f, hasIntro: true);
 				sans.SetFace("split_think" + bloodPrefix);
 				sans.SetSweat(-1);
-				sans.Chat(new string[9] { "heh^15 heh^15 heh^05...", "so what goes 'round...^15\ncomes 'round...", "...", "what's up,^15 susie...?", "you expecting me to \ncry out in pain?", "do you honestly \nthink that this avenges \nthat orphan?", "that poor,^15 lost little \norphan named <color=#FF00FF>suzy</color>?", "ARE YOU STUPID!?", "AS IF HER FAMILY \nCARES THAT SHE'S DEAD." }, "snd_txtsans", Util.GameManager().IsTestMode(), 1);
+				sans.Chat(new string[9] { "heh^15 heh^15 heh^05...", "so what goes \n'round...^15\ncomes 'round...", "...", "what's up,^15 susie...?", "you expecting me \nto cry out in pain?", "do you honestly \nthink that this \navenges that orphan?", "that poor,^15 lost \nlittle orphan named \n<color=#FF00FF>suzy</color>?", "ARE YOU STUPID!?", "AS IF HER FAMILY \nCARES THAT SHE'S \nDEAD." }, "snd_txtsans", Util.GameManager().IsTestMode(), 1);
 				sans.GetTextBubble().GetComponent<ShakingText>().StartShake(10, "sans");
 				state = 1;
 				frames = 0;
@@ -120,7 +120,7 @@ public class SansDeathAttack : AttackBase
 				if (sans.GetTextBubble().GetCurrentStringNum() == 8 && !fuckedUp)
 				{
 					fuckedUp = true;
-					Object.FindObjectOfType<BattleManager>().StopMusic();
+					Util.FindObjectOfType<BattleManager>().StopMusic();
 					sans.SetFace("split_laugh_0" + bloodPrefix);
 					sans.GetTextBubble().GetComponent<ShakingText>().StartShake(0, "sans");
 				}
@@ -130,11 +130,11 @@ public class SansDeathAttack : AttackBase
 			if (frames == 1)
 			{
 				Util.GameManager().PlayGlobalSFX("music/mus_sansdeath");
-				Object.FindObjectOfType<BattleCamera>().BlastShake();
+				Util.FindObjectOfType<BattleCamera>().BlastShake();
 			}
 			if (frames == 10)
 			{
-				Object.FindObjectOfType<BattleCamera>().GiantBlastShake();
+				Util.FindObjectOfType<BattleCamera>().GiantBlastShake();
 			}
 			sans.SetFace("split_laugh_" + frames / 4 % 2 + bloodPrefix);
 			float num5 = (float)(frames % 14) / 7f;
@@ -143,18 +143,18 @@ public class SansDeathAttack : AttackBase
 				num5 = 2f - num5;
 			}
 			float t = (float)(frames - 30) / 60f;
-			Object.FindObjectOfType<BattleCamera>().GetComponent<Camera>().backgroundColor = Color.Lerp(Color.black, new Color(Mathf.Lerp(0.4f, 0f, t), 0f, 0f), num5);
+			Util.FindObjectOfType<BattleCamera>().GetComponent<Camera>().backgroundColor = Color.Lerp(Color.black, new Color(Mathf.Lerp(0.4f, 0f, t), 0f, 0f), num5);
 			if (frames >= 20 && frames <= 140)
 			{
 				switch ((frames - 20) % 20)
 				{
 				case 0:
-					Object.Instantiate(slicePrefab).GetComponent<PlayerAttackAnimation>().AssignValues(sans, 1, 20f, 3);
+					Object.Instantiate(slicePrefab).GetComponent<PlayerAttackAnimation>().AssignValues(sans, 1, 20f, 3, 1);
 					break;
 				case 12:
 					if (frames < 120)
 					{
-						sans.Hit(1, 20f, true);
+						sans.Hit(1, 20f, playSound: true);
 					}
 					break;
 				}
@@ -163,7 +163,7 @@ public class SansDeathAttack : AttackBase
 			{
 				Util.GameManager().AddEXP(sans.GetFinalEXP());
 				Util.GameManager().AddGold(sans.GetGold());
-				Object.FindObjectOfType<BattleManager>().FadeEndBattle(1);
+				Util.FindObjectOfType<BattleManager>().FadeEndBattle(1);
 			}
 		}
 	}

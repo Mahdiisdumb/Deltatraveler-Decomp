@@ -32,18 +32,18 @@ public class ShopUISansSnowdin2 : ShopUISansBase
 			{
 				topic4lines = new string[13]
 				{
-					"closed`*\tlooks like you guys took\n\tcare of evil me.", "sad`*\tsorry you had to deal with\n\thim.", "concerned`*\tit's hard to even imagine what\n\tkinda place he was in when\n\tyou met him.", "closed`*\tbut, uhh...^10 on an unrelated\n\tnote...", "neutral`*\ti think it's a bad idea\n\tto abuse ice magic.", "rolleye`*\ti mean,^05 plenty of folks here\n\thave frozen themselves to the\n\tfloor and had to call the guard\n\tto help.", "closed`*\tbut also...", "closed`*\tit's really powerful to master.", "neutral`*\tpower that requires incredible\n\tresponsibility to handle.", "closed`*\ti doubt you'd be able to\n\teven get close to mastering\n\tice magic on your journey.",
-					"wink`*\tbut in your dreams,^05 you\n\tcould do anything.", "side`*\tactually,^05 uhh...", "closed`*\t...nevermind."
+					"closed`* looks like you guys took\n  care of evil me.", "sad`* sorry you had to deal with\n  him.", "concerned`* it's hard to even imagine what\n  kinda place he was in when\n  you met him.", "closed`* but, uhh...^10 on an unrelated\n  note...", "neutral`* i think it's a bad idea\n  to abuse ice magic.", "rolleye`* i mean,^05 plenty of folks here\n  have frozen themselves to the\n  floor and had to call the guard\n  to help.", "closed`* but also...", "closed`* it's really powerful to master.", "neutral`* power that requires incredible\n  responsibility to handle.", "closed`* i doubt you'd be able to\n  even get close to mastering\n  ice magic on your journey.",
+					"wink`* but in your dreams,^05 you\n  could do anything.", "side`* actually,^05 uhh...", "closed`* ...nevermind."
 				};
 			}
 			else
 			{
-				topic4lines = new string[4] { "closed`*\tlooks like you guys took\n\tcare of evil me.", "sad`*\tsorry you had to deal with\n\thim.", "concerned`*\tit's hard to even imagine what\n\tkinda place he was in when\n\tyou met him.", "closed`*\t... but it's not hard for\n\tme to see how that could've\n\tstarted." };
+				topic4lines = new string[4] { "closed`* looks like you guys took\n  care of evil me.", "sad`* sorry you had to deal with\n  him.", "concerned`* it's hard to even imagine what\n  kinda place he was in when\n  you met him.", "closed`* ... but it's not hard for\n  me to see how that could've\n  started." };
 			}
 		}
 		else if (Util.GameManager().GetFlagInt(318) == 1)
 		{
-			topic4lines = new string[6] { "closed`*\tlooks like you guys took\n\tcare of evil me.", "side`*\tthat turned out better than \n\ti expected.", "sad`*\tnot gonna lie,^05 i was thinking\n\tyou guys'd have to make \n\thim fall asleep.", "wink`*\tglad to see talking it out \n\tactually worked,^05 though.", "closed`*\tthat being said,^05 i feel if you went\n\tany other route,^05 that wouldn't\n\tbe possible.", "wink`*\tbut that's not something\n\tto worry about anymore.^10\n*\twhat's been done, ^10\n\t's been done." };
+			topic4lines = new string[6] { "closed`* looks like you guys took\n  care of evil me.", "side`* that turned out better than \n  i expected.", "sad`* not gonna lie,^05 i was thinking\n  you guys'd have to make \n  him fall asleep.", "wink`* glad to see talking it out \n  actually worked,^05 though.", "closed`* that being said,^05 i feel if you went\n  any other route,^05 that wouldn't\n  be possible.", "wink`* but that's not something\n  to worry about anymore.^10\n* what's been done, ^10\n  's been done." };
 		}
 	}
 
@@ -82,7 +82,7 @@ public class ShopUISansSnowdin2 : ShopUISansBase
 		{
 			Util.GameManager().SetFlag(284, 1);
 			endToState = 6;
-			StartFullTalk(new string[5] { "closed`*\tokay,^05 i talked with papyrus...", "wink`*\tunder a heavy disguise...", "rolleye`*\tsays he's pretty bored from\n\tpolishing a cannon.", "neutral`*\tso i can buy <color=#FFFF00FF>three things</color>\n\toff of you for now.", "wink`*\tbe sure to choose what\n\tyou wanna sell wisely." });
+			StartFullTalk(new string[5] { "closed`* okay,^05 i talked with papyrus...", "wink`* under a heavy disguise...", "rolleye`* says he's pretty bored from\n  polishing a cannon.", "neutral`* so i can buy <color=#FFFF00FF>three things</color>\n  off of you for now.", "wink`* be sure to choose what\n  you wanna sell wisely." });
 		}
 		else
 		{

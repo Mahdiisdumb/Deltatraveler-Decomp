@@ -15,7 +15,7 @@ public class PaintBlobBullet : BulletBase
 		baseDmg = 9;
 		destroyOnHit = true;
 		ChangeType(Random.Range(0, 2));
-		if (base.gameObject.tag == "BlueBullet" && !Object.FindObjectOfType<Carpainter>())
+		if (base.gameObject.tag == "BlueBullet" && !Util.FindObjectOfType<Carpainter>())
 		{
 			speed = 5;
 		}
@@ -23,7 +23,7 @@ public class PaintBlobBullet : BulletBase
 		int num = (moveRight ? (-3) : 3);
 		float[] obj = new float[4] { -2.688f, -2.048f, -1.328f, -0.692f };
 		int num2 = Random.Range(0, 4);
-		if ((num2 <= 1 && Object.FindObjectOfType<SOUL>().transform.position.y > -1.685f) || (num2 > 1 && Object.FindObjectOfType<SOUL>().transform.position.y < -1.685f))
+		if ((num2 <= 1 && Util.FindObjectOfType<SOUL>().transform.position.y > -1.685f) || (num2 > 1 && Util.FindObjectOfType<SOUL>().transform.position.y < -1.685f))
 		{
 			num2 = Random.Range(0, 4);
 		}
@@ -49,13 +49,13 @@ public class PaintBlobBullet : BulletBase
 
 	public override void SOULHit()
 	{
-		if ((bool)Object.FindObjectOfType<PaintBlobAttack>())
+		if ((bool)Util.FindObjectOfType<PaintBlobAttack>())
 		{
-			Object.FindObjectOfType<PaintBlobAttack>().GetHit();
+			Util.FindObjectOfType<PaintBlobAttack>().GetHit();
 		}
-		if ((bool)Object.FindObjectOfType<CarPaintBlobAttack>())
+		if ((bool)Util.FindObjectOfType<CarPaintBlobAttack>())
 		{
-			Object.FindObjectOfType<CarPaintBlobAttack>().GetHit();
+			Util.FindObjectOfType<CarPaintBlobAttack>().GetHit();
 		}
 		base.SOULHit();
 	}

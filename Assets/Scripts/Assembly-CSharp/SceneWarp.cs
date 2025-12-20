@@ -20,7 +20,7 @@ public class SceneWarp : MonoBehaviour
 
 	private void Awake()
 	{
-		player = Object.FindObjectOfType<OverworldPlayer>();
+		player = Util.OverworldPlayer();
 		holdingHoriz = false;
 		holdingVert = false;
 		dir = 0;
@@ -36,14 +36,14 @@ public class SceneWarp : MonoBehaviour
 
 	private void Start()
 	{
-		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(true);
+		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
 	}
 
 	private void Update()
 	{
 		if ((bool)player && player.CanMove())
 		{
-			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(true);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
 		}
 		if (UTInput.GetAxis("Horizontal") == -1f && !holdingHoriz)
 		{
@@ -91,7 +91,7 @@ public class SceneWarp : MonoBehaviour
 		}
 		else if (UTInput.GetButtonDown("C"))
 		{
-			Object.FindObjectOfType<GameManager>().ForceLoadArea(curScene);
+			Util.GameManager().ForceLoadArea(curScene);
 		}
 	}
 

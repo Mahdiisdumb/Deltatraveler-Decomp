@@ -24,11 +24,11 @@ public class SusieAndNoelleGoToBed : CutsceneBase
 				{
 					if (!MoveTo(susie, new Vector3(2.08f, -1.42f), 4f))
 					{
-						SetMoveAnim(susie, false);
+						SetMoveAnim(susie, isMoving: false);
 					}
 					else
 					{
-						SetMoveAnim(susie, true);
+						SetMoveAnim(susie, isMoving: true);
 					}
 				}
 				else if (frames == 51)
@@ -43,7 +43,7 @@ public class SusieAndNoelleGoToBed : CutsceneBase
 						PlayAnimation(susie, "FallBack");
 						PlaySFX("sounds/snd_jump");
 					}
-					susie.transform.position = Vector3.Lerp(new Vector3(2.08f, -1.42f), new Vector3(2.477f, 0.208f), (float)(frames - 55) / 20f) + new Vector3(0f, Mathf.Sin((float)((frames - 55) * 9) * ((float)Math.PI / 180f)));
+					susie.transform.position = Vector3.Lerp(new Vector3(2.08f, -1.42f), new Vector3(2.477f, 0.208f), (float)(frames - 55) / 20f) + new Vector3(0f, Mathf.Sin((float)((frames - 55) * 9) * (MathF.PI / 180f)));
 					if (frames == 75)
 					{
 						SetSprite(susie, "spr_su_chilling_0");
@@ -53,7 +53,7 @@ public class SusieAndNoelleGoToBed : CutsceneBase
 				if (noelle.transform.position.y < -1.51f)
 				{
 					MoveTo(noelle, new Vector3(2.99f, -1.51f), 4f);
-					SetMoveAnim(noelle, true);
+					SetMoveAnim(noelle, isMoving: true);
 					return;
 				}
 				if (noelle.transform.position.x < 4.61f)
@@ -67,7 +67,7 @@ public class SusieAndNoelleGoToBed : CutsceneBase
 					ChangeDirection(noelle, Vector2.up);
 					return;
 				}
-				SetMoveAnim(noelle, false);
+				SetMoveAnim(noelle, isMoving: false);
 				if (frames >= 75)
 				{
 					noelle.UseUnhappySprites();
@@ -127,7 +127,7 @@ public class SusieAndNoelleGoToBed : CutsceneBase
 				}
 				if (frames == 135)
 				{
-					SetMoveAnim(noelle, true);
+					SetMoveAnim(noelle, isMoving: true);
 					ChangeDirection(noelle, Vector2.left);
 					GameObject.Find("NoelleBedSide").GetComponent<SpriteRenderer>().enabled = true;
 					if (animType == 2)
@@ -143,7 +143,7 @@ public class SusieAndNoelleGoToBed : CutsceneBase
 				if (!MoveTo(noelle, new Vector3(1.773f, 2.936f), 4f))
 				{
 					ChangeDirection(noelle, Vector2.down);
-					SetMoveAnim(noelle, false);
+					SetMoveAnim(noelle, isMoving: false);
 					state = 2;
 					frames = 0;
 				}
@@ -259,11 +259,11 @@ public class SusieAndNoelleGoToBed : CutsceneBase
 			{
 				if (!MoveTo(susie, new Vector3(2.49f, -1.05f), 4f))
 				{
-					SetMoveAnim(susie, false);
+					SetMoveAnim(susie, isMoving: false);
 				}
 				else
 				{
-					SetMoveAnim(susie, true);
+					SetMoveAnim(susie, isMoving: true);
 				}
 			}
 			else if (frames == 110)
@@ -319,9 +319,9 @@ public class SusieAndNoelleGoToBed : CutsceneBase
 		{
 			animType = 1;
 		}
-		gm.SetPartyMembers(false, false);
+		gm.SetPartyMembers(susie: false, noelle: false);
 		RevokePlayerControl();
-		kris.SetSelfAnimControl(true);
+		kris.SetSelfAnimControl(setAnimControl: true);
 		gm.EnablePlayerMovement();
 		ChangeDirection(susie, Vector2.up);
 		ChangeDirection(noelle, Vector2.up);

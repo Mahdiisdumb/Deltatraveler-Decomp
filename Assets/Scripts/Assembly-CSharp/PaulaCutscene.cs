@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PaulaCutscene : CutsceneBase
@@ -28,50 +27,6 @@ public class PaulaCutscene : CutsceneBase
 
 	private Transform table;
 
-	public override Dictionary<string, string[]> GetDefaultStrings()
-	{
-		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
-		dictionary.Add("intro_0", new string[1] { "* Who...?" });
-		dictionary.Add("intro_1_paulaknown", new string[5] { "* Wait,^05 what???^05\n* A kid???", "* Are you Paula???", "* H-^05how did you know\n  my name?", "* Did someone tell you\n  that I was here...?", "* Well,^05 the masked\n  man didn't seem very\n  smart..." });
-		dictionary.Add("intro_1", new string[5] { "* Uhhhh,^05 what???", "* Is that a kid???", "* Oh...^10 hello.^05\n* My name is Paula.", "* I was abducted\n  by a chubby kid\n  and a masked man.", "* They locked me\n  here,^05 and--" });
-		dictionary.Add("intro_2", new string[12]
-		{
-			"* Wait...^05 how long have\n  you BEEN here?", "* You've just been...\n^10  alone,^05 all by yourself?", "* ... And they didn't\n  even give you any\n  FOOD???", "* WHEN I GET MY\n  HANDS ON THEM,\n  I'LL--", "* Susie,^05 shouldn't we\n  help her first?", "* Oh yeah.", "* ...", "* Well,^05 you three aren't\n  who I was hoping\n  would show up...", "* But if you wanna\n  help me,^05 you'll need\n  to get a key from--", "* Key?",
-			"* Nah,^05 we don't need\n  that.", "* Susie?"
-		});
-		dictionary.Add("intro_3", new string[1] { "* Watch THIS!" });
-		dictionary.Add("intro_4", new string[3] { "* ...", "* Well...^05 thanks!", "* Don't mention it." });
-		dictionary.Add("intro_5", new string[1] { "* So...^05 what now?" });
-		dictionary.Add("gaster_rant_0", new string[3] { "\b        WELL DONE,^10 KRIS.", "\b          IT APPEARS\n\b         WE HAVE FOUND\n\b       AN ESSENCE HOLDER.", "\b    TAKE A LOOK AT THE SOULS\n\b          IN THIS ROOM." });
-		dictionary.Add("gaster_rant_1", new string[12]
-		{
-			"\b  NOTICE THE COLOR OF YOUR SOUL,^10\n\b        AS WELL AS HERS.", "\b   THIS INDICATES A CONNECTION.", "\b            THOUGH...\n\b           WITH HER...", "\b          IT APPEARS...\n\b     HER CONNECTION IS NOT\n\b         STRONG ENOUGH.", "\b IT IS SPREAD ACROSS FOUR HUMANS\n\b         IN THIS WORLD.", "\b    AND THEIR WILL TO PROCEED\n\b         IS NOT AS HIGH\n\b          AS YOUR OWN.", "\b              ...", "\b           HOWEVER...", "\b    SHE SEEMS TO BE CARRYING\n\b       AN IMPORTANT OBJECT.", "\b          I WONDER...",
-			"\b  WOULD SHE BENEFIT YOUR CAUSE?", "\b           AND IF SO..."
-		});
-		dictionary.Add("gaster_rant_2", new string[1] { "\b  WOULD YOU ALLOW HER TO DO SO?" });
-		dictionary.Add("post_gaster_0", new string[2] { "* No idea.", "* Any ideas,^05 Kris?" });
-		dictionary.Add("post_gaster_1", new string[2] { "* ...^10 Kris?", "* Is... something wrong?" });
-		dictionary.Add("choices_0", new string[2] { "Nothing", "Paula\nshould\njoin us" });
-		dictionary.Add("post_gaster_2_choice0", new string[7] { "* ...", "* Not sure I believe\n  that.", "* Yeah,^05 Kris.", "* You look really\n  worried about\n  something.", "* Say,^05 is there a\n  reason why you came\n  here?", "* Well,^05 we're tryna find\n  a grey door,^05 mostly.", "* Really?" });
-		dictionary.Add("post_gaster_2_choice1", new string[5] { "* Huh?", "* Umm,^05 I guess for\n  like...", "* Until we reach a\n  grey door.", "* (I don't think Kris\n  even believes\n  themself...)", "* Oh,^05 you're trying to\n  find a grey door?" });
-		dictionary.Add("post_gaster_3", new string[22]
-		{
-			"* Well,^05 I heard there's\n  one nearby.", "* It's at a place\n  called <color=#FFFF00FF>Lilliput Steps</color>.", "* But...^05 the entrance\n  has been completely\n  sealed.", "* The only way to\n  get past it is\n  to blow it up.", "* Okay...^10 but how?", "* Is there a bomb\n  nearby or something?", "* Yeah.\n^05* Exactly that.", "* Mr. Carpainter has a\n  bomb hidden away at\n  the <color=#FFFF00FF>center of town</color>.", "* Okay,^05 I was just\n  joking.", "* That's like...\n^05  actually stupid.",
-			"* But if that's what\n  we need to do,^05\n  we'll just take it.", "* That could be an\n  issue if you go\n  by yourselves.", "* See,^05 he has this\n  lightning power...", "* Because he can cast\n  lightning,^05 you won't\n  be able to get it.", "* This whole thing sounds\n  really tough,^05 haha...", "* Well,^05 it's a good\n  thing I have a solution.", "* I have a Franklin Badge\n  that can <color=#FFFF00FF>reflect\n  lightning</color>!", "* Maybe for the time\n  being,^05 I could join you\n  three.", "* Badge aside,^05 I know\n  some psychic moves\n  that can help you.", "* I dunno.",
-			"* Sounds kinda complicated.", "* ..."
-		});
-		dictionary.Add("paula_injured_0", new string[11]
-		{
-			"* O-^05ow...", "* I...^10 I think I\n  hurt my leg...", "* Those two were\n  pretty rough...", "* Oh!", "* Umm...^05 Maybe one of\n  us could carry you?", "* Really?\n* That sounds like\n  fun!", "* Umm,^05 sorry but...^05 I...^10\n  don't do carrying.", "* And I mean,^05 she was\n  sitting in a\n  dirty ass cell.", "* And I'm not strong\n  enough to carry\n  anyone...", "* ...^05 Kris?",
-			"* Can you carry her?"
-		});
-		dictionary.Add("choices_1", new string[2] { "Yes", "No" });
-		dictionary.Add("paula_injured_1_choice0", new string[2] { "* T-^05thanks Kris!", "* (They could've said it\n  less rudely,^05 I was\n  asking nicely...)" });
-		dictionary.Add("paula_injured_1_choice1", new string[2] { "* No?", "* Well too bad,^05 you\n  can't proceed without\n  me!" });
-		dictionary.Add("cope_seethe_mald", new string[9] { "* (Paula joined the party.)", "* Wow,^05 it's so tall\n  up here!", "* I...^10 I'd love to\n  also ride piggyback...", "* Well,^05 too bad Kris\n  is already carrying\n  someone.", "* Well,^05 you're not\n  carrying anything...", "* Yeah,^05 well I don't\n  feel like carrying\n  anything right now.", "* ", "* Alright,^05 enough screwing\n  around.", "* Let's go to that\n  <color=#FFFF00FF>center of town</color> place." });
-		return dictionary;
-	}
-
 	private void Update()
 	{
 		if (state == 0)
@@ -86,10 +41,10 @@ public class PaulaCutscene : CutsceneBase
 			else if (frames == 30)
 			{
 				paula.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("overworld/npcs/spr_paula_firstcut_1");
-				kris.GetComponent<Animator>().SetBool("isMoving", false);
-				susie.GetComponent<Animator>().SetBool("isMoving", false);
-				noelle.GetComponent<Animator>().SetBool("isMoving", false);
-				StartText(GetStringArray("intro_0"), new string[1] { "snd_txtpau" }, new int[18], new string[1] { "pau_confused" }, 0);
+				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+				StartText(new string[1] { "* Who...?" }, new string[1] { "snd_txtpau" }, new int[18], new string[1] { "pau_confused" }, 0);
 				state = 1;
 				frames = 0;
 			}
@@ -114,11 +69,11 @@ public class PaulaCutscene : CutsceneBase
 				noelle.SetSprite("spr_no_surprise_up");
 				if (paulaKnown)
 				{
-					StartText(GetStringArray("intro_1_paulaknown"), new string[5] { "snd_txtsus", "snd_txtsus", "snd_txtpau", "snd_txtpau", "snd_txtpau" }, new int[18], new string[5] { "su_shocked", "su_shocked", "pau_surprised", "pau_neutral", "pau_dejected" }, 0);
+					StartText(new string[5] { "* Wait,^05 what???^05\n* A kid???", "* Are you Paula???", "* H-^05how did you know\n  my name?", "* Did someone tell you\n  that I was here...?", "* Well,^05 the masked\n  man didn't seem very\n  smart..." }, new string[5] { "snd_txtsus", "snd_txtsus", "snd_txtpau", "snd_txtpau", "snd_txtpau" }, new int[18], new string[5] { "su_shocked", "su_shocked", "pau_surprised", "pau_neutral", "pau_dejected" }, 0);
 				}
 				else
 				{
-					StartText(GetStringArray("intro_1"), new string[5] { "snd_txtsus", "snd_txtsus", "snd_txtpau", "snd_txtpau", "snd_txtpau" }, new int[18], new string[5] { "su_shocked", "su_shocked", "pau_neutral", "pau_dejected", "pau_dejected" }, 0);
+					StartText(new string[5] { "* Uhhhh,^05 what???", "* Is that a kid???", "* Oh...^10 hello.^05\n* My name is Paula.", "* I was abducted\n  by a chubby kid\n  and a masked man.", "* They locked me\n  here,^05 and--" }, new string[5] { "snd_txtsus", "snd_txtsus", "snd_txtpau", "snd_txtpau", "snd_txtpau" }, new int[18], new string[5] { "su_shocked", "su_shocked", "pau_neutral", "pau_dejected", "pau_dejected" }, 0);
 				}
 			}
 			if (frames > 15 && !txt)
@@ -129,7 +84,11 @@ public class PaulaCutscene : CutsceneBase
 				noelle.UseUnhappySprites();
 				susie.EnableAnimator();
 				susie.GetComponent<SpriteRenderer>().flipX = true;
-				StartText(GetStringArray("intro_2"), new string[12]
+				StartText(new string[12]
+				{
+					"* Wait...^05 how long have\n  you BEEN here?", "* You've just been...\n^10  alone,^05 all by yourself?", "* ... And they didn't\n  even give you any\n  FOOD???", "* WHEN I GET MY\n  HANDS ON THEM,\n  I'LL--", "* Susie,^05 shouldn't we\n  help her first?", "* Oh yeah.", "* ...", "* Well,^05 you three aren't\n  who I was hoping\n  would show up...", "* But if you wanna\n  help me,^05 you'll need\n  to get a key from--", "* Key?",
+					"* Nah,^05 we don't need\n  that.", "* Susie?"
+				}, new string[12]
 				{
 					"snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtpau", "snd_txtpau", "snd_txtpau", "snd_txtsus",
 					"snd_txtsus", "snd_txtnoe"
@@ -184,7 +143,7 @@ public class PaulaCutscene : CutsceneBase
 			{
 				susie.UseHappySprites();
 				susie.ChangeDirection(Vector2.down);
-				susie.GetComponent<Animator>().SetBool("isMoving", true);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 				susie.GetComponent<Animator>().SetFloat("speed", 2f);
 				susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(susie.transform.position.x, -2.96f), 5f / 24f);
 			}
@@ -201,12 +160,12 @@ public class PaulaCutscene : CutsceneBase
 			else
 			{
 				kris.ChangeDirection(Vector2.left);
-				susie.GetComponent<Animator>().SetBool("isMoving", false);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 				susie.GetComponent<Animator>().SetFloat("speed", 1f);
 				susie.ChangeDirection(Vector2.up);
 				susie.DisableAnimator();
 				susie.SetSprite("spr_su_throw_ready");
-				StartText(GetStringArray("intro_3"), new string[1] { "snd_txtsus" }, new int[18], new string[1] { "su_teeth_eyes" }, 0);
+				StartText(new string[1] { "* Watch THIS!" }, new string[1] { "snd_txtsus" }, new int[18], new string[1] { "su_teeth_eyes" }, 0);
 				state = 3;
 				frames = 0;
 			}
@@ -252,7 +211,7 @@ public class PaulaCutscene : CutsceneBase
 			if (frames == 90)
 			{
 				susie.EnableAnimator();
-				StartText(GetStringArray("intro_4"), new string[3] { "snd_txtpau", "snd_txtpau", "snd_txtsus" }, new int[18], new string[3] { "pau_wideeye", "pau_embarrassed", "su_smile" }, 0);
+				StartText(new string[3] { "* ...", "* Well...^05 thanks!", "* Don't mention it." }, new string[3] { "snd_txtpau", "snd_txtpau", "snd_txtsus" }, new int[18], new string[3] { "pau_wideeye", "pau_embarrassed", "su_smile" }, 0);
 				state = 4;
 				frames = 0;
 			}
@@ -272,7 +231,7 @@ public class PaulaCutscene : CutsceneBase
 				frames++;
 				if (frames == 1)
 				{
-					paula.SetBool("isMoving", true);
+					paula.SetBool("isMoving", value: true);
 				}
 				if (paula.transform.position.x != -1.65f)
 				{
@@ -286,23 +245,23 @@ public class PaulaCutscene : CutsceneBase
 				}
 				else
 				{
-					paula.SetBool("isMoving", false);
+					paula.SetBool("isMoving", value: false);
 				}
 				if (noelle.transform.position != new Vector3(-0.55f, -2.99f))
 				{
 					noelle.EnableAnimator();
-					noelle.GetComponent<Animator>().SetBool("isMoving", true);
+					noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
 					noelle.ChangeDirection(Vector2.left);
 					noelle.transform.position = Vector3.MoveTowards(noelle.transform.position, new Vector3(-0.55f, -2.99f), 1f / 12f);
 				}
 				else
 				{
-					noelle.GetComponent<Animator>().SetBool("isMoving", false);
+					noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
 					noelle.ChangeDirection(Vector2.up);
 				}
 				if (frames == 100)
 				{
-					StartText(GetStringArray("intro_5"), new string[1] { "snd_txtnoe" }, new int[18], new string[1] { "no_confused_side" }, 0);
+					StartText(new string[1] { "* So...^05 what now?" }, new string[1] { "snd_txtnoe" }, new int[18], new string[1] { "no_confused_side" }, 0);
 					state = 5;
 					frames = 0;
 				}
@@ -320,7 +279,7 @@ public class PaulaCutscene : CutsceneBase
 			if (frames == 60)
 			{
 				gm.PlayMusic("music/AUDIO_ANOTHERHIM", 0.7f, 0.75f);
-				StartText(GetStringArray("gaster_rant_0"), new string[20]
+				StartText(new string[3] { "\b        WELL DONE,^10 KRIS.", "\b          IT APPEARS\n\b         WE HAVE FOUND\n\b       AN ESSENCE HOLDER.", "\b    TAKE A LOOK AT THE SOULS\n\b          IN THIS ROOM." }, new string[20]
 				{
 					"", "", "", "", "", "", "", "", "", "",
 					"", "", "", "", "", "", "", "", "", ""
@@ -390,7 +349,11 @@ public class PaulaCutscene : CutsceneBase
 				}
 				if (frames == 60)
 				{
-					StartText(GetStringArray("gaster_rant_1"), new string[20]
+					StartText(new string[12]
+					{
+						"\b  NOTICE THE COLOR OF YOUR SOUL,^10\n\b        AS WELL AS HERS.", "\b   THIS INDICATES A CONNECTION.", "\b            THOUGH...\n\b           WITH HER...", "\b          IT APPEARS...\n\b     HER CONNECTION IS NOT\n\b         STRONG ENOUGH.", "\b IT IS SPREAD ACROSS FOUR HUMANS\n\b         IN THIS WORLD.", "\b    AND THEIR WILL TO PROCEED\n\b         IS NOT AS HIGH\n\b          AS YOUR OWN.", "\b              ...", "\b           HOWEVER...", "\b    SHE SEEMS TO BE CARRYING\n\b       AN IMPORTANT OBJECT.", "\b          I WONDER...",
+						"\b  WOULD SHE BENEFIT YOUR CAUSE?", "\b           AND IF SO..."
+					}, new string[20]
 					{
 						"", "", "", "", "", "", "", "", "", "",
 						"", "", "", "", "", "", "", "", "", ""
@@ -429,7 +392,7 @@ public class PaulaCutscene : CutsceneBase
 			}
 			if (frames == 120)
 			{
-				StartText(GetStringArray("gaster_rant_2"), new string[20]
+				StartText(new string[1] { "\b  WOULD YOU ALLOW HER TO DO SO?" }, new string[20]
 				{
 					"", "", "", "", "", "", "", "", "", "",
 					"", "", "", "", "", "", "", "", "", ""
@@ -449,7 +412,7 @@ public class PaulaCutscene : CutsceneBase
 		if (state == 5 || state == 6)
 		{
 			fadeFrames++;
-			GameObject.Find("TimeFreeze").GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f + (Mathf.Cos((float)(fadeFrames * 3) * ((float)Math.PI / 180f)) - 1f) / 10f);
+			GameObject.Find("TimeFreeze").GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f + (Mathf.Cos((float)(fadeFrames * 3) * (MathF.PI / 180f)) - 1f) / 10f);
 		}
 		if (state == 7)
 		{
@@ -472,7 +435,7 @@ public class PaulaCutscene : CutsceneBase
 					PlaySFX("sounds/snd_noise");
 					susie.ChangeDirection(Vector2.right);
 					noelle.ChangeDirection(Vector2.left);
-					StartText(GetStringArray("post_gaster_0"), new string[2] { "snd_txtsus", "snd_txtsus" }, new int[18], new string[2] { "su_side_sweat", "su_smile_sweat" }, 0);
+					StartText(new string[2] { "* No idea.", "* Any ideas,^05 Kris?" }, new string[2] { "snd_txtsus", "snd_txtsus" }, new int[18], new string[2] { "su_side_sweat", "su_smile_sweat" }, 0);
 					frames++;
 				}
 				else
@@ -487,7 +450,7 @@ public class PaulaCutscene : CutsceneBase
 					if (frames == 45)
 					{
 						susie.UseUnhappySprites();
-						StartText(GetStringArray("post_gaster_1"), new string[2] { "snd_txtsus", "snd_txtsus" }, new int[18], new string[2] { "su_inquisitive", "su_neutral" }, 0);
+						StartText(new string[2] { "* ...^10 Kris?", "* Is... something wrong?" }, new string[2] { "snd_txtsus", "snd_txtsus" }, new int[18], new string[2] { "su_inquisitive", "su_neutral" }, 0);
 						txt.EnableSelectionAtEnd();
 					}
 				}
@@ -496,8 +459,8 @@ public class PaulaCutscene : CutsceneBase
 			{
 				selecting = true;
 				InitiateDeltaSelection();
-				select.SetupChoice(Vector2.left, GetString("choices_0", 0), Vector3.zero);
-				select.SetupChoice(Vector2.right, GetString("choices_0", 1), new Vector3(-32f, 0f));
+				select.SetupChoice(Vector2.left, "Nothing", Vector3.zero);
+				select.SetupChoice(Vector2.right, "Paula\nshould\njoin us", new Vector3(-32f, 0f));
 				select.Activate(this, 0, txt.gameObject);
 			}
 		}
@@ -515,7 +478,12 @@ public class PaulaCutscene : CutsceneBase
 			}
 			else
 			{
-				StartText(GetStringArray("post_gaster_3"), new string[22]
+				StartText(new string[22]
+				{
+					"* Well,^05 I heard there's\n  one nearby.", "* It's at a place\n  called <color=#FFFF00FF>Lilliput Steps</color>.", "* But...^05 the entrance\n  has been completely\n  sealed.", "* The only way to\n  get past it is\n  to blow it up.", "* Okay...^10 but how?", "* Is there a bomb\n  nearby or something?", "* Yeah.\n^05* Exactly that.", "* Mr. Carpainter has a\n  bomb hidden away at\n  the <color=#FFFF00FF>center of town</color>.", "* Okay,^05 I was just\n  joking.", "* That's like...\n^05  actually stupid.",
+					"* But if that's what\n  we need to do,^05\n  we'll just take it.", "* That could be an\n  issue if you go\n  by yourselves.", "* See,^05 he has this\n  lightning power...", "* Because he can cast\n  lightning,^05 you won't\n  be able to get it.", "* This whole thing sounds\n  really tough,^05 haha...", "* Well,^05 it's a good\n  thing I have a solution.", "* I have a Franklin Badge\n  that can <color=#FFFF00FF>reflect\n  lightning</color>!", "* Maybe for the time\n  being,^05 I could join you\n  three.", "* Badge aside,^05 I know\n  some psychic moves\n  that can help you.", "* I dunno.",
+					"* Sounds kinda complicated.", "* ..."
+				}, new string[22]
 				{
 					"snd_txtpau", "snd_txtpau", "snd_txtpau", "snd_txtpau", "snd_txtsus", "snd_txtsus", "snd_txtpau", "snd_txtpau", "snd_txtsus", "snd_txtsus",
 					"snd_txtsus", "snd_txtpau", "snd_txtpau", "snd_txtpau", "snd_txtnoe", "snd_txtpau", "snd_txtpau", "snd_txtpau", "snd_txtpau", "snd_txtsus",
@@ -539,7 +507,7 @@ public class PaulaCutscene : CutsceneBase
 					paula.enabled = true;
 					paula.SetFloat("dirX", 1f);
 					paula.SetFloat("dirY", 0f);
-					paula.SetBool("isMoving", true);
+					paula.SetBool("isMoving", value: true);
 					frames++;
 				}
 				if (paula.transform.position.x != 0f && frames == 1)
@@ -552,7 +520,7 @@ public class PaulaCutscene : CutsceneBase
 					if (frames == 2)
 					{
 						kris.ChangeDirection(Vector2.up);
-						paula.SetBool("isMoving", false);
+						paula.SetBool("isMoving", value: false);
 					}
 					if (frames >= 12 && frames <= 15)
 					{
@@ -578,7 +546,11 @@ public class PaulaCutscene : CutsceneBase
 					}
 					if (frames == 45)
 					{
-						StartText(GetStringArray("paula_injured_0"), new string[11]
+						StartText(new string[11]
+						{
+							"* O-^05ow...", "* I...^10 I think I\n  hurt my leg...", "* Those two were\n  pretty rough...", "* Oh!", "* Umm...^05 Maybe one of\n  us could carry you?", "* Really?\n* That sounds like\n  fun!", "* Umm,^05 sorry but...^05 I...^10\n  don't do carrying.", "* And I mean,^05 she was\n  sitting in a\n  dirty ass cell.", "* And I'm not strong\n  enough to carry\n  anyone...", "* ...^05 Kris?",
+							"* Can you carry her?"
+						}, new string[11]
 						{
 							"snd_txtpau", "snd_txtpau", "snd_txtpau", "snd_txtnoe", "snd_txtnoe", "snd_txtpau", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtnoe",
 							"snd_txtnoe"
@@ -629,7 +601,7 @@ public class PaulaCutscene : CutsceneBase
 				{
 					paula.SetFloat("dirX", 1f);
 					paula.SetFloat("dirY", 0f);
-					paula.SetBool("isMoving", true);
+					paula.SetBool("isMoving", value: true);
 					paula.transform.position = Vector3.MoveTowards(paula.transform.position, new Vector3(2.75f, -1.33f), 0.125f);
 					susie.ChangeDirection(Vector2.right);
 					noelle.ChangeDirection(Vector2.right);
@@ -656,19 +628,18 @@ public class PaulaCutscene : CutsceneBase
 						PlaySFX("sounds/snd_jump");
 					}
 					float num6 = (float)frames / 8f;
-					paula.transform.position = new Vector3(Mathf.Lerp(2.75f, 2.139f, num6), Mathf.Lerp(-2.44f, -1.931f, Mathf.Sin(num6 * (float)Math.PI * 0.5f)));
+					paula.transform.position = new Vector3(Mathf.Lerp(2.75f, 2.139f, num6), Mathf.Lerp(-2.44f, -1.931f, Mathf.Sin(num6 * MathF.PI * 0.5f)));
 					if (frames == 8)
 					{
 						kris.ChangeDirection(Vector2.left);
 						paula.GetComponent<SpriteRenderer>().enabled = false;
-						gm.SetMiniPartyMember(1);
-						gm.Heal(0, 20);
+						gm.SetPartyMember(3, 3);
 					}
 					if (frames == 35)
 					{
 						gm.StopMusic();
 						gm.PlayGlobalSFX("music/mus_charjoined");
-						StartText(GetStringArray("cope_seethe_mald"), new string[9] { "snd_text", "snd_txtpau", "snd_txtnoe", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtsus" }, new int[21], new string[9] { "", "pau_happy", "no_blush", "su_smirk_sweat", "no_happy", "su_annoyed", "no_boom", "su_annoyed", "su_side" }, 0);
+						StartText(new string[9] { "* (Paula joined the party.)", "* Wow,^05 it's so tall\n  up here!", "* I...^10 I'd love to\n  also ride piggyback...", "* Well,^05 too bad Kris\n  is already carrying\n  someone.", "* Well,^05 you're not\n  carrying anything...", "* Yeah,^05 well I don't\n  feel like carrying\n  anything right now.", "* ", "* Alright,^05 enough screwing\n  around.", "* Let's go to that\n  <color=#FFFF00FF>center of town</color> place." }, new string[9] { "snd_text", "snd_txtpau", "snd_txtnoe", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtsus" }, new int[21], new string[9] { "", "pau_happy", "no_blush", "su_smirk_sweat", "no_happy", "su_annoyed", "no_boom", "su_annoyed", "su_side" }, 0);
 						state = 11;
 						frames = 0;
 					}
@@ -703,9 +674,9 @@ public class PaulaCutscene : CutsceneBase
 			}
 			else
 			{
-				kris.SetSelfAnimControl(true);
-				susie.SetSelfAnimControl(true);
-				noelle.SetSelfAnimControl(true);
+				kris.SetSelfAnimControl(setAnimControl: true);
+				susie.SetSelfAnimControl(setAnimControl: true);
+				noelle.SetSelfAnimControl(setAnimControl: true);
 				susie.ChangeDirection(Vector2.right);
 				noelle.ChangeDirection(Vector2.right);
 				susie.UseHappySprites();
@@ -764,7 +735,7 @@ public class PaulaCutscene : CutsceneBase
 				if (frames == 16)
 				{
 					susie.EnableAnimator();
-					susie.GetComponent<Animator>().SetBool("isMoving", true);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 					susie.GetComponent<Animator>().SetFloat("speed", 2f);
 				}
 				if (susie.transform.position.y != -1.58f)
@@ -781,7 +752,7 @@ public class PaulaCutscene : CutsceneBase
 				{
 					state = 13;
 					frames = 0;
-					susie.GetComponent<Animator>().SetBool("isMoving", false);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 					susie.GetComponent<Animator>().SetFloat("speed", 1f);
 					susie.DisableAnimator();
 					susie.SetSprite("spr_su_kneel_front");
@@ -845,7 +816,7 @@ public class PaulaCutscene : CutsceneBase
 				if (paulaPos.x < 3.42f)
 				{
 					paula.GetComponent<SpriteRenderer>().sortingOrder = 5;
-					paula.SetBool("isMoving", true);
+					paula.SetBool("isMoving", value: true);
 					paulaPos = Vector3.MoveTowards(paulaPos, new Vector3(3.42f, paulaPos.y), ((tripFrames >= 10 && tripFrames <= 16) ? 3f : 6f) / 48f);
 				}
 				else if (paulaPos.y != -2.32f)
@@ -901,9 +872,9 @@ public class PaulaCutscene : CutsceneBase
 			kris.EnableAnimator();
 			kris.ChangeDirection(Vector2.down);
 			susie.EnableAnimator();
-			kris.SetSelfAnimControl(true);
-			susie.SetSelfAnimControl(true);
-			noelle.SetSelfAnimControl(true);
+			kris.SetSelfAnimControl(setAnimControl: true);
+			susie.SetSelfAnimControl(setAnimControl: true);
+			noelle.SetSelfAnimControl(setAnimControl: true);
 			EndCutscene();
 		}
 	}
@@ -914,11 +885,11 @@ public class PaulaCutscene : CutsceneBase
 		{
 			if (index == Vector2.left)
 			{
-				StartText(GetStringArray("post_gaster_2_choice0"), new string[7] { "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtnoe", "snd_txtpau", "snd_txtsus", "snd_txtpau" }, new int[18], new string[7] { "su_neutral", "su_side_sweat", "no_curious", "no_thinking", "pau_confused", "su_smirk_sweat", "pau_surprised" }, 0);
+				StartText(new string[7] { "* ...", "* Not sure I believe\n  that.", "* Yeah,^05 Kris.", "* You look really\n  worried about\n  something.", "* Say,^05 is there a\n  reason why you came\n  here?", "* Well,^05 we're tryna find\n  a grey door,^05 mostly.", "* Really?" }, new string[7] { "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtnoe", "snd_txtpau", "snd_txtsus", "snd_txtpau" }, new int[18], new string[7] { "su_neutral", "su_side_sweat", "no_curious", "no_thinking", "pau_confused", "su_smirk_sweat", "pau_surprised" }, 0);
 			}
 			else
 			{
-				StartText(GetStringArray("post_gaster_2_choice1"), new string[5] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtpau" }, new int[18], new string[5] { "su_surprised", "su_side_sweat", "su_smile_sweat", "no_thinking", "pau_surprised" }, 0);
+				StartText(new string[5] { "* Huh?", "* Umm,^05 I guess for\n  like...", "* Until we reach a\n  grey door.", "* (I don't think Kris\n  even believes\n  themself...)", "* Oh,^05 you're trying to\n  find a grey door?" }, new string[5] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtpau" }, new int[18], new string[5] { "su_surprised", "su_side_sweat", "su_smile_sweat", "no_thinking", "pau_surprised" }, 0);
 			}
 			state = 8;
 			frames = 0;
@@ -928,11 +899,11 @@ public class PaulaCutscene : CutsceneBase
 		{
 			if (index == Vector2.left)
 			{
-				StartText(GetStringArray("paula_injured_1_choice0"), new string[2] { "snd_txtnoe", "snd_txtnoe" }, new int[18], new string[2] { "no_happy", "no_thinking" }, 0);
+				StartText(new string[2] { "* T-^05thanks Kris!", "* (They could've said it\n  less rudely,^05 I was\n  asking nicely...)" }, new string[2] { "snd_txtnoe", "snd_txtnoe" }, new int[18], new string[2] { "no_happy", "no_thinking" }, 0);
 			}
 			else
 			{
-				StartText(GetStringArray("paula_injured_1_choice1"), new string[2] { "snd_txtpau", "snd_txtpau" }, new int[18], new string[2] { "pau_confused", "pau_confident" }, 0);
+				StartText(new string[2] { "* No?", "* Well too bad,^05 you\n  can't proceed without\n  me!" }, new string[2] { "snd_txtpau", "snd_txtpau" }, new int[18], new string[2] { "pau_confused", "pau_confident" }, 0);
 			}
 			selecting = false;
 		}
@@ -950,15 +921,15 @@ public class PaulaCutscene : CutsceneBase
 		table.GetComponent<SpriteRenderer>().enabled = true;
 		GameObject.Find("RoomShading").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("overworld/eb_objects/spr_cabin_shading_door");
 		GameObject.Find("CellDoor").GetComponent<SpriteRenderer>().enabled = true;
-		kris.SetSelfAnimControl(false);
-		susie.SetSelfAnimControl(false);
-		noelle.SetSelfAnimControl(false);
+		kris.SetSelfAnimControl(setAnimControl: false);
+		susie.SetSelfAnimControl(setAnimControl: false);
+		noelle.SetSelfAnimControl(setAnimControl: false);
 		kris.ChangeDirection(Vector2.left);
-		kris.GetComponent<Animator>().SetBool("isMoving", true);
+		kris.GetComponent<Animator>().SetBool("isMoving", value: true);
 		susie.ChangeDirection(Vector2.left);
-		susie.GetComponent<Animator>().SetBool("isMoving", true);
+		susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 		noelle.ChangeDirection(Vector2.left);
-		noelle.GetComponent<Animator>().SetBool("isMoving", true);
+		noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
 		kris.transform.position = new Vector3(4f, -2.305f);
 		susie.transform.position = new Vector3(5.25f, -2.14f);
 		noelle.transform.position = new Vector3(6.5f, -2.1175f);

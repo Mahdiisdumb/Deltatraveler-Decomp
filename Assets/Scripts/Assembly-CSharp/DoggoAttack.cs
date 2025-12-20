@@ -12,7 +12,7 @@ public class DoggoAttack : AttackBase
 	{
 		base.Awake();
 		bbSize = new Vector2(235f, 140f);
-		int progress = Object.FindObjectOfType<Doggo>().GetProgress();
+		int progress = Util.FindObjectOfType<Doggo>().GetProgress();
 		maxFrames = ((progress == 0) ? 100 : 140);
 		switch (progress)
 		{

@@ -96,8 +96,8 @@ public class Sans : EnemyBase
 		satisfyTxt = flavorTxt;
 		dyingTxt = new string[4] { "* Sans's face dementedly\n  contorts.", "* Sans is acting erratic.", "* Sans looks like he's about\n  to collapse.", "* The burning smell seems to\n  be waning." };
 		actNames = new string[5] { "Talk", "Distract", "SN!XDistract", REDBUSTER_NAME, DUALHEAL_NAME };
-		sActionName = "Distract";
-		nActionName = "Distract";
+		susieMiniACTs[0].SetName("Distract");
+		noelleMiniACTs[0].SetName("Distract");
 		canSpareViaFight = false;
 		renderSpareBar = false;
 		defaultChatSize = "RightSmall";
@@ -115,7 +115,7 @@ public class Sans : EnemyBase
 		playerMultiplier = Mathf.Lerp(1f, 0.8f, (float)(Util.GameManager().GetLV() - 1) / 12f);
 		if (Util.GameManager().GetLV() >= 7)
 		{
-			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/KarmaHandler"), UnityEngine.Object.FindObjectOfType<PartyPanels>().transform);
+			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/KarmaHandler"), Util.FindObjectOfType<PartyPanels>().transform);
 			karmaVer = true;
 		}
 		else if (Util.GameManager().GetEXP() == 0)
@@ -130,17 +130,17 @@ public class Sans : EnemyBase
 		base.Start();
 		if (SKIP_INTRO)
 		{
-			UnityEngine.Object.Destroy(UnityEngine.Object.FindObjectOfType<SansIntroAttack>().gameObject);
+			UnityEngine.Object.Destroy(Util.FindObjectOfType<SansIntroAttack>().gameObject);
 			SetFace("empty_down");
 			ResetBreatheAnimation();
-			UnityEngine.Object.FindObjectOfType<PartyPanels>().transform.position = Vector3.zero;
-			UnityEngine.Object.FindObjectOfType<SansBG>().FadeIn();
-			UnityEngine.Object.FindObjectOfType<BattleManager>().PlayMusic("music/mus_vsufsans", 1f, true);
+			Util.FindObjectOfType<PartyPanels>().transform.position = Vector3.zero;
+			Util.FindObjectOfType<SansBG>().FadeIn();
+			Util.FindObjectOfType<BattleManager>().PlayMusic("music/mus_vsufsans", 1f, hasIntro: true);
 			Distract(4);
 			StartFinale();
 			hp = Mathf.RoundToInt((float)maxHp * 0.1f);
-			UnityEngine.Object.FindObjectOfType<SansBG>().FadeOut();
-			UnityEngine.Object.FindObjectOfType<BattleManager>().StopMusic();
+			Util.FindObjectOfType<SansBG>().FadeOut();
+			Util.FindObjectOfType<BattleManager>().StopMusic();
 			curAtk = 2;
 		}
 	}
@@ -177,7 +177,7 @@ public class Sans : EnemyBase
 			}
 			obj.transform.localPosition = mainPos + new Vector3((float)moveBody / 24f, 0f);
 		}
-		if (!inFinale && (float)hp / (float)maxHp <= 0.5f && UnityEngine.Object.FindObjectOfType<BattleManager>().GetState() < 3)
+		if (!inFinale && (float)hp / (float)maxHp <= 0.5f && Util.FindObjectOfType<BattleManager>().GetState() < 3)
 		{
 			float t = ((float)hp / (float)maxHp - 0.25f) / 0.25f;
 			menuBone.Activate(Mathf.Lerp(8f, 2f, t) / 48f);
@@ -214,7 +214,7 @@ public class Sans : EnemyBase
 		if (distractedLv == 0 && !dodging && !gotHit && !inFinale)
 		{
 			bool flag = false;
-			PlayerAttackAnimation[] array = UnityEngine.Object.FindObjectsOfType<PlayerAttackAnimation>();
+			PlayerAttackAnimation[] array = Util.FindObjectsOfType<PlayerAttackAnimation>();
 			if (array != null && array.Length != 0)
 			{
 				PlayerAttackAnimation[] array2 = array;
@@ -227,7 +227,7 @@ public class Sans : EnemyBase
 					}
 				}
 			}
-			if (flag || ((bool)UnityEngine.Object.FindObjectOfType<SpecialAttackEffect>() && UnityEngine.Object.FindObjectOfType<SpecialAttackEffect>().IsPlaying()))
+			if (flag || ((bool)Util.FindObjectOfType<SpecialAttackEffect>() && Util.FindObjectOfType<SpecialAttackEffect>().IsPlaying()))
 			{
 				dodging = true;
 				dodgeFrames = 0;
@@ -243,7 +243,7 @@ public class Sans : EnemyBase
 			}
 			if (num4 < 1f)
 			{
-				num4 = Mathf.Sin(num4 * (float)Math.PI * 0.5f);
+				num4 = Mathf.Sin(num4 * MathF.PI * 0.5f);
 			}
 			obj.transform.Find("parts").localPosition = new Vector3(Mathf.Lerp(0f, -2f, num4), 0f);
 			playerMultiplier = ((dodgeFrames <= 5 || dodgeFrames >= 55) ? 1 : 0);
@@ -260,10 +260,10 @@ public class Sans : EnemyBase
 		if (doingBreatheAnimation)
 		{
 			breatheFrames++;
-			float num5 = (0f - Mathf.Cos((float)breatheFrames * 3.75f * ((float)Math.PI / 180f)) + 1f) / 2f;
+			float num5 = (0f - Mathf.Cos((float)breatheFrames * 3.75f * (MathF.PI / 180f)) + 1f) / 2f;
 			if (inFinale)
 			{
-				num5 = (0f - Mathf.Cos((float)(breatheFrames * 2) * ((float)Math.PI / 180f)) + 1f) / 2f;
+				num5 = (0f - Mathf.Cos((float)(breatheFrames * 2) * (MathF.PI / 180f)) + 1f) / 2f;
 			}
 			GetPart("body").localPosition = new Vector3(inFinale ? 0f : (-1f / 12f), (inFinale ? 1.25f : 1.5f) - num5 * 2f / 24f);
 			GetPart("body").Find("head").localPosition = new Vector3(0f, (inFinale ? 0.75f : 0.875f) - num5 * 2f / 24f);
@@ -379,7 +379,7 @@ public class Sans : EnemyBase
 				if (pacifist)
 				{
 					actNames[1] = "SN!Talk";
-					UnityEngine.Object.FindObjectOfType<PartyPanels>().RaiseHeads(true, false, false);
+					Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: true, susie: false, noelle: false);
 					pTalked++;
 					if (pTalked != 1)
 					{
@@ -393,9 +393,9 @@ public class Sans : EnemyBase
 						}
 						if (pTalked != 3)
 						{
-							return new string[1] { "* You ask if he actually\n  killed her." };
+							return new string[1] { "* You ask if he truly killed her." };
 						}
-						return new string[1] { "* You ask what happened after\n  he attacked this world's\n  Susie." };
+						return new string[1] { "* You ask what actually happened\n  after he attacked this world's\n  Susie." };
 					}
 					return new string[1] { (talked >= 3) ? "* You ask again why Sans is\n  doing all of this." : "* You ask why Sans is doing\n  all of this." };
 				}
@@ -418,18 +418,18 @@ public class Sans : EnemyBase
 								}
 								return new string[2] { "* You try to think of something\n  else to say,^05 but...", "* As hard as you try,^05 you\n  can't seem to be able to\n  de-escalate the situation." };
 							}
-							return new string[2] { "ufsans_empty`snd_txtsans`*\tquit talking to me.", "ufsans_sadistic`snd_txtsans`*\tjust lie down and make\n\tthis easy for me." };
+							return new string[2] { "ufsans_empty`snd_txtsans`* quit talking to me.", "ufsans_sadistic`snd_txtsans`* just lie down and make\n  this easy for me." };
 						}
-						return new string[2] { "ufsans_side`snd_txtsans`*\twhy the hell would i\n\ttell you why i'm doing\n\tthis?", "ufsans_closed`snd_txtsans`*\ti'd be giving you an\n\topportunity to make things\n\tworse." };
+						return new string[2] { "ufsans_side`snd_txtsans`* why the hell would i\n  tell you why i'm doing\n  this?", "ufsans_closed`snd_txtsans`* i'd be giving you an\n  opportunity to make things\n  worse." };
 					}
-					return new string[2] { "ufsans_side`snd_txtsans`*\toh,^05 I'M being unreasonable?", "ufsans_empty`snd_txtsans`*\tthe only reasonable thing\n\ti can think of doing is\n\tpulverizing you." };
+					return new string[2] { "ufsans_side`snd_txtsans`* oh,^05 I'M being\n  unreasonable?", "ufsans_empty`snd_txtsans`* the only reasonable thing\n  i can think of doing is\n  pulverizing you." };
 				}
 				return new string[4]
 				{
 					"* You try to talk to Sans.",
-					"ufsans_closed`snd_txtsans`*\tyou wanna talk?",
-					"ufsans_side`snd_txtsans`*\treally now.",
-					(Util.GameManager().GetFlagInt(87) >= 5) ? "ufsans_sadistic`snd_txtsans`*\tyou're really gonna go back\n\ton that mass murder thing\n\twith a mass murderer?" : "ufsans_empty`snd_txtsans`*\twhat makes you think i'd\n\tbe willing to talk to\n\tthe likes of you?"
+					"ufsans_closed`snd_txtsans`* you wanna talk?",
+					"ufsans_side`snd_txtsans`* really now.",
+					(Util.GameManager().GetFlagInt(87) >= 5) ? "ufsans_sadistic`snd_txtsans`* you're really gonna go back\n  on that mass murder thing\n  with a mass murderer?" : "ufsans_empty`snd_txtsans`* what makes you think i'd\n  be willing to talk to\n  the likes of you?"
 				};
 			}
 			return new string[1] { (talked >= 5) ? "* If Sans was unwilling to talk\n  before,^05 now would be a worse\n  time." : "* It seems like Sans is too\n  aggressive to even respond." };
@@ -458,7 +458,7 @@ public class Sans : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		if (!tired)
 		{
@@ -545,9 +545,9 @@ public class Sans : EnemyBase
 				return;
 			}
 			base.Hit(partyMember, rawDmg, playSound);
-			if ((bool)UnityEngine.Object.FindObjectOfType<EnemyHPBar>())
+			if ((bool)Util.FindObjectOfType<EnemyHPBar>())
 			{
-				UnityEngine.Object.Destroy(UnityEngine.Object.FindObjectOfType<EnemyHPBar>().gameObject);
+				UnityEngine.Object.Destroy(Util.FindObjectOfType<EnemyHPBar>().gameObject);
 			}
 			if (deathCoreLevel < 5)
 			{
@@ -568,7 +568,7 @@ public class Sans : EnemyBase
 			{
 				return;
 			}
-			if ((bool)UnityEngine.Object.FindObjectOfType<IceShock>())
+			if ((bool)Util.FindObjectOfType<IceShock>())
 			{
 				playerMultiplier = 666f;
 			}
@@ -577,7 +577,7 @@ public class Sans : EnemyBase
 				playerMultiplier = 420f;
 			}
 		}
-		if (dodging && (playerMultiplier == 1f || ((bool)UnityEngine.Object.FindObjectOfType<KSliceAnimation>() && UnityEngine.Object.FindObjectOfType<KSliceAnimation>().DoingBigSwing())))
+		if (dodging && (playerMultiplier == 1f || ((bool)Util.FindObjectOfType<KSliceAnimation>() && Util.FindObjectOfType<KSliceAnimation>().DoingBigSwing())))
 		{
 			obj.transform.Find("parts").localPosition = Vector3.zero;
 			dodging = false;
@@ -613,12 +613,12 @@ public class Sans : EnemyBase
 		{
 			killed = false;
 			StopBreatheAnimation();
-			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
-			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
-			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
-			UnityEngine.Object.FindObjectOfType<BattleManager>().ForceNoSpare();
-			UnityEngine.Object.FindObjectOfType<BattleManager>().ForceNoFight();
-			if ((bool)UnityEngine.Object.FindObjectOfType<IceShock>())
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
+			Util.FindObjectOfType<BattleManager>().ForceNoSpare();
+			Util.FindObjectOfType<BattleManager>().ForceNoFight();
+			if ((bool)Util.FindObjectOfType<IceShock>())
 			{
 				wasIceShocked = true;
 				SetSweat(-1);
@@ -784,25 +784,25 @@ public class Sans : EnemyBase
 				pTalkedProgress = pTalked;
 				if (pTalked == 1)
 				{
-					Chat(new string[4] { "*huff*^15 really...?", "you really think...^10 i'll \njust leave myself open \nlike that?", "giving you another chance \nto screw me over?", "i'm not talking." }, "snd_txtsans", true, 0);
+					Chat(new string[4] { "*huff*^15 really...?", "you really think...^10 \ni'll just leave \nmyself open like \nthat?", "giving you another \nchance to screw me \nover?", "i'm not talking." }, "snd_txtsans", canSkip: true, 0);
 				}
 				else if (pTalked == 2)
 				{
-					Chat(new string[5] { "why...^15 why the hell do \nYOU care?", "you really wanna get \nchummy with me?^10\nespecially NOW?", "after i tried killing \nyou multiple times and \nadmitted to attacking \nan orphan?", "and especially after all \nthat i've been through.", "you're nuts." }, "snd_txtsans", true, 0);
+					Chat(new string[5] { "why...^15 why the hell \ndo YOU care?", "you really wanna \nget chummy with \nme?^10\nespecially NOW?", "after i tried killing \nyou multiple times \nand admitted to \nkilling an orphan?", "and especially after \nall that i've been \nthrough.", "you're nuts." }, "snd_txtsans", canSkip: true, 0);
 				}
 				else if (pTalked == 3)
 				{
-					Chat(new string[6] { "...", "w-^10well...", "...", "i...^15 already said.", "she's one with the \nwind.", "b-^10but i ran away \nbefore i could see \nher die." }, "snd_txtsans", true, 0);
+					Chat(new string[6] { "...", "w-^10well...", "...", "i...^15 already said.", "she's one with \nthe wind.", "b-^10but i ran away \nbefore i could see \nher die." }, "snd_txtsans", canSkip: true, 0);
 				}
 			}
 			else
 			{
-				Chat(new string[1] { (UnityEngine.Random.Range(0, 2) == 0) ? "..." : "*huff*...^15 *puff*..." }, "snd_txtsans", true, 0);
+				Chat(new string[1] { (UnityEngine.Random.Range(0, 2) == 0) ? "..." : "*huff*...^15 *puff*..." }, "snd_txtsans", canSkip: true, 0);
 			}
 		}
 		else if ((float)hp / (float)maxHp <= 0.1f)
 		{
-			Chat(new string[3] { "you...^10 you really never \ngive up,^05 do you?", "i'm on my last legs here,^05 \nkris.", "don't say i didn't warn \nyou." }, "snd_txtsans", true, 0);
+			Chat(new string[3] { "you...^10 you really \nnever give up,^05 do \nyou?", "i'm on my last legs \nhere,^05 kris.", "don't say i didn't \nwarn you." }, "snd_txtsans", canSkip: true, 0);
 		}
 		else if ((float)hp / (float)maxHp <= 0.5f)
 		{
@@ -810,39 +810,39 @@ public class Sans : EnemyBase
 			lowHpRanting++;
 			if (lowHpRanting == 0)
 			{
-				Chat(new string[2] { "i've been waiting for \nthis moment for a long \ntime.", "to finally get my revenge \non humanity,^05 and rid this \nworld of its problems,^05 once \nand for all." }, "snd_txtsans", true, 0);
+				Chat(new string[3] { "i've been waiting \nfor this moment for \na long time.", "to finally take \nrevenge on humanity,^05 \nand rid this world \nof its problems.", "forever." }, "snd_txtsans", canSkip: true, 0);
 			}
 			else if (lowHpRanting == 1)
 			{
-				Chat(new string[3] { "but yet...^10\nout of all potential \ntimelines...", "it had to be against \nyou three?", "what an insulting \nfate." }, "snd_txtsans", true, 0);
+				Chat(new string[3] { "but yet...^10\nout of all potential \ntimelines...", "it had to be against \nyou three?", "what an insulting \nfate." }, "snd_txtsans", canSkip: true, 0);
 			}
 			else if (lowHpRanting == 2)
 			{
-				Chat(new string[4] { "and the worst part?", "the look on your face,^05 \nhow confused you seem...", "you're COMPLETELY \noblivious to what you did \nto me.", "it's like the universe \nwants to see me \nlose it." }, "snd_txtsans", true, 0);
+				Chat(new string[4] { "and the worst part?", "the look on your \nface.^10\nhow confused you \nseem.", "you're COMPLETELY \noblivious to what \nyou did to me.", "it's like the \nuniverse wants to \nsee me lose it." }, "snd_txtsans", canSkip: true, 0);
 			}
 			else if (lowHpRanting == 3)
 			{
-				Chat(new string[3] { "and,^05 y'know....", "if you keep resisting...", "then i WILL lose it." }, "snd_txtsans", true, 0);
+				Chat(new string[3] { "and,^05 y'know....", "if you keep \nresisting...", "then i WILL lose it." }, "snd_txtsans", canSkip: true, 0);
 			}
 			else if (lowHpRanting == 4)
 			{
-				Chat(new string[2] { "just make things easier \nfor both of us...", "and let me rip that \nsoul out of your \ncold,^05 dead body." }, "snd_txtsans", true, 0);
+				Chat(new string[2] { "just make things \neasier for both of \nus...", "and let me rip that \nsoul out of your \ncold,^05 dead body." }, "snd_txtsans", canSkip: true, 0);
 			}
 		}
 		else if (curAtk == 2)
 		{
-			Chat(new string[3] { "you and your damn \n\"determination\".", "all living things lose \nthe will to live at \nsome point.", "for you, that point \nis NOW." }, "snd_txtsans", true, 0);
+			Chat(new string[3] { "you and your damn \n\"determination\".", "all living things \nlose the will to live \nat some point.", "for you, that point \nis NOW." }, "snd_txtsans", canSkip: true, 0);
 		}
 		else if (curAtk == 3)
 		{
 			doingChatFaces = true;
 			if (wasFrozen)
 			{
-				Chat(new string[4] { "mhmm...", "all of you looked \nshocked,^05 and yet you \nbarely dodged it.", "you didn't know how \nto avoid the pitfall,^05 \ndid you?", "what the hell kind of \npower do you have?" }, "snd_txtsans", true, 0);
+				Chat(new string[4] { "mhmm...", "all of you \nlooked shocked,^05 and \nyet you barely \ndodged it.", "you didn't know \nhow to avoid the \npitfall,^05 did you?", "what the hell \nkind of power \ndo you have?" }, "snd_txtsans", canSkip: true, 0);
 			}
 			else
 			{
-				Chat(new string[4] { "of course,^05 of course.", "you knew exactly how \nto avoid such an \nunavoidable pitfall.", "almost like you're \nplaying god or something.", "all you humans deserve to \ndie at the hands of \nmonsterkind." }, "snd_txtsans", true, 0);
+				Chat(new string[4] { "of course,^05 of \ncourse.", "you knew exactly \nhow to avoid such \nan unavoidable \npitfall.", "almost like you're \nplaying god or \nsomething.", "all you humans \ndeserve to die at \nthe hands of \nmonsterkind." }, "snd_txtsans", canSkip: true, 0);
 			}
 		}
 	}
@@ -867,9 +867,9 @@ public class Sans : EnemyBase
 	public override bool IsShaking()
 	{
 		bool flag = false;
-		if (dodging && (bool)UnityEngine.Object.FindObjectOfType<FightTarget>())
+		if (dodging && (bool)Util.FindObjectOfType<FightTarget>())
 		{
-			flag = dodging && UnityEngine.Object.FindObjectOfType<FightTarget>().IsGoing();
+			flag = dodging && Util.FindObjectOfType<FightTarget>().IsGoing();
 		}
 		return base.IsShaking() || flag;
 	}
@@ -879,10 +879,10 @@ public class Sans : EnemyBase
 		if (inFinale && sleepMist)
 		{
 			wasSleepMisted = true;
-			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
-			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
-			UnityEngine.Object.FindObjectOfType<BattleManager>().ForceNoSpare();
-			UnityEngine.Object.FindObjectOfType<BattleManager>().ForceNoFight();
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
+			Util.FindObjectOfType<BattleManager>().ForceNoSpare();
+			Util.FindObjectOfType<BattleManager>().ForceNoFight();
 			SetFace("shocked");
 		}
 	}

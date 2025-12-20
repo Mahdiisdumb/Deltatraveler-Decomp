@@ -26,9 +26,9 @@ public class SusieLDAxeBullet : BulletBase
 		}
 		float num = (right ? 4f : (-4f));
 		float num2 = 0f;
-		num2 = UnityEngine.Object.FindObjectOfType<SOUL>().transform.position.y - yVelocity * 30f;
+		num2 = Util.FindObjectOfType<SOUL>().transform.position.y - yVelocity * 30f;
 		base.transform.position = new Vector3(num, num2);
-		xLimitMulti = Mathf.Abs(UnityEngine.Object.FindObjectOfType<SOUL>().transform.position.x + num);
+		xLimitMulti = Mathf.Abs(Util.FindObjectOfType<SOUL>().transform.position.x + num);
 		sr.color = new Color(1f, 1f, 1f, 0f);
 		if (right)
 		{
@@ -50,7 +50,7 @@ public class SusieLDAxeBullet : BulletBase
 		if (frames <= 60)
 		{
 			float x = base.transform.position.x;
-			base.transform.position = new Vector3((4f - Mathf.Sin((float)(frames * 3) * ((float)Math.PI / 180f)) * xLimitMulti) * (float)num2, base.transform.position.y + yVelocity);
+			base.transform.position = new Vector3((4f - Mathf.Sin((float)(frames * 3) * (MathF.PI / 180f)) * xLimitMulti) * (float)num2, base.transform.position.y + yVelocity);
 			endVelocity = base.transform.position.x - x;
 			return;
 		}

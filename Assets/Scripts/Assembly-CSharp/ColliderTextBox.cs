@@ -1,16 +1,7 @@
-using System;
 using UnityEngine;
 
 public class ColliderTextBox : MonoBehaviour
 {
-	[Serializable]
-	protected struct Remark
-	{
-		public int line;
-
-		public string[] text;
-	}
-
 	private TextBox txt;
 
 	[SerializeField]
@@ -30,7 +21,7 @@ public class ColliderTextBox : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)txt || !collision.GetComponent<OverworldPlayer>())
+		if ((bool)txt || !collision || !collision.GetComponent<OverworldPlayer>())
 		{
 			return;
 		}
@@ -39,14 +30,13 @@ public class ColliderTextBox : MonoBehaviour
 		if (array != null && array.Length != 0)
 		{
 			Remark[] array2 = remarks;
-			for (int i = 0; i < array2.Length; i++)
+			foreach (Remark remark in array2)
 			{
-				Remark remark = array2[i];
-				txt.AddRemark(remark.line, remark.text);
+				txt.AddRemark(remark);
 			}
 		}
-		txt.CreateBox(lines, sounds, speed, true, portraits);
-		UnityEngine.Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
-		UnityEngine.Object.Destroy(base.gameObject);
+		txt.CreateBox(lines, sounds, speed, giveBackControl: true, portraits);
+		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+		Object.Destroy(base.gameObject);
 	}
 }

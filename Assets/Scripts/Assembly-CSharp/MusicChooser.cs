@@ -85,7 +85,7 @@ public class MusicChooser : MonoBehaviour
 			base.transform.Find("NormalThemePlay").GetComponent<Text>().enabled = true;
 			base.transform.Find("NormalThemePlay").GetComponent<Text>().color = Color.white;
 			base.transform.Find("NormalThemeDescription").GetComponent<Text>().enabled = true;
-			base.transform.Find("NormalThemeDescription").GetComponent<Text>().text = Util.BattleHUDFontFix(array[1]);
+			base.transform.Find("NormalThemeDescription").GetComponent<Text>().text = array[1];
 			if (mus.IsPlaying() && mus.CurrentMusic() == UnoGameManager.GetUnoMusic(musicID)[0].Key.Replace("_intro", ""))
 			{
 				base.transform.Find("NormalThemePlay").GetComponent<Text>().color = new Color(1f, 1f, 0f);
@@ -97,7 +97,7 @@ public class MusicChooser : MonoBehaviour
 			base.transform.Find("TenseThemePlay").GetComponent<Text>().enabled = true;
 			base.transform.Find("TenseThemePlay").GetComponent<Text>().color = Color.white;
 			base.transform.Find("TenseThemeDescription").GetComponent<Text>().enabled = true;
-			base.transform.Find("TenseThemeDescription").GetComponent<Text>().text = Util.BattleHUDFontFix(array2[1]);
+			base.transform.Find("TenseThemeDescription").GetComponent<Text>().text = array2[1];
 			if (mus.IsPlaying() && mus.CurrentMusic() == UnoGameManager.GetUnoMusic(musicID)[1].Key.Replace("_intro", ""))
 			{
 				base.transform.Find("TenseThemePlay").GetComponent<Text>().color = new Color(1f, 1f, 0f);
@@ -121,7 +121,7 @@ public class MusicChooser : MonoBehaviour
 			base.transform.Find("1v1ThemePlay").GetComponent<Text>().enabled = true;
 			base.transform.Find("1v1ThemePlay").GetComponent<Text>().color = Color.white;
 			base.transform.Find("1v1ThemeDescription").GetComponent<Text>().enabled = true;
-			base.transform.Find("1v1ThemeDescription").GetComponent<Text>().text = Util.BattleHUDFontFix(array3[1]);
+			base.transform.Find("1v1ThemeDescription").GetComponent<Text>().text = array3[1];
 			base.transform.Find("1v1PapWarning").GetComponent<Text>().enabled = musicID == FRANKNESS_ID;
 			if (mus.IsPlaying() && mus.CurrentMusic() == UnoGameManager.GetUnoMusic(musicID)[0].Key.Replace("_intro", ""))
 			{
@@ -135,18 +135,11 @@ public class MusicChooser : MonoBehaviour
 		for (int i = 0; i < 4; i++)
 		{
 			Transform transform = base.transform.Find(array5[i]);
-			transform.GetComponent<Text>().text = string.Format(array4[i], joystickIsActive ? " " : string.Format("[{0}]", UTInput.GetKeyName(array6[i])));
+			transform.GetComponent<Text>().text = string.Format(array4[i], joystickIsActive ? "  " : $"[{UTInput.GetKeyName(array6[i])}]");
 			if (joystickIsActive && transform.GetComponent<Text>().enabled)
 			{
 				transform.GetComponentInChildren<Image>().enabled = true;
-				for (int j = 0; j < ButtonPrompts.validButtons.Length; j++)
-				{
-					if (UTInput.GetKeyOrButtonReplacement(array6[i]) == ButtonPrompts.GetButtonChar(ButtonPrompts.validButtons[j]))
-					{
-						transform.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("ui/buttons/" + ButtonPrompts.GetButtonGraphic(ButtonPrompts.validButtons[j]));
-						break;
-					}
-				}
+				ButtonPrompts.UpdateImageWithGraphic(array6[i], transform.GetComponentInChildren<Image>(), 2f, ButtonPrompts.ButtonType.Small);
 			}
 			else
 			{
@@ -198,7 +191,7 @@ public class MusicChooser : MonoBehaviour
 		{
 			string key = UnoGameManager.GetUnoMusic(musicID)[tense].Key;
 			bool flag2 = key.EndsWith("_intro");
-			mus.ChangeMusic(flag2 ? key.Replace("_intro", "") : key, flag2, true);
+			mus.ChangeMusic(flag2 ? key.Replace("_intro", "") : key, flag2, playImmediately: true);
 			mus.GetSource().pitch = UnoGameManager.GetUnoMusic(musicID)[tense].Value;
 			if (showdown)
 			{

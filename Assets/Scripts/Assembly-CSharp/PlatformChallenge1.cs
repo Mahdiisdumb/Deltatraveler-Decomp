@@ -18,7 +18,7 @@ public class PlatformChallenge1 : AttackBase
 		maxFrames = 335;
 		bbSize = new Vector2(375f, 140f);
 		soulPos = new Vector2(-0.055f, -2.83f);
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 	}
 
 	protected override void Update()
