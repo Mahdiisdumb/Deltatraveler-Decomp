@@ -9,7 +9,7 @@ public class ExceptionHandlerUI : MonoBehaviour
 
 	private string[] randomText = new string[1] { "* Whoops! Looks like a crash...\n* Please report this to the\n  developers." };
 
-	private readonly string[] videos = new string[3] { "overworld/npcs/v_ralsei", "battle/attacks/bullets/jerry/v_favorites", "mariobros/v_ario" };
+	private readonly string[] videos = new string[4] { "overworld/npcs/v_ralsei", "battle/attacks/bullets/jerry/v_favorites", "mariobros/v_ario", "Ai music ahh" };
 
 	private bool listed;
 
