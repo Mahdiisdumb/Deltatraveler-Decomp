@@ -14,10 +14,10 @@ public class BunnyDoor : InteractTextBox
 		else if ((int)Util.GameManager().GetFlag(204) == 1)
 		{
 			done = true;
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
-			Util.GameManager().SetPartyMembers(susie: true, noelle: true);
+			Util.GameManager().DisablePlayerMovement(true);
+			Util.GameManager().SetPartyMembers(true, true);
 			Util.GameManager().SetCheckpoint(89);
-			Util.FindObjectOfType<Fade>().FadeOut(15);
+			Object.FindObjectOfType<Fade>().FadeOut(15);
 		}
 		else
 		{
@@ -27,9 +27,9 @@ public class BunnyDoor : InteractTextBox
 
 	protected override void Update()
 	{
-		if (done && !Util.FindObjectOfType<Fade>().IsPlaying())
+		if (done && !Object.FindObjectOfType<Fade>().IsPlaying())
 		{
-			Util.GameManager().LoadArea(88, fadeIn: true, new Vector3(4.15f, 1.41f), Vector2.down);
+			Util.GameManager().LoadArea(88, true, new Vector3(4.15f, 1.41f), Vector2.down);
 		}
 	}
 }

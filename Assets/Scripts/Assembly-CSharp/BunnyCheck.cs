@@ -17,7 +17,7 @@ public class BunnyCheck : MonoBehaviour
 
 	private int lastStep = -1;
 
-	private void Awake()
+	private void Start()
 	{
 		whatTheBunDoin = UnityEngine.Random.Range(0, 2);
 		bnuuy = GetComponent<SpriteRenderer>();
@@ -44,14 +44,6 @@ public class BunnyCheck : MonoBehaviour
 		}
 	}
 
-	private void Start()
-	{
-		if ((bool)Util.GameManager())
-		{
-			UnityEngine.Object.Destroy(Util.GameManager().gameObject);
-		}
-	}
-
 	private void Update()
 	{
 		float num = 60f / songBPM;
@@ -60,11 +52,11 @@ public class BunnyCheck : MonoBehaviour
 		{
 			bnuuy.sprite = bunSprites[(int)Mathf.Floor(num2 * 2f) % 2];
 			bnuuy.GetComponent<SpriteRenderer>().flipX = Mathf.Floor(num2) % 4f > 1f;
-			bnuuy.transform.position = new Vector2(0f, bunInitialPos.y + Mathf.Abs(Mathf.Sin(num2 * MathF.PI)) / 2f);
+			bnuuy.transform.position = new Vector2(0f, bunInitialPos.y + Mathf.Abs(Mathf.Sin(num2 * (float)Math.PI)) / 2f);
 			return;
 		}
 		bnuuy.sprite = bunSprites[(int)Mathf.Floor(num2 / 2f) % 2];
-		bnuuy.transform.localScale = new Vector2(2f, 2f + Mathf.Sin(num2 * MathF.PI / 2f) / 4f);
+		bnuuy.transform.localScale = new Vector2(2f, 2f + Mathf.Sin(num2 * (float)Math.PI / 2f) / 4f);
 		int num3 = (int)Mathf.Floor(num2 / 2f);
 		if (num3 != lastStep)
 		{

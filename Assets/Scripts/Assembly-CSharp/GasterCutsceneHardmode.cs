@@ -27,8 +27,8 @@ public class GasterCutsceneHardmode : CutsceneBase
 				gm.StopMusic(120f);
 				if (frames == 30)
 				{
-					kris.SetSelfAnimControl(setAnimControl: false);
-					kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+					kris.SetSelfAnimControl(false);
+					kris.GetComponent<Animator>().SetBool("isMoving", true);
 					kris.GetComponent<Animator>().SetFloat("speed", 0.5f);
 				}
 				if (kris.transform.position != new Vector3(0.42f, -1.7f))
@@ -37,8 +37,8 @@ public class GasterCutsceneHardmode : CutsceneBase
 				}
 				else
 				{
-					cam.SetFollowPlayer(follow: false);
-					kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+					cam.SetFollowPlayer(false);
+					kris.GetComponent<Animator>().SetBool("isMoving", false);
 				}
 				if (!cam.FollowingPlayer())
 				{
@@ -109,7 +109,7 @@ public class GasterCutsceneHardmode : CutsceneBase
 				{
 					gaster.SetFloat("dirX", 1f);
 					gaster.SetFloat("dirY", 0f);
-					gaster.SetBool("isMoving", value: true);
+					gaster.SetBool("isMoving", true);
 				}
 				if (gaster.transform.position != new Vector3(1.74f, 1.831f))
 				{
@@ -117,7 +117,7 @@ public class GasterCutsceneHardmode : CutsceneBase
 				}
 				else
 				{
-					gaster.SetBool("isMoving", value: false);
+					gaster.SetBool("isMoving", false);
 				}
 			}
 			if (frames == 120)
@@ -190,7 +190,7 @@ public class GasterCutsceneHardmode : CutsceneBase
 					gaster.enabled = true;
 					gaster.SetFloat("dirX", -1f);
 					gaster.SetFloat("dirY", 0f);
-					gaster.SetBool("isMoving", value: true);
+					gaster.SetBool("isMoving", true);
 				}
 				if (gaster.transform.position != new Vector3(-1f, 1.831f))
 				{
@@ -198,7 +198,7 @@ public class GasterCutsceneHardmode : CutsceneBase
 				}
 				else
 				{
-					gaster.SetBool("isMoving", value: false);
+					gaster.SetBool("isMoving", false);
 				}
 				if (frames == 120)
 				{
@@ -240,7 +240,7 @@ public class GasterCutsceneHardmode : CutsceneBase
 			{
 				gaster.SetFloat("dirX", 1f);
 				gaster.SetFloat("dirY", 0f);
-				gaster.SetBool("isMoving", value: true);
+				gaster.SetBool("isMoving", true);
 			}
 			if (gaster.transform.position != new Vector3(0.376f, 1.831f))
 			{
@@ -248,7 +248,7 @@ public class GasterCutsceneHardmode : CutsceneBase
 			}
 			else
 			{
-				gaster.SetBool("isMoving", value: false);
+				gaster.SetBool("isMoving", false);
 			}
 			if (frames == 90)
 			{
@@ -276,12 +276,12 @@ public class GasterCutsceneHardmode : CutsceneBase
 				{
 					gm.StopMusic();
 					dess.SetFloat("dirX", -1f);
-					dess.SetBool("isMoving", value: true);
+					dess.SetBool("isMoving", true);
 				}
 				dess.transform.position = new Vector3(Mathf.Lerp(8f, 5.28f, (float)frames / 30f), 0f);
 				if (frames == 30)
 				{
-					dess.SetBool("isMoving", value: false);
+					dess.SetBool("isMoving", false);
 				}
 				if (frames == 15)
 				{
@@ -329,10 +329,10 @@ public class GasterCutsceneHardmode : CutsceneBase
 		}
 		if (frames == 15)
 		{
-			cam.SetFollowPlayer(follow: true);
+			cam.SetFollowPlayer(true);
 			gm.EnablePlayerMovement();
-			kris.SetSelfAnimControl(setAnimControl: true);
-			Util.FindObjectOfType<ActionBulletHandler>().transform.position = Vector3.zero;
+			kris.SetSelfAnimControl(true);
+			Object.FindObjectOfType<ActionBulletHandler>().transform.position = Vector3.zero;
 			for (int i = 0; i < 2; i++)
 			{
 				float num = ((i % 2 == 0) ? 1 : (-1));
@@ -401,7 +401,7 @@ public class GasterCutsceneHardmode : CutsceneBase
 			{
 				"* NOW,^10 UNLIKE FOR MY\n  PRIMARY EXPERIMENT.",
 				"* I HAVE TRACKED THE\n  NUMBER OF MONSTERS\n  THAT YOU HAVE SLAIN.",
-				$"* YOU HAVE ELIMINATED\n  <color=#FF0000FF>{num} MONSTERS</color> ON YOUR\n  JOURNEY."
+				string.Format("* YOU HAVE ELIMINATED\n  <color=#FF0000FF>{0} MONSTERS</color> ON YOUR\n  JOURNEY.", num)
 			});
 			list2.AddRange(new string[3] { "gaster_neutral", "gaster_closed", "gaster_neutral" });
 			list3.AddRange(new string[3] { "#v_gaster_path_neutraloblit_0", "#v_gaster_path_neutraloblit_1", text });
@@ -518,15 +518,15 @@ public class GasterCutsceneHardmode : CutsceneBase
 		dess = GameObject.Find("Dess").GetComponent<Animator>();
 		blasterCenter = new GameObject("BlasterCenter").transform;
 		Object.Destroy(GameObject.Find("LoadingZone"));
-		if (PersistentSAVE.GetInt("hardmode-completion", 0) == 1)
+		if (PlayerPrefs.GetInt("HardmodeCompletion", 0) == 1)
 		{
 			completionState = 2;
 		}
-		else if (PersistentSAVE.GetInt("completion", 0) >= 1)
+		else if (PlayerPrefs.GetInt("CompletionState", 0) >= 1)
 		{
 			completionState = 1;
 		}
-		PersistentSAVE.SetInt("hardmode-completion", 1);
+		PlayerPrefs.SetInt("HardmodeCompletion", 1);
 		recordingDeviceDetected = GameManager.UsingRecordingSoftware();
 		gm.SetEnding(0);
 	}

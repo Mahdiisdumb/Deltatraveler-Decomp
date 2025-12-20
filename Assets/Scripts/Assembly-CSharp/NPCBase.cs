@@ -143,7 +143,7 @@ public class NPCBase : Interactable
 		{
 			Object.Destroy(base.gameObject);
 		}
-		if (eventType == 7 && (int)Util.GameManager().GetFlag(eventData) == 1)
+		if (eventType == 7 && (int)Object.FindObjectOfType<GameManager>().GetFlag(eventData) == 1)
 		{
 			Object.Destroy(base.gameObject);
 		}
@@ -171,7 +171,7 @@ public class NPCBase : Interactable
 					{
 						num = 310;
 					}
-					sels.CreateSelections(new string[1, 2] { { optionA, optionB } }, new Vector2(-116f, -283 + num), new Vector2(192f, 0f), new Vector2(-15f, 94f), "DTM-Mono", useSoul: true, makeSound: false, this, 0);
+					sels.CreateSelections(new string[1, 2] { { optionA, optionB } }, new Vector2(-116f, -283 + num), new Vector2(192f, 0f), new Vector2(-15f, 94f), "DTM-Mono", true, false, this, 0);
 				}
 				if (anim != null)
 				{
@@ -185,7 +185,7 @@ public class NPCBase : Interactable
 			doSelection = false;
 			bool flag = false;
 			txt = new GameObject().AddComponent<TextBox>();
-			if (Util.GameManager().FirstFreeItemSpace(equipment: false) == -1 && ((selection == 0 && optionAItem > -1) || (selection == 1 && optionBItem > -1)))
+			if (Object.FindObjectOfType<GameManager>().FirstFreeItemSpace() == -1 && ((selection == 0 && optionAItem > -1) || (selection == 1 && optionBItem > -1)))
 			{
 				txt.CreateBox(ctmLines, ctmSound, ctmSpeed, ctmPortraits);
 			}
@@ -195,13 +195,13 @@ public class NPCBase : Interactable
 				{
 					doFight = true;
 				}
-				Util.GameManager().AddItem(optionAItem);
+				Object.FindObjectOfType<GameManager>().AddItem(optionAItem);
 				if (optionAItem > -1)
 				{
 					flag = true;
 					if (eventData > -1)
 					{
-						Util.GameManager().SetFlag(eventData, 1);
+						Object.FindObjectOfType<GameManager>().SetFlag(eventData, 1);
 					}
 				}
 				if (optionALines != null && optionALines.Length != 0)
@@ -211,7 +211,7 @@ public class NPCBase : Interactable
 				else
 				{
 					Object.Destroy(txt);
-					Util.GameManager().EnablePlayerMovement();
+					Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
 				}
 			}
 			else if (selection == 1)
@@ -220,13 +220,13 @@ public class NPCBase : Interactable
 				{
 					doFight = true;
 				}
-				Util.GameManager().AddItem(optionBItem);
+				Object.FindObjectOfType<GameManager>().AddItem(optionBItem);
 				if (optionBItem > -1)
 				{
 					flag = true;
 					if (eventData > -1)
 					{
-						Util.GameManager().SetFlag(eventData, 1);
+						Object.FindObjectOfType<GameManager>().SetFlag(eventData, 1);
 					}
 				}
 				if (optionBLines != null && optionBLines.Length != 0)
@@ -236,7 +236,7 @@ public class NPCBase : Interactable
 				else
 				{
 					Object.Destroy(txt);
-					Util.GameManager().EnablePlayerMovement();
+					Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
 				}
 			}
 			selection = -1;
@@ -248,7 +248,7 @@ public class NPCBase : Interactable
 		else if (doFight)
 		{
 			doFight = false;
-			Util.OverworldPlayer().InitiateBattle();
+			Object.FindObjectOfType<OverworldPlayer>().InitiateBattle();
 		}
 	}
 
@@ -279,7 +279,7 @@ public class NPCBase : Interactable
 			{
 				txt.CreateBox(defeatSaveLines, defeatSaveSound, defeatSaveSpeed, defeatSavePortraits);
 			}
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 		}
 		else if (eventType != 1 && eventType != 3)
 		{
@@ -317,7 +317,7 @@ public class NPCBase : Interactable
 				sels = txt.GetUIBox().AddComponent<Selection>();
 				txt.DisablePlayerControlOnDestroy();
 			}
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 			talkedTo = true;
 		}
 		else if (eventType == 3)
@@ -326,7 +326,7 @@ public class NPCBase : Interactable
 		}
 		else
 		{
-			Util.OverworldPlayer().InitiateBattle();
+			Object.FindObjectOfType<OverworldPlayer>().InitiateBattle();
 		}
 	}
 

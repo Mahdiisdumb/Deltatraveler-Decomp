@@ -4,21 +4,6 @@ public class BattleBG : MonoBehaviour
 {
 	private BattleBGPiece[,] pieces;
 
-	[SerializeField]
-	private BattleBGType type;
-
-	[SerializeField]
-	private float intensity;
-
-	[SerializeField]
-	private float speed;
-
-	[SerializeField]
-	private Color color;
-
-	[SerializeField]
-	private bool isBoss;
-
 	public void Awake()
 	{
 		pieces = new BattleBGPiece[2, 6];
@@ -34,7 +19,35 @@ public class BattleBG : MonoBehaviour
 				num2++;
 				num = 0;
 			}
-			battleBGPiece.StartBG(type, intensity, speed, color, isBoss);
+		}
+	}
+
+	public void StartBG(int type, float intensity, float speed, bool isBoss)
+	{
+		StartBG(type, intensity, speed, new Color(0.1333f, 0.694f, 0.298f), isBoss);
+	}
+
+	public void StartBG(int type, float intensity, float speed, Color color, bool isBoss)
+	{
+		if (type == 4)
+		{
+			GameObject gameObject = Object.Instantiate(Resources.Load<GameObject>("vfx/BattleBGEffect/" + EnemyGenerator.GetBGName((int)intensity)));
+			if (isBoss)
+			{
+				gameObject.GetComponent<SpriteRenderer>().enabled = false;
+			}
+			type = 0;
+			color = new Color(0f, 0f, 0f, 0f);
+		}
+		BattleBGPiece[,] array = pieces;
+		int upperBound = array.GetUpperBound(0);
+		int upperBound2 = array.GetUpperBound(1);
+		for (int i = array.GetLowerBound(0); i <= upperBound; i++)
+		{
+			for (int j = array.GetLowerBound(1); j <= upperBound2; j++)
+			{
+				array[i, j].StartBG(type, intensity, speed, color, isBoss);
+			}
 		}
 	}
 }

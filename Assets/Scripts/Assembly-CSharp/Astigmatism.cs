@@ -94,16 +94,16 @@ public class Astigmatism : EnemyBase
 		}
 		float num3 = Mathf.Lerp(0f, 0.08f, t);
 		float num4 = Mathf.Lerp(0f, 0.05f, t);
-		GetPart("leftarm").transform.localPosition = new Vector3(-0.687f, 0.707f) + new Vector3(Mathf.Cos((float)bodyFrames * rotateMulti * (MathF.PI / 180f)), Mathf.Sin((float)bodyFrames * rotateMulti * (MathF.PI / 180f))) * num3;
-		GetPart("rightarm").transform.localPosition = new Vector3(0.687f, 0.707f) - new Vector3(Mathf.Cos((float)bodyFrames * rotateMulti * (MathF.PI / 180f)), Mathf.Sin((float)bodyFrames * rotateMulti * (MathF.PI / 180f))) * num3;
-		GetPart("leftleg").transform.localPosition = new Vector3(-0.228f, 0.208f) + new Vector3(0f - Mathf.Sin(((float)bodyFrames * rotateMulti + 75f) * (MathF.PI / 180f)), 0f - Mathf.Cos(((float)bodyFrames * rotateMulti + 75f) * (MathF.PI / 180f))) * num4;
-		GetPart("rightleg").transform.localPosition = new Vector3(0.228f, 0.208f) - new Vector3(0f - Mathf.Sin(((float)bodyFrames * rotateMulti + 75f) * (MathF.PI / 180f)), 0f - Mathf.Cos(((float)bodyFrames * rotateMulti + 75f) * (MathF.PI / 180f))) * num4;
+		GetPart("leftarm").transform.localPosition = new Vector3(-0.687f, 0.707f) + new Vector3(Mathf.Cos((float)bodyFrames * rotateMulti * ((float)Math.PI / 180f)), Mathf.Sin((float)bodyFrames * rotateMulti * ((float)Math.PI / 180f))) * num3;
+		GetPart("rightarm").transform.localPosition = new Vector3(0.687f, 0.707f) - new Vector3(Mathf.Cos((float)bodyFrames * rotateMulti * ((float)Math.PI / 180f)), Mathf.Sin((float)bodyFrames * rotateMulti * ((float)Math.PI / 180f))) * num3;
+		GetPart("leftleg").transform.localPosition = new Vector3(-0.228f, 0.208f) + new Vector3(0f - Mathf.Sin(((float)bodyFrames * rotateMulti + 75f) * ((float)Math.PI / 180f)), 0f - Mathf.Cos(((float)bodyFrames * rotateMulti + 75f) * ((float)Math.PI / 180f))) * num4;
+		GetPart("rightleg").transform.localPosition = new Vector3(0.228f, 0.208f) - new Vector3(0f - Mathf.Sin(((float)bodyFrames * rotateMulti + 75f) * ((float)Math.PI / 180f)), 0f - Mathf.Cos(((float)bodyFrames * rotateMulti + 75f) * ((float)Math.PI / 180f))) * num4;
 	}
 
 	public override string[] PerformAct(int i)
 	{
 		lastAct = i - 1;
-		if (GetActNames()[i] == EnemyBase.CHECK_NAME)
+		if (GetActNames()[i] == "Check")
 		{
 			return new string[1] { "* ASTIGMATISM - 32 ATK 26 DEF\n" + checkDesc };
 		}
@@ -125,7 +125,7 @@ public class Astigmatism : EnemyBase
 		}
 		if (GetActNames()[i] == "Challenge")
 		{
-			EnemyBase[] array = Util.FindObjectsOfType<EnemyBase>();
+			EnemyBase[] array = UnityEngine.Object.FindObjectsOfType<EnemyBase>();
 			foreach (EnemyBase enemyBase in array)
 			{
 				if (!enemyBase.IsDone() && enemyBase != this)
@@ -150,11 +150,11 @@ public class Astigmatism : EnemyBase
 		respondToDefy = true;
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 		if (i == 1)
 		{
@@ -162,7 +162,7 @@ public class Astigmatism : EnemyBase
 			nextAttackHard = true;
 			return new string[2] { "* Susie picked on Astigmatism.", "su_teeth`snd_txtsus`* I'm gonna throw you\n  against the wall like\n  a dodgeball." };
 		}
-		return base.PerformAssistAct_Old(i);
+		return base.PerformAssistAct(i);
 	}
 
 	public override void Chat(string[] text, string type, string sound, Vector2 pos, bool canSkip, int speed)

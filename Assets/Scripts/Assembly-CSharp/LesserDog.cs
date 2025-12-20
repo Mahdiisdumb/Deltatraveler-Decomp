@@ -60,26 +60,26 @@ public class LesserDog : EnemyBase
 			noShield = true;
 			tired = true;
 			PlaySFX("sounds/snd_dust");
-			GetPart("shield").GetComponent<ParticleDuplicator>().Activate(includeBlack: true, Vector2.zero);
+			GetPart("shield").GetComponent<ParticleDuplicator>().Activate(true, Vector2.zero);
 			GetPart("body").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Lesser Dog/spr_b_ldog_noshield");
 			hurtSpriteName = "_dmg";
 			playerMultiplier = 1f;
-			Util.FindObjectOfType<BattleManager>().GetComponent<AudioSource>().pitch = 0.4f;
+			Object.FindObjectOfType<BattleManager>().GetComponent<AudioSource>().pitch = 0.4f;
 		}
-		int maxExclusive = 15;
+		int max = 15;
 		if (noShield)
 		{
-			maxExclusive = 6;
+			max = 6;
 		}
 		else if (progress == 1)
 		{
-			maxExclusive = 50;
+			max = 50;
 		}
 		else if (progress > 1 && progress != 4)
 		{
-			maxExclusive = 100000;
+			max = 100000;
 		}
-		GetPart("body").transform.localPosition = new Vector3((float)((Random.Range(0, maxExclusive) == 0) ? ((Random.Range(0, 2) != 0) ? 1 : (-1)) : 0) / 48f, 0f);
+		GetPart("body").transform.localPosition = new Vector3((float)((Random.Range(0, max) == 0) ? ((Random.Range(0, 2) != 0) ? 1 : (-1)) : 0) / 48f, 0f);
 		if (progress > 4 && !noShield)
 		{
 			bodyFrames++;
@@ -116,7 +116,7 @@ public class LesserDog : EnemyBase
 					progress++;
 					AddActPoints(15);
 					playerMultiplier = 0.5f;
-					Util.FindObjectOfType<BattleManager>().GetComponent<AudioSource>().pitch = 0.45f;
+					Object.FindObjectOfType<BattleManager>().GetComponent<AudioSource>().pitch = 0.45f;
 					return new string[1] { "* You called for the Lesser Dog.\n* It lowers its shield,^05 but isn't\n  fully out yet." };
 				}
 				if (progress == 3)
@@ -125,7 +125,7 @@ public class LesserDog : EnemyBase
 					progress++;
 					AddActPoints(25);
 					playerMultiplier = 0.75f;
-					Util.FindObjectOfType<BattleManager>().GetComponent<AudioSource>().pitch = 0.5f;
+					Object.FindObjectOfType<BattleManager>().GetComponent<AudioSource>().pitch = 0.5f;
 					return new string[1] { "* You called for the Lesser Dog.\n* It puts its shield to its\n  side,^05 ready for you." };
 				}
 				return new string[1] { "* You called for the Lesser Dog.\n* But nothing happened." };
@@ -149,7 +149,7 @@ public class LesserDog : EnemyBase
 					progress++;
 					playerMultiplier = 666f;
 					AddActPoints(35);
-					Util.FindObjectOfType<BattleManager>().PlayMusic("music/mus_battle", 1f);
+					Object.FindObjectOfType<BattleManager>().PlayMusic("music/mus_battle", 1f);
 					return new string[3] { "* You proposed a game of catch\n  with snowballs.", "* Everyone played with the\n  Lesser Dog.", "* Lesser Dog feels safe in your\n  presence." };
 				}
 				return new string[1] { "* The Lesser Dog is tuckered out." };
@@ -215,7 +215,7 @@ public class LesserDog : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		switch (i)
 		{
@@ -255,7 +255,7 @@ public class LesserDog : EnemyBase
 			}
 			break;
 		}
-		return base.PerformAssistAct_Old(i);
+		return base.PerformAssistAct(i);
 	}
 
 	public override void EnemyTurnEnd()

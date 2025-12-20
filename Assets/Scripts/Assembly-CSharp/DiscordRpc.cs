@@ -167,7 +167,7 @@ public class DiscordRpc
 		{
 			string text = toconv.Trim();
 			byte[] bytes = Encoding.Default.GetBytes(text);
-			if (bytes.Length != 0 && bytes[^1] != 0)
+			if (bytes.Length != 0 && bytes[bytes.Length - 1] != 0)
 			{
 				text += "\0\0";
 			}
@@ -226,18 +226,18 @@ public class DiscordRpc
 	{
 		Callbacks = handlers;
 		EventHandlers handlers2 = default(EventHandlers);
-		ref OnReadyInfo readyCallback = ref handlers2.readyCallback;
-		readyCallback = (OnReadyInfo)Delegate.Combine(readyCallback, new OnReadyInfo(ReadyCallback));
-		ref OnDisconnectedInfo disconnectedCallback = ref handlers2.disconnectedCallback;
-		disconnectedCallback = (OnDisconnectedInfo)Delegate.Combine(disconnectedCallback, new OnDisconnectedInfo(DisconnectedCallback));
-		ref OnErrorInfo errorCallback = ref handlers2.errorCallback;
-		errorCallback = (OnErrorInfo)Delegate.Combine(errorCallback, new OnErrorInfo(ErrorCallback));
-		ref OnJoinInfo joinCallback = ref handlers2.joinCallback;
-		joinCallback = (OnJoinInfo)Delegate.Combine(joinCallback, new OnJoinInfo(JoinCallback));
-		ref OnSpectateInfo spectateCallback = ref handlers2.spectateCallback;
-		spectateCallback = (OnSpectateInfo)Delegate.Combine(spectateCallback, new OnSpectateInfo(SpectateCallback));
-		ref OnRequestInfo requestCallback = ref handlers2.requestCallback;
-		requestCallback = (OnRequestInfo)Delegate.Combine(requestCallback, new OnRequestInfo(RequestCallback));
+		ref EventHandlers reference = ref handlers2;
+		reference.readyCallback = (OnReadyInfo)Delegate.Combine(reference.readyCallback, new OnReadyInfo(ReadyCallback));
+		ref EventHandlers reference2 = ref handlers2;
+		reference2.disconnectedCallback = (OnDisconnectedInfo)Delegate.Combine(reference2.disconnectedCallback, new OnDisconnectedInfo(DisconnectedCallback));
+		ref EventHandlers reference3 = ref handlers2;
+		reference3.errorCallback = (OnErrorInfo)Delegate.Combine(reference3.errorCallback, new OnErrorInfo(ErrorCallback));
+		ref EventHandlers reference4 = ref handlers2;
+		reference4.joinCallback = (OnJoinInfo)Delegate.Combine(reference4.joinCallback, new OnJoinInfo(JoinCallback));
+		ref EventHandlers reference5 = ref handlers2;
+		reference5.spectateCallback = (OnSpectateInfo)Delegate.Combine(reference5.spectateCallback, new OnSpectateInfo(SpectateCallback));
+		ref EventHandlers reference6 = ref handlers2;
+		reference6.requestCallback = (OnRequestInfo)Delegate.Combine(reference6.requestCallback, new OnRequestInfo(RequestCallback));
 		InitializeInternal(applicationId, ref handlers2, autoRegister, optionalSteamId);
 	}
 

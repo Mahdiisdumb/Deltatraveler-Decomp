@@ -57,7 +57,7 @@ public class MartletBG : MonoBehaviour
 		alarm--;
 		if (alarm <= 0)
 		{
-			if (Util.FindObjectsOfType<MartletSnowflake>().Length < 20)
+			if (Object.FindObjectsOfType<MartletSnowflake>().Length < 20)
 			{
 				int num3 = Random.Range(0, 4);
 				float x = Random.Range(-6.6666665f, 6.6666665f);

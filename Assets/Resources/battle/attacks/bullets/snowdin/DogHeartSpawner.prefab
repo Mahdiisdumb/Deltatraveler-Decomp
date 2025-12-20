@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1871941911929183
+--- !u!1 &1396408528288836
 GameObject:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Component:
-  - component: {fileID: 4779323301969384}
-  - component: {fileID: 212142259392252211}
-  - component: {fileID: 114303001167517972}
+  - component: {fileID: 4761080648894525}
+  - component: {fileID: 212899213353253882}
+  - component: {fileID: 114676923046391914}
   m_Layer: 0
   m_Name: DogHeartSpawner
   m_TagString: Untagged
@@ -18,41 +18,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4779323301969384
+--- !u!4 &4761080648894525
 Transform:
-  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1871941911929183}
+  m_GameObject: {fileID: 1396408528288836}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.16, y: -1.78, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
---- !u!212 &212142259392252211
+--- !u!212 &212899213353253882
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1871941911929183}
+  m_GameObject: {fileID: 1396408528288836}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -64,7 +57,6 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -77,7 +69,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 190
-  m_Sprite: {fileID: 21300000, guid: 0a2f897756a5dfc45a73850f29fc097e, type: 2}
+  m_Sprite: {fileID: 21300000, guid: 2f64d20069a03fe499ce91dd8e1ffbda, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -88,22 +80,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
---- !u!114 &114303001167517972
+--- !u!114 &114676923046391914
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1871941911929183}
+  m_GameObject: {fileID: 1396408528288836}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 497c1b21de5e8217aea12bf067afd29e, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   sprites:
-  - {fileID: 21300000, guid: 0a2f897756a5dfc45a73850f29fc097e, type: 2}
-  - {fileID: 21300000, guid: edf48a98661b80e45ac8a8a056188986, type: 2}
-  - {fileID: 21300000, guid: 8008c92401e128e4286cbc7bf0f70e37, type: 2}
+  - {fileID: 21300000, guid: 2f64d20069a03fe499ce91dd8e1ffbda, type: 2}
+  - {fileID: 21300000, guid: 5d8151303ecff0942806579b39d47825, type: 2}
+  - {fileID: 21300000, guid: f3e83e191e0225042b5df4ab4e8383c5, type: 2}
   sadSprites:
-  - {fileID: 21300000, guid: 9970466a67ddf9f47a369d9cd0341e37, type: 2}
-  - {fileID: 21300000, guid: bc6584038d631a648a91be102b700a59, type: 2}
+  - {fileID: 21300000, guid: 3bb507df8ed925941828b7ad2f79d941, type: 2}
+  - {fileID: 21300000, guid: 0e5df264f793d924698374e7d8e60ff9, type: 2}

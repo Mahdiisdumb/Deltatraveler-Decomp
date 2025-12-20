@@ -21,12 +21,12 @@ public class ShakingText : MonoBehaviour
 		{
 			return;
 		}
-		Text[] array = Util.FindObjectsOfType<Text>();
+		Text[] array = Object.FindObjectsOfType<Text>();
 		foreach (Text text in array)
 		{
 			if (text.font.name == focusFont)
 			{
-				text.GetComponent<LetterSpacing>().ForceShake(forceShake: true, frequency);
+				text.GetComponent<LetterSpacing>().ForceShake(true, frequency);
 			}
 		}
 	}
@@ -35,12 +35,12 @@ public class ShakingText : MonoBehaviour
 	{
 		frequency = freq;
 		isPlaying = true;
-		Text[] array = Util.FindObjectsOfType<Text>();
+		Text[] array = Object.FindObjectsOfType<Text>();
 		foreach (Text text in array)
 		{
 			if (text.font.name == focusFont)
 			{
-				text.GetComponent<LetterSpacing>().ForceShake(forceShake: true, frequency);
+				text.GetComponent<LetterSpacing>().ForceShake(true, frequency);
 			}
 		}
 		this.focusFont = focusFont;
@@ -48,12 +48,12 @@ public class ShakingText : MonoBehaviour
 
 	public void Stop()
 	{
-		Text[] array = Util.FindObjectsOfType<Text>();
+		Text[] array = Object.FindObjectsOfType<Text>();
 		foreach (Text text in array)
 		{
 			if (text.font.name == focusFont)
 			{
-				text.GetComponent<LetterSpacing>().ForceShake(forceShake: false);
+				text.GetComponent<LetterSpacing>().ForceShake(false);
 			}
 		}
 		isPlaying = false;

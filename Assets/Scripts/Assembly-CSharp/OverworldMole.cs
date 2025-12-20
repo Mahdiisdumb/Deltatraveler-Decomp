@@ -9,9 +9,9 @@ public class OverworldMole : OverworldBloodEnemyBase
 
 	protected override void Awake()
 	{
-		if ((int)Util.GameManager().GetFlag(defeatFlagID) == 1 && (int)Util.GameManager().GetFlag(13) >= 5)
+		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(defeatFlagID) == 1 && (int)Object.FindObjectOfType<GameManager>().GetFlag(13) >= 5)
 		{
-			CreateDeadEnemy(age: true);
+			CreateDeadEnemy(true);
 		}
 		base.Awake();
 		anim.SetFloat("dirX", startLook.x);
@@ -40,13 +40,13 @@ public class OverworldMole : OverworldBloodEnemyBase
 	{
 		base.DetectPlayer();
 		dif = CalculateDifference(6f);
-		SetFaceDirection(reverse: false);
+		SetFaceDirection(false);
 	}
 
 	public override void StopRunning()
 	{
 		base.StopRunning();
-		anim.SetBool("isMoving", value: false);
+		anim.SetBool("isMoving", false);
 	}
 
 	public override void OnCollisionEnter2D(Collision2D collision)
@@ -54,7 +54,7 @@ public class OverworldMole : OverworldBloodEnemyBase
 		base.OnCollisionEnter2D(collision);
 		if ((bool)collision.gameObject.GetComponent<OverworldPlayer>() && !disabled && canDetectPlayer)
 		{
-			anim.SetBool("isMoving", value: false);
+			anim.SetBool("isMoving", false);
 		}
 	}
 
@@ -62,41 +62,41 @@ public class OverworldMole : OverworldBloodEnemyBase
 	{
 		if (runFromPlayer)
 		{
-			if (Vector3.Distance(base.transform.position, Util.OverworldPlayer().transform.position) < 2f)
+			if (Vector3.Distance(base.transform.position, Object.FindObjectOfType<OverworldPlayer>().transform.position) < 2f)
 			{
 				startRunning = true;
 			}
-			if (Vector3.Distance(base.transform.position, Util.OverworldPlayer().transform.position) < 4f && startRunning)
+			if (Vector3.Distance(base.transform.position, Object.FindObjectOfType<OverworldPlayer>().transform.position) < 4f && startRunning)
 			{
-				speed = Util.OverworldPlayer().GetSpeed() + 2f;
+				speed = Object.FindObjectOfType<OverworldPlayer>().GetSpeed() + 2f;
 				base.RunAlgorithm();
-				anim.SetBool("isMoving", value: true);
-				SetFaceDirection(reverse: true);
+				anim.SetBool("isMoving", true);
+				SetFaceDirection(true);
 			}
 			else
 			{
 				startRunning = false;
 				dif = CalculateDifference(6f);
-				anim.SetBool("isMoving", value: false);
-				SetFaceDirection(reverse: false);
+				anim.SetBool("isMoving", false);
+				SetFaceDirection(false);
 			}
 		}
 		else
 		{
 			if (UTInput.GetAxis("Horizontal") != 0f || UTInput.GetAxis("Vertical") != 0f)
 			{
-				speed = Util.OverworldPlayer().GetSpeed() + 2f;
-				anim.SetBool("isMoving", value: true);
+				speed = Object.FindObjectOfType<OverworldPlayer>().GetSpeed() + 2f;
+				anim.SetBool("isMoving", true);
 			}
 			else
 			{
 				speed = 0f;
-				anim.SetBool("isMoving", value: false);
+				anim.SetBool("isMoving", false);
 			}
 			base.RunAlgorithm();
 			if (speed != 0f)
 			{
-				SetFaceDirection(reverse: false);
+				SetFaceDirection(false);
 			}
 		}
 	}

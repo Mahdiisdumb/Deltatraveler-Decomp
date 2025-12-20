@@ -11,7 +11,7 @@ public class VegCarrotAttack : AttackBase
 		base.Awake();
 		maxFrames = 110;
 		bbSize = new Vector2(165f, 140f);
-		Vegetoid[] array = Util.FindObjectsOfType<Vegetoid>();
+		Vegetoid[] array = Object.FindObjectsOfType<Vegetoid>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			if (array[i].ExpectingGreensEaten())
@@ -24,7 +24,7 @@ public class VegCarrotAttack : AttackBase
 
 	public void OnDestroy()
 	{
-		Vegetoid[] array = Util.FindObjectsOfType<Vegetoid>();
+		Vegetoid[] array = Object.FindObjectsOfType<Vegetoid>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			array[i].DisableEatingGreens();

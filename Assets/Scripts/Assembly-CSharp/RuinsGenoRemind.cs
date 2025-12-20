@@ -18,7 +18,7 @@ public class RuinsGenoRemind : CutsceneBase
 			base.StartCutscene(par);
 			if ((int)gm.GetFlag(108) == 1)
 			{
-				StartText(new string[1] { $"<color=#FF0000FF>* Strongly felt {WeirdChecker.GetRemainingHardModeEnemies(gm)} left.\n* Shouldn't proceed yet.</color>" }, new string[2] { "snd_text", "snd_text" }, new int[2], new string[0]);
+				StartText(new string[1] { string.Format("<color=#FF0000FF>* Strongly felt {0} left.\n* Shouldn't proceed yet.</color>", WeirdChecker.GetRemainingHardModeEnemies(gm)) }, new string[2] { "snd_text", "snd_text" }, new int[2], new string[0]);
 			}
 			else
 			{

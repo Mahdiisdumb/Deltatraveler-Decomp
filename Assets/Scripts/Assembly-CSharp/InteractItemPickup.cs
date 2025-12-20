@@ -46,7 +46,7 @@ public class InteractItemPickup : InteractSelectionBase
 
 	private void Awake()
 	{
-		if (flag > -1 && (int)Util.GameManager().GetFlag(flag) == 1)
+		if (flag > -1 && (int)Object.FindObjectOfType<GameManager>().GetFlag(flag) == 1)
 		{
 			Object.Destroy(base.gameObject);
 		}
@@ -56,20 +56,20 @@ public class InteractItemPickup : InteractSelectionBase
 	{
 		if (index == Vector2.left)
 		{
-			if (Util.GameManager().NumItemFreeSpace(Items.IsEquipment(itemID)) == 0)
+			if (Object.FindObjectOfType<GameManager>().NumItemFreeSpace() == 0)
 			{
 				txt = new GameObject("InteractTextBoxItem", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(noSpaceLines, noSpaceSounds, noSpaceSpeed, giveBackControl: true, noSpacePortraits);
+				txt.CreateBox(noSpaceLines, noSpaceSounds, noSpaceSpeed, true, noSpacePortraits);
 			}
 			else
 			{
-				Util.GameManager().AddAmbiguousItem(itemID);
+				Object.FindObjectOfType<GameManager>().AddItem(itemID);
 				if (flag > -1)
 				{
-					Util.GameManager().SetFlag(flag, 1);
+					Object.FindObjectOfType<GameManager>().SetFlag(flag, 1);
 				}
 				txt = new GameObject("InteractTextBoxItem", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(purchaseLines, purchaseSounds, purchaseSpeed, giveBackControl: true, purchasePortraits);
+				txt.CreateBox(purchaseLines, purchaseSounds, purchaseSpeed, true, purchasePortraits);
 				Object.Destroy(base.gameObject);
 			}
 		}
@@ -78,11 +78,11 @@ public class InteractItemPickup : InteractSelectionBase
 			if (rejectLines.Length != 0)
 			{
 				txt = new GameObject("InteractTextBoxItem", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(rejectLines, rejectSounds, rejectSpeed, giveBackControl: true, rejectPortraits);
+				txt.CreateBox(rejectLines, rejectSounds, rejectSpeed, true, rejectPortraits);
 			}
 			else
 			{
-				Util.GameManager().EnablePlayerMovement();
+				Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
 			}
 		}
 		selectActivated = false;

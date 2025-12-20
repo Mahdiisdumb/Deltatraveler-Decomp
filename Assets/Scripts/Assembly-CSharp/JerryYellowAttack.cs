@@ -30,7 +30,7 @@ public class JerryYellowAttack : AttackBase
 	{
 		base.Awake();
 		bbSize = new Vector3(185f, 140f);
-		jerry = Util.FindObjectOfType<Jerry>();
+		jerry = UnityEngine.Object.FindObjectOfType<Jerry>();
 		prefab = Resources.Load<GameObject>("battle/attacks/bullets/jerry/JerrySlashYellow");
 		for (int i = 0; i < 3; i++)
 		{
@@ -54,7 +54,7 @@ public class JerryYellowAttack : AttackBase
 			{
 				jerry.SetPose(1);
 				jerry.PlaySFX("sounds/snd_boost");
-				Util.FindObjectOfType<SOUL>().ChangeSOULMode(5);
+				UnityEngine.Object.FindObjectOfType<SOUL>().ChangeSOULMode(5);
 			}
 			if (frames == 18)
 			{
@@ -71,7 +71,7 @@ public class JerryYellowAttack : AttackBase
 			}
 			if (frames <= 20)
 			{
-				float b = Mathf.Sin((float)frames * 10.588235f * (MathF.PI / 180f));
+				float b = Mathf.Sin((float)frames * 10.588235f * ((float)Math.PI / 180f));
 				jerry.GetPart("sword").GetComponent<SpriteRenderer>().color = new Color(1f, 1f, b);
 				return;
 			}
@@ -82,7 +82,7 @@ public class JerryYellowAttack : AttackBase
 			}
 			if (frames % spawnRate == 1)
 			{
-				float f = UnityEngine.Random.Range(0f, MathF.PI * 2f);
+				float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
 				Vector3 position = new Vector3(Mathf.Sin(f) * 2.05f, 1.37f + Mathf.Cos(f) * 0.73f);
 				JerrySlashYellow component = UnityEngine.Object.Instantiate(prefab, position, Quaternion.identity, base.transform).GetComponent<JerrySlashYellow>();
 				component.Activate(position.x < 0f, UnityEngine.Random.Range(-10f, 60f), UnityEngine.Random.Range(25, 40), bulletSpeed, bigBullets[numOfBulletsSpawned], redBullets[numOfBulletsSpawned]);
@@ -105,7 +105,7 @@ public class JerryYellowAttack : AttackBase
 				bullets[0].StartFalling();
 				bullets.RemoveAt(0);
 			}
-			else if (bullets.Count == 0 && !Util.FindObjectOfType<JerrySlashYellow>())
+			else if (bullets.Count == 0 && !UnityEngine.Object.FindObjectOfType<JerrySlashYellow>())
 			{
 				UnityEngine.Object.Destroy(base.gameObject);
 			}

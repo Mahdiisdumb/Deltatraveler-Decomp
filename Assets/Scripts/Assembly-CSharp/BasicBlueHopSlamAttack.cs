@@ -27,7 +27,7 @@ public class BasicBlueHopSlamAttack : AttackBase
 		maxFrames = 340;
 		bbSize = new Vector2(375f, 140f);
 		soulPos = new Vector2(-0.055f, -2.83f);
-		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		UnityEngine.Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 	}
 
 	protected override void Update()
@@ -41,19 +41,19 @@ public class BasicBlueHopSlamAttack : AttackBase
 		boneSideLineRight.transform.position = new Vector3(boneSideLineRight.transform.position.x, Mathf.Lerp(0.47f, 0.21f, (float)(frames % 6) / 6f));
 		if (frames == 30 || frames == 90 || frames == 184)
 		{
-			Util.FindObjectOfType<Sans>().ResetBreatheAnimation();
+			UnityEngine.Object.FindObjectOfType<Sans>().ResetBreatheAnimation();
 		}
 		if (frames == 1)
 		{
-			Util.FindObjectOfType<SansGravityManager>().Slam(Vector2.up, 12f);
+			UnityEngine.Object.FindObjectOfType<SansGravityManager>().Slam(Vector2.up, 12f);
 		}
 		if (frames == 7)
 		{
-			Util.FindObjectOfType<SansGravityManager>().Slam(Vector2.right);
+			UnityEngine.Object.FindObjectOfType<SansGravityManager>().Slam(Vector2.right);
 		}
 		if (frames == 11)
 		{
-			Util.FindObjectOfType<SOUL>().SlamToDirection(Vector2.right, 20f);
+			UnityEngine.Object.FindObjectOfType<SOUL>().SlamToDirection(Vector2.right, 20f);
 			boneGroup1.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
 			boneGroup1.transform.localScale = new Vector3(-1f, 1f, 1f);
 			boneGroup2.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
@@ -70,7 +70,7 @@ public class BasicBlueHopSlamAttack : AttackBase
 		}
 		if (frames == 80)
 		{
-			Util.FindObjectOfType<SansGravityManager>().Slam(Vector2.left);
+			UnityEngine.Object.FindObjectOfType<SansGravityManager>().Slam(Vector2.left);
 		}
 		if (frames == 95)
 		{
@@ -86,7 +86,7 @@ public class BasicBlueHopSlamAttack : AttackBase
 		if (frames >= 90 && frames <= 105)
 		{
 			float num = (float)(frames - 90) / 15f;
-			boneSideLineRight.transform.position = new Vector3(Mathf.Lerp(1.62f, 0f, Mathf.Sin(num * MathF.PI * 0.5f)), boneSideLineRight.transform.position.y);
+			boneSideLineRight.transform.position = new Vector3(Mathf.Lerp(1.62f, 0f, Mathf.Sin(num * (float)Math.PI * 0.5f)), boneSideLineRight.transform.position.y);
 		}
 		if (frames >= 100)
 		{
@@ -95,20 +95,20 @@ public class BasicBlueHopSlamAttack : AttackBase
 		}
 		if (frames == 156)
 		{
-			Util.FindObjectOfType<SansGravityManager>().Slam(Vector2.right);
+			UnityEngine.Object.FindObjectOfType<SansGravityManager>().Slam(Vector2.right);
 		}
 		if (frames == 164)
 		{
-			Util.FindObjectOfType<SansGravityManager>().Slam(Vector2.down);
+			UnityEngine.Object.FindObjectOfType<SansGravityManager>().Slam(Vector2.down);
 		}
 		if (frames == 168)
 		{
-			Util.FindObjectOfType<SOUL>().SlamToDirection(Vector2.down, 20f);
+			UnityEngine.Object.FindObjectOfType<SOUL>().SlamToDirection(Vector2.down, 20f);
 		}
 		if (frames >= 165 && frames <= 180)
 		{
 			float num2 = (float)(frames - 165) / 15f;
-			boneSideLineLeft.transform.position = new Vector3(Mathf.Lerp(-1.62f, 0f, Mathf.Sin(num2 * MathF.PI * 0.5f)), boneSideLineLeft.transform.position.y);
+			boneSideLineLeft.transform.position = new Vector3(Mathf.Lerp(-1.62f, 0f, Mathf.Sin(num2 * (float)Math.PI * 0.5f)), boneSideLineLeft.transform.position.y);
 		}
 		if (frames >= 170)
 		{

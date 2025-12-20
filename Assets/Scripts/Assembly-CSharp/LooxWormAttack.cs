@@ -9,7 +9,7 @@ public class LooxWormAttack : AttackBase
 		base.Awake();
 		bbSize = new Vector2(185f, 140f);
 		maxFrames = 110;
-		if (Util.FindObjectOfType<Loox>().IsNextAttackHard())
+		if (Object.FindObjectOfType<Loox>().IsNextAttackHard())
 		{
 			spawnRate = 6;
 		}
@@ -18,9 +18,9 @@ public class LooxWormAttack : AttackBase
 
 	public void OnDestroy()
 	{
-		if ((bool)Util.FindObjectOfType<Loox>())
+		if ((bool)Object.FindObjectOfType<Loox>())
 		{
-			Util.FindObjectOfType<Loox>().ResetAttackDifficulty();
+			Object.FindObjectOfType<Loox>().ResetAttackDifficulty();
 		}
 	}
 

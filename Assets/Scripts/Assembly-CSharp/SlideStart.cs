@@ -95,10 +95,6 @@ public class SlideStart : OverworldManipulator
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (!collision)
-		{
-			return;
-		}
 		if ((bool)collision.GetComponent<OverworldPlayer>() && !activated)
 		{
 			activated = true;
@@ -108,12 +104,12 @@ public class SlideStart : OverworldManipulator
 		else if ((bool)collision.GetComponent<OverworldPartyMember>() && activated)
 		{
 			collision.GetComponent<OverworldPartyMember>().StartSliding();
-			if (collision.GetComponent<OverworldPartyMember>().GetMemberID() == 1 && susie == null)
+			if (collision.gameObject.name == "Susie" && susie == null)
 			{
 				susie = collision.GetComponent<OverworldPartyMember>();
 				MonoBehaviour.print("susie now sliding");
 			}
-			else if (collision.GetComponent<OverworldPartyMember>().GetMemberID() == 2 && noelle == null)
+			else if (collision.gameObject.name == "Noelle" && noelle == null)
 			{
 				noelle = collision.GetComponent<OverworldPartyMember>();
 				MonoBehaviour.print("noelle now sliding");

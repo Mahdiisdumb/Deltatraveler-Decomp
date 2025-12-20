@@ -36,11 +36,11 @@ public class TileMazeStartCutscene : CutsceneBase
 			frames++;
 			if (!MoveTo(susie, new Vector3(-4.56f, 1.4f), 4f))
 			{
-				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(susie, false);
 			}
 			if (!MoveTo(noelle, new Vector3(-5.85f, 1.41f), 4f))
 			{
-				SetMoveAnim(noelle, isMoving: false);
+				SetMoveAnim(noelle, false);
 			}
 			if (frames == 30)
 			{
@@ -107,8 +107,8 @@ public class TileMazeStartCutscene : CutsceneBase
 			}
 			float t = (float)frames / 30f;
 			float t2 = (float)frames / 40f;
-			susieSign.position = Vector3.Lerp(new Vector3(3.83f, 2.03f), new Vector3(-4.54f, 2.37f), t) + new Vector3(0f, Mathf.Sin(Mathf.Lerp(0f, MathF.PI, t)));
-			noelleSign.position = Vector3.Lerp(new Vector3(3.83f, 2.03f), new Vector3(-5.86f, 2.37f), t2) + new Vector3(0f, Mathf.Sin(Mathf.Lerp(0f, MathF.PI, t2)));
+			susieSign.position = Vector3.Lerp(new Vector3(3.83f, 2.03f), new Vector3(-4.54f, 2.37f), t) + new Vector3(0f, Mathf.Sin(Mathf.Lerp(0f, (float)Math.PI, t)));
+			noelleSign.position = Vector3.Lerp(new Vector3(3.83f, 2.03f), new Vector3(-5.86f, 2.37f), t2) + new Vector3(0f, Mathf.Sin(Mathf.Lerp(0f, (float)Math.PI, t2)));
 			if (frames == 30)
 			{
 				susieSign.GetComponent<SpriteRenderer>().enabled = false;
@@ -137,7 +137,7 @@ public class TileMazeStartCutscene : CutsceneBase
 					"* Wait,^05 I'm lost,^05 what\n  are the rules again?",
 					"* Kris smells like\n  lemons on purple,^05 but\n  what else?",
 					"OKAY...^05\nI GUESS I'LL \nREPEAT MYSELF...",
-					"* stop wasting time.",
+					"*\tstop wasting time.",
 					"AH,^05 HAVE THEM \nREMEMBER BY TRIAL \nAND ERROR?",
 					"THEN I WON'T WASTE \nMORE TIME \nEXPLAINING!",
 					depressed ? "* (Then I guess I'll\n  just worry about\n  the purple ones.)" : "* GOD DAMN IT!!!",
@@ -229,17 +229,17 @@ public class TileMazeStartCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				SetMoveAnim(papyrus, isMoving: true);
+				SetMoveAnim(papyrus, true);
 				ChangeDirection(papyrus, Vector2.up);
 				kris.EnableAnimator();
 				susie.EnableAnimator();
 				noelle.EnableAnimator();
 				GameObject.Find("TileMazeMachine").GetComponent<AudioSource>().Play();
-				Util.FindObjectOfType<MusicPlayer>().SetVolume(0.3f);
+				UnityEngine.Object.FindObjectOfType<MusicPlayer>().SetVolume(0.3f);
 			}
 			else if (frames == 30)
 			{
-				SetMoveAnim(papyrus, isMoving: false);
+				SetMoveAnim(papyrus, false);
 				ChangeDirection(papyrus, Vector2.left);
 			}
 			randomizeFrames++;
@@ -352,7 +352,7 @@ public class TileMazeStartCutscene : CutsceneBase
 					PlayAnimation(noelle, "idle");
 					if (!depressed)
 					{
-						SetSprite(susie, "spr_su_shrug", flipX: true);
+						SetSprite(susie, "spr_su_shrug", true);
 					}
 				}
 				else if (AtLine(3) && !depressed)
@@ -380,7 +380,7 @@ public class TileMazeStartCutscene : CutsceneBase
 			{
 				PlayAnimation(papyrus, "walk");
 				ChangeDirection(papyrus, Vector2.up);
-				SetMoveAnim(papyrus, isMoving: true, 2f);
+				SetMoveAnim(papyrus, true, 2f);
 			}
 			if (frames == 5 || frames == 10)
 			{
@@ -397,7 +397,7 @@ public class TileMazeStartCutscene : CutsceneBase
 				SetSprite(kris, "spr_kr_surprise");
 				SetSprite(susie, "spr_su_surprise_right");
 				SetSprite(noelle, "spr_no_surprise");
-				SetMoveAnim(papyrus, isMoving: false);
+				SetMoveAnim(papyrus, false);
 			}
 			float num = 0f;
 			if (frames >= 20 && frames <= 23)
@@ -473,25 +473,25 @@ public class TileMazeStartCutscene : CutsceneBase
 	{
 		base.StartCutscene(par);
 		gm.SetCheckpoint();
-		papyrus = Util.FindObjectOfType<InteractPapyrusTextbox>();
+		papyrus = UnityEngine.Object.FindObjectOfType<InteractPapyrusTextbox>();
 		sans = GameObject.Find("Sans").GetComponent<Animator>();
 		susieSign = GameObject.Find("SignToSusie").transform;
 		noelleSign = GameObject.Find("SignToNoelle").transform;
-		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(forceActivationTrigger: true);
-		tileMaze = Util.FindObjectOfType<TileMaze>();
+		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(true);
+		tileMaze = UnityEngine.Object.FindObjectOfType<TileMaze>();
 		papyrus.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
 		RevokePlayerControl();
 		ChangeDirection(kris, Vector2.right);
 		ChangeDirection(susie, Vector2.right);
 		ChangeDirection(noelle, Vector2.right);
-		SetMoveAnim(kris, isMoving: false);
-		SetMoveAnim(susie, isMoving: true);
-		SetMoveAnim(noelle, isMoving: true);
+		SetMoveAnim(kris, false);
+		SetMoveAnim(susie, true);
+		SetMoveAnim(noelle, true);
 		susie.UseUnhappySprites();
 		noelle.UseUnhappySprites();
 		gm.PlayMusic("music/mus_papyrus", 0.85f);
 		depressed = Util.GameManager().GetFlagInt(87) >= 7;
 		gm.LockMenu();
-		gm.SetPartyMembers(susie: false, noelle: false);
+		gm.SetPartyMembers(false, false);
 	}
 }

@@ -20,16 +20,16 @@ public class DeepForestFirstCutscene : CutsceneBase
 			{
 				if (frames == 30)
 				{
-					SetMoveAnim(susie, isMoving: true);
-					SetMoveAnim(noelle, isMoving: true);
+					SetMoveAnim(susie, true);
+					SetMoveAnim(noelle, true);
 				}
 				if (!MoveTo(susie, new Vector3(20.889f, 1.66f), 4f))
 				{
-					SetMoveAnim(susie, isMoving: false);
+					SetMoveAnim(susie, false);
 				}
 				if (!MoveTo(noelle, new Vector3(19.138f, 1.612f), 4f))
 				{
-					SetMoveAnim(noelle, isMoving: false);
+					SetMoveAnim(noelle, false);
 				}
 			}
 			if (frames == 90)
@@ -87,7 +87,7 @@ public class DeepForestFirstCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(susie, false);
 			}
 			if (frames == 5)
 			{
@@ -138,22 +138,22 @@ public class DeepForestFirstCutscene : CutsceneBase
 		base.StartCutscene(par);
 		oblit = (int)gm.GetFlag(172) == 1;
 		RevokePlayerControl();
-		cam.SetFollowPlayer(follow: true);
+		cam.SetFollowPlayer(true);
 		gm.SetFlag(203, 1);
 		gm.SetFlag(1, "side_sweat");
 		if (!Util.GameManager().SusieInParty())
 		{
-			LoadingZone[] array = Util.FindObjectsOfType<LoadingZone>();
+			LoadingZone[] array = Object.FindObjectsOfType<LoadingZone>();
 			foreach (LoadingZone obj in array)
 			{
-				obj.SetForceActivationTrigger(forceActivationTrigger: true);
+				obj.SetForceActivationTrigger(true);
 				obj.ModifyContents("* Kris,^05 let's head over\n  to that house.", "snd_txtsus", "su_annoyed");
 			}
-			Util.GameManager().SetPartyMembers(susie: true, noelle: false);
+			Util.GameManager().SetPartyMembers(true, false);
 			StartText(new string[1] { "* KRIS!!!" }, new string[1] { "snd_txtsus" }, new int[1], new string[1] { "" });
 			GameObject.Find("LOL").transform.position = new Vector3(36.22f, -16.38f);
 			susie.transform.position = new Vector3(20f, -2.54f);
-			SetMoveAnim(susie, isMoving: true);
+			SetMoveAnim(susie, true);
 			ChangeDirection(susie, Vector2.up);
 			state = 3;
 		}

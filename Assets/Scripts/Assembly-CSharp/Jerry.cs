@@ -93,8 +93,8 @@ public class Jerry : EnemyBase
 		def = 5;
 		exp = 1;
 		gold = 0;
-		susieMiniACTs[0].SetName("Criticize");
-		noelleMiniACTs[0].SetName("Inquire");
+		sActionName = "Criticize";
+		nActionName = "Inquire";
 		hpWidth = 202;
 		defaultChatPos = new Vector2(191f, 60f);
 		canSpareViaFight = false;
@@ -120,11 +120,11 @@ public class Jerry : EnemyBase
 		xDif = base.transform.position.x - obj.transform.localPosition.x;
 		hpPos.x -= Mathf.Round(xDif * 48f);
 		new GameObject("PetalGenerator").AddComponent<PetalGenerator>();
-		if (!Util.FindObjectOfType<Glyde>())
+		if (!Object.FindObjectOfType<Glyde>())
 		{
 			playedIntro = true;
-			Util.FindObjectOfType<PetalGenerator>().Activate();
-			Util.FindObjectOfType<BattleManager>().ActivateSeriousMode();
+			Object.FindObjectOfType<PetalGenerator>().Activate();
+			Object.FindObjectOfType<BattleManager>().ActivateSeriousMode();
 		}
 	}
 
@@ -140,7 +140,7 @@ public class Jerry : EnemyBase
 		{
 			backgroundChangeFrames++;
 			float t = (float)backgroundChangeFrames / 90f;
-			BattleBGPiece[] array = Util.FindObjectsOfType<BattleBGPiece>();
+			BattleBGPiece[] array = Object.FindObjectsOfType<BattleBGPiece>();
 			for (int i = 0; i < array.Length; i++)
 			{
 				array[i].GetComponent<SpriteRenderer>().color = Color.Lerp(new Color(0.1333f, 0.694f, 0.298f), new Color32(17, 87, 145, byte.MaxValue), t);
@@ -167,7 +167,7 @@ public class Jerry : EnemyBase
 				}
 			}
 		}
-		int bigShotCheating = Util.FindObjectOfType<SOUL>().GetBigShotCheating();
+		int bigShotCheating = Object.FindObjectOfType<SOUL>().GetBigShotCheating();
 		if (bigShotCheating > 1 && bigShotCheating > lastCheatingAmount)
 		{
 			rageAmount++;
@@ -230,7 +230,7 @@ public class Jerry : EnemyBase
 		}
 		if (GetActNames()[i].StartsWith("SN!SoulFinisher"))
 		{
-			Util.FindObjectOfType<BattleManager>().StopMusic();
+			Object.FindObjectOfType<BattleManager>().StopMusic();
 			Object.Instantiate(Resources.Load<GameObject>("battle/acts/JerryFinisher"));
 			return new string[8]
 			{
@@ -310,8 +310,8 @@ public class Jerry : EnemyBase
 				actPosition++;
 				AddActPoints(100);
 				SetFace("thinking");
-				Util.FindObjectOfType<BattleManager>().StopMusic();
-				Util.FindObjectOfType<PetalGenerator>().SetRate(20);
+				Object.FindObjectOfType<BattleManager>().StopMusic();
+				Object.FindObjectOfType<PetalGenerator>().SetRate(20);
 				Unhostile();
 				playerMultiplier = 0f;
 				displayedDef = 99;
@@ -326,7 +326,7 @@ public class Jerry : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		switch (i)
 		{
@@ -378,7 +378,7 @@ public class Jerry : EnemyBase
 			}
 			return new string[1] { "* Noelle tried asking about\n  Jerry,^05 but Jerry ignored her." };
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 
@@ -649,9 +649,9 @@ public class Jerry : EnemyBase
 	{
 		if (!playedIntro)
 		{
-			Util.FindObjectOfType<PetalGenerator>().Activate();
-			Util.FindObjectOfType<BattleManager>().ActivateSeriousMode();
-			Util.FindObjectOfType<BattleManager>().JerryFightReorganize();
+			Object.FindObjectOfType<PetalGenerator>().Activate();
+			Object.FindObjectOfType<BattleManager>().ActivateSeriousMode();
+			Object.FindObjectOfType<BattleManager>().JerryFightReorganize();
 			playedIntro = true;
 			return "* Jerry suddenly attacks!";
 		}
@@ -697,7 +697,7 @@ public class Jerry : EnemyBase
 
 	public override bool IsDone()
 	{
-		if (!Util.FindObjectOfType<Glyde>() || Util.FindObjectOfType<Glyde>().IsDone())
+		if (!Object.FindObjectOfType<Glyde>() || Object.FindObjectOfType<Glyde>().IsDone())
 		{
 			return base.IsDone();
 		}

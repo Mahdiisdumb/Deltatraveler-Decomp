@@ -70,11 +70,11 @@ public class LilUFO : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 		switch (i)
 		{
@@ -88,7 +88,7 @@ public class LilUFO : EnemyBase
 			}
 			return new string[1] { "* Noelle smiled at Li'l UFO.\n* It felt less anxious." };
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 
@@ -118,7 +118,7 @@ public class LilUFO : EnemyBase
 					bodyFrames = 0;
 				}
 			}
-			GetPart("body").transform.parent.localPosition = new Vector3(Mathf.Sin((float)(6 * bodyFrames) * (MathF.PI / 180f)) * 0.4f, Mathf.Sin((float)(12 * bodyFrames) * (MathF.PI / 180f)) * 0.4f);
+			GetPart("body").transform.parent.localPosition = new Vector3(Mathf.Sin((float)(6 * bodyFrames) * ((float)Math.PI / 180f)) * 0.4f, Mathf.Sin((float)(12 * bodyFrames) * ((float)Math.PI / 180f)) * 0.4f);
 			if (laserRod)
 			{
 				GetPart("rod").transform.localPosition = Vector3.Lerp(GetPart("rod").transform.localPosition, Vector3.zero, 0.5f);
@@ -131,7 +131,7 @@ public class LilUFO : EnemyBase
 		else if (isDying)
 		{
 			dyingFrames++;
-			float x = basePos.x + Mathf.Sin((float)(dyingFrames * 18) * (MathF.PI / 180f)) / 4f;
+			float x = basePos.x + Mathf.Sin((float)(dyingFrames * 18) * ((float)Math.PI / 180f)) / 4f;
 			float num = (float)dyingFrames / 40f;
 			float y = Mathf.Lerp(basePos.y, 0.49f, num * num);
 			GetEnemyObject().transform.position = new Vector3(x, y);
@@ -148,8 +148,8 @@ public class LilUFO : EnemyBase
 			if (dyingFrames == 40)
 			{
 				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/EnemyExplosion")).transform.position += new Vector3(x, 0f);
-				Util.FindObjectOfType<BattleManager>().GetBattleFade().FadeIn(10, Color.white);
-				Util.FindObjectOfType<BattleCamera>().GiantBlastShake();
+				UnityEngine.Object.FindObjectOfType<BattleManager>().GetBattleFade().FadeIn(10, Color.white);
+				UnityEngine.Object.FindObjectOfType<BattleCamera>().GiantBlastShake();
 				obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().enabled = false;
 				isDying = false;
 			}

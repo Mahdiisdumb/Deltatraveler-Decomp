@@ -55,46 +55,46 @@ public class TouchPad : MonoBehaviour
 			{
 				num4 += 360f;
 			}
-			Vector3 vector2 = new Vector3(Mathf.Abs(Mathf.Cos(num4 * (MathF.PI / 180f)) * num2), Mathf.Abs(Mathf.Sin(num4 * (MathF.PI / 180f)) * num2));
+			Vector3 vector2 = new Vector3(Mathf.Abs(Mathf.Cos(num4 * ((float)Math.PI / 180f)) * num2), Mathf.Abs(Mathf.Sin(num4 * ((float)Math.PI / 180f)) * num2));
 			float num5 = ((vector2.x > vector2.y) ? vector2.x : vector2.y);
 			if (num3 > num5)
 			{
 				if (num4 <= 60f || num4 >= 300f)
 				{
-					UTInput.SetValue("Horizontal", value: true, pos: true, diag: false, left: false);
+					UTInput.SetValue("Horizontal", true, true, false, false);
 				}
 				else if (num4 <= 240f && num4 >= 120f)
 				{
-					UTInput.SetValue("Horizontal", value: true, pos: false, diag: false, left: false);
+					UTInput.SetValue("Horizontal", true, false, false, false);
 				}
 				else
 				{
-					UTInput.SetValue("Horizontal", value: false, pos: true, diag: false, left: false);
+					UTInput.SetValue("Horizontal", false, true, false, false);
 				}
 				if (num4 <= 150f && num4 >= 30f)
 				{
-					UTInput.SetValue("Vertical", value: true, pos: true, diag: false, left: false);
+					UTInput.SetValue("Vertical", true, true, false, false);
 				}
 				else if (num4 <= 330f && num4 >= 210f)
 				{
-					UTInput.SetValue("Vertical", value: true, pos: false, diag: false, left: false);
+					UTInput.SetValue("Vertical", true, false, false, false);
 				}
 				else
 				{
-					UTInput.SetValue("Vertical", value: false, pos: true, diag: false, left: false);
+					UTInput.SetValue("Vertical", false, true, false, false);
 				}
 			}
 			else
 			{
-				UTInput.SetValue("Horizontal", value: false, pos: false, diag: false, left: false);
-				UTInput.SetValue("Vertical", value: false, pos: false, diag: false, left: false);
+				UTInput.SetValue("Horizontal", false, false, false, false);
+				UTInput.SetValue("Vertical", false, false, false, false);
 			}
 		}
 		else
 		{
 			reticle.color = new Color(curColor.r, curColor.g, curColor.b, Mathf.Lerp(reticle.color.a, 0f, 0.2f));
-			UTInput.SetValue("Horizontal", value: false, pos: false, diag: false, left: false);
-			UTInput.SetValue("Vertical", value: false, pos: false, diag: false, left: false);
+			UTInput.SetValue("Horizontal", false, false, false, false);
+			UTInput.SetValue("Vertical", false, false, false, false);
 		}
 	}
 

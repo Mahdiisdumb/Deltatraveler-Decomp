@@ -76,17 +76,17 @@ public class LetterEndCutscene : CutsceneBase
 			{
 				frames++;
 				ChangeDirection(kris, Vector2.up);
-				SetMoveAnim(kris, isMoving: true);
-				SetMoveAnim(sans, isMoving: true);
+				SetMoveAnim(kris, true);
+				SetMoveAnim(sans, true);
 				if (!leave)
 				{
 					ChangeDirection(susie, Vector2.up);
 					ChangeDirection(noelle, Vector2.up);
-					SetMoveAnim(susie, isMoving: true);
-					SetMoveAnim(noelle, isMoving: true);
+					SetMoveAnim(susie, true);
+					SetMoveAnim(noelle, true);
 				}
 				ChangeDirection(papyrus, Vector2.up);
-				SetMoveAnim(papyrus, isMoving: true);
+				SetMoveAnim(papyrus, true);
 			}
 			bool flag = MoveTo(kris, new Vector3(kris.transform.position.x, -2.35f), 6f);
 			bool flag2 = false;
@@ -99,19 +99,19 @@ public class LetterEndCutscene : CutsceneBase
 			}
 			if (!flag)
 			{
-				SetMoveAnim(kris, isMoving: false);
+				SetMoveAnim(kris, false);
 			}
 			if (!flag2)
 			{
-				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(susie, false);
 			}
 			if (!flag3)
 			{
-				SetMoveAnim(noelle, isMoving: false);
+				SetMoveAnim(noelle, false);
 			}
 			if (!flag4)
 			{
-				SetMoveAnim(sans, isMoving: false);
+				SetMoveAnim(sans, false);
 			}
 			if (papyrus.transform.position.y != 0.87f)
 			{
@@ -129,7 +129,7 @@ public class LetterEndCutscene : CutsceneBase
 				return;
 			}
 			ChangeDirection(papyrus, Vector2.down);
-			SetMoveAnim(papyrus, isMoving: false);
+			SetMoveAnim(papyrus, false);
 			if (!flag && !flag2 && !flag3)
 			{
 				state = 1;
@@ -166,7 +166,7 @@ public class LetterEndCutscene : CutsceneBase
 				float num = (float)(frames - 50) / 9f;
 				if (num < 1f)
 				{
-					num = Mathf.Sin(num * MathF.PI * 0.5f);
+					num = Mathf.Sin(num * (float)Math.PI * 0.5f);
 				}
 				papyrus.transform.position = new Vector3(Mathf.Lerp(0f, -1.81f, num), papyrus.transform.position.y);
 				letter.position += new Vector3(0f, speed / 48f);
@@ -179,7 +179,7 @@ public class LetterEndCutscene : CutsceneBase
 					gm.StopMusic();
 					SetSprite(papyrus, "overworld/npcs/underfell/spr_ufpap_slide_1");
 					letter.GetComponent<UFLetter>().StartGeneratingBones();
-					SetSprite(susie, leave ? "spr_su_surprise_right" : "spr_su_surprise_up", susie.transform.position.x > 0f);
+					SetSprite(susie, leave ? "spr_su_surprise_right" : "spr_su_surprise_up", (susie.transform.position.x > 0f) ? true : false);
 					if (!oblit)
 					{
 						SetSprite(noelle, "spr_no_surprise_up");
@@ -202,8 +202,8 @@ public class LetterEndCutscene : CutsceneBase
 				SetSprite(papyrus, "overworld/npcs/underfell/spr_ufpap_slide_2");
 				StartText(new string[12]
 				{
-					"...", "* Y'know,^05 should I even\n  be surprised???", "* That's basically a\n  BOMB!!!", "SANS,^05 THIS ISN'T A \nFAIR OR CLEVER TRAP.", "IT IS YET ANOTHER \nASSAULT...", "I WOULD'VE EXPECTED \nYOU TO HAVE,^10 SAY...", "WRITTEN A LOVELY,^05 \nFLATTERING LETTER \nAS A TRICK!", "* oh, ^05papyrus.", "* do you think i'd just\n  let them by after\n  what i've been through?", "* after what they've done\n  to me?",
-					"WHAT THE HELL IS \nTHAT SUPPOSED TO \nMEAN???", "* oh,^05 you wouldn't know."
+					"...", "* Y'know,^05 should I even\n  be surprised???", "* That's basically a\n  BOMB!!!", "SANS,^05 THIS ISN'T A \nFAIR OR CLEVER TRAP.", "IT IS YET ANOTHER \nASSAULT...", "I WOULD'VE EXPECTED \nYOU TO HAVE,^10 SAY...", "WRITTEN A LOVELY,^05 \nFLATTERING LETTER \nAS A TRICK!", "*\toh, ^05papyrus.", "*\tdo you think i'd just\n\tlet them by after\n\twhat i've been through?", "*\tafter what they've done\n\tto me?",
+					"WHAT THE HELL IS \nTHAT SUPPOSED TO \nMEAN???", "*\toh,^05 you wouldn't know."
 				}, new string[12]
 				{
 					"snd_txtpap", "snd_txtsus", "snd_txtsus", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtsans", "snd_txtsans", "snd_txtsans",
@@ -223,7 +223,7 @@ public class LetterEndCutscene : CutsceneBase
 			{
 				if (!MoveTo(kris, new Vector3(-1.78f, kris.transform.position.y), txt ? 2 : 4))
 				{
-					SetMoveAnim(kris, isMoving: false);
+					SetMoveAnim(kris, false);
 				}
 				else
 				{
@@ -231,7 +231,7 @@ public class LetterEndCutscene : CutsceneBase
 					{
 						ChangeDirection(kris, Vector2.right);
 					}
-					SetMoveAnim(kris, isMoving: true, txt ? 0.5f : 1f);
+					SetMoveAnim(kris, true, txt ? 0.5f : 1f);
 				}
 			}
 			if ((bool)txt)
@@ -260,12 +260,12 @@ public class LetterEndCutscene : CutsceneBase
 					if (!MoveTo(susie, new Vector3(susie.transform.position.x, papyrus.transform.position.y), 6f))
 					{
 						ChangeDirection(susie, Vector2.right);
-						SetMoveAnim(susie, isMoving: false);
+						SetMoveAnim(susie, false);
 					}
 					else
 					{
 						ChangeDirection(susie, Vector2.down);
-						SetMoveAnim(susie, isMoving: true);
+						SetMoveAnim(susie, true);
 					}
 				}
 				return;
@@ -275,11 +275,11 @@ public class LetterEndCutscene : CutsceneBase
 				if (leave)
 				{
 					ChangeDirection(susie, Vector2.right);
-					SetMoveAnim(susie, isMoving: false);
+					SetMoveAnim(susie, false);
 				}
 				PlayAnimation(papyrus, "idle");
 				ChangeDirection(sans, Vector2.down);
-				SetMoveAnim(sans, isMoving: true);
+				SetMoveAnim(sans, true);
 				MoveTo(sans, new Vector3(sans.transform.position.x, -0.32f), 4f);
 				return;
 			}
@@ -350,7 +350,7 @@ public class LetterEndCutscene : CutsceneBase
 				ChangeDirection(kris, Vector2.right);
 				papyrus.enabled = true;
 				ChangeDirection(papyrus, Vector2.right);
-				SetMoveAnim(papyrus, isMoving: true);
+				SetMoveAnim(papyrus, true);
 				return;
 			}
 			frames++;
@@ -413,20 +413,20 @@ public class LetterEndCutscene : CutsceneBase
 				}
 				if (frames == 0)
 				{
-					UnityEngine.Object.Destroy(Util.FindObjectOfType<LetterScenarioHandler>().gameObject);
-					SetMoveAnim(susie, isMoving: true, 1.5f);
+					UnityEngine.Object.Destroy(UnityEngine.Object.FindObjectOfType<LetterScenarioHandler>().gameObject);
+					SetMoveAnim(susie, true, 1.5f);
 					ChangeDirection(kris, Vector2.down);
 					ChangeDirection(susie, Vector2.right);
 					gm.PlayMusic("zoneMusic");
-					kris.SetCollision(onoff: true);
-					kris.SetSelfAnimControl(setAnimControl: true);
+					kris.SetCollision(true);
+					kris.SetSelfAnimControl(true);
 					gm.EnablePlayerMovement();
 					frames++;
 				}
 			}
 			else
 			{
-				UnityEngine.Object.Destroy(Util.FindObjectOfType<LetterScenarioHandler>().gameObject);
+				UnityEngine.Object.Destroy(UnityEngine.Object.FindObjectOfType<LetterScenarioHandler>().gameObject);
 				RestorePlayerControl();
 				ChangeDirection(kris, Vector2.down);
 				gm.PlayMusic("zoneMusic");
@@ -438,7 +438,7 @@ public class LetterEndCutscene : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(forceActivationTrigger: false);
+		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(false);
 		papyrus = GameObject.Find("Papyrus").GetComponent<Animator>();
 		sans = GameObject.Find("Sans").GetComponent<Animator>();
 		oblit = (int)Util.GameManager().GetFlag(172) == 1;
@@ -448,7 +448,7 @@ public class LetterEndCutscene : CutsceneBase
 		gm.SetFlag(84, 9);
 		StartText(new string[12]
 		{
-			"SANS!!!^05\nTHAT DIDN'T DO \nANYTHING!", "* hmm.", "* boss,^05 i need you to\n  understand.", "* you do a lotta talk,\n  but not enough\n  persuasion.", "WHAT DID I SAY \nABOUT CALLING \nME--^10 ", "* you can't seem to focus.", "* you wouldn't be able\n  to stand whatever is\n  in that envelope.", "* Y'know,^05 if you wanted\n  to convince us that\n  the letter is safe,^10 ", "NO, NO.^10\nHE'S RIGHT.", "I MUST PROVE MYSELF \nWORTHY!",
+			"SANS!!!^05\nTHAT DIDN'T DO \nANYTHING!", "*\thmm.", "*\tboss,^05 i need you to\n\tunderstand.", "*\tyou do a lotta talk,\n\tbut not enough\n\tpersuasion.", "WHAT DID I SAY \nABOUT CALLING \nME--^10 ", "*\tyou can't seem to focus.", "*\tyou wouldn't be able\n\tto stand whatever is\n\tin that envelope.", "* Y'know,^05 if you wanted\n  to convince us that\n  the letter is safe,^10 ", "NO, NO.^10\nHE'S RIGHT.", "I MUST PROVE MYSELF \nWORTHY!",
 			"FINE,^05 SANS!!!^05\nI ACCEPT YOUR\nCHALLENGE!", "* (This can only end\n  badly...)"
 		}, new string[12]
 		{
@@ -460,6 +460,6 @@ public class LetterEndCutscene : CutsceneBase
 			"ufpap_evil", "su_inquisitive"
 		});
 		susRun = GameManager.GetOptions().runAnimations.value == 1;
-		letter = Util.FindObjectOfType<UFLetter>().transform;
+		letter = UnityEngine.Object.FindObjectOfType<UFLetter>().transform;
 	}
 }

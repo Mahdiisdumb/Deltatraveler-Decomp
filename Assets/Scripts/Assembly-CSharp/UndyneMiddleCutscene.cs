@@ -33,13 +33,13 @@ public class UndyneMiddleCutscene : CutsceneBase
 				}
 				if (frames <= 30)
 				{
-					float num = Mathf.Sin((float)(frames * 6) * (MathF.PI / 180f));
+					float num = Mathf.Sin((float)(frames * 6) * ((float)Math.PI / 180f));
 					susie.transform.position = new Vector3(susie.transform.position.x + 1f / 6f, -0.59f + num);
 				}
 				else if (frames <= 60)
 				{
 					float num2 = (float)(frames - 30) / 30f;
-					num2 = Mathf.Sin(num2 * MathF.PI * 0.5f);
+					num2 = Mathf.Sin(num2 * (float)Math.PI * 0.5f);
 					if (frames == 31)
 					{
 						PlaySFX("sounds/snd_noise");
@@ -57,7 +57,7 @@ public class UndyneMiddleCutscene : CutsceneBase
 				{
 					if (frames == 61)
 					{
-						SetMoveAnim(susie, isMoving: true);
+						SetMoveAnim(susie, true);
 						ChangeDirection(susie, Vector2.right);
 						PlayAnimation(susie, "run", 1.5f);
 					}
@@ -82,7 +82,7 @@ public class UndyneMiddleCutscene : CutsceneBase
 		else if (state == 1 && !txt)
 		{
 			gm.LockMenu();
-			gm.SetPartyMembers(susie: false, noelle: false);
+			gm.SetPartyMembers(false, false);
 			RestorePlayerControl();
 			gm.EnablePlayerMovement();
 			kris.EnableAnimator();
@@ -90,34 +90,34 @@ public class UndyneMiddleCutscene : CutsceneBase
 			noelle.EnableAnimator();
 			noelle.UseUnhappySprites();
 			ChangeDirection(noelle, Vector2.right);
-			noelle.SetSelfAnimControl(setAnimControl: false);
-			SetMoveAnim(noelle, isMoving: true, 1.5f);
+			noelle.SetSelfAnimControl(false);
+			SetMoveAnim(noelle, true, 1.5f);
 			if (noleRun)
 			{
 				PlayAnimation(noelle, "run", 1.5f);
 			}
 			state = 2;
-			Util.FindObjectOfType<ActionPartyPanels>().Reinitialize();
-			Util.FindObjectOfType<UndyneSpearSpawner>().Activate();
+			UnityEngine.Object.FindObjectOfType<ActionPartyPanels>().UpdatePanels();
+			UnityEngine.Object.FindObjectOfType<UndyneSpearSpawner>().Activate();
 			if (Util.GameManager().GetHP(0) < Util.GameManager().GetMaxHP(0))
 			{
-				Util.FindObjectOfType<ActionPartyPanels>().Raise();
-				Util.FindObjectOfType<ActionPartyPanels>().UpdateHP(gm.GetHPArray());
+				UnityEngine.Object.FindObjectOfType<ActionPartyPanels>().Raise();
+				UnityEngine.Object.FindObjectOfType<ActionPartyPanels>().UpdateHP(gm.GetHPArray());
 			}
 		}
 		else if (state == 2)
 		{
 			noelle.transform.position += new Vector3(1f / 6f, 0f);
 			frames++;
-			_ = frames;
-			_ = 900;
+			int frame = frames;
+			int num3 = 900;
 		}
 		if (!MoveTo(undyne, new Vector3(3.2f, -0.43f), 8f))
 		{
 			undyneFrames++;
 			if (undyneFrames == 1)
 			{
-				SetMoveAnim(undyne, isMoving: false);
+				SetMoveAnim(undyne, false);
 			}
 			if (undyneFrames == 30)
 			{
@@ -134,10 +134,10 @@ public class UndyneMiddleCutscene : CutsceneBase
 	{
 		base.StartCutscene(par);
 		RevokePlayerControl();
-		cam.SetFollowPlayer(follow: true);
+		cam.SetFollowPlayer(true);
 		undyne = GameObject.Find("Undyne").GetComponent<Animator>();
 		ChangeDirection(undyne, Vector2.right);
-		SetMoveAnim(undyne, isMoving: true);
+		SetMoveAnim(undyne, true);
 		undyne.transform.position = new Vector3(-11.49f, -0.43f);
 		susie.transform.position = new Vector3(-7.32f, -0.59f);
 		PlayAnimation(susie, "DragKrisNoelle");

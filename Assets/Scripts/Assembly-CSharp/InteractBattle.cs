@@ -18,7 +18,7 @@ public class InteractBattle : Interactable
 	{
 		if ((int)EndBattleHandler.GetFlagFromId(battleID) == 0)
 		{
-			Util.OverworldPlayer().InitiateBattle(2);
+			UnityEngine.Object.FindObjectOfType<OverworldPlayer>().InitiateBattle(2);
 		}
 	}
 

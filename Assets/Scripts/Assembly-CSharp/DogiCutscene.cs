@@ -25,7 +25,7 @@ public class DogiCutscene : CutsceneBase
 
 	private string[] noellePortrats = new string[3] { "no_confused", "no_confused_side", "no_weird" };
 
-	private string[] dogamyDiag = new string[5] { ";MPdogamy; .................", ";MPdogamy; Yeah,^05 that makes sense.", ";MPdogaressa; (Get back to town,^05 all of you.)", ";MPdogaressa; (It's dangerous out here,^05\n  especially with a human\n  prowling around.)", "* Okay...^05 got it." };
+	private string[] dogamyDiag = new string[5] { "* .................", "* Yeah,^05 that makes sense.", "* (Get back to town,^05 all of you.)", "* (It's dangerous out here,^05\n  especially with a human\n  prowling around.)", "* Okay...^05 got it." };
 
 	private string[] dogamySounds = new string[5] { "snd_text", "snd_text", "snd_text", "snd_text", "snd_txtsus" };
 
@@ -46,9 +46,9 @@ public class DogiCutscene : CutsceneBase
 				kris.EnableAnimator();
 				susie.EnableAnimator();
 				noelle.EnableAnimator();
-				SetMoveAnim(kris, isMoving: true, 1.5f);
-				SetMoveAnim(susie, isMoving: true, 1.5f);
-				SetMoveAnim(noelle, isMoving: true, 1.5f);
+				SetMoveAnim(kris, true, 1.5f);
+				SetMoveAnim(susie, true, 1.5f);
+				SetMoveAnim(noelle, true, 1.5f);
 				ChangeDirection(kris, Vector2.left);
 				ChangeDirection(susie, (susie.transform.position.x > 8.402f) ? Vector2.left : Vector2.right);
 				ChangeDirection(noelle, (noelle.transform.position.x > 9.494f) ? Vector2.left : Vector2.right);
@@ -65,7 +65,7 @@ public class DogiCutscene : CutsceneBase
 			else
 			{
 				ChangeDirection(kris, Vector2.up);
-				SetMoveAnim(kris, isMoving: false);
+				SetMoveAnim(kris, false);
 			}
 			if (susie.transform.position.x != 8.402f)
 			{
@@ -78,7 +78,7 @@ public class DogiCutscene : CutsceneBase
 			else
 			{
 				ChangeDirection(susie, Vector2.up);
-				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(susie, false);
 			}
 			if (noelle.transform.position.x != 9.494f)
 			{
@@ -91,7 +91,7 @@ public class DogiCutscene : CutsceneBase
 			else
 			{
 				ChangeDirection(noelle, Vector2.up);
-				SetMoveAnim(noelle, isMoving: false);
+				SetMoveAnim(noelle, false);
 			}
 			if (!MoveTo(dogamy.transform.parent, new Vector3(8.43f, 0.27f), 8f))
 			{
@@ -103,7 +103,7 @@ public class DogiCutscene : CutsceneBase
 			{
 				dogamy.GetComponent<Animator>().enabled = false;
 				dogaressa.GetComponent<Animator>().enabled = false;
-				List<string> list = new List<string> { ";MPdogamy; We've heard multiple reports of\n  a human wandering around with\n  a couple of monsters.", ";MPdogaressa; (Have you three seen this\n  human?)", "* Uhhhhhhhhhh", "* ...", "* Nope.", "* I uhh...^05 have no\n  idea what a human\n  looks like.", ";MPdogamy; Are you sure...?", ";MPdogaressa; (You three smell strange...)", "* Well,^05 uhh...", "* We just,^05 umm..." };
+				List<string> list = new List<string> { "* We've heard multiple reports of\n  a human wandering around with\n  a couple of monsters.", "* (Have you three seen this\n  human?)", "* Uhhhhhhhhhh", "* ...", "* Nope.", "* I uhh...^05 have no\n  idea what a human\n  looks like.", "* Are you sure...?", "* (You three smell strange...)", "* Well,^05 uhh...", "* We just,^05 umm..." };
 				List<string> list2 = new List<string> { "snd_text", "snd_text", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_text", "snd_text", "snd_txtsus", "snd_txtsus" };
 				List<int> list3 = new List<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 				List<string> list4 = new List<string> { "", "", "su_side_sweat", "su_neutral", "su_side", "su_smirk_sweat", "", "", "su_wideeye", "su_sus" };
@@ -298,7 +298,7 @@ public class DogiCutscene : CutsceneBase
 					}
 					else if (AtLine(9))
 					{
-						SetSprite(susie, "spr_su_throw_ready", flipX: true);
+						SetSprite(susie, "spr_su_throw_ready", true);
 					}
 				}
 				else if (selIndex == 2)
@@ -332,7 +332,7 @@ public class DogiCutscene : CutsceneBase
 				if (oblit && oblitDistance == 0)
 				{
 					flag = true;
-					new GameObject("LOL").AddComponent<TextBox>().CreateBox(new string[3] { "* ...", "* Oh shoot,^05 we didn't\n  fight them!", "* Looks like things\n  should de-escalate." }, new string[1] { "snd_txtsus" }, new int[1], giveBackControl: true, new string[3] { "su_side", "su_surprised", "su_smile" });
+					new GameObject("LOL").AddComponent<TextBox>().CreateBox(new string[3] { "* ...", "* Oh shoot,^05 we didn't\n  fight them!", "* Looks like things\n  should de-escalate." }, new string[1] { "snd_txtsus" }, new int[1], true, new string[3] { "su_side", "su_surprised", "su_smile" });
 					WeirdChecker.Abort(gm);
 				}
 				gm.SetFlag(214, 1);
@@ -415,7 +415,7 @@ public class DogiCutscene : CutsceneBase
 			{
 				kris.InitiateBattle(66);
 				gm.SetFlag(214, 1);
-				EndCutscene(enablePlayerMovement: false);
+				EndCutscene(false);
 			}
 		}
 	}
@@ -441,7 +441,7 @@ public class DogiCutscene : CutsceneBase
 			else if (index == Vector2.up)
 			{
 				selIndex = 2;
-				SetSprite(susie, "spr_su_wtf", flipX: true);
+				SetSprite(susie, "spr_su_wtf", true);
 				list4.AddRange(new string[8] { "* The hell does that\n  mean,^05 Kris???", "* I heard that humans\n  have a long history\n  of prejudice.", "* Deeply rooted conflicts\n  between themselves over\n  their differences.", "* I can't imagine what\n  that's like,^05 let alone\n  how they'd treat us.", "* I imagine Kris knows\n  more about this than\n  the rest of us.", "* We don't need to\n  be getting deep about\n  this stuff right now.", "* Save that for when\n  we get home,^05 in school.", "* Let's just get going." });
 				list5.AddRange(new string[8] { "snd_txtsus", "snd_txtnoe", "snd_txtnoe", "snd_txtnoe", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtsus" });
 				list6.AddRange(new string[8] { "su_angry", "no_curious", "no_thinking", "no_curious", "no_weird", "su_annoyed", "su_side", "su_annoyed" });
@@ -491,7 +491,7 @@ public class DogiCutscene : CutsceneBase
 			else
 			{
 				state = 4;
-				SetSprite(susie, "spr_su_surprise_right", flipX: true);
+				SetSprite(susie, "spr_su_surprise_right", true);
 				SetSprite(noelle, "spr_no_surprise_left");
 				list7.AddRange(new string[6] { "* K-^05KRIS???", "* Oh,^05 uhh...", "* My buddy here is a\n  bit loopy after,^05 uhh...", "* Fending off the\n  Snowdrakes in the\n  forest down there...", "* Which is uhhh,^05\n  why we smell weird.", "* Right,^05 Kris...?" });
 				list8.AddRange(new string[2] { "snd_txtnoe", "snd_txtsus" });
@@ -528,9 +528,9 @@ public class DogiCutscene : CutsceneBase
 			else
 			{
 				state = 5;
-				SetSprite(susie, "spr_su_wtf", flipX: true);
+				SetSprite(susie, "spr_su_wtf", true);
 				SetSprite(noelle, "spr_no_surprise_left");
-				list11.AddRange(new string[3] { "* KRIS,^05 SHUT UP!!!", "* We are NOT gonna\n  help you if you're\n  doing this.", ";MPdogamy; T-^05they're not joking...???" });
+				list11.AddRange(new string[3] { "* KRIS,^05 SHUT UP!!!", "* We are NOT gonna\n  help you if you're\n  doing this.", "* T-^05they're not joking...???" });
 				list12.AddRange(new string[3] { "snd_txtsus", "snd_txtsus", "snd_text" });
 				list13.Add(0);
 				list14.AddRange(new string[3] { "su_wtf", "su_pissed", "" });
@@ -551,7 +551,7 @@ public class DogiCutscene : CutsceneBase
 			if (index == Vector2.left)
 			{
 				state = 1;
-				list.AddRange(new string[4] { ";MPdogamy; Okay,^05 thank god.", ";MPdogamy; For a second,^05 we almost thought\n  you WERE a human.", ";MPdogaressa; (Be careful with that dark\n  humor.)^05\n;MPdogaressa; (It could get you killed.)", ";MPdogaressa; (Now you three get back to\n  town.)" });
+				list.AddRange(new string[4] { "* Okay,^05 thank god.", "* For a second,^05 we almost thought\n  you WERE a human.", "* (Be careful with that dark\n  humor.)^05\n* (It could get you killed.)", "* (Now you three get back to\n  town.)" });
 				list2.Add("snd_text");
 				list3.Add("");
 				oblitDif = 13;
@@ -564,8 +564,8 @@ public class DogiCutscene : CutsceneBase
 				SetSprite(susie, "spr_su_shrug");
 				ChangeDirection(noelle, Vector2.left);
 				gm.SetCheckpoint(91, new Vector3(-2.8f, 2.57f));
-				gm.SetPartyMembers(susie: false, noelle: false);
-				list.AddRange(new string[4] { "* Alright,^05 well we talked\n  about this.", "* We'll just step away.", ";MPdogaressa; (So you WERE a human this\n  whole time!!!)", ";MPdogaressa; (It's time to eliminate you!)" });
+				gm.SetPartyMembers(false, false);
+				list.AddRange(new string[4] { "* Alright,^05 well we talked\n  about this.", "* We'll just step away.", "* (So you WERE a human this\n  whole time!!!)", "* (It's time to eliminate you!)" });
 				list2.AddRange(new string[3] { "snd_txtsus", "snd_txtsus", "snd_text" });
 				list3.AddRange(new string[3] { "su_smile_sweat", "su_smirk", "" });
 			}

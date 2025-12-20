@@ -12,7 +12,7 @@ public class GiantColorBlasterAttack : AttackBase
 		base.Awake();
 		maxFrames = 305;
 		bbSize = new Vector2(500f, 140f);
-		Util.FindObjectOfType<SOUL>().ChangeSOULMode(0);
+		UnityEngine.Object.FindObjectOfType<SOUL>().ChangeSOULMode(0);
 	}
 
 	protected override void Update()
@@ -29,9 +29,9 @@ public class GiantColorBlasterAttack : AttackBase
 			Vector3 vector = ((!num) ? new Vector3(6 * num2, UnityEngine.Random.Range(-3.83f, 3.83f)) : new Vector3(UnityEngine.Random.Range(-6, 6), 3.83f * (float)num2));
 			component.transform.position = vector;
 			component.ChangeType(id);
-			component.transform.up = Util.FindObjectOfType<SOUL>().transform.position - component.transform.position;
+			component.transform.up = UnityEngine.Object.FindObjectOfType<SOUL>().transform.position - component.transform.position;
 			float num3 = component.transform.rotation.eulerAngles.z - 180f;
-			Vector3 vector2 = new Vector3(Mathf.Cos((num3 + 90f) * (MathF.PI / 180f)), Mathf.Sin((num3 + 90f) * (MathF.PI / 180f))) * 5f;
+			Vector3 vector2 = new Vector3(Mathf.Cos((num3 + 90f) * ((float)Math.PI / 180f)), Mathf.Sin((num3 + 90f) * ((float)Math.PI / 180f))) * 5f;
 			component.transform.position += vector2;
 			component.Activate(4, 4, num3, vector, 12);
 		}

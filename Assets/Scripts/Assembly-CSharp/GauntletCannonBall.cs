@@ -26,6 +26,6 @@ public class GauntletCannonBall : ActionBulletBase
 
 	public void SetDirection(float angle)
 	{
-		direction = new Vector3(0f - Mathf.Sin(angle * (MathF.PI / 180f)), Mathf.Cos(angle * (MathF.PI / 180f)));
+		direction = new Vector3(0f - Mathf.Sin(angle * ((float)Math.PI / 180f)), Mathf.Cos(angle * ((float)Math.PI / 180f)));
 	}
 }

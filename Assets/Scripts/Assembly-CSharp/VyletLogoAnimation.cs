@@ -36,7 +36,7 @@ public class VyletLogoAnimation : MonoBehaviour
 			{
 				GetComponent<AudioSource>().Play();
 			}
-			float t = Mathf.Abs(Mathf.Sin(timer * 640f * (MathF.PI / 180f)));
+			float t = Mathf.Abs(Mathf.Sin(timer * 640f * ((float)Math.PI / 180f)));
 			icon.transform.localScale = new Vector3(Mathf.Lerp(0.2f, 1f, t), 1f);
 			icon.color = new Color(1f, 1f, 1f, timer * 2f);
 		}

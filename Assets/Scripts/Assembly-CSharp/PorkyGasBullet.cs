@@ -12,7 +12,7 @@ public class PorkyGasBullet : BulletBase
 		base.Awake();
 		baseDmg = 9;
 		destroyOnHit = false;
-		tradjectory = Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position, 1f / 24f) - base.transform.position;
+		tradjectory = Vector3.MoveTowards(base.transform.position, Object.FindObjectOfType<SOUL>().transform.position, 1f / 24f) - base.transform.position;
 		sr.color = new Color(1f, 1f, 1f, 0f);
 	}
 

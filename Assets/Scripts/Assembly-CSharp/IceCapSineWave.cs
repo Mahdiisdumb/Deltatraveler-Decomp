@@ -37,7 +37,7 @@ public class IceCapSineWave : MonoBehaviour
 		base.transform.position = new Vector3(1.5f, centerY);
 		for (int i = 0; i < top.childCount; i++)
 		{
-			float num = Mathf.Sin(180f * ((float)i / (float)lowToHighCount) * (MathF.PI / 180f));
+			float num = Mathf.Sin(180f * ((float)i / (float)lowToHighCount) * ((float)Math.PI / 180f));
 			top.GetChild(i).localScale = new Vector3(1f, 0f - (100f + (num + 1f) / 2f * (float)maxHeight), 1f);
 			bot.GetChild(i).localScale = new Vector3(1f, 100f + (0f - num + 1f) / 2f * (float)maxHeight, 1f);
 			top.GetChild(i).localPosition = new Vector3((0f - horizontalDistance) * (float)i / 48f, 0f, 0f);

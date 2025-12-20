@@ -1,7 +1,7 @@
 public class SystemClassWithMembersAndTypes : ClassWithMembersAndTypes
 {
 	public SystemClassWithMembersAndTypes(Reader reader)
-		: base(reader, hasLibrary: false)
+		: base(reader, false)
 	{
 	}
 

@@ -1,8 +1,12 @@
 using System;
 using UnityEngine;
 
-public class HardModeCredits : CreditsBase
+public class HardModeCredits : MonoBehaviour
 {
+	private int frames;
+
+	private Transform credits;
+
 	private SpriteRenderer sarah;
 
 	private Sprite[] sarahSprites;
@@ -27,15 +31,17 @@ public class HardModeCredits : CreditsBase
 
 	private Animator beeth;
 
+	private Transform sonas;
+
 	private float tuneVelocity;
 
-	protected override void Awake()
+	private AudioSource audio;
+
+	private readonly int CREDITS_LENGTH = 3056;
+
+	private void Awake()
 	{
-		base.Awake();
-		length = 3056;
-		startInterval = 60;
-		endInterval = 60;
-		seenFlag = "seen-hardmode-credits";
+		credits = base.transform.GetChild(0);
 		sonas = credits.Find("SonasHM");
 		sarah = sonas.Find("Sarah").GetComponent<SpriteRenderer>();
 		tune = sonas.Find("TuneHero").GetComponent<Animator>();
@@ -47,6 +53,7 @@ public class HardModeCredits : CreditsBase
 		eriSprites = LoadSprites("overworld/npcs/staff/sillies/spr_eri_fops", 6);
 		chloeSprites = Resources.LoadAll<Sprite>("overworld/npcs/staff/sillies/spr_luma_doggie");
 		veeSprites = Resources.LoadAll<Sprite>("overworld/npcs/staff/sillies/spr_vee_sleep");
+		audio = GetComponent<AudioSource>();
 	}
 
 	private Sprite[] LoadSprites(string baseName, int num)
@@ -59,17 +66,22 @@ public class HardModeCredits : CreditsBase
 		return array;
 	}
 
-	protected override void Update()
+	private void Update()
 	{
-		base.Update();
+		frames++;
+		if (frames == 1)
+		{
+			audio.Play();
+		}
+		credits.localPosition = Vector3.Lerp(Vector3.zero, new Vector3(0f, CREDITS_LENGTH), (float)(frames - 60) / (float)CREDITS_LENGTH * 2f);
 		float num = 0.5084746f;
-		float num2 = GetComponent<AudioSource>().time / num;
+		float num2 = audio.time / num;
 		sarah.sprite = sarahSprites[Mathf.FloorToInt(num2 * 2f) % 2];
 		sarah.GetComponent<SpriteRenderer>().flipX = Mathf.Floor(num2) % 4f > 1f;
-		sarah.transform.localPosition = new Vector2(-212f, -420f + Mathf.Abs(Mathf.Sin(num2 * MathF.PI)) * 12f);
+		sarah.transform.localPosition = new Vector2(-212f, -420f + Mathf.Abs(Mathf.Sin(num2 * (float)Math.PI)) * 12f);
 		sonas.Find("Scoot").GetComponent<SpriteRenderer>().sprite = scootSprites[Mathf.FloorToInt(num2) % 2];
 		sonas.Find("Sophie").GetComponent<SpriteRenderer>().sprite = sophieSprites[Mathf.FloorToInt(num2) / 2 % 2];
-		float num3 = GetComponent<AudioSource>().clip.length / num;
+		float num3 = audio.clip.length / num;
 		sonas.Find("Eribetra").GetComponent<SpriteRenderer>().sprite = eriSprites[(!(num3 - num2 < 3f) && !(num2 * 2f % 12f >= 6f)) ? ((uint)(num2 * 2f % 6f)) : 0];
 		if (credits.localPosition.y >= 900f)
 		{
@@ -111,11 +123,13 @@ public class HardModeCredits : CreditsBase
 				beeth.enabled = true;
 			}
 		}
-	}
-
-	protected override void OnCreditsEnd()
-	{
-		base.OnCreditsEnd();
-		Util.GameManager().ForceLoadArea(6);
+		if (frames >= CREDITS_LENGTH / 2 + 60)
+		{
+			audio.volume = Mathf.Lerp(1f, 0f, (float)(frames - (CREDITS_LENGTH / 2 + 60)) / 60f);
+		}
+		if (frames == CREDITS_LENGTH / 2 + 120)
+		{
+			Util.GameManager().ForceLoadArea(6);
+		}
 	}
 }

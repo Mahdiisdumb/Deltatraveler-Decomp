@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,21 +5,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasRenderer))]
 public class SpriteText : Graphic
 {
-	public enum AlignmentH
-	{
-		Left = 0,
-		Center = 1,
-		Right = 2
-	}
-
-	public enum AlignmentV
-	{
-		Top = 0,
-		Center = 1,
-		Bottom = 2
-	}
-
-	[TextArea]
 	[SerializeField]
 	private string text = "";
 
@@ -34,19 +18,10 @@ public class SpriteText : Graphic
 	private int spaceSize = 8;
 
 	[SerializeField]
-	private int lineSpacing;
-
-	[SerializeField]
 	private string customCharacterSet = "";
 
 	[SerializeField]
 	private Vector2 inset = new Vector2(4f, -4f);
-
-	[SerializeField]
-	private AlignmentH hAlignment;
-
-	[SerializeField]
-	private AlignmentV vAlignment;
 
 	private readonly string CHARACTER_SET = "abcdefghijklmnopqrstuvwxyz0123456789!?-=.,#*/[]:";
 
@@ -119,22 +94,6 @@ public class SpriteText : Graphic
 		}
 	}
 
-	public int LineSpacing
-	{
-		get
-		{
-			return lineSpacing;
-		}
-		set
-		{
-			if (lineSpacing != value)
-			{
-				lineSpacing = value;
-				SetVerticesDirty();
-			}
-		}
-	}
-
 	public string CustomCharacterSet
 	{
 		get
@@ -167,39 +126,13 @@ public class SpriteText : Graphic
 		}
 	}
 
-	public AlignmentH HAlignment
+	public override Texture mainTexture
 	{
 		get
 		{
-			return hAlignment;
-		}
-		set
-		{
-			if (hAlignment != value)
-			{
-				hAlignment = value;
-				SetVerticesDirty();
-			}
+			return texture;
 		}
 	}
-
-	public AlignmentV VAlignment
-	{
-		get
-		{
-			return vAlignment;
-		}
-		set
-		{
-			if (vAlignment != value)
-			{
-				vAlignment = value;
-				SetVerticesDirty();
-			}
-		}
-	}
-
-	public override Texture mainTexture => texture;
 
 	private string GetCharacterSet()
 	{
@@ -218,63 +151,26 @@ public class SpriteText : Graphic
 			spriteSet = Resources.LoadAll<Sprite>(spritePath);
 		}
 		vh.Clear();
+		int num = 0;
 		string characterSet = GetCharacterSet();
 		if (spriteSet.Length != characterSet.Length)
 		{
 			return;
 		}
 		texture = spriteSet[0].texture;
-		string[] array = this.text.Split('\n');
-		int num = 0;
-		int num2 = ((int)spriteSet[0].rect.height + lineSpacing) * array.Length;
-		string[] array2 = array;
-		foreach (string text in array2)
+		for (int i = 0; i < text.Length; i++)
 		{
-			int num3 = 0;
-			List<int> list = new List<int>();
-			List<Vector3> list2 = new List<Vector3>();
-			for (int j = 0; j < text.Length; j++)
+			int num2 = characterSet.IndexOf(text[i]);
+			if (num2 > -1 && num2 < spriteSet.Length)
 			{
-				int num4 = characterSet.IndexOf(text[j]);
-				list.Add(num4);
-				if (num4 > -1 && num4 < spriteSet.Length)
-				{
-					list2.Add(new Vector3(num3, -num));
-					num3 += (int)spriteSet[num4].rect.width;
-				}
-				else
-				{
-					list2.Add(Vector3.zero);
-					num3 += spaceSize;
-				}
-				num3 += characterSpacing;
+				DrawLetter(vh, num2, new Vector3(num, 0f));
+				num += (int)spriteSet[num2].rect.width;
 			}
-			for (int k = 0; k < text.Length; k++)
+			else
 			{
-				int num5 = list[k];
-				if (num5 >= 0)
-				{
-					Vector3 vector = list2[k];
-					if (hAlignment == AlignmentH.Center)
-					{
-						vector.x -= num3 / 2;
-					}
-					else if (hAlignment == AlignmentH.Right)
-					{
-						vector.x -= num3;
-					}
-					if (vAlignment == AlignmentV.Center)
-					{
-						vector.y += num2 / 2;
-					}
-					else if (vAlignment == AlignmentV.Bottom)
-					{
-						vector.y += num2;
-					}
-					DrawLetter(vh, num5, vector);
-				}
+				num += spaceSize;
 			}
-			num += (int)spriteSet[0].rect.height + lineSpacing;
+			num += characterSpacing;
 		}
 	}
 

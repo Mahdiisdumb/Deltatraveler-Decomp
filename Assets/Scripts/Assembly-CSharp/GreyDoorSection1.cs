@@ -36,14 +36,14 @@ public class GreyDoorSection1 : CutsceneBase
 			if (frames == 1)
 			{
 				kris.ChangeDirection(Vector2.up);
-				kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+				kris.GetComponent<Animator>().SetBool("isMoving", true);
 				kris.GetComponent<Animator>().SetFloat("speed", 0.7f);
 				susie.ChangeDirection(Vector2.up);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
 				susie.GetComponent<Animator>().SetFloat("speed", 0.7f);
 				noelle.ChangeDirection(Vector2.up);
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
-				cam.SetFollowPlayer(follow: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", true);
+				cam.SetFollowPlayer(false);
 			}
 			if (cam.transform.position != new Vector3(2.083f, 0f, -10f))
 			{
@@ -55,7 +55,7 @@ public class GreyDoorSection1 : CutsceneBase
 			}
 			else
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (susie.transform.position != new Vector3(0.98f, 1.26f))
 			{
@@ -63,7 +63,7 @@ public class GreyDoorSection1 : CutsceneBase
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (noelle.transform.position != new Vector3(2.09f, 1.74f))
 			{
@@ -71,7 +71,7 @@ public class GreyDoorSection1 : CutsceneBase
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			MonoBehaviour.print(frames);
 			if (frames == 100)
@@ -102,7 +102,7 @@ public class GreyDoorSection1 : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+				noelle.GetComponent<Animator>().SetBool("isMoving", true);
 				noelle.GetComponent<Animator>().SetFloat("speed", 0.4f);
 			}
 			if (noelle.transform.position != new Vector3(2.09f, 2.83f))
@@ -111,7 +111,7 @@ public class GreyDoorSection1 : CutsceneBase
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (frames == 90)
 			{
@@ -181,7 +181,7 @@ public class GreyDoorSection1 : CutsceneBase
 			if (frames <= 10)
 			{
 				susie.EnableAnimator();
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
 				susie.GetComponent<Animator>().SetFloat("speed", 3f);
 				susie.transform.position = Vector3.Lerp(new Vector3(0.98f, 1.26f), new Vector3(2.09f, 2.83f), (float)frames / 10f);
 				if (frames == 10)
@@ -200,20 +200,20 @@ public class GreyDoorSection1 : CutsceneBase
 			if (frames >= 15 && frames <= 35)
 			{
 				kris.ChangeDirection(Vector2.left);
-				kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+				kris.GetComponent<Animator>().SetBool("isMoving", true);
 				kris.GetComponent<Animator>().SetFloat("speed", 0.7f);
 				kris.transform.position = Vector3.Lerp(new Vector3(3.08f, 1.11f), new Vector3(2.083f, 1.11f), (float)(frames - 15) / 20f);
 			}
 			else if (frames >= 35 && frames < 45)
 			{
 				kris.ChangeDirection(Vector2.up);
-				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			else if (frames >= 45 && frames <= 65)
 			{
 				kris.GetComponent<Animator>().SetFloat("speed", 0f);
 				kris.GetComponent<Animator>().Play("RunUp", 0, 0f);
-				kris.transform.position = Vector3.Lerp(new Vector3(2.083f, 1.11f), new Vector3(2.083f, 0.25f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
+				kris.transform.position = Vector3.Lerp(new Vector3(2.083f, 1.11f), new Vector3(2.083f, 0.25f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
 			}
 			else if (frames >= 65 && frames <= 75)
 			{
@@ -237,7 +237,7 @@ public class GreyDoorSection1 : CutsceneBase
 			if (frames <= 15)
 			{
 				float num5 = (float)frames / 15f;
-				num5 = Mathf.Sin(num5 * MathF.PI * 0.5f);
+				num5 = Mathf.Sin(num5 * (float)Math.PI * 0.5f);
 				kris.transform.position = Vector3.Lerp(new Vector3(2.083f, 2.83f), new Vector3(2.083f, 3.5f), num5);
 			}
 			if (frames < 50)
@@ -303,7 +303,7 @@ public class GreyDoorSection1 : CutsceneBase
 			}
 			if (frames == 120)
 			{
-				Util.GameManager().ForceLoadArea(50);
+				UnityEngine.Object.FindObjectOfType<GameManager>().ForceLoadArea(50);
 			}
 		}
 		if (state == 7 && !txtEB)
@@ -311,7 +311,7 @@ public class GreyDoorSection1 : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				Util.GameManager().SetFramerate(30);
+				UnityEngine.Object.FindObjectOfType<GameManager>().SetFramerate(30);
 			}
 			if (frames == 60)
 			{
@@ -360,12 +360,12 @@ public class GreyDoorSection1 : CutsceneBase
 		base.StartCutscene(par);
 		gm.StopMusic(60f);
 		gm.SetFlag(95, 0);
-		kris.SetSelfAnimControl(setAnimControl: false);
-		susie.SetSelfAnimControl(setAnimControl: false);
-		noelle.SetSelfAnimControl(setAnimControl: false);
-		kris.GetComponent<Animator>().SetBool("isMoving", value: false);
-		susie.GetComponent<Animator>().SetBool("isMoving", value: false);
-		noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+		kris.SetSelfAnimControl(false);
+		susie.SetSelfAnimControl(false);
+		noelle.SetSelfAnimControl(false);
+		kris.GetComponent<Animator>().SetBool("isMoving", false);
+		susie.GetComponent<Animator>().SetBool("isMoving", false);
+		noelle.GetComponent<Animator>().SetBool("isMoving", false);
 		krisBW = GameObject.Find("KrisBW").GetComponent<SpriteRenderer>();
 		susieBW = GameObject.Find("SusieBW").GetComponent<SpriteRenderer>();
 		noelleBW = GameObject.Find("NoelleBW").GetComponent<SpriteRenderer>();

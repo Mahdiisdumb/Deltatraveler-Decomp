@@ -56,7 +56,7 @@ public class CrossSlash : SpecialAttackEffect
 	{
 		if ((bool)enemy)
 		{
-			enemy.Hit(0, 15f, playSound: false);
+			enemy.Hit(0, 20f, false);
 		}
 	}
 }

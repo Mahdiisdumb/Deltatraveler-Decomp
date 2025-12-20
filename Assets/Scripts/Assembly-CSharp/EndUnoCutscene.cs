@@ -53,7 +53,7 @@ public class EndUnoCutscene : CutsceneBase
 		{
 			par[0] = -1;
 		}
-		gm.SetPartyMembers(susie: true, noelle: true);
+		gm.SetPartyMembers(true, true);
 		int num2 = (int)par[0];
 		if (num2 > 0)
 		{
@@ -78,13 +78,13 @@ public class EndUnoCutscene : CutsceneBase
 						Util.GameManager().SetFlag(292, 1);
 						flag = true;
 						soundAt.Add(list.Count + 2);
-						list.AddRange(new string[9] { "HERE IS YOUR PRIZE!", "* (You got a silver key.)", "* (You put the KEY in your\n  KEY ITEMs.)", "I...^05 FOUND IT WHEN \nI FIRST ARRIVED HERE.", "JUST ON THE GROUND.", "ADMITTEDLY,^05 I HAD \nNOTHING ELSE TO \nGIVE FOR 1st.", "BUT IT SEEMS SPECIAL \nENOUGH TO RESERVE \nIT FOR THAT.", "SO...", "ENJOY?" });
+						list.AddRange(new string[9] { "HERE IS YOUR PRIZE!", "* (You got a silver key.)", "* (You hooked it on your phone's\n  lanyard hole.)", "I...^05 FOUND IT WHEN \nI FIRST ARRIVED HERE.", "JUST ON THE GROUND.", "ADMITTEDLY,^05 I HAD \nNOTHING ELSE TO \nGIVE FOR 1st.", "BUT IT SEEMS SPECIAL \nENOUGH TO RESERVE \nIT FOR THAT.", "SO...", "ENJOY?" });
 						list2.AddRange(new string[9] { "snd_txtpap", "snd_text", "snd_text", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap" });
 						list3.AddRange(new string[9] { "ifpap_neutral", "", "", "ifpap_side", "ifpap_confused", "ifpap_worry", "ifpap_side", "ifpap_neutral", "ifpap_laugh" });
 					}
 					else if (num2 <= i && i > 1 && Util.GameManager().GetFlagInt(310 - (i - 2) * 2) == 0)
 					{
-						bool flag3 = Util.GameManager().NumItemFreeSpace(equipment: false) > 0;
+						bool flag3 = Util.GameManager().NumItemFreeSpace() > 0;
 						Util.GameManager().SetFlag(310 - (i - 2) * 2, 1);
 						if (!flag2)
 						{
@@ -119,7 +119,7 @@ public class EndUnoCutscene : CutsceneBase
 								list.AddRange(new string[2]
 								{
 									"HERE IS YOUR PRIZE!",
-									(i == 2) ? "* (You got the WILD REVERSE\n  CARD.)^05\n* (It was added to your ITEMs.)" : "* (You got the Spaghetti.)^05\n* (It was added to your ITEMs.)"
+									(i == 2) ? "* (You got the WILD REVERSE\n  CARD.)" : "* (You got the Spaghetti.)"
 								});
 								list2.AddRange(new string[2] { "snd_txtpap", "snd_text" });
 								list3.AddRange(new string[2] { "ifpap_neutral", "" });
@@ -159,8 +159,8 @@ public class EndUnoCutscene : CutsceneBase
 				}
 				if (list4.Count > 0)
 				{
-					bool num3 = Util.GameManager().NumItemFreeSpace(equipment: false) >= list4.Count;
-					bool flag4 = Util.GameManager().NumItemFreeSpace(equipment: false) == 1;
+					bool num3 = Util.GameManager().NumItemFreeSpace() >= list4.Count;
+					bool flag4 = Util.GameManager().NumItemFreeSpace() == 1;
 					list.Add("WAIT A SECOND!!!^05\nI STILL HAVE A \nPRIZE YOU'VE EARNED!");
 					list2.Add("snd_txtpap");
 					list3.Add("ifpap_mad");
@@ -179,7 +179,7 @@ public class EndUnoCutscene : CutsceneBase
 						{
 							Util.GameManager().SetFlag(311 - (item2 - 2) * 2, 1);
 							Util.GameManager().AddItem((item2 == 2) ? 45 : 44);
-							list.AddRange(new string[1] { (item2 == 2) ? "* (You got the WILD REVERSE\n  CARD.)^05\n* (It was added to your ITEMs.)" : "* (You got the Spaghetti.)^05\n* (It was added to your ITEMs.)" });
+							list.AddRange(new string[1] { (item2 == 2) ? "* (You got the WILD REVERSE\n  CARD.)" : "* (You got the Spaghetti.)" });
 							list2.Add("snd_text");
 							list3.Add("");
 							soundAt.Add(list.Count);
@@ -240,6 +240,6 @@ public class EndUnoCutscene : CutsceneBase
 		{
 			StartText(new string[1] { "HOW'D YOU GET IN\n0th PLACE???\n^10ERROR!!!" }, new string[1] { "snd_txtpap" }, new int[1], new string[1] { "ifpap_mad" });
 		}
-		Util.FindObjectOfType<IFPapyrus>().SetTalkable(txt);
+		Object.FindObjectOfType<IFPapyrus>().SetTalkable(txt);
 	}
 }

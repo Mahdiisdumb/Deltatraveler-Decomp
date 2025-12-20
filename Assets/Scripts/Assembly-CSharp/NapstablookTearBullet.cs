@@ -14,6 +14,6 @@ public class NapstablookTearBullet : BulletBase
 	{
 		base.transform.rotation = Quaternion.Lerp(base.transform.rotation, Quaternion.Euler(0f, 0f, 0f), 0.075f);
 		float z = base.transform.rotation.eulerAngles.z;
-		base.transform.position += new Vector3(Mathf.Sin(z * (MathF.PI / 180f)), 0f - Mathf.Cos(z * (MathF.PI / 180f))) * (5f / 48f);
+		base.transform.position += new Vector3(Mathf.Sin(z * ((float)Math.PI / 180f)), 0f - Mathf.Cos(z * ((float)Math.PI / 180f))) * (5f / 48f);
 	}
 }

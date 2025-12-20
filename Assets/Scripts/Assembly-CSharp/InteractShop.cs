@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InteractShop : Interactable
 {
@@ -94,7 +95,7 @@ public class InteractShop : Interactable
 
 	protected bool selectActivated;
 
-	protected MiniShopUI shopBG;
+	protected UIBackground shopBG;
 
 	[SerializeField]
 	private Sprite[] talkSprites;
@@ -171,10 +172,17 @@ public class InteractShop : Interactable
 	{
 		if (!txt && enabled)
 		{
-			CreateTextBox(lines, sounds, speed, giveBackControl: false, portraits, remarks);
-			shopBG = Object.Instantiate(Resources.Load<GameObject>("ui/MiniShopUI"), GameObject.Find("Canvas").transform).GetComponent<MiniShopUI>();
-			shopBG.SetInventoryType(itemID);
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+			CreateTextBox(lines, sounds, speed, false, portraits, remarks);
+			shopBG = new GameObject("ShopMenu").AddComponent<UIBackground>();
+			shopBG.transform.parent = GameObject.Find("Canvas").transform;
+			shopBG.CreateElement("space", new Vector2(189f, 2f), new Vector2(202f, 108f));
+			Text component = Object.Instantiate(Resources.Load<GameObject>("ui/SelectionBase"), shopBG.transform).GetComponent<Text>();
+			component.gameObject.name = "SpaceInfo";
+			component.transform.localScale = new Vector3(1f, 1f, 1f);
+			component.transform.localPosition = new Vector3(116f, -71f);
+			component.text = "$ - " + Object.FindObjectOfType<GameManager>().GetGold() + "G\nSPACE - " + (8 - Object.FindObjectOfType<GameManager>().NumItemFreeSpace()) + "/8";
+			component.lineSpacing = 1.3f;
+			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 			txt.EnableSelectionAtEnd();
 		}
 	}
@@ -200,31 +208,31 @@ public class InteractShop : Interactable
 	{
 		if (index == Vector2.left)
 		{
-			if (Util.GameManager().NumItemFreeSpace(Items.IsEquipment(itemID)) == 0)
+			if (Object.FindObjectOfType<GameManager>().NumItemFreeSpace() == 0)
 			{
-				CreateTextBox(noSpaceLines, noSpaceSounds, noSpaceSpeed, giveBackControl: true, noSpacePortraits, noSpaceRemarks);
+				CreateTextBox(noSpaceLines, noSpaceSounds, noSpaceSpeed, true, noSpacePortraits, noSpaceRemarks);
 			}
-			else if (Util.GameManager().GetGold() < price)
+			else if (Object.FindObjectOfType<GameManager>().GetGold() < price)
 			{
-				CreateTextBox(noMoneyLines, noMoneySounds, noMoneySpeed, giveBackControl: true, noMoneyPortraits, noMoneyRemarks);
+				CreateTextBox(noMoneyLines, noMoneySounds, noMoneySpeed, true, noMoneyPortraits, noMoneyRemarks);
 			}
 			else
 			{
-				Util.GameManager().AddAmbiguousItem(itemID);
-				Util.GameManager().RemoveGold(price);
-				shopBG.UpdateText();
-				CreateTextBox(purchaseLines, purchaseSounds, purchaseSpeed, giveBackControl: true, purchasePortraits, purchaseRemarks);
+				Object.FindObjectOfType<GameManager>().AddItem(itemID);
+				Object.FindObjectOfType<GameManager>().RemoveGold(price);
+				shopBG.transform.Find("SpaceInfo").GetComponent<Text>().text = "$ - " + Object.FindObjectOfType<GameManager>().GetGold() + "G\nSPACE - " + (8 - Object.FindObjectOfType<GameManager>().NumItemFreeSpace()) + "/8";
+				CreateTextBox(purchaseLines, purchaseSounds, purchaseSpeed, true, purchasePortraits, purchaseRemarks);
 			}
 		}
 		else if (index == Vector2.right)
 		{
 			if (rejectLines.Length != 0)
 			{
-				CreateTextBox(rejectLines, rejectSounds, rejectSpeed, giveBackControl: true, rejectPortraits, rejectRemarks);
+				CreateTextBox(rejectLines, rejectSounds, rejectSpeed, true, rejectPortraits, rejectRemarks);
 			}
 			else
 			{
-				Util.GameManager().EnablePlayerMovement();
+				Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
 			}
 		}
 		selectActivated = false;

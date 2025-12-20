@@ -40,7 +40,7 @@ public class MightyBear : EnemyBase
 		defaultChatSize = "RightSmall";
 		exp = 2;
 		gold = 10;
-		geno = (int)Util.GameManager().GetFlag(13) >= 5;
+		geno = (int)Object.FindObjectOfType<GameManager>().GetFlag(13) >= 5;
 		attacks = new int[1] { 53 };
 	}
 
@@ -77,7 +77,7 @@ public class MightyBear : EnemyBase
 				}
 				else if (defeatFrames == 35)
 				{
-					Util.FindObjectOfType<BattleCamera>().BlastShake();
+					Object.FindObjectOfType<BattleCamera>().BlastShake();
 					base.obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/" + enemyName.Replace(".", "") + "/spr_b_" + fileName + "_die_1");
 					base.obj.transform.Find("mainbody").localPosition = Vector3.zero;
 					Object.Instantiate(Resources.Load<GameObject>("vfx/EnemyBlood"), base.obj.transform.Find("mainbody").position + new Vector3(0f, 0.2f), Quaternion.identity);
@@ -134,7 +134,7 @@ public class MightyBear : EnemyBase
 		if (GetActNames()[i] == "Shoo")
 		{
 			int num = (lectured ? 50 : 15);
-			if (Util.GameManager().GetPartyMember(3) == 3)
+			if (Util.GameManager().GetMiniPartyMember() == 1)
 			{
 				num += 15;
 			}
@@ -156,7 +156,7 @@ public class MightyBear : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		switch (i)
 		{
@@ -167,7 +167,7 @@ public class MightyBear : EnemyBase
 			tired = true;
 			return new string[4] { "no_scared`snd_txtnoe`* M^05-me???", "no_surprised_happy`snd_txtnoe`* Uhh...^05 anything but\n  a GIANT BEAR.", "no_happy`snd_txtnoe`* And ESPECIALLY not\n  by myself.", "* Mighty Bear saw the lack\n  of action and became tired." };
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 

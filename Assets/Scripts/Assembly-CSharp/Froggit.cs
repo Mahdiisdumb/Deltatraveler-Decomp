@@ -78,18 +78,18 @@ public class Froggit : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 		if (i == 1)
 		{
 			tired = true;
 			return new string[2] { "* Susie punched her fist\n  into her hand.", "* Froggit couldn't handle\n  it and became TIRED." };
 		}
-		return base.PerformAssistAct_Old(i);
+		return base.PerformAssistAct(i);
 	}
 
 	public override string GetChatter()
@@ -124,11 +124,11 @@ public class Froggit : EnemyBase
 
 	public override int GetNextAttack()
 	{
-		if (Util.FindObjectsOfType<Froggit>().Length == 2 && !Util.FindObjectsOfType<Froggit>()[0].IsDone() && !Util.FindObjectsOfType<Froggit>()[1].IsDone())
+		if (Object.FindObjectsOfType<Froggit>().Length == 2 && !Object.FindObjectsOfType<Froggit>()[0].IsDone() && !Object.FindObjectsOfType<Froggit>()[1].IsDone())
 		{
 			return 6;
 		}
-		if ((bool)Util.FindObjectOfType<Whimsun>() && !Util.FindObjectOfType<Whimsun>().IsDone())
+		if ((bool)Object.FindObjectOfType<Whimsun>() && !Object.FindObjectOfType<Whimsun>().IsDone())
 		{
 			return 9;
 		}

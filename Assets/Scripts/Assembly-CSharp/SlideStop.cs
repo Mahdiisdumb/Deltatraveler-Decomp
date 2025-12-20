@@ -4,7 +4,7 @@ public class SlideStop : OverworldManipulator
 {
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision && (bool)collision.GetComponent<OverworldPlayer>() && collision.GetComponent<OverworldPlayer>().IsSliding())
+		if ((bool)collision.GetComponent<OverworldPlayer>() && collision.GetComponent<OverworldPlayer>().IsSliding())
 		{
 			collision.GetComponent<OverworldPlayer>().StopSliding();
 		}

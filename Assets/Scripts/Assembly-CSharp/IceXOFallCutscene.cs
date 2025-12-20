@@ -44,9 +44,9 @@ public class IceXOFallCutscene : CutsceneBase
 						ChangeDirection(kris, Vector2.down);
 						if (!playFullCutscene)
 						{
-							kris.SetCollision(onoff: true);
-							kris.SetSelfAnimControl(setAnimControl: true);
-							kris.SetMovement(newMove: true, activateMembers: false);
+							kris.SetCollision(true);
+							kris.SetSelfAnimControl(true);
+							kris.SetMovement(true);
 						}
 					}
 				}
@@ -65,7 +65,7 @@ public class IceXOFallCutscene : CutsceneBase
 						susie.GetComponent<SpriteRenderer>().flipX = false;
 						if (!playFullCutscene)
 						{
-							susie.SetSelfAnimControl(setAnimControl: true);
+							susie.SetSelfAnimControl(true);
 							susie.ResetPathLists();
 							susie.Activate();
 						}
@@ -88,7 +88,7 @@ public class IceXOFallCutscene : CutsceneBase
 						noelle.EnableAnimator();
 						if (!playFullCutscene)
 						{
-							noelle.SetSelfAnimControl(setAnimControl: true);
+							noelle.SetSelfAnimControl(true);
 							noelle.ResetPathLists();
 							noelle.Activate();
 						}
@@ -110,7 +110,7 @@ public class IceXOFallCutscene : CutsceneBase
 					}
 					else if (!playFullCutscene)
 					{
-						EndCutscene(enablePlayerMovement: false);
+						EndCutscene(false);
 					}
 				}
 			}
@@ -130,16 +130,16 @@ public class IceXOFallCutscene : CutsceneBase
 				else
 				{
 					frames = 0;
-					state = (((Random.Range(0, 5) == 0 || Util.GameManager().GetPlayerName() == "SHAYY") && (int)Util.GameManager().GetFlag(12) == 0) ? 2 : 3);
+					state = ((Random.Range(0, 5) == 0 && (int)Util.GameManager().GetFlag(12) == 0) ? 2 : 3);
 				}
 			}
 			else if (state == 2)
 			{
 				frames++;
-				SetSprite(bunny, "overworld/npcs/spr_bunny_walk_" + frames / 10 % 2, flipX: true);
+				SetSprite(bunny, "overworld/npcs/spr_bunny_walk_" + frames / 10 % 2, true);
 				if (!MoveTo(bunny, new Vector3(-5f, 3.81f), 1f) && frames >= 60)
 				{
-					SetSprite(bunny, "overworld/npcs/spr_bunny", flipX: true);
+					SetSprite(bunny, "overworld/npcs/spr_bunny", true);
 					StartText(new string[5] { "* its cuz i didnt feel like\n  making them stay in a single\n  room,^05 cuz that's hard lmao", "* WHAT?????", "* Who the heck is\n  that???", "* I dunno.^05\n* Seems pretty annoying\n  though.", "* Anyway..." }, new string[5] { "snd_text", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtnoe" }, new int[1], new string[5] { "", "su_angry", "no_confused", "su_annoyed", "no_thinking" }, 1);
 					state = 3;
 				}
@@ -224,7 +224,7 @@ public class IceXOFallCutscene : CutsceneBase
 			bunnyFrames++;
 			if (MoveTo(bunny, new Vector3(-5f, 6f), 12f))
 			{
-				SetSprite(bunny, "overworld/npcs/spr_bunny_walk_" + bunnyFrames % 2, flipX: true);
+				SetSprite(bunny, "overworld/npcs/spr_bunny_walk_" + bunnyFrames % 2, true);
 			}
 		}
 	}

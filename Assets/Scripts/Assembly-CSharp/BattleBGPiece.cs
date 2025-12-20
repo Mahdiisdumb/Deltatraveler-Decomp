@@ -11,18 +11,20 @@ public class BattleBGPiece : MonoBehaviour
 
 	private int maxFrames;
 
-	[SerializeField]
-	private BattleBGType type;
+	private int type;
 
-	[SerializeField]
 	private float intensity;
-
-	[SerializeField]
-	private float speed;
 
 	private bool moving;
 
+	private float speed;
+
 	private float yMove;
+
+	private void Awake()
+	{
+		moving = false;
+	}
 
 	private void Update()
 	{
@@ -30,7 +32,7 @@ public class BattleBGPiece : MonoBehaviour
 		{
 			return;
 		}
-		if (type == BattleBGType.Wave)
+		if (type == 1)
 		{
 			frames++;
 			if (frames < maxFrames / 2)
@@ -48,11 +50,11 @@ public class BattleBGPiece : MonoBehaviour
 				frames = 0;
 			}
 		}
-		else if (type == BattleBGType.Twitch)
+		else if (type == 2)
 		{
-			if (Random.Range(0f, speed) == 0f)
+			if (Random.Range(0, (int)speed) == 0)
 			{
-				base.transform.position = origPos + new Vector3(0.0208333f * Random.Range(0f - intensity, intensity + 1f), 0.0208333f * Random.Range(0f - intensity, intensity + 1f));
+				base.transform.position = origPos + new Vector3(0.0208333f * (float)Random.Range(-(int)intensity, (int)intensity + 1), 0.0208333f * (float)Random.Range(-(int)intensity, (int)intensity + 1));
 			}
 			else
 			{
@@ -61,21 +63,21 @@ public class BattleBGPiece : MonoBehaviour
 		}
 	}
 
-	public void StartBG(BattleBGType newType, float newIntensity, float newSpeed, Color color, bool isBoss)
+	public void StartBG(int newType, float newIntensity, float newSpeed, Color color, bool isBoss)
 	{
 		GetComponent<SpriteRenderer>().color = color;
 		type = newType;
 		intensity = newIntensity;
 		speed = newSpeed;
 		origPos = base.transform.position;
-		if (type == BattleBGType.NoBG)
+		if (type == 3)
 		{
 			GetComponent<SpriteRenderer>().enabled = false;
 		}
-		if (type == BattleBGType.Wave)
+		if (type == 1)
 		{
 			yMove = intensity;
-			maxFrames = Mathf.FloorToInt(speed);
+			maxFrames = (int)speed;
 			frames = (int)(index[1] / 6f * (float)maxFrames);
 		}
 		moving = true;

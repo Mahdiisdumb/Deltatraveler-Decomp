@@ -10,11 +10,11 @@ public class PSIMagnetBullet : MonoBehaviour
 	{
 		if (strongMode)
 		{
-			Util.FindObjectOfType<SOUL>().SetPullForce(Vector3.MoveTowards(Util.FindObjectOfType<SOUL>().transform.position, base.transform.position, 0.0625f) - Util.FindObjectOfType<SOUL>().transform.position);
+			Object.FindObjectOfType<SOUL>().SetPullForce(Vector3.MoveTowards(Object.FindObjectOfType<SOUL>().transform.position, base.transform.position, 0.0625f) - Object.FindObjectOfType<SOUL>().transform.position);
 		}
 		else
 		{
-			Util.FindObjectOfType<SOUL>().SetPullForce(Vector3.MoveTowards(Util.FindObjectOfType<SOUL>().transform.position, base.transform.position, 3f / 64f) - Util.FindObjectOfType<SOUL>().transform.position);
+			Object.FindObjectOfType<SOUL>().SetPullForce(Vector3.MoveTowards(Object.FindObjectOfType<SOUL>().transform.position, base.transform.position, 3f / 64f) - Object.FindObjectOfType<SOUL>().transform.position);
 		}
 	}
 
@@ -25,9 +25,9 @@ public class PSIMagnetBullet : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		if ((bool)Util.FindObjectOfType<SOUL>())
+		if ((bool)Object.FindObjectOfType<SOUL>())
 		{
-			Util.FindObjectOfType<SOUL>().SetPullForce(Vector3.zero);
+			Object.FindObjectOfType<SOUL>().SetPullForce(Vector3.zero);
 		}
 	}
 
@@ -39,13 +39,13 @@ public class PSIMagnetBullet : MonoBehaviour
 			{
 				GetComponent<AudioSource>().Play();
 			}
-			if (Util.FindObjectOfType<TPBar>().GetCurrentTP() > 0)
+			if (Object.FindObjectOfType<TPBar>().GetCurrentTP() > 0)
 			{
 				pullThreshold++;
 			}
 			if (pullThreshold == 4)
 			{
-				Util.FindObjectOfType<TPBar>().RemoveTP(1);
+				Object.FindObjectOfType<TPBar>().RemoveTP(1);
 				pullThreshold = 0;
 			}
 		}

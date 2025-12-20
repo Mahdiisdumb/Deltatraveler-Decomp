@@ -15,14 +15,14 @@ public class Options
 			this.limit = limit;
 		}
 
-		public void LoadFromConfig(ref Config c, string category = "General")
+		public void LoadFromConfig(ref Config c)
 		{
-			value = c.GetInt(category, name, value, writeIfNotExist: true);
+			value = c.GetInt("General", name, value, true);
 		}
 
-		public void SaveToConfig(ref Config c, string category = "General")
+		public void SaveToConfig(ref Config c)
 		{
-			c.SetInt(category, name, value);
+			c.SetInt("General", name, value);
 		}
 
 		public void Increase()
@@ -30,12 +30,6 @@ public class Options
 			value = (value + 1) % limit;
 		}
 	}
-
-	public static readonly string[] FLAVORS = new string[11]
-	{
-		"Vanilla", "Mint", "Strawberry", "Banana", "ButtsPie", "Blueberry", "Cinnamon", "Moss", "Nerds", "Cotton Candy",
-		"Eggplant"
-	};
 
 	public Option contentSetting;
 
@@ -53,47 +47,39 @@ public class Options
 
 	public Option easyMode;
 
-	public Option vSync;
-
-	public Option monitorInfo;
-
 	public Options()
 	{
 		contentSetting = new Option(0, "ContentSetting", 2);
-		lowGraphics = new Option(0, "LowGraphics", 2);
-		buttonStyle = new Option(0, "ButtonStyle", 5);
-		autoButton = new Option(1, "AutoButton", 2);
+		lowGraphics = new Option(GameManager.autoLowGraphics ? 1 : 0, "LowGraphics", 2);
+		buttonStyle = new Option(0, "ButtonStyle", 3);
+		autoButton = new Option(0, "AutoButton", 2);
 		startingFlavor = new Option(0, "StartingFlavor", 11);
 		autoRun = new Option(0, "AutoRun", 2);
 		runAnimations = new Option(1, "RunAnimations", 2);
 		easyMode = new Option(0, "EasyMode", 2);
-		vSync = new Option(0, "vSync", 2);
-		monitorInfo = new Option(0, "MonitorInfo", 2);
 	}
 
 	public void LoadFromConfig(ref Config c)
 	{
 		contentSetting.LoadFromConfig(ref c);
+		lowGraphics.LoadFromConfig(ref c);
 		buttonStyle.LoadFromConfig(ref c);
 		autoButton.LoadFromConfig(ref c);
 		startingFlavor.LoadFromConfig(ref c);
 		autoRun.LoadFromConfig(ref c);
 		runAnimations.LoadFromConfig(ref c);
 		easyMode.LoadFromConfig(ref c);
-		vSync.LoadFromConfig(ref c);
-		monitorInfo.LoadFromConfig(ref c, "Debug");
 	}
 
 	public void SaveToConfig(ref Config c)
 	{
 		contentSetting.SaveToConfig(ref c);
+		lowGraphics.SaveToConfig(ref c);
 		buttonStyle.SaveToConfig(ref c);
 		autoButton.SaveToConfig(ref c);
 		startingFlavor.SaveToConfig(ref c);
 		autoRun.SaveToConfig(ref c);
 		runAnimations.SaveToConfig(ref c);
 		easyMode.SaveToConfig(ref c);
-		vSync.SaveToConfig(ref c);
-		monitorInfo.SaveToConfig(ref c, "Debug");
 	}
 }

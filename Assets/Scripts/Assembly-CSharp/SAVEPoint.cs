@@ -74,7 +74,7 @@ public class SAVEPoint : Interactable
 			Object.Instantiate(Resources.Load<GameObject>("ui/SaveMenu"), Vector3.zero, Quaternion.identity, GameObject.Find("Canvas").transform).transform.localPosition = Vector3.zero;
 			saveMenuOpen = true;
 		}
-		if (saveMenuOpen && !Util.FindObjectOfType<SaveMenu>())
+		if (saveMenuOpen && !Object.FindObjectOfType<SaveMenu>())
 		{
 			saveMenuOpen = false;
 			isSaving = false;
@@ -86,11 +86,11 @@ public class SAVEPoint : Interactable
 	{
 		gm.HealAll(99);
 		gm.PlayGlobalSFX("sounds/snd_heal");
-		gm.DisablePlayerMovement(deactivatePartyMembers: false);
+		gm.DisablePlayerMovement(false);
 		if (doPhrase)
 		{
 			txt = new GameObject().AddComponent<TextBox>();
-			txt.CreateBox(phrases, giveBackControl: false);
+			txt.CreateBox(phrases, false);
 		}
 		isSaving = true;
 	}

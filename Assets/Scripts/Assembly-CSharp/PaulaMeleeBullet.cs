@@ -38,7 +38,7 @@ public class PaulaMeleeBullet : MonoBehaviour
 			{
 				if (frames == 5)
 				{
-					Util.FindObjectOfType<BattleCamera>().HurtShake();
+					Object.FindObjectOfType<BattleCamera>().HurtShake();
 					GetComponent<SpriteRenderer>().sortingOrder = 197;
 					for (int i = 0; i < 8; i++)
 					{

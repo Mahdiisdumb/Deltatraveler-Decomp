@@ -79,16 +79,6 @@ public class Config
 		return def;
 	}
 
-	public bool HasKey(string category, string value)
-	{
-		return configData[category][value] != null;
-	}
-
-	public void RemoveKey(string category, string value)
-	{
-		configData[category].RemoveKey(value);
-	}
-
 	public void Write()
 	{
 		try

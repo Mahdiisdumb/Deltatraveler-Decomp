@@ -34,7 +34,7 @@ public class RedBusterEffect : SpecialAttackEffect
 			{
 				if (troll)
 				{
-					Util.FindObjectOfType<PartyPanels>().SetSprite(0, "eye/spr_kr_down_0_eye");
+					Object.FindObjectOfType<PartyPanels>().SetSprite(0, "eye/spr_kr_down_0_eye");
 				}
 				Object.Destroy(base.gameObject);
 			}
@@ -66,8 +66,8 @@ public class RedBusterEffect : SpecialAttackEffect
 		if ((int)Util.GameManager().GetFlag(211) == 1)
 		{
 			troll = true;
-			base.transform.position = new Vector3(Util.FindObjectOfType<PartyPanels>().transform.Find("Party0Sprite").localPosition.x / 48f, -0.2f);
-			Util.FindObjectOfType<SOUL>().transform.position = base.transform.position;
+			base.transform.position = new Vector3(Object.FindObjectOfType<PartyPanels>().transform.Find("KrisSprite").localPosition.x / 48f, -0.2f);
+			Object.FindObjectOfType<SOUL>().transform.position = base.transform.position;
 		}
 	}
 
@@ -75,14 +75,14 @@ public class RedBusterEffect : SpecialAttackEffect
 	{
 		if (troll)
 		{
-			Util.FindObjectOfType<PartyPanels>().SetTargets(kris: true, susie: true, noelle: true, activateDefense: false);
-			Util.FindObjectOfType<SOUL>().Damage(500);
+			Object.FindObjectOfType<PartyPanels>().SetTargets(true, true, true, false);
+			Object.FindObjectOfType<SOUL>().Damage(500);
 			if (Util.GameManager().GetHP(0) >= 1)
 			{
-				Util.FindObjectOfType<PartyPanels>().SetSprite(0, "spr_kr_surprise_down");
-				Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
-				Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
-				Util.FindObjectOfType<SOUL>().transform.position = new Vector3(500f, 500f);
+				Object.FindObjectOfType<PartyPanels>().SetSprite(0, "spr_kr_surprise_down");
+				Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
+				Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
+				Object.FindObjectOfType<SOUL>().transform.position = new Vector3(500f, 500f);
 			}
 		}
 		else if ((bool)enemy)
@@ -91,7 +91,7 @@ public class RedBusterEffect : SpecialAttackEffect
 			{
 				aud[2].Play();
 			}
-			enemy.Hit(1, 65 + bonusDamage, playSound: false);
+			enemy.Hit(1, 65 + bonusDamage, false);
 		}
 	}
 }

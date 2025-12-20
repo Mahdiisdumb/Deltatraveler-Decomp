@@ -36,7 +36,7 @@ public class SOULShotChargeEffect : MonoBehaviour
 				float num = (float)(parentSOUL.GetChargeFrames() - 5) / 15f;
 				float num2 = (float)i * 90f + num * 135f;
 				float num3 = (1f - num) / 1.25f;
-				child.transform.localPosition = new Vector3(Mathf.Cos(num2 * (MathF.PI / 180f)) * num3, Mathf.Sin(num2 * (MathF.PI / 180f)) * num3, 0f);
+				child.transform.localPosition = new Vector3(Mathf.Cos(num2 * ((float)Math.PI / 180f)) * num3, Mathf.Sin(num2 * ((float)Math.PI / 180f)) * num3, 0f);
 				child.transform.localScale = Vector3.Lerp(new Vector3(4f, 4f, 0f), new Vector3(2f, 2f, 0f), num);
 				child.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 0f, (parentSOUL.GetChargeFrames() <= 6) ? 0.5f : 1f);
 			}
@@ -47,7 +47,7 @@ public class SOULShotChargeEffect : MonoBehaviour
 		}
 		for (int j = 0; j < 3; j++)
 		{
-			float num4 = Mathf.Abs(Mathf.Sin(180f / (float)(30 + 10 * j) * (float)(frames - 15) * (MathF.PI / 180f)));
+			float num4 = Mathf.Abs(Mathf.Sin(180f / (float)(30 + 10 * j) * (float)(frames - 15) * ((float)Math.PI / 180f)));
 			base.transform.GetChild(j).GetComponent<SpriteRenderer>().enabled = true;
 			base.transform.GetChild(j).localScale = new Vector3(1f + num4, 1f + num4, 1f);
 			if ((bool)parentSOUL)

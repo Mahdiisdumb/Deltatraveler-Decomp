@@ -72,7 +72,7 @@ public class GyftrotPresentBullet : BulletBase
 				ChangeType(typeSet);
 			}
 		}
-		float num2 = Mathf.Sin((degreeOffset + degree) * (MathF.PI / 180f));
+		float num2 = Mathf.Sin((degreeOffset + degree) * ((float)Math.PI / 180f));
 		sr.sortingOrder = 150 + (int)(num2 * 10f);
 		base.transform.position = new Vector3(-1.405f * num2, Mathf.Lerp(-2.396f, 1.33f, num));
 	}

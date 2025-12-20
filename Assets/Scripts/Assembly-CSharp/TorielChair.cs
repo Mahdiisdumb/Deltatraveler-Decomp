@@ -11,12 +11,12 @@ public class TorielChair : Interactable
 
 	private void Awake()
 	{
-		if ((int)Util.GameManager().GetFlag(53) == 1 && (int)Util.GameManager().GetFlag(56) == 0)
+		if ((int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(53) == 1 && (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(56) == 0)
 		{
 			torielInChair = true;
 			GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("overworld/toriel_home/spr_chairiel_withtoriel");
 		}
-		torielDialogue = (int)Util.GameManager().GetFlag(55);
+		torielDialogue = (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(55);
 	}
 
 	public override void DoInteract()
@@ -62,10 +62,11 @@ public class TorielChair : Interactable
 					component.CreateBox(new string[2] { "* Kris,^10 your mother is\n  worried about you.", "* You should probably\n  start on your way\n  soon." }, new string[2] { "snd_txttor", "snd_txttor" }, new int[14], new string[2] { "tori_worry", "tori_worry" });
 				}
 			}
+			component.gameObject.AddComponent<TorielGlasses>();
 			if (torielDialogue < 2)
 			{
 				torielDialogue++;
-				Util.GameManager().SetFlag(55, torielDialogue);
+				UnityEngine.Object.FindObjectOfType<GameManager>().SetFlag(55, torielDialogue);
 			}
 		}
 		else
@@ -84,7 +85,7 @@ public class TorielChair : Interactable
 			}
 			talkedToBefore = true;
 		}
-		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+		UnityEngine.Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 	}
 
 	public override int GetEventData()

@@ -29,7 +29,7 @@ public class CultistWallGenerator : MonoBehaviour
 					if (pixel == Color.white)
 					{
 						Transform obj = Object.Instantiate(base.transform.Find("CultistWall"), position, Quaternion.identity, GameObject.Find("CultistWalls").transform);
-						obj.GetComponent<Animator>().SetBool("isMoving", value: true);
+						obj.GetComponent<Animator>().SetBool("isMoving", true);
 						obj.GetComponent<Animator>().SetFloat("speed", Random.Range(0.25f, 0.75f));
 					}
 					else
@@ -61,7 +61,7 @@ public class CultistWallGenerator : MonoBehaviour
 		cultistNPCs = Object.Instantiate(Resources.Load<GameObject>("overworld/npcs/hhvillage/CultistNPCs"), GameObject.Find("NPC").transform);
 		if ((int)Util.GameManager().GetFlag(13) >= 5 && (int)Util.GameManager().GetFlag(109) == 1)
 		{
-			CreateDeadEnemies(age: true);
+			CreateDeadEnemies(true);
 		}
 	}
 

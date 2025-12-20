@@ -78,14 +78,14 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 				{
 					if (frames == 330)
 					{
-						kris.SetSelfAnimControl(setAnimControl: false);
-						susie.SetSelfAnimControl(setAnimControl: false);
-						noelle.SetSelfAnimControl(setAnimControl: false);
+						kris.SetSelfAnimControl(false);
+						susie.SetSelfAnimControl(false);
+						noelle.SetSelfAnimControl(false);
 						if ((bool)mole)
 						{
-							mole.SetSelfAnimControl(setAnimControl: false);
+							mole.SetSelfAnimControl(false);
 						}
-						cam.SetFollowPlayer(follow: false);
+						cam.SetFollowPlayer(false);
 						gm.HealAll(99);
 						if (injuredVariant)
 						{
@@ -135,11 +135,11 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 				kris.GetComponent<Animator>().SetFloat("speed", 1f);
 				susie.GetComponent<Animator>().SetFloat("speed", 1f);
 				noelle.GetComponent<Animator>().SetFloat("speed", 1f);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
+				noelle.GetComponent<Animator>().SetBool("isMoving", true);
 				if ((bool)mole)
 				{
-					mole.GetComponent<Animator>().SetBool("isMoving", value: true);
+					mole.GetComponent<Animator>().SetBool("isMoving", true);
 				}
 				noelleToPos = kris.transform.position + new Vector3(0.97f, -0.58f);
 				moleToPos = kris.transform.position + new Vector3(0.75f, 0.77f);
@@ -170,7 +170,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 				susie.ChangeDirection(look);
 			}
 			if (noelle.transform.position != noelleToPos)
@@ -180,7 +180,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", false);
 				noelle.ChangeDirection(look);
 			}
 			if (cam.transform.position != camToPos)
@@ -197,7 +197,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 				}
 				else
 				{
-					mole.GetComponent<Animator>().SetBool("isMoving", value: false);
+					mole.GetComponent<Animator>().SetBool("isMoving", false);
 					mole.ChangeDirection(Vector2.down);
 				}
 			}
@@ -222,9 +222,9 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", value: true);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+				kris.GetComponent<Animator>().SetBool("isMoving", true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
+				noelle.GetComponent<Animator>().SetBool("isMoving", true);
 				kris.ChangeDirection(Vector2.right);
 				susie.ChangeDirection(Vector2.right);
 				noelle.ChangeDirection(Vector2.right);
@@ -237,7 +237,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			}
 			else
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", false);
 				kris.ChangeDirection(Vector2.up);
 			}
 			if (susie.transform.position != new Vector3(14.07f, -4.02f))
@@ -247,7 +247,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 				susie.ChangeDirection(Vector2.up);
 			}
 			if (noelle.transform.position != new Vector3(12.67f, -4.21f))
@@ -257,7 +257,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", false);
 				noelle.ChangeDirection(Vector2.up);
 			}
 			if (cam.transform.position != new Vector3(12.62f, -3.08f, -10f))
@@ -270,7 +270,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 				if (frames == 15)
 				{
 					flag2 = false;
-					mole.GetComponent<Animator>().SetBool("isMoving", value: true);
+					mole.GetComponent<Animator>().SetBool("isMoving", true);
 					mole.ChangeDirection(Vector2.right);
 				}
 				else if (frames > 15)
@@ -282,7 +282,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 					}
 					else
 					{
-						mole.GetComponent<Animator>().SetBool("isMoving", value: false);
+						mole.GetComponent<Animator>().SetBool("isMoving", false);
 						mole.ChangeDirection(Vector2.up);
 					}
 				}
@@ -312,11 +312,11 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				gm.SetPartyMember(3, -1);
+				gm.SetMiniPartyMember(0);
 				paula.SetFloat("dirX", -1f);
 				PlaySFX("sounds/snd_jump");
 			}
-			paula.transform.position = new Vector3(Mathf.Lerp(11.343f, 10.325f, (float)frames / 10f), -4.325f + 0.416f * Mathf.Cos((float)(frames * 9) * (MathF.PI / 180f)));
+			paula.transform.position = new Vector3(Mathf.Lerp(11.343f, 10.325f, (float)frames / 10f), -4.325f + 0.416f * Mathf.Cos((float)(frames * 9) * ((float)Math.PI / 180f)));
 			if (frames == 10)
 			{
 				kris.ChangeDirection(Vector2.left);
@@ -371,9 +371,9 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 				if (frames == 1)
 				{
 					gm.StopMusic(30f);
-					kris.GetComponent<Animator>().SetBool("isMoving", value: true);
-					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
-					noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+					kris.GetComponent<Animator>().SetBool("isMoving", true);
+					susie.GetComponent<Animator>().SetBool("isMoving", true);
+					noelle.GetComponent<Animator>().SetBool("isMoving", true);
 				}
 				if (!oblitBoss)
 				{
@@ -422,7 +422,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 						if ((bool)mole)
 						{
 							mole.ChangeDirection(Vector2.down);
-							mole.GetComponent<Animator>().SetBool("isMoving", value: true);
+							mole.GetComponent<Animator>().SetBool("isMoving", true);
 							mole.GetComponent<Animator>().SetFloat("speed", 2f);
 						}
 					}
@@ -441,7 +441,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 					float num2 = (float)(frames - 40) / 35f;
 					if (num2 <= 1f)
 					{
-						num2 = Mathf.Sin(num2 * MathF.PI * 0.5f);
+						num2 = Mathf.Sin(num2 * (float)Math.PI * 0.5f);
 						kris.transform.position = Vector3.Lerp(krisToPos, new Vector3(8.31f, -5.11f), num2);
 						susie.transform.position = Vector3.Lerp(susieToPos, new Vector3(7.54f, -6.96f), num2);
 						noelle.transform.position = Vector3.Lerp(noelleToPos, new Vector3(10.73f, -7.46f), num2);
@@ -484,7 +484,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 							ness.GetComponent<SpriteRenderer>().sortingOrder = 102;
 							paula.GetComponent<SpriteRenderer>().sortingOrder = 102;
 						}
-						flash.transform.localScale = new Vector3(Mathf.Lerp(1f, 640f, (float)(frames - 70) / 4f), Mathf.Lerp(1f, 440f + Mathf.Sin((float)(frames * 36) * (MathF.PI / 180f)) * 20f, (float)(frames - 70) / 8f));
+						flash.transform.localScale = new Vector3(Mathf.Lerp(1f, 640f, (float)(frames - 70) / 4f), Mathf.Lerp(1f, 440f + Mathf.Sin((float)(frames * 36) * ((float)Math.PI / 180f)) * 20f, (float)(frames - 70) / 8f));
 						Color color = Color.Lerp(Color.black, Color.white, (float)(frames - 100) / 45f);
 						kris.GetComponent<SpriteRenderer>().color = color;
 						susie.GetComponent<SpriteRenderer>().color = color;
@@ -496,7 +496,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 						float num3 = (float)(frames - 70) / 35f;
 						if (num3 <= 1f)
 						{
-							num3 = Mathf.Sin(num3 * MathF.PI * 0.5f);
+							num3 = Mathf.Sin(num3 * (float)Math.PI * 0.5f);
 							kris.transform.position = Vector3.Lerp(krisToPos, krisToPos - new Vector3(0f, 2f), num3);
 							susie.transform.position = Vector3.Lerp(susieToPos, susieToPos - new Vector3(0f, 2f), num3);
 							noelle.transform.position = Vector3.Lerp(noelleToPos, noelleToPos - new Vector3(0f, 2f), num3);
@@ -547,7 +547,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 						mole.transform.position = new Vector3(8.45f, -10.97f);
 						mole.ChangeDirection(Vector2.up);
 						mole.GetComponent<Animator>().SetFloat("speed", 1f);
-						mole.GetComponent<Animator>().SetBool("isMoving", value: false);
+						mole.GetComponent<Animator>().SetBool("isMoving", false);
 					}
 					if (!injuredVariant)
 					{
@@ -555,7 +555,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 						paula.GetComponent<SpriteRenderer>().flipX = false;
 						paula.SetFloat("dirX", -1f);
 						paula.SetFloat("speed", 2f);
-						paula.SetBool("isMoving", value: true);
+						paula.SetBool("isMoving", true);
 					}
 				}
 				if (frames == 15)
@@ -583,7 +583,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 					else if (noelle.GetComponent<Animator>().enabled)
 					{
 						noelle.GetComponent<Animator>().SetFloat("speed", 1f);
-						noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+						noelle.GetComponent<Animator>().SetBool("isMoving", false);
 						noelle.DisableAnimator();
 						noelle.SetSprite("spr_no_right_shocked_0");
 					}
@@ -608,7 +608,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 					else if (!paulaDoFunnyAnim)
 					{
 						paula.SetFloat("dirX", 1f);
-						paula.SetBool("isMoving", value: false);
+						paula.SetBool("isMoving", false);
 						paula.Play("DrawWeapon", 0, 0f);
 						paulaDoFunnyAnim = true;
 					}
@@ -659,31 +659,51 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			{
 				if (!injuredVariant)
 				{
-					gm.SetPartyMember(3, 3);
+					gm.SetMiniPartyMember(1);
 				}
 				PlaySFX("sounds/snd_weaponpull");
 				susie.EnableAnimator();
 				susie.GetComponent<Animator>().Play("AttackStick", 0, 0f);
 				string text = "Attack";
-				text = gm.GetWeapon(0) switch
+				switch (gm.GetWeapon(0))
 				{
-					8 => text + "Ring", 
-					13 => text + "ToyKnife", 
-					21 => text + "Bat", 
-					31 => text + "AlBat", 
-					_ => text + "Pencil", 
-				};
+				case 8:
+					text += "Ring";
+					break;
+				case 13:
+					text += "ToyKnife";
+					break;
+				case 21:
+					text += "Bat";
+					break;
+				case 31:
+					text += "AlBat";
+					break;
+				default:
+					text += "Pencil";
+					break;
+				}
 				kris.EnableAnimator();
 				kris.GetComponent<Animator>().Play(text, 0, 0f);
 				string text2 = "Attack";
-				text2 = gm.GetWeapon(2) switch
+				switch (gm.GetWeapon(2))
 				{
-					8 => text2 + "Ring", 
-					13 => text2 + "ToyKnife", 
-					21 => text2 + "Bat", 
-					31 => text2 + "AlBat", 
-					_ => text2 + "Pencil", 
-				};
+				case 8:
+					text2 += "Ring";
+					break;
+				case 13:
+					text2 += "ToyKnife";
+					break;
+				case 21:
+					text2 += "Bat";
+					break;
+				case 31:
+					text2 += "AlBat";
+					break;
+				default:
+					text2 += "Pencil";
+					break;
+				}
 				noelle.EnableAnimator();
 				noelle.GetComponent<Animator>().Play(text2, 0, 0f);
 			}
@@ -709,7 +729,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 					mole.GetComponent<SpriteRenderer>().enabled = false;
 				}
 				kris.InitiateBattle(52);
-				EndCutscene(enablePlayerMovement: false);
+				EndCutscene(false);
 			}
 		}
 		if (state == 8)
@@ -734,8 +754,8 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 				{
 					PlaySFX("sounds/snd_wing");
 					kris.EnableAnimator();
-					kris.GetComponent<Animator>().SetBool("isMoving", value: false);
-					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+					kris.GetComponent<Animator>().SetBool("isMoving", false);
+					susie.GetComponent<Animator>().SetBool("isMoving", false);
 					susie.EnableAnimator();
 				}
 				else if (txt.GetCurrentStringNum() == 15 && susie.GetComponent<Animator>().enabled)
@@ -746,7 +766,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 				else if (txt.GetCurrentStringNum() == 16 && !susie.GetComponent<Animator>().enabled)
 				{
 					noelle.EnableAnimator();
-					noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+					noelle.GetComponent<Animator>().SetBool("isMoving", false);
 					noelle.ChangeDirection(Vector2.left);
 					susie.EnableAnimator();
 					susie.ChangeDirection(Vector2.left);
@@ -762,8 +782,8 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			else
 			{
 				kris.InitiateBattle(53);
-				Util.FindObjectOfType<NessPaulaSouls>().Activate();
-				EndCutscene(enablePlayerMovement: false);
+				UnityEngine.Object.FindObjectOfType<NessPaulaSouls>().Activate();
+				EndCutscene(false);
 			}
 		}
 		if (state == 9)
@@ -778,13 +798,13 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 				}
 				else
 				{
-					kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+					kris.GetComponent<Animator>().SetBool("isMoving", true);
 				}
 				kris.ChangeDirection(Vector2.right);
 				susie.ChangeDirection(Vector2.right);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
 				noelle.ChangeDirection(Vector2.right);
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+				noelle.GetComponent<Animator>().SetBool("isMoving", true);
 				camToPos = cam.transform.position;
 				susieToPos = susie.transform.position;
 				krisToPos = kris.transform.position;
@@ -792,7 +812,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 				if ((bool)mole)
 				{
 					mole.ChangeDirection(Vector2.right);
-					mole.GetComponent<Animator>().SetBool("isMoving", value: true);
+					mole.GetComponent<Animator>().SetBool("isMoving", true);
 					moleToPos = mole.transform.position;
 				}
 			}
@@ -804,7 +824,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			{
 				if (frames == 20 && injuredVariant)
 				{
-					kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+					kris.GetComponent<Animator>().SetBool("isMoving", true);
 					kris.GetComponent<Animator>().Play("walk");
 				}
 				cam.transform.position = Vector3.Lerp(camToPos, new Vector3(10.29f, -6.27f, -10f), (float)frames / 60f);
@@ -826,7 +846,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 					susie.SetSprite("spr_su_surprise_right");
 					noelle.DisableAnimator();
 					noelle.SetSprite("spr_no_surprise");
-					kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+					kris.GetComponent<Animator>().SetBool("isMoving", false);
 					if ((bool)mole)
 					{
 						mole.ChangeDirection(Vector2.down);
@@ -849,7 +869,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 				if (frames == 70 && (bool)mole)
 				{
 					mole.ChangeDirection(Vector2.up);
-					mole.GetComponent<Animator>().SetBool("isMoving", value: false);
+					mole.GetComponent<Animator>().SetBool("isMoving", false);
 				}
 				if (frames == 90)
 				{
@@ -858,7 +878,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 						mole.GetComponent<SpriteRenderer>().enabled = false;
 					}
 					kris.InitiateBattle(52);
-					EndCutscene(enablePlayerMovement: false);
+					EndCutscene(false);
 				}
 			}
 		}
@@ -872,9 +892,9 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			kris.GetComponent<Animator>().SetFloat("speed", 1.5f);
 			kris.ChangeDirection(Vector2.right);
 			susie.ChangeDirection(Vector2.right);
-			susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+			susie.GetComponent<Animator>().SetBool("isMoving", true);
 			noelle.ChangeDirection(Vector2.right);
-			noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+			noelle.GetComponent<Animator>().SetBool("isMoving", true);
 			camToPos = cam.transform.position;
 			susieToPos = susie.transform.position;
 			krisToPos = kris.transform.position;
@@ -884,7 +904,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 		{
 			if (frames == 20 && injuredVariant)
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+				kris.GetComponent<Animator>().SetBool("isMoving", true);
 				kris.GetComponent<Animator>().Play("walk");
 			}
 			cam.transform.position = Vector3.Lerp(camToPos, new Vector3(12.62f, -3.08f, -10f), (float)frames / 70f);
@@ -923,7 +943,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 				ness.GetComponent<SpriteRenderer>().sortingOrder = 102;
 				paula.GetComponent<SpriteRenderer>().sortingOrder = 102;
 			}
-			flash.transform.localScale = new Vector3(Mathf.Lerp(1f, 640f, (float)(num4 - 70) / 4f), Mathf.Lerp(1f, 440f + Mathf.Sin((float)(num4 * 36) * (MathF.PI / 180f)) * 20f, (float)(num4 - 70) / 8f));
+			flash.transform.localScale = new Vector3(Mathf.Lerp(1f, 640f, (float)(num4 - 70) / 4f), Mathf.Lerp(1f, 440f + Mathf.Sin((float)(num4 * 36) * ((float)Math.PI / 180f)) * 20f, (float)(num4 - 70) / 8f));
 			Color color2 = Color.Lerp(Color.black, Color.white, (float)(num4 - 100) / 45f);
 			kris.GetComponent<SpriteRenderer>().color = color2;
 			susie.GetComponent<SpriteRenderer>().color = color2;
@@ -935,7 +955,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			float num5 = (float)(num4 - 70) / 35f;
 			if (num5 <= 1f)
 			{
-				num5 = Mathf.Sin(num5 * MathF.PI * 0.5f);
+				num5 = Mathf.Sin(num5 * (float)Math.PI * 0.5f);
 				kris.transform.position = Vector3.Lerp(krisToPos, krisToPos - new Vector3(0f, 1.1666666f), num5);
 				susie.transform.position = Vector3.Lerp(susieToPos, susieToPos - new Vector3(0f, 1.1666666f), num5);
 				noelle.transform.position = Vector3.Lerp(noelleToPos, noelleToPos - new Vector3(0f, 1.1666666f), num5);
@@ -944,8 +964,8 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 			{
 				UnityEngine.Object.Destroy(flash.gameObject);
 				kris.InitiateBattle(53);
-				Util.FindObjectOfType<NessPaulaSouls>().Activate();
-				EndCutscene(enablePlayerMovement: false);
+				UnityEngine.Object.FindObjectOfType<NessPaulaSouls>().Activate();
+				EndCutscene(false);
 			}
 		}
 	}
@@ -964,9 +984,9 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 	{
 		base.StartCutscene(par);
 		gm.SetCheckpoint(71);
-		if ((bool)Util.FindObjectOfType<MoleFriend>())
+		if ((bool)UnityEngine.Object.FindObjectOfType<MoleFriend>())
 		{
-			mole = Util.FindObjectOfType<MoleFriend>();
+			mole = UnityEngine.Object.FindObjectOfType<MoleFriend>();
 		}
 		ness = GameObject.Find("Ness").GetComponent<Animator>();
 		paula = GameObject.Find("Paula").GetComponent<Animator>();
@@ -998,7 +1018,7 @@ public class LilliputStepsPrebossCutscene : CutsceneBase
 		}
 		else
 		{
-			gm.SetPartyMember(3, -1);
+			gm.SetMiniPartyMember(0);
 		}
 		if (!fastVersion)
 		{

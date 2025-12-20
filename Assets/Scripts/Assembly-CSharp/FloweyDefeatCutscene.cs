@@ -30,7 +30,7 @@ public class FloweyDefeatCutscene : CutsceneBase
 		}
 		if (state == 1 && !txt)
 		{
-			cam.SetFollowPlayer(follow: true);
+			cam.SetFollowPlayer(true);
 			kris.ChangeDirection(Vector2.down);
 			if (endState == 2 && (int)gm.GetFlag(13) == 3)
 			{
@@ -51,8 +51,8 @@ public class FloweyDefeatCutscene : CutsceneBase
 		}
 		kris.GetComponent<Animator>().Play("idle");
 		susie.GetComponent<Animator>().Play("idle");
-		kris.SetSelfAnimControl(setAnimControl: true);
-		susie.SetSelfAnimControl(setAnimControl: true);
+		kris.SetSelfAnimControl(true);
+		susie.SetSelfAnimControl(true);
 		kris.ChangeDirection(Vector2.up);
 		susie.ChangeDirection(Vector2.up);
 	}

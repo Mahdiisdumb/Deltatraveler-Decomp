@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.DualShock;
-using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Experimental.Input;
+using UnityEngine.Experimental.Input.LowLevel;
 
 public class UTInput : MonoBehaviour
 {
-	private static bool initialized = false;
-
 	private static float xAxis = 0f;
 
 	private static float yAxis = 0f;
@@ -47,17 +44,14 @@ public class UTInput : MonoBehaviour
 
 	private static bool useInputPriority = true;
 
-	private Color lightbarColor = Color.black;
-
 	private void Awake()
 	{
-		initialized = true;
-		if (PersistentSAVE.GetInt("new-input", 0) == 0)
+		if (PlayerPrefs.GetInt("NewInput") == 0)
 		{
 			FirstTimeSetupNewInput();
-			PersistentSAVE.SetInt("new-input", 1);
+			PlayerPrefs.SetInt("NewInput", 1);
 		}
-		LoadInputsFromConfig(Util.GameManager().config);
+		LoadInputsFromConfig(UnityEngine.Object.FindObjectOfType<GameManager>().config);
 	}
 
 	private void FixedUpdate()
@@ -78,34 +72,11 @@ public class UTInput : MonoBehaviour
 			string[] array = inputNames;
 			foreach (string key in array)
 			{
-				if (!Gamepad.current[buttons[key]].wasPressedThisFrame)
+				if (Gamepad.current[buttons[key]].wasPressedThisFrame)
 				{
-					continue;
-				}
-				joystickIsActive = true;
-				touchpadIsActive = false;
-				if (!Gamepad.current.GetType().ToString().EndsWith("SwitchProControllerHID"))
-				{
+					joystickIsActive = true;
+					touchpadIsActive = false;
 					break;
-				}
-				Gamepad current = Gamepad.current;
-				foreach (Gamepad item in Gamepad.all)
-				{
-					if (item.GetType().ToString().Contains("XInput") && Math.Abs(item.lastUpdateTime - current.lastUpdateTime) < 0.1)
-					{
-						Debug.Log($"Switch Pro controller detected and a copy of XInput was active at almost the same time. Disabling XInput device. `{current}`; `{item}`");
-						InputSystem.DisableDevice(item);
-					}
-				}
-				break;
-			}
-			if (Gamepad.current is DualShockGamepad dualShockGamepad)
-			{
-				Color lightBarColor = SOUL.GetLightBarColor();
-				if (lightBarColor != lightbarColor)
-				{
-					lightbarColor = lightBarColor;
-					dualShockGamepad.SetLightBarColor(lightbarColor);
 				}
 			}
 		}
@@ -177,7 +148,7 @@ public class UTInput : MonoBehaviour
 
 	public static float GetAxisRaw(string name)
 	{
-		if (Application.isFocused && initialized)
+		if (Application.isFocused)
 		{
 			if (useInputPriority)
 			{
@@ -252,7 +223,7 @@ public class UTInput : MonoBehaviour
 
 	public static bool GetButtonDown(string button)
 	{
-		if (!initialized || !Application.isFocused)
+		if (!Application.isFocused)
 		{
 			return false;
 		}
@@ -293,7 +264,7 @@ public class UTInput : MonoBehaviour
 
 	public static bool GetButtonUp(string button)
 	{
-		if (!initialized || !Application.isFocused)
+		if (!Application.isFocused)
 		{
 			return false;
 		}
@@ -334,7 +305,7 @@ public class UTInput : MonoBehaviour
 
 	public static bool GetButton(string button)
 	{
-		if (!initialized || !Application.isFocused)
+		if (!Application.isFocused)
 		{
 			return false;
 		}
@@ -389,13 +360,17 @@ public class UTInput : MonoBehaviour
 		}
 		if (touchpadIsActive)
 		{
-			return input switch
+			switch (input)
 			{
-				"Confirm" => "Z", 
-				"Cancel" => "X", 
-				"Menu" => "C", 
-				_ => input, 
-			};
+			case "Confirm":
+				return "Z";
+			case "Cancel":
+				return "X";
+			case "Menu":
+				return "C";
+			default:
+				return input;
+			}
 		}
 		if (keys.ContainsKey(input))
 		{
@@ -428,14 +403,14 @@ public class UTInput : MonoBehaviour
 		}
 		if (buttons.ContainsKey(input))
 		{
-			return FixButtonName(buttons[input].ToString());
+			return buttons[input].ToString();
 		}
 		return "INVALID INPUT";
 	}
 
 	public static void BindKey(string input, Key key)
 	{
-		Config config = Util.GameManager().config;
+		Config config = UnityEngine.Object.FindObjectOfType<GameManager>().config;
 		Key key2 = Key.None;
 		string[] array = inputNames;
 		foreach (string text in array)
@@ -462,7 +437,7 @@ public class UTInput : MonoBehaviour
 
 	public static void BindButton(string input, GamepadButton buttonInput)
 	{
-		Config config = Util.GameManager().config;
+		Config config = UnityEngine.Object.FindObjectOfType<GameManager>().config;
 		string[] array = inputNames;
 		foreach (string text in array)
 		{
@@ -488,7 +463,7 @@ public class UTInput : MonoBehaviour
 
 	public static void ResetKeys()
 	{
-		Config config = Util.GameManager().config;
+		Config config = UnityEngine.Object.FindObjectOfType<GameManager>().config;
 		keys = new Dictionary<string, Key>
 		{
 			{
@@ -587,9 +562,9 @@ public class UTInput : MonoBehaviour
 			}
 			catch
 			{
-				keys[inputNames[i]] = (Key)Enum.Parse(typeof(Key), defaultKeyNames[i], ignoreCase: true);
+				keys[inputNames[i]] = (Key)Enum.Parse(typeof(Key), defaultKeyNames[i], true);
 			}
-			int value2 = c.GetInt("Gamepad Controls", inputNames[i], (int)Enum.Parse(typeof(GamepadButton), defaultButtonNames[i]), writeIfNotExist: true);
+			int value2 = c.GetInt("Gamepad Controls", inputNames[i], (int)Enum.Parse(typeof(GamepadButton), defaultButtonNames[i]), true);
 			buttons[inputNames[i]] = (GamepadButton)value2;
 		}
 		c.Write();
@@ -616,47 +591,30 @@ public class UTInput : MonoBehaviour
 
 	private static Key[] GetAltKeys(string inputName)
 	{
-		return inputName switch
+		switch (inputName)
 		{
-			"Confirm" => new Key[1] { Key.Enter }, 
-			"Cancel" => new Key[2]
+		case "Confirm":
+			return new Key[1] { Key.Enter };
+		case "Cancel":
+			return new Key[2]
 			{
 				Key.LeftShift,
 				Key.RightShift
-			}, 
-			"Menu" => new Key[2]
+			};
+		case "Menu":
+			return new Key[2]
 			{
 				Key.LeftCtrl,
 				Key.RightCtrl
-			}, 
-			_ => new Key[1], 
-		};
-	}
-
-	public static string FixButtonName(string button)
-	{
-		switch (button)
-		{
-		case "A":
-		case "Cross":
-			return "South";
-		case "B":
-		case "Circle":
-			return "East";
-		case "X":
-		case "Square":
-			return "West";
-		case "Y":
-		case "Triangle":
-			return "North";
+			};
 		default:
-			return button;
+			return new Key[1];
 		}
 	}
 
 	private static void FirstTimeSetupNewInput()
 	{
-		Config config = Util.GameManager().config;
+		Config config = UnityEngine.Object.FindObjectOfType<GameManager>().config;
 		List<string> list = new List<string>();
 		List<string> list2 = new List<string>();
 		for (int i = 0; i < inputNames.Length; i++)
@@ -789,18 +747,7 @@ public class UTInput : MonoBehaviour
 		for (int i = 0; i < array.Length; i++)
 		{
 			GamepadButton gamepadButton = array[i];
-			string[] obj = new string[5]
-			{
-				text,
-				gamepadButton.ToString(),
-				" ",
-				null,
-				null
-			};
-			int num = (int)gamepadButton;
-			obj[3] = num.ToString();
-			obj[4] = "\n";
-			text = string.Concat(obj);
+			text = text + gamepadButton.ToString() + " " + (int)gamepadButton + "\n";
 		}
 		MonoBehaviour.print(text);
 	}

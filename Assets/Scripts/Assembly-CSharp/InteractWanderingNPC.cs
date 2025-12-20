@@ -88,7 +88,7 @@ public class InteractWanderingNPC : InteractTextBox
 
 	private void LateUpdate()
 	{
-		GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+		GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 	}
 
 	public override void DoInteract()
@@ -99,15 +99,15 @@ public class InteractWanderingNPC : InteractTextBox
 			isWalking = false;
 			GetComponent<Animator>().SetBool("isMoving", isWalking);
 			wanderDisabled = true;
-			GetComponent<Animator>().SetFloat("dirX", Util.OverworldPlayer().transform.position.x - base.transform.position.x);
-			GetComponent<Animator>().SetFloat("dirY", Util.OverworldPlayer().transform.position.y - base.transform.position.y);
+			GetComponent<Animator>().SetFloat("dirX", Object.FindObjectOfType<OverworldPlayer>().transform.position.x - base.transform.position.x);
+			GetComponent<Animator>().SetFloat("dirY", Object.FindObjectOfType<OverworldPlayer>().transform.position.y - base.transform.position.y);
 		}
 		base.DoInteract();
 	}
 
 	public void StopMoving()
 	{
-		GetComponent<Animator>().SetBool("isMoving", value: false);
+		GetComponent<Animator>().SetBool("isMoving", false);
 		forceDisableWander = true;
 	}
 

@@ -52,10 +52,10 @@ public class NessDefeatCutscene : CutsceneBase
 			else
 			{
 				kris.ChangeDirection(Vector2.down);
-				kris.SetSelfAnimControl(setAnimControl: true);
-				susie.SetSelfAnimControl(setAnimControl: true);
-				noelle.SetSelfAnimControl(setAnimControl: true);
-				cam.SetFollowPlayer(follow: true);
+				kris.SetSelfAnimControl(true);
+				susie.SetSelfAnimControl(true);
+				noelle.SetSelfAnimControl(true);
+				cam.SetFollowPlayer(true);
 				EndCutscene();
 			}
 		}
@@ -81,8 +81,8 @@ public class NessDefeatCutscene : CutsceneBase
 				{
 					ness.SetFloat("dirX", -1f);
 					paula.SetFloat("dirX", -1f);
-					paula.SetBool("isMoving", value: true);
-					ness.SetBool("isMoving", value: true);
+					paula.SetBool("isMoving", true);
+					ness.SetBool("isMoving", true);
 				}
 				if (frames == 40)
 				{
@@ -124,9 +124,9 @@ public class NessDefeatCutscene : CutsceneBase
 					kris.GetComponent<Animator>().Play("RunUp", 0, 0f);
 					susie.GetComponent<Animator>().SetFloat("speed", 0f);
 					susie.GetComponent<Animator>().Play("RunUp", 0, 0f);
-					kris.transform.position = Vector3.Lerp(new Vector3(11.34f, -5.3866663f), new Vector3(11.34f, -6.2466664f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
-					susie.transform.position = Vector3.Lerp(new Vector3(14.07f, -5.1866665f), new Vector3(14.07f, -6.0466666f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
-					noelle.transform.position = Vector3.Lerp(new Vector3(12.67f, -5.376667f), new Vector3(12.67f, -6.236667f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
+					kris.transform.position = Vector3.Lerp(new Vector3(11.34f, -5.3866663f), new Vector3(11.34f, -6.2466664f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
+					susie.transform.position = Vector3.Lerp(new Vector3(14.07f, -5.1866665f), new Vector3(14.07f, -6.0466666f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
+					noelle.transform.position = Vector3.Lerp(new Vector3(12.67f, -5.376667f), new Vector3(12.67f, -6.236667f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
 				}
 				else if (frames >= 65 && frames <= 75)
 				{
@@ -156,7 +156,7 @@ public class NessDefeatCutscene : CutsceneBase
 			if (frames <= 15)
 			{
 				float num = (float)frames / 15f;
-				num = Mathf.Sin(num * MathF.PI * 0.5f);
+				num = Mathf.Sin(num * (float)Math.PI * 0.5f);
 				kris.transform.position = Vector3.Lerp(new Vector3(11.92f, -2.82f), new Vector3(10.92f, -2.1499999f), num);
 				susie.transform.position = Vector3.Lerp(new Vector3(13.35f, -2.6f), new Vector3(14.35f, -1.9299998f), num);
 				noelle.transform.position = Vector3.Lerp(new Vector3(12.64f, -2.9f), new Vector3(12.64f, -2.23f), num);
@@ -220,7 +220,7 @@ public class NessDefeatCutscene : CutsceneBase
 			}
 			if (frames == 120)
 			{
-				Util.GameManager().ForceLoadArea(74);
+				UnityEngine.Object.FindObjectOfType<GameManager>().ForceLoadArea(74);
 			}
 		}
 		if ((state == 2 && !txt) || state >= 3)
@@ -283,7 +283,7 @@ public class NessDefeatCutscene : CutsceneBase
 		if (!spare)
 		{
 			gm.SetFlag(84, 6);
-			WeirdChecker.AdvanceTo(gm, 7, sound: false);
+			WeirdChecker.AdvanceTo(gm, 7, false);
 			gm.SetFlag(2, "depressedx");
 			gm.SetFlag(0, "g_1");
 			GameObject obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("overworld/npcs/enemies/npc_replace/DeadEBHeroes"));
@@ -295,7 +295,7 @@ public class NessDefeatCutscene : CutsceneBase
 		{
 			WeirdChecker.Abort(gm);
 		}
-		Util.FindObjectOfType<LoadingZone>().SetForceActivationTrigger(forceActivationTrigger: true);
+		UnityEngine.Object.FindObjectOfType<LoadingZone>().SetForceActivationTrigger(true);
 		gm.StopMusic();
 		paula = GameObject.Find("Paula").GetComponent<Animator>();
 		ness = GameObject.Find("Ness").GetComponent<Animator>();
@@ -315,26 +315,26 @@ public class NessDefeatCutscene : CutsceneBase
 		}
 		GameObject.Find("NatureSounds").GetComponent<AudioSource>().Play();
 		kris.transform.position = new Vector3(11.34f, -5.3866663f);
-		kris.SetSelfAnimControl(setAnimControl: false);
-		kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+		kris.SetSelfAnimControl(false);
+		kris.GetComponent<Animator>().SetBool("isMoving", false);
 		kris.GetComponent<Animator>().Play("idle");
 		kris.ChangeDirection(Vector2.up);
 		kris.EnableAnimator();
 		susie.UseUnhappySprites();
 		susie.EnableAnimator();
 		susie.transform.position = new Vector3(14.07f, -5.1866665f);
-		susie.SetSelfAnimControl(setAnimControl: false);
-		susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+		susie.SetSelfAnimControl(false);
+		susie.GetComponent<Animator>().SetBool("isMoving", false);
 		susie.GetComponent<Animator>().Play("idle");
 		susie.ChangeDirection(Vector2.up);
 		noelle.transform.position = new Vector3(12.67f, -5.376667f);
 		noelle.EnableAnimator();
 		noelle.UseUnhappySprites();
-		noelle.SetSelfAnimControl(setAnimControl: false);
-		noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+		noelle.SetSelfAnimControl(false);
+		noelle.GetComponent<Animator>().SetBool("isMoving", false);
 		noelle.GetComponent<Animator>().Play("idle");
 		noelle.ChangeDirection(Vector2.up);
-		cam.SetFollowPlayer(follow: false);
+		cam.SetFollowPlayer(false);
 		cam.transform.position = new Vector3(12.62f, -3.08f, -10f);
 		greyDoor = GameObject.Find("GreyDoor").GetComponent<SpriteRenderer>();
 		krisBW = GameObject.Find("KrisBW").GetComponent<SpriteRenderer>();

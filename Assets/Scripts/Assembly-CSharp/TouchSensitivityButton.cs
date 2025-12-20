@@ -18,20 +18,20 @@ public class TouchSensitivityButton : MonoBehaviour
 			if (holdingFrames >= 20 && holdingFrames % 3 == 0)
 			{
 				UpdateSensitivity();
-				Util.GameManager().PlayGlobalSFX("sounds/snd_menumove");
+				Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_menumove");
 			}
 		}
 	}
 
 	private void UpdateSensitivity()
 	{
-		Util.FindObjectOfType<TouchPad>().ChangeSensitivity(add ? 1 : (-1));
-		Util.FindObjectOfType<TitleScreen>().UpdateSensitivityText();
+		Object.FindObjectOfType<TouchPad>().ChangeSensitivity(add ? 1 : (-1));
+		Object.FindObjectOfType<TitleScreen>().UpdateSensitivityText();
 	}
 
 	public void OnPointerDown()
 	{
-		Util.GameManager().PlayGlobalSFX("sounds/snd_select");
+		Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_select");
 		GetComponent<Image>().color = new Color(1f, 1f, 0f);
 		UpdateSensitivity();
 		holdingDown = true;

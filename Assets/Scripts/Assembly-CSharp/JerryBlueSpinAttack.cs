@@ -47,9 +47,9 @@ public class JerryBlueSpinAttack : AttackBase
 		sword = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/jerry/JerrySword"), new Vector3(10f, 10f), Quaternion.identity, base.transform).transform;
 		sword.GetComponent<SpriteRenderer>().color = new Color32(0, 60, byte.MaxValue, byte.MaxValue);
 		sword.GetComponent<BoxCollider2D>().enabled = false;
-		jerry = Util.FindObjectOfType<Jerry>();
+		jerry = UnityEngine.Object.FindObjectOfType<Jerry>();
 		attackAllTargets = false;
-		soul = Util.FindObjectOfType<SOUL>();
+		soul = UnityEngine.Object.FindObjectOfType<SOUL>();
 		spikeLeft = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/flowey/FloweySpikeInterior"), new Vector3(-10f, 0f), Quaternion.Euler(0f, 0f, -90f), base.transform).transform;
 		spikeRight = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/flowey/FloweySpikeInterior"), new Vector3(10f, 0f), Quaternion.Euler(0f, 0f, 90f), base.transform).transform;
 	}
@@ -66,7 +66,7 @@ public class JerryBlueSpinAttack : AttackBase
 			if (frames >= 5 && frames <= 20)
 			{
 				float num = (float)(frames - 5) / 15f;
-				num = Mathf.Sin(num * MathF.PI * 0.5f);
+				num = Mathf.Sin(num * (float)Math.PI * 0.5f);
 				sword.position = Vector3.Lerp(new Vector3(-1.09f, 2.84f), new Vector3(-1.03f, 4.76f), num);
 				sword.eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(-76f, -112f, num));
 			}
@@ -74,7 +74,7 @@ public class JerryBlueSpinAttack : AttackBase
 			{
 				float num2 = (float)(frames - 20) / 25f;
 				num2 = num2 * num2 * num2 * (num2 * (6f * num2 - 15f) + 10f);
-				sword.position = Vector3.Lerp(new Vector3(-1.03f, 4.76f), new Vector3(4.25f, -2.6f), num2) + new Vector3(0f, Mathf.Sin((float)(frames - 20) * 7.2f * (MathF.PI / 180f)) * ((float)frames / 45f));
+				sword.position = Vector3.Lerp(new Vector3(-1.03f, 4.76f), new Vector3(4.25f, -2.6f), num2) + new Vector3(0f, Mathf.Sin((float)(frames - 20) * 7.2f * ((float)Math.PI / 180f)) * ((float)frames / 45f));
 				sword.eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(-112f, -360f, num2));
 			}
 			if (frames == 1)
@@ -136,14 +136,14 @@ public class JerryBlueSpinAttack : AttackBase
 			}
 			angle += angleAcceleration;
 			swordSpinning.eulerAngles = new Vector3(0f, 0f, angle);
-			float num3 = Mathf.Abs(Mathf.Sin(angle * (MathF.PI / 180f)));
+			float num3 = Mathf.Abs(Mathf.Sin(angle * ((float)Math.PI / 180f)));
 			swordSpinning.localScale = new Vector3(1f + num3 / 5f, 1f - num3 / 2f, 1f);
 			if (frames >= 120)
 			{
 				if (frames % 10 == 0)
 				{
-					float maxInclusive = -3f;
-					float num4 = UnityEngine.Random.Range(-0.3f, maxInclusive);
+					float max = -3f;
+					float num4 = UnityEngine.Random.Range(-0.3f, max);
 					if (safetyRanges.Count > 0 && UnityEngine.Random.Range(0, 10) != 0)
 					{
 						for (int i = 0; i < safetyRanges.Count; i++)
@@ -229,7 +229,7 @@ public class JerryBlueSpinAttack : AttackBase
 			}
 			angle += angleAcceleration;
 			swordSpinning.eulerAngles = new Vector3(0f, 0f, angle);
-			float num5 = Mathf.Lerp(Mathf.Abs(Mathf.Sin(angle * (MathF.PI / 180f))), 0f, (float)frames / 45f);
+			float num5 = Mathf.Lerp(Mathf.Abs(Mathf.Sin(angle * ((float)Math.PI / 180f))), 0f, (float)frames / 45f);
 			swordSpinning.localScale = new Vector3(1f + num5 / 5f, 1f - num5 / 2f, 1f);
 			MonoBehaviour.print(frames);
 			if (frames >= 50)

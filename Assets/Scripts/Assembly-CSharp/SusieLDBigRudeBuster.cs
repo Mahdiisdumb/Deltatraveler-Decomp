@@ -23,7 +23,7 @@ public class SusieLDBigRudeBuster : MonoBehaviour
 			GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, (float)frames / 4f);
 		}
 		Quaternion rotation = base.transform.rotation;
-		base.transform.right = Util.FindObjectOfType<SOUL>().transform.position - base.transform.position;
+		base.transform.right = UnityEngine.Object.FindObjectOfType<SOUL>().transform.position - base.transform.position;
 		Quaternion b = base.transform.rotation;
 		if (base.transform.rotation.eulerAngles.y == -180f)
 		{
@@ -31,13 +31,13 @@ public class SusieLDBigRudeBuster : MonoBehaviour
 		}
 		base.transform.rotation = Quaternion.Lerp(rotation, b, 0.12f);
 		float z = base.transform.rotation.eulerAngles.z;
-		base.transform.position += new Vector3(Mathf.Cos(z * (MathF.PI / 180f)), Mathf.Sin(z * (MathF.PI / 180f))) * velocity / 48f;
+		base.transform.position += new Vector3(Mathf.Cos(z * ((float)Math.PI / 180f)), Mathf.Sin(z * ((float)Math.PI / 180f))) * velocity / 48f;
 		UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/snowdin/SusieLDRudeBusterAfterImage"), base.transform.position, base.transform.rotation, base.transform.parent).GetComponent<SusieLDRudeBusterAfterImage>().Activate(GetComponent<SpriteRenderer>().color.a);
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision && (bool)collision.GetComponentInParent<BulletBoard>())
+		if ((bool)collision.GetComponentInParent<BulletBoard>())
 		{
 			Util.GameManager().PlayGlobalSFX("sounds/snd_rudebuster_hit");
 			for (int i = 0; i < 8; i++)

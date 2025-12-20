@@ -8,9 +8,9 @@ public class OverworldBatty : OverworldBloodEnemyBase
 	protected override void Awake()
 	{
 		sortingOrderOffset = -2;
-		if ((int)Util.GameManager().GetFlag(defeatFlagID) == 1 && (int)Util.GameManager().GetFlag(13) >= 5)
+		if ((int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(defeatFlagID) == 1 && (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(13) >= 5)
 		{
-			CreateDeadEnemy(age: true);
+			CreateDeadEnemy(true);
 		}
 		base.Awake();
 		if ((int)Util.GameManager().GetFlag(13) >= 5)
@@ -51,15 +51,15 @@ public class OverworldBatty : OverworldBloodEnemyBase
 
 	protected override void RunAlgorithm()
 	{
-		speed = Util.OverworldPlayer().GetSpeed() + 2f;
+		speed = UnityEngine.Object.FindObjectOfType<OverworldPlayer>().GetSpeed() + 2f;
 		if (speed < 6f)
 		{
 			speed = 6f;
 		}
 		anim.Play("Fly");
-		Vector3 vector = Vector3.MoveTowards(base.transform.position, Util.OverworldPlayer().transform.position, speed / 48f);
+		Vector3 vector = Vector3.MoveTowards(base.transform.position, UnityEngine.Object.FindObjectOfType<OverworldPlayer>().transform.position, speed / 48f);
 		frames++;
-		warble = Mathf.Sin((float)(frames * 12) * (MathF.PI / 180f)) / 4f;
+		warble = Mathf.Sin((float)(frames * 12) * ((float)Math.PI / 180f)) / 4f;
 		dif = vector - base.transform.position;
 		if (runFromPlayer)
 		{

@@ -4,35 +4,27 @@ using UnityEngine;
 
 public static class Util
 {
-	private static OverworldPlayer player;
-
 	public static GameManager GameManager()
 	{
 		if ((bool)global::GameManager.instance)
 		{
 			return global::GameManager.instance;
 		}
-		return UnityEngine.Object.FindFirstObjectByType<GameManager>();
+		return UnityEngine.Object.FindObjectOfType<GameManager>();
 	}
 
-	public static OverworldPlayer OverworldPlayer()
+	public static PackManager PackManager()
 	{
-		if ((bool)player)
+		if ((bool)global::PackManager.instance)
 		{
-			return player;
+			return global::PackManager.instance;
 		}
-		player = UnityEngine.Object.FindFirstObjectByType<OverworldPlayer>();
-		return player;
+		return UnityEngine.Object.FindObjectOfType<PackManager>();
 	}
 
-	public static T FindObjectOfType<T>() where T : UnityEngine.Object
+	public static MiscellaneousStrings MiscStrings()
 	{
-		return UnityEngine.Object.FindFirstObjectByType<T>();
-	}
-
-	public static T[] FindObjectsOfType<T>() where T : UnityEngine.Object
-	{
-		return UnityEngine.Object.FindObjectsByType<T>(FindObjectsSortMode.None);
+		return UnityEngine.Object.FindObjectOfType<MiscellaneousStrings>();
 	}
 
 	public static string Unescape(string str)
@@ -56,5 +48,15 @@ public static class Util
 			Debug.LogWarning(message);
 			return "* [INVALID_STRING]";
 		}
+	}
+
+	public static string BattleHUDFontFix(string text)
+	{
+		string text2 = "";
+		for (int i = 0; i < text.Length; i++)
+		{
+			text2 = ((char.ToLower(text[i]) != 'u') ? ((char.ToLower(text[i]) != 'v') ? (text2 + text[i]) : (text2 + "u")) : (text2 + "v"));
+		}
+		return text2;
 	}
 }

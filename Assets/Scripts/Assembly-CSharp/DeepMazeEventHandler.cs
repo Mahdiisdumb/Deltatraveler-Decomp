@@ -35,9 +35,9 @@ public class DeepMazeEventHandler : MonoBehaviour
 			if ((int)Util.GameManager().GetFlag(208) == 1)
 			{
 				StartChase();
-				Util.FindObjectOfType<ActionBulletHandler>().enabled = true;
+				Object.FindObjectOfType<ActionBulletHandler>().enabled = true;
 				GameObject.Find("LoadingZone (1)").GetComponent<LoadingZone>().ModifyContents("* DON'T LOOK BACK AND\n  RUN!!!", "snd_txtsus", "su_wtf");
-				GameObject.Find("LoadingZone (1)").GetComponent<LoadingZone>().SetForceActivationTrigger(forceActivationTrigger: true);
+				GameObject.Find("LoadingZone (1)").GetComponent<LoadingZone>().SetForceActivationTrigger(true);
 				boneSpearTriggers = Object.Instantiate(Resources.Load<GameObject>("overworld/bullets/BoneSpearTriggers"), GameObject.Find("OBJ").transform);
 			}
 			else if ((int)Util.GameManager().GetFlag(208) == 2 && (int)Util.GameManager().GetFlag(209) == 0)
@@ -51,7 +51,7 @@ public class DeepMazeEventHandler : MonoBehaviour
 				if (fadeAwayShadows)
 				{
 					darkness.color = new Color(0f, 0f, 0f, 0.75f);
-					Util.FindObjectOfType<Torch>().transform.GetChild(0).GetComponent<SpriteRenderer>().color = darkness.color;
+					Object.FindObjectOfType<Torch>().transform.GetChild(0).GetComponent<SpriteRenderer>().color = darkness.color;
 				}
 			}
 		}
@@ -77,7 +77,7 @@ public class DeepMazeEventHandler : MonoBehaviour
 
 	private void Update()
 	{
-		if (chaseSequence && Util.FindObjectOfType<ActionBulletHandler>().IsActivated())
+		if (chaseSequence && Object.FindObjectOfType<ActionBulletHandler>().IsActivated())
 		{
 			chaseFrames++;
 			if (SceneManager.GetActiveScene().buildIndex == 90 && chaseFrames % 30 == 29)
@@ -100,7 +100,7 @@ public class DeepMazeEventHandler : MonoBehaviour
 					bool flag = Random.Range(0, 2) == 0;
 					Vector3 vector = Vector3.zero;
 					vector = ((!num2) ? new Vector3(flag ? (-3.5f) : 3.5f, num) : new Vector3(num, flag ? (-3.5f) : 3.5f));
-					OverworldBoneBullet component2 = Object.Instantiate(bonePrefab, Util.OverworldPlayer().transform.position + vector, Quaternion.identity, GameObject.Find("OBJ").transform).GetComponent<OverworldBoneBullet>();
+					OverworldBoneBullet component2 = Object.Instantiate(bonePrefab, Object.FindObjectOfType<OverworldPlayer>().transform.position + vector, Quaternion.identity, GameObject.Find("OBJ").transform).GetComponent<OverworldBoneBullet>();
 					component2.StartSpinning();
 					component2.StartTracking(vector);
 					component2.StartMoving(j == 0);
@@ -110,7 +110,7 @@ public class DeepMazeEventHandler : MonoBehaviour
 		if (fadeAwayShadows)
 		{
 			darkness.color = new Color(0f, 0f, 0f, Mathf.Lerp(darkness.color.a, 0.75f, 0.05f));
-			Util.FindObjectOfType<Torch>().transform.GetChild(0).GetComponent<SpriteRenderer>().color = darkness.color;
+			Object.FindObjectOfType<Torch>().transform.GetChild(0).GetComponent<SpriteRenderer>().color = darkness.color;
 		}
 	}
 
@@ -125,11 +125,11 @@ public class DeepMazeEventHandler : MonoBehaviour
 		if ((bool)boneSpearTriggers)
 		{
 			Object.Destroy(boneSpearTriggers);
-			Util.FindObjectOfType<ActionBulletHandler>().enabled = false;
+			Object.FindObjectOfType<ActionBulletHandler>().enabled = false;
 		}
 		if ((bool)GameObject.Find("LoadingZone (1)"))
 		{
-			GameObject.Find("LoadingZone (1)").GetComponent<LoadingZone>().SetForceActivationTrigger(forceActivationTrigger: false);
+			GameObject.Find("LoadingZone (1)").GetComponent<LoadingZone>().SetForceActivationTrigger(false);
 		}
 	}
 
@@ -147,15 +147,15 @@ public class DeepMazeEventHandler : MonoBehaviour
 		WalkingBunnies component = Object.Instantiate(Resources.Load<GameObject>("overworld/npcs/snowdin/WalkingBunnies"), GameObject.Find("NPC").transform).GetComponent<WalkingBunnies>();
 		if (relativeBunny)
 		{
-			if (Util.OverworldPlayer().transform.position.y > -5.63f)
+			if (Object.FindObjectOfType<OverworldPlayer>().transform.position.y > -5.63f)
 			{
 				component.SetPosition(16);
 			}
-			else if (Util.OverworldPlayer().transform.position.y > -15.58f)
+			else if (Object.FindObjectOfType<OverworldPlayer>().transform.position.y > -15.58f)
 			{
 				component.SetPosition(17);
 			}
-			else if (Util.OverworldPlayer().transform.position.y > -22.07f)
+			else if (Object.FindObjectOfType<OverworldPlayer>().transform.position.y > -22.07f)
 			{
 				component.SetPosition(13);
 			}

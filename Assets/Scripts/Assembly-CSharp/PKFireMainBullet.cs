@@ -43,8 +43,8 @@ public class PKFireMainBullet : MonoBehaviour
 			{
 				float num2 = z + UnityEngine.Random.Range(-2f, 2f);
 				float num3 = z + UnityEngine.Random.Range(-2f, 2f);
-				vector = new Vector2(Mathf.Cos(num2 * (MathF.PI / 180f)), Mathf.Sin(num2 * (MathF.PI / 180f)));
-				vector2 = new Vector2(0f - Mathf.Cos(num3 * (MathF.PI / 180f)), 0f - Mathf.Sin(num3 * (MathF.PI / 180f)));
+				vector = new Vector2(Mathf.Cos(num2 * ((float)Math.PI / 180f)), Mathf.Sin(num2 * ((float)Math.PI / 180f)));
+				vector2 = new Vector2(0f - Mathf.Cos(num3 * ((float)Math.PI / 180f)), 0f - Mathf.Sin(num3 * ((float)Math.PI / 180f)));
 			}
 			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/nesspaula/PKFireFlame"), base.transform.position + new Vector3(UnityEngine.Random.Range(-5f, 5f), UnityEngine.Random.Range(-5f, 5f)) / 48f, Quaternion.identity, base.transform.parent).GetComponent<PKFireFlame>().Activate(UnityEngine.Random.Range(0.9f, 1.1f) * (float)i, vector);
 			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/nesspaula/PKFireFlame"), base.transform.position + new Vector3(UnityEngine.Random.Range(-5f, 5f), UnityEngine.Random.Range(-5f, 5f)) / 48f, Quaternion.identity, base.transform.parent).GetComponent<PKFireFlame>().Activate(UnityEngine.Random.Range(0.9f, 1.1f) * (float)i, vector2);

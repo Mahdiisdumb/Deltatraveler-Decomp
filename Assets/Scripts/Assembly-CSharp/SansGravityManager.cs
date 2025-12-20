@@ -87,7 +87,7 @@ public class SansGravityManager : MonoBehaviour
 		frames++;
 		if (frames == 4 && force > 0f)
 		{
-			Util.FindObjectOfType<SOUL>().SlamToDirection(direction, force);
+			Object.FindObjectOfType<SOUL>().SlamToDirection(direction, force);
 		}
 		int num = frames / 2;
 		if (num < spriteIds.Length)

@@ -10,7 +10,8 @@ public class ArraySingleObject : ArraySingle
 		{
 			Record record = reader.ReadRecord();
 			offsets[i] = record.offset;
-			if (record is ObjectNull objectNull)
+			ObjectNull objectNull;
+			if ((objectNull = record as ObjectNull) != null)
 			{
 				int num = 0;
 				while (num < objectNull.repeats)

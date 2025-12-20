@@ -34,12 +34,7 @@ public class FightTargetBarMini : FightTargetBar
 		if (ending && endFrames < 12)
 		{
 			endFrames++;
-			Color a = PartyMembers.GetMemberNeonColor(partyMember);
-			if (partyMember == 6 && Util.GameManager().GetFlagInt(108) == 1)
-			{
-				a = Color.white;
-			}
-			GetComponent<SpriteRenderer>().color = Color.Lerp(a, endColor, (float)endFrames / 6f);
+			GetComponent<SpriteRenderer>().color = Color.Lerp(PartyPanels.defaultColors[partyMember], endColor, (float)endFrames / 6f);
 			GetComponent<SpriteRenderer>().color = new Color(GetComponent<SpriteRenderer>().color.r, GetComponent<SpriteRenderer>().color.g, GetComponent<SpriteRenderer>().color.b, 1f - (float)endFrames / 12f);
 			base.transform.localScale *= 1.1f;
 		}
@@ -51,11 +46,11 @@ public class FightTargetBarMini : FightTargetBar
 		if (!miss)
 		{
 			ending = true;
-			Util.FindObjectOfType<TPBar>().AddTP(1);
-			Util.FindObjectOfType<FightTarget>().PlayMiniHitAnimation(enemy, partyMember);
+			Object.FindObjectOfType<TPBar>().AddTP(1);
+			Object.FindObjectOfType<FightTarget>().PlayMiniHitAnimation(enemy, partyMember);
 			if (GetSuccessRate() == 20f)
 			{
-				Util.FindObjectOfType<TPBar>().AddTP(1);
+				Object.FindObjectOfType<TPBar>().AddTP(1);
 				GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("sounds/snd_quad_crit");
 				endColor = new Color(1f, 0.6f, 0f, 0f);
 			}

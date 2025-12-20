@@ -89,7 +89,7 @@ public class ClassWithMembersAndTypes : IndexedRecord
 	private BinaryLibrary library;
 
 	public ClassWithMembersAndTypes(Reader reader)
-		: this(reader, hasLibrary: true)
+		: this(reader, true)
 	{
 	}
 
@@ -174,17 +174,21 @@ public class ClassWithMembersAndTypes : IndexedRecord
 				throw new InvalidOperationException("Missing instance field '" + key + "' in given class " + type.FullName + " (serialized class: " + GetClassName() + ")");
 			}
 			object obj = values[key];
-			if (obj is MemberReference memberReference)
+			MemberReference memberReference;
+			if ((memberReference = obj as MemberReference) != null)
 			{
 				obj = memberReference.Unwrap();
 			}
 			if (!obj.GetType().IsPrimitive)
 			{
+				ClassWithMembersAndTypes classWithMembersAndTypes;
+				BinaryObject binaryObject;
+				ArraySingle arraySingle;
 				if (obj is ObjectNull)
 				{
 					obj = null;
 				}
-				else if (obj is ClassWithMembersAndTypes classWithMembersAndTypes)
+				else if ((classWithMembersAndTypes = obj as ClassWithMembersAndTypes) != null)
 				{
 					if (!deserializeNestedObjects)
 					{
@@ -201,13 +205,14 @@ public class ClassWithMembersAndTypes : IndexedRecord
 					}
 					obj = classWithMembersAndTypes.GetAs(type2);
 				}
-				else if (obj is BinaryObject binaryObject)
+				else if ((binaryObject = obj as BinaryObject) != null)
 				{
 					obj = binaryObject.value;
 				}
-				else if (obj is ArraySingle arraySingle)
+				else if ((arraySingle = obj as ArraySingle) != null)
 				{
-					if (arraySingle is ArraySinglePrimitive arr)
+					ArraySinglePrimitive arr;
+					if ((arr = arraySingle as ArraySinglePrimitive) != null)
 					{
 						obj = ConvertToPrimitiveArray(arr);
 					}
@@ -218,15 +223,18 @@ public class ClassWithMembersAndTypes : IndexedRecord
 						for (int i = 0; i < arraySingle.length; i++)
 						{
 							object obj2 = array2[i];
-							if (obj2 is MemberReference memberReference2)
+							MemberReference memberReference2;
+							if ((memberReference2 = obj2 as MemberReference) != null)
 							{
 								obj2 = memberReference2.Unwrap();
 							}
-							if (obj2 is BinaryObject binaryObject2)
+							BinaryObject binaryObject2;
+							MemberPrimitiveTyped memberPrimitiveTyped;
+							if ((binaryObject2 = obj2 as BinaryObject) != null)
 							{
 								obj2 = binaryObject2.value;
 							}
-							else if (obj2 is MemberPrimitiveTyped memberPrimitiveTyped)
+							else if ((memberPrimitiveTyped = obj2 as MemberPrimitiveTyped) != null)
 							{
 								obj2 = memberPrimitiveTyped.value;
 							}
@@ -244,20 +252,43 @@ public class ClassWithMembersAndTypes : IndexedRecord
 	private static Array ConvertToPrimitiveArray(ArraySinglePrimitive arr)
 	{
 		object[] array = arr.GetValues();
-		Array array2 = Array.CreateInstance(arr.primitiveType switch
+		Type typeFromHandle;
+		switch (arr.primitiveType)
 		{
-			PrimitiveType.Boolean => typeof(bool), 
-			PrimitiveType.Byte => typeof(byte), 
-			PrimitiveType.Char => typeof(char), 
-			PrimitiveType.Int16 => typeof(short), 
-			PrimitiveType.Int32 => typeof(int), 
-			PrimitiveType.Int64 => typeof(long), 
-			PrimitiveType.UInt16 => typeof(ushort), 
-			PrimitiveType.UInt32 => typeof(uint), 
-			PrimitiveType.Single => typeof(float), 
-			PrimitiveType.Double => typeof(double), 
-			_ => throw new NotSupportedException("no ArraySinglePrimitive type mapping exists for PrimitiveType " + arr.primitiveType), 
-		}, array.Length);
+		case PrimitiveType.Boolean:
+			typeFromHandle = typeof(bool);
+			break;
+		case PrimitiveType.Byte:
+			typeFromHandle = typeof(byte);
+			break;
+		case PrimitiveType.Char:
+			typeFromHandle = typeof(char);
+			break;
+		case PrimitiveType.Int16:
+			typeFromHandle = typeof(short);
+			break;
+		case PrimitiveType.Int32:
+			typeFromHandle = typeof(int);
+			break;
+		case PrimitiveType.Int64:
+			typeFromHandle = typeof(long);
+			break;
+		case PrimitiveType.UInt16:
+			typeFromHandle = typeof(ushort);
+			break;
+		case PrimitiveType.UInt32:
+			typeFromHandle = typeof(uint);
+			break;
+		case PrimitiveType.Single:
+			typeFromHandle = typeof(float);
+			break;
+		case PrimitiveType.Double:
+			typeFromHandle = typeof(double);
+			break;
+		default:
+			throw new NotSupportedException("no ArraySinglePrimitive type mapping exists for PrimitiveType " + arr.primitiveType);
+		}
+		Array array2 = Array.CreateInstance(typeFromHandle, array.Length);
 		for (int i = 0; i < array.Length; i++)
 		{
 			array2.SetValue(array[i], i);
@@ -284,7 +315,8 @@ public class ClassWithMembersAndTypes : IndexedRecord
 				stringBuilder.Append('<');
 				if (typeInfoPair.type == BinaryType.SystemClass)
 				{
-					string text2 = typeInfoPair.additionalInfo?.ToString() ?? "null";
+					object additionalInfo = typeInfoPair.additionalInfo;
+					string text2 = ((additionalInfo != null) ? additionalInfo.ToString() : null) ?? "null";
 					stringBuilder.Append(text2.Split('`')[0]);
 				}
 				else

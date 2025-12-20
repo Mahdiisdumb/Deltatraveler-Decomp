@@ -91,7 +91,7 @@ public class Feraldrake : EnemyBase
 		base.Start();
 		defaultChatPos = new Vector2(Mathf.RoundToInt(GetEnemyObject().transform.position.x * 48f) + 107, 95f);
 		obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/" + enemyName.Replace(".", "") + "/spr_b_" + fileName + hurtSpriteName);
-		if (Util.FindObjectOfType<BattleManager>().GetBattleID() == 65)
+		if (Object.FindObjectOfType<BattleManager>().GetBattleID() == 65)
 		{
 			chilldrake = true;
 			checkDesc = "* A feral snowdrake,^05 but cooler.";
@@ -99,7 +99,7 @@ public class Feraldrake : EnemyBase
 			{
 				actNames = new string[5]
 				{
-					EnemyBase.CHECK_NAME,
+					"Check",
 					"Agree",
 					"Clash",
 					((int)Util.GameManager().GetFlag(211) == 1) ? REDBUSTER_NAME : "Joke",
@@ -110,7 +110,7 @@ public class Feraldrake : EnemyBase
 			{
 				actNames = new string[4]
 				{
-					EnemyBase.CHECK_NAME,
+					"Check",
 					"Agree",
 					"Clash",
 					((int)Util.GameManager().GetFlag(211) == 1) ? REDBUSTER_NAME : "Joke"
@@ -258,7 +258,7 @@ public class Feraldrake : EnemyBase
 			turnCount = 3;
 			return hp - 1;
 		}
-		if (partyMember == 2 && (bool)Util.FindObjectOfType<IceShock>())
+		if (partyMember == 2 && (bool)Object.FindObjectOfType<IceShock>())
 		{
 			return base.CalculateDamage(partyMember, rawDmg, forceMagic) / 20;
 		}
@@ -364,10 +364,10 @@ public class Feraldrake : EnemyBase
 						doingFakeAttack = true;
 					}
 				}
-				base.Hit(0, 10f, playSound: true);
+				base.Hit(0, 10f, true);
 				return new string[1] { "* You smack Feraldrake." };
 			}
-			base.Hit(0, 10f, playSound: true);
+			base.Hit(0, 10f, true);
 			return new string[1] { "* You smack Snowdrake.\n* It looks confused." };
 		}
 		return base.PerformAct(i);
@@ -382,7 +382,7 @@ public class Feraldrake : EnemyBase
 		}
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		switch (i)
 		{
@@ -415,7 +415,7 @@ public class Feraldrake : EnemyBase
 			respond = 5;
 			return new string[2] { "* Noelle flows snow through\n  the cold air.", "* Snowdrake looks confused,^05 but\n  seems impressed." };
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 

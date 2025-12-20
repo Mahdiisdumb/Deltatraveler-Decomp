@@ -22,7 +22,7 @@ public class FireballPanBullet : MonoBehaviour
 	private void Update()
 	{
 		frames++;
-		base.transform.eulerAngles = new Vector3(0f, 0f, Mathf.Sin((float)(frames * 9) * (MathF.PI / 180f)) * (float)(right ? (-136) : 136));
+		base.transform.eulerAngles = new Vector3(0f, 0f, Mathf.Sin((float)(frames * 9) * ((float)Math.PI / 180f)) * (float)(right ? (-136) : 136));
 		if (frames <= 5)
 		{
 			GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, (float)frames / 5f);

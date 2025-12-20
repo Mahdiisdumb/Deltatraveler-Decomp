@@ -98,22 +98,22 @@ namespace MarioBrosMayhem
 					componentsInChildren2[i].enabled = false;
 				}
 				base.transform.Find("GameOverText").GetComponent<SpriteText>().enabled = true;
-				Util.FindObjectOfType<MarioBrosNetworkManager>().RevivePlayer(0);
+				Object.FindObjectOfType<MarioBrosNetworkManager>().RevivePlayer(0);
 				state = 2;
 			}
 			else if (index == 1)
 			{
 				Deactivate();
-				Util.FindObjectOfType<MarioBrosManager>().TrueGameOver();
+				Object.FindObjectOfType<MarioBrosManager>().TrueGameOver();
 			}
 		}
 
 		public void Activate(int credits)
 		{
 			MonoBehaviour.print("activatedx");
-			if (Util.FindObjectOfType<PauseMenu>().Paused())
+			if (Object.FindObjectOfType<PauseMenu>().Paused())
 			{
-				Util.FindObjectOfType<PauseMenu>().Unpause();
+				Object.FindObjectOfType<PauseMenu>().Unpause();
 			}
 			string text = credits.ToString().PadLeft(2, ' ');
 			base.transform.Find("Credits").GetComponent<SpriteText>().Text = "Credit" + text;

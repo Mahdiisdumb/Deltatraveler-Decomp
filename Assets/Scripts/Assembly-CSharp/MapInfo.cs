@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
 public class MapInfo
 {
@@ -57,6 +56,11 @@ public class MapInfo
 
 	public static string GetMapName(int bIndex)
 	{
+		Dictionary<int, string> serializedClass = Util.PackManager().GetSerializedClass<Dictionary<int, string>>("text/MapInfo");
+		if (serializedClass != null && serializedClass.ContainsKey(bIndex))
+		{
+			return serializedClass[bIndex];
+		}
 		if (validSavePoints.ContainsKey(bIndex))
 		{
 			return validSavePoints[bIndex];
@@ -78,31 +82,6 @@ public class MapInfo
 		return validSavePoints.ContainsKey(map);
 	}
 
-	public static World GetMapWorld(int room)
-	{
-		if (room >= 7 && room <= 49)
-		{
-			return World.Undertale;
-		}
-		if ((room >= 50 && room <= 62) || (room >= 70 && room <= 71))
-		{
-			return World.Earthbound;
-		}
-		if ((room >= 72 && room <= 76) || (room >= 79 && room <= 102) || (room >= 105 && room <= 109))
-		{
-			return World.Underfell;
-		}
-		if ((room >= 110 && room <= 127) || room == 130)
-		{
-			return World.UTIntermission1;
-		}
-		if ((room >= 63 && room <= 69) || room == 101 || room == 102)
-		{
-			return World.LOSTCORE;
-		}
-		return World.None;
-	}
-
 	public static List<string> GetMapNames()
 	{
 		return new List<string>(validSavePoints.Values);
@@ -111,10 +90,5 @@ public class MapInfo
 	public static List<int> GetMapIDs()
 	{
 		return new List<int>(validSavePoints.Keys);
-	}
-
-	public static World GetCurrentWorld()
-	{
-		return GetMapWorld(SceneManager.GetActiveScene().buildIndex);
 	}
 }

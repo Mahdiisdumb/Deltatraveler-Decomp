@@ -26,8 +26,8 @@ public class UndyneSpearSpawner : MonoBehaviour
 	{
 		if (activated && Util.GameManager().GetHP(0) < Util.GameManager().GetMaxHP(0))
 		{
-			Util.FindObjectOfType<ActionPartyPanels>().Raise();
-			Util.FindObjectOfType<ActionPartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
+			Object.FindObjectOfType<ActionPartyPanels>().Raise();
+			Object.FindObjectOfType<ActionPartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
 		}
 	}
 
@@ -67,7 +67,7 @@ public class UndyneSpearSpawner : MonoBehaviour
 			bool flag = Random.Range(0, 2) == 0;
 			Vector3 vector = Vector3.zero;
 			vector = ((!num3) ? new Vector3(flag ? (-3.5f) : 3.5f, num2) : new Vector3(num2, flag ? (-3.5f) : 3.5f));
-			OverworldBoneBullet component = Object.Instantiate(bonePrefab, Util.OverworldPlayer().transform.position + vector, Quaternion.identity, GameObject.Find("OBJ").transform).GetComponent<OverworldBoneBullet>();
+			OverworldBoneBullet component = Object.Instantiate(bonePrefab, Object.FindObjectOfType<OverworldPlayer>().transform.position + vector, Quaternion.identity, GameObject.Find("OBJ").transform).GetComponent<OverworldBoneBullet>();
 			component.StartSpinning();
 			component.StartTracking(vector);
 			component.StartMoving(i == 0);

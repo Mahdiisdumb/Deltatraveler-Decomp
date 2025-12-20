@@ -33,8 +33,8 @@ public class EnemyHPText : MonoBehaviour
 		txtChange = 7.35f;
 		int num = oldHp - dmg - oldHp;
 		textTransform = base.transform.Find("text");
-		Color color = ((!mercy) ? PartyMembers.GetMemberNeonColor(partyMember) : new Color(1f, 1f, 0f));
-		if (partyMember == 6 && (int)Util.GameManager().GetFlag(108) == 1)
+		Color color = ((!mercy) ? PartyPanels.defaultColors[partyMember] : PartyPanels.defaultColors[2]);
+		if (partyMember == 0 && (int)Object.FindObjectOfType<GameManager>().GetFlag(107) == 1 && (int)Util.GameManager().GetFlag(108) == 1)
 		{
 			color = ((num == 0) ? new Color(0.765f, 0.765f, 0.765f) : Color.red);
 		}
@@ -43,7 +43,7 @@ public class EnemyHPText : MonoBehaviour
 		if (mercy)
 		{
 			text = ((dmg < 0) ? (dmg + "%") : ("+" + dmg + "%"));
-			color2 = new Color(1f, 1f, 0f);
+			color2 = PartyPanels.defaultColors[2];
 			if (dmg >= 100)
 			{
 				color2 = new Color(0f, 1f, 0f);
@@ -67,13 +67,14 @@ public class EnemyHPText : MonoBehaviour
 		textTransform.GetComponent<SpriteText>().Text = text;
 		textTransform.GetComponent<SpriteText>().color = color2;
 		textTransform.GetComponent<SpriteText>().CharacterSpacing = ((!(text == "*")) ? (-4) : 0);
+		textTransform.GetComponent<SpriteText>().Inset = new Vector2((text == "*") ? 62 : (2 + 32 * text.Length / 2), -31f);
 		if ((bool)hpBar)
 		{
 			int numPartyMembersEffecting = hpBar.GetNumPartyMembersEffecting();
 			offset = 32 * numPartyMembersEffecting;
 			if (numPartyMembersEffecting >= 3)
 			{
-				offset = -60 - 32 * (numPartyMembersEffecting - 3);
+				offset = -60f;
 			}
 		}
 		textTransform.localPosition = new Vector3(0f, offset);

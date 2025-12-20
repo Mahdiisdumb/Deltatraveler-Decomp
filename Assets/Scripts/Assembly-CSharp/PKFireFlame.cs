@@ -12,7 +12,7 @@ public class PKFireFlame : FlameBullet
 	{
 		base.Awake();
 		baseDmg = 10;
-		tpGrazeValue = (Util.FindObjectOfType<AttackBase>() ? 0.3f : 0f);
+		tpGrazeValue = (Object.FindObjectOfType<AttackBase>() ? 0.3f : 0f);
 		tpGrazeValueReuse = 0f;
 		tpBuildRate = 0f;
 	}

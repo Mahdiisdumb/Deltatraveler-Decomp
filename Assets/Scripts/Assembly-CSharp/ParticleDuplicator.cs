@@ -40,6 +40,6 @@ public class ParticleDuplicator : MonoBehaviour
 
 	public void Activate(int dusterType = 0)
 	{
-		Activate(includeBlack: false, Vector2.zero, dusterType);
+		Activate(false, Vector2.zero, dusterType);
 	}
 }

@@ -34,7 +34,7 @@ public class CoilSnake : EnemyBase
 		exp = 1;
 		gold = 4;
 		attacks = new int[1] { 34 };
-		geno = (int)Util.GameManager().GetFlag(13) >= 4;
+		geno = (int)Object.FindObjectOfType<GameManager>().GetFlag(13) >= 4;
 		if (geno)
 		{
 			checkDesc = "* Snake blood is good for\n  treating damaged hearts.";
@@ -60,14 +60,17 @@ public class CoilSnake : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
-		return i switch
+		switch (i)
 		{
-			1 => new string[1] { "su_inquisitive`snd_txtsus`* ... The hell am I\n  supposed to do???^10\n* Lasso it?" }, 
-			2 => new string[1] { "no_happy`snd_txtnoe`* I think we can\n  already spare it,^05 Kris..." }, 
-			_ => base.PerformAssistAct_Old(i), 
-		};
+		case 1:
+			return new string[1] { "su_inquisitive`snd_txtsus`* ... The hell am I\n  supposed to do???^10\n* Lasso it?" };
+		case 2:
+			return new string[1] { "no_happy`snd_txtnoe`* I think we can\n  already spare it,^05 Kris..." };
+		default:
+			return base.PerformAssistAct(i);
+		}
 	}
 
 	public override void Chat(string[] text, string type, string sound, Vector2 pos, bool canSkip, int speed)
@@ -97,7 +100,7 @@ public class CoilSnake : EnemyBase
 			{
 				if (defeatFrames == 1)
 				{
-					Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: false, susie: false, noelle: false);
+					Object.FindObjectOfType<PartyPanels>().RaiseHeads(false, false, false);
 				}
 				if (defeatFrames < 45)
 				{
@@ -144,13 +147,13 @@ public class CoilSnake : EnemyBase
 		base.Hit(partyMember, rawDmg, playSound);
 		if (hp <= 0 && rawDmg > 0f && geno)
 		{
-			Util.FindObjectOfType<BattleManager>().StopMusic();
+			Object.FindObjectOfType<BattleManager>().StopMusic();
 			exp = 25;
 			gold = 10;
 			obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/" + enemyName.Replace(".", "") + "/spr_b_" + fileName + "_kill_0");
-			Util.GameManager().SetFlag(87, 4);
-			Util.FindObjectOfType<PartyPanels>().SetSprite(1, "unhappy/spr_su_down_0_unhappy");
-			Util.FindObjectOfType<PartyPanels>().SetSprite(2, "unhappy/spr_no_down_0_unhappy");
+			Object.FindObjectOfType<GameManager>().SetFlag(87, 4);
+			Object.FindObjectOfType<PartyPanels>().SetSprite(1, "spr_su_down_unhappy_0");
+			Object.FindObjectOfType<PartyPanels>().SetSprite(2, "spr_no_down_unhappy_0");
 		}
 	}
 

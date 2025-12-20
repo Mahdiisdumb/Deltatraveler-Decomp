@@ -5,7 +5,7 @@ public class OverworldCoilSnake : OverworldBloodEnemyBase
 	protected override void Awake()
 	{
 		speed = 6f;
-		if ((int)Util.GameManager().GetFlag(defeatFlagID) == 1 && (int)Util.GameManager().GetFlag(13) == 4)
+		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(defeatFlagID) == 1 && (int)Object.FindObjectOfType<GameManager>().GetFlag(13) == 4)
 		{
 			CreateDeadEnemy();
 		}

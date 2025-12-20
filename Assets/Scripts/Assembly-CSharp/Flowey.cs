@@ -127,7 +127,7 @@ public class Flowey : EnemyBase
 			if (gotHit)
 			{
 				frames++;
-				_ = moveBody;
+				int moveBody2 = moveBody;
 				int num2 = (finaleKilled ? 6 : 4);
 				if (frames % num2 == 0)
 				{
@@ -205,7 +205,7 @@ public class Flowey : EnemyBase
 			}
 			else if (inFinale && spareAttemptsSpokenFinale == 0)
 			{
-				if ((int)Util.GameManager().GetFlag(13) == 3)
+				if ((int)Object.FindObjectOfType<GameManager>().GetFlag(13) == 3)
 				{
 					if (hardmode)
 					{
@@ -336,7 +336,7 @@ public class Flowey : EnemyBase
 
 	public override string[] PerformAct(int i)
 	{
-		if (GetActNames()[i] == EnemyBase.CHECK_NAME)
+		if (GetActNames()[i] == "Check")
 		{
 			check = true;
 			return new string[1] { "* FLOWEY - LV 99\n" + checkDesc };
@@ -348,7 +348,7 @@ public class Flowey : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		return new string[1] { "* But she couldn't think\n  of anything to do." };
 	}
@@ -390,9 +390,9 @@ public class Flowey : EnemyBase
 			{
 				GetPart("stem").transform.localScale = new Vector3(1f, 1f, 1f);
 				GetPart("head").transform.localPosition = new Vector3(-0.34f, 2.72f);
-				Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
-				Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
-				Util.FindObjectOfType<BattleManager>().StopMusic();
+				Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
+				Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
+				Object.FindObjectOfType<BattleManager>().StopMusic();
 				GetPart("vineLeft").GetComponent<Animator>().SetFloat("speed", 0f);
 				GetPart("vineRight").GetComponent<Animator>().SetFloat("speed", 0f);
 				SetFace("evil_hit_dying");
@@ -434,11 +434,11 @@ public class Flowey : EnemyBase
 				component.gameObject.name = "EnemyHP" + obj.transform.parent.gameObject.name[5];
 				component.transform.localScale = new Vector2(1f, 1f);
 				component.transform.localPosition = hpPos;
-				component.StartHP(num, num2, maxHp, partyMember, hpWidth, mercy: false, emptyHPBarWhenZero);
+				component.StartHP(num, num2, maxHp, partyMember, hpWidth, false, emptyHPBarWhenZero);
 			}
 			else
 			{
-				GameObject.Find(text).GetComponent<EnemyHPBar>().StartHP(num, num2, maxHp, partyMember, mercy: false, emptyHPBarWhenZero);
+				GameObject.Find(text).GetComponent<EnemyHPBar>().StartHP(num, num2, maxHp, partyMember, false, emptyHPBarWhenZero);
 			}
 		}
 	}
@@ -457,9 +457,9 @@ public class Flowey : EnemyBase
 		{
 			if (!hardmode)
 			{
-				Chat(new string[3] { "I knew it...!", "You're just like \nthem!", "Chara..." }, defaultChatSize, "snd_txtflw2", defaultChatPos, canSkip: true, 2);
+				Chat(new string[3] { "I knew it...!", "You're just like \nthem!", "Chara..." }, defaultChatSize, "snd_txtflw2", defaultChatPos, true, 2);
 			}
-			else if ((int)Util.GameManager().GetFlag(13) == 3)
+			else if ((int)Object.FindObjectOfType<GameManager>().GetFlag(13) == 3)
 			{
 				Chat(new string[4]
 				{
@@ -467,11 +467,11 @@ public class Flowey : EnemyBase
 					"...^15 Frisk...",
 					"You played your best \ntrick yet...!",
 					"H^04a^04.^04.^04.^30 h^04a^04.^04.^04."
-				}, defaultChatSize, "snd_txtflw2", defaultChatPos, canSkip: true, 2);
+				}, defaultChatSize, "snd_txtflw2", defaultChatPos, true, 2);
 			}
 			else
 			{
-				Chat(new string[1] { "I knew you had \nit in you!" }, defaultChatSize, "snd_txtflw2", defaultChatPos, canSkip: true, 2);
+				Chat(new string[1] { "I knew you had \nit in you!" }, defaultChatSize, "snd_txtflw2", defaultChatPos, true, 2);
 			}
 			chatbox.gameObject.AddComponent<ShakingText>().StartShake(0, "speechbubble");
 		}
@@ -506,13 +506,13 @@ public class Flowey : EnemyBase
 			{
 				array[4] = "I already told you \nthat I won't accept \nyour mercy.";
 			}
-			if (spareAttemptsSpokenFinale == 0 && (int)Util.GameManager().GetFlag(13) == 3)
+			if (spareAttemptsSpokenFinale == 0 && (int)Object.FindObjectOfType<GameManager>().GetFlag(13) == 3)
 			{
 				array[2] = "Are you like... \nACTUALLY braindead?";
 				array[4] = "Didn't you murder \nall the monsters \nin the RUINS?";
 			}
 			spareAttemptsSpokenFinale++;
-			Chat(array, defaultChatSize, "snd_txtflw", defaultChatPos, canSkip: true, 0);
+			Chat(array, defaultChatSize, "snd_txtflw", defaultChatPos, true, 0);
 		}
 		else if (!inFinale && hp <= 0)
 		{
@@ -521,15 +521,15 @@ public class Flowey : EnemyBase
 			doneChatting = false;
 			actNames[1] = "";
 			check = false;
-			Util.FindObjectOfType<BattleManager>().ForceSoloKris();
-			Util.FindObjectOfType<BattleManager>().PlayMusic("music/mus_f_wind", 1f, hasIntro: true);
+			Object.FindObjectOfType<BattleManager>().ForceSoloKris();
+			Object.FindObjectOfType<BattleManager>().PlayMusic("music/mus_f_wind", 1f, true);
 			inFinale = true;
-			if (Util.GameManager().GetHP(0) < 1)
+			if (Object.FindObjectOfType<GameManager>().GetHP(0) < 1)
 			{
-				Util.GameManager().SetHP(0, 1);
-				Util.GameManager().PlayGlobalSFX("sounds/snd_heal");
+				Object.FindObjectOfType<GameManager>().SetHP(0, 1);
+				Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_heal");
 			}
-			if ((int)Util.GameManager().GetFlag(13) == 3)
+			if ((int)Object.FindObjectOfType<GameManager>().GetFlag(13) == 3)
 			{
 				if (!hardmode)
 				{
@@ -537,7 +537,7 @@ public class Flowey : EnemyBase
 					{
 						"Hee hee hee...", "Well done,^05 Kris!", "You sure are no \npushover.", "All that power \nyou gained from \nmerciless slaughter...", "Through sheer will \nand DETERMINATION...", "And look where \nit's gotten you!", "Though...^10 it hasn't \nall been just you, \nhas it?", "After all,^05 it takes \nMAGIC to kill a \nghost.", "I was never any \nmatch against you \ntwo!", "...",
 						"So...^05 Kris.", "It's time to finish \nwhat you started.", "Do it.", "Finish me off."
-					}, defaultChatSize, "snd_txtflw", defaultChatPos, canSkip: true, 0);
+					}, defaultChatSize, "snd_txtflw", defaultChatPos, true, 0);
 					checkDesc = "^15* Your best friend.";
 				}
 				else
@@ -554,7 +554,7 @@ public class Flowey : EnemyBase
 						"It's time to finish \nwhat you started.",
 						"Do it.",
 						"Finish me off."
-					}, defaultChatSize, "snd_txtflw", defaultChatPos, canSkip: true, 0);
+					}, defaultChatSize, "snd_txtflw", defaultChatPos, true, 0);
 				}
 			}
 			else if (!hardmode)
@@ -563,7 +563,7 @@ public class Flowey : EnemyBase
 				{
 					"Hee hee hee...", "Well done,^05 Kris!", "You're clearly not \nthe pushover I \nthought you were.", "I wouldn't have gone \ndown THAT easily if \nI fought anyone else.", "But you're different.", "Why,^05 through sheer \nwill and \nDETERMINATION...", "You were able to \nwither me down!", "So...^05 Kris.", "It's time to make \nyour final move.", "Do it.",
 					"Finish me off."
-				}, defaultChatSize, "snd_txtflw", defaultChatPos, canSkip: true, 0);
+				}, defaultChatSize, "snd_txtflw", defaultChatPos, true, 0);
 			}
 			else
 			{
@@ -571,18 +571,18 @@ public class Flowey : EnemyBase
 				{
 					"Hee hee hee...", "Well done!", "You're clearly not \nthe pushover I \nthought you were.", "Especially not like \nthe IDIOT in my grasp, \nwho never fought back.", "But you're different.", "Why,^05 through sheer \nwill and \nDETERMINATION...", "You were able to \nwither me down!", "So...^05 human.", "It's time to make \nyour final move.", "Do it.",
 					"Finish me off."
-				}, defaultChatSize, "snd_txtflw", defaultChatPos, canSkip: true, 0);
+				}, defaultChatSize, "snd_txtflw", defaultChatPos, true, 0);
 			}
 		}
 		else if (inFinale)
 		{
 			if (spareAttemptsFinale > 0)
 			{
-				Chat(new string[1] { "..." }, defaultChatSize, "snd_txtflw", defaultChatPos, canSkip: true, 0);
+				Chat(new string[1] { "..." }, defaultChatSize, "snd_txtflw", defaultChatPos, true, 0);
 			}
 			else
 			{
-				Chat(new string[1] { "Come on,^10 finish me \noff." }, defaultChatSize, "snd_txtflw", defaultChatPos, canSkip: true, 0);
+				Chat(new string[1] { "Come on,^10 finish me \noff." }, defaultChatSize, "snd_txtflw", defaultChatPos, true, 0);
 			}
 		}
 		else if (spareAttempts > spareAttemptsSpoken)
@@ -596,12 +596,12 @@ public class Flowey : EnemyBase
 				new string[3] { "Is this a joke?\nAre you braindead?", "I'm NEVER going to \naccept your MERCY!", "Now SHUT UP and DIE!" }
 			})[spareAttemptsSpoken];
 			spareAttemptsSpoken++;
-			Chat(text, defaultChatSize, "snd_txtflw2", defaultChatPos, canSkip: true, 0);
+			Chat(text, defaultChatSize, "snd_txtflw2", defaultChatPos, true, 0);
 		}
 		else if (check)
 		{
 			doneChatting = false;
-			Chat(new string[1] { "Like I'm gonna let \nyou see MY stats!" }, defaultChatSize, "snd_txtflw2", defaultChatPos, canSkip: true, 0);
+			Chat(new string[1] { "Like I'm gonna let \nyou see MY stats!" }, defaultChatSize, "snd_txtflw2", defaultChatPos, true, 0);
 		}
 	}
 

@@ -61,7 +61,7 @@ public class TextBubble : MonoBehaviour
 				return;
 			}
 			bool flag = true;
-			TextBubble[] array = Util.FindObjectsOfType<TextBubble>();
+			TextBubble[] array = Object.FindObjectsOfType<TextBubble>();
 			for (int i = 0; i < array.Length; i++)
 			{
 				if (array[i].IsPlaying())
@@ -131,7 +131,7 @@ public class TextBubble : MonoBehaviour
 
 	public bool CanMoveForward()
 	{
-		TextBubble[] array = Util.FindObjectsOfType<TextBubble>();
+		TextBubble[] array = Object.FindObjectsOfType<TextBubble>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			if (array[i].IsPlaying())

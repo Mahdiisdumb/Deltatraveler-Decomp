@@ -11,7 +11,7 @@ public class JerrySlashBlue : BulletBase
 	{
 		base.Awake();
 		echo = Resources.Load<GameObject>("battle/attacks/bullets/jerry/JerrySlashEcho");
-		baseDmg = Util.FindObjectOfType<Jerry>().GetDamageValue();
+		baseDmg = UnityEngine.Object.FindObjectOfType<Jerry>().GetDamageValue();
 		aud.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
 		sr.color = new Color32(0, 60, byte.MaxValue, byte.MaxValue);
 	}
@@ -20,11 +20,11 @@ public class JerrySlashBlue : BulletBase
 	{
 		frames++;
 		sr.color = Color.Lerp(new Color32(0, 60, byte.MaxValue, byte.MaxValue), Color.white, (float)frames / 10f);
-		float t = Mathf.Abs(Mathf.Sin((float)(frames * 36) * (MathF.PI / 180f)));
+		float t = Mathf.Abs(Mathf.Sin((float)(frames * 36) * ((float)Math.PI / 180f)));
 		base.transform.localScale = Vector3.Lerp(new Vector3(1f, 1f, 1f), new Vector3(1.2f, 0.8f, 1f), t);
 		float z = base.transform.eulerAngles.z;
 		base.transform.eulerAngles = new Vector3(0f, 0f, z);
-		Vector3 vector = new Vector3(Mathf.Cos(z * (MathF.PI / 180f)), Mathf.Sin(z * (MathF.PI / 180f)));
+		Vector3 vector = new Vector3(Mathf.Cos(z * ((float)Math.PI / 180f)), Mathf.Sin(z * ((float)Math.PI / 180f)));
 		base.transform.position += vector * velocity;
 		if (frames % 10 == 0)
 		{
@@ -44,6 +44,6 @@ public class JerrySlashBlue : BulletBase
 	public override void PreSOULHit()
 	{
 		base.PreSOULHit();
-		baseDmg = Util.FindObjectOfType<Jerry>().GetDamageValue();
+		baseDmg = UnityEngine.Object.FindObjectOfType<Jerry>().GetDamageValue();
 	}
 }

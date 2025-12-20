@@ -4,29 +4,19 @@ using System.Collections.Generic;
 [Serializable]
 public class SAVEFile
 {
-	public string zoneName;
-
-	public bool susieActive;
-
-	public bool noelleActive;
-
 	public string name;
 
 	public int exp;
 
 	public List<int> items;
 
-	public List<int> equipItems;
-
-	public List<int> boxItems;
-
-	public int[] party;
-
-	public int[] hp;
-
 	public int[] weapon;
 
 	public int[] armor;
+
+	public bool susieActive;
+
+	public bool noelleActive;
 
 	public int playTime;
 
@@ -38,22 +28,23 @@ public class SAVEFile
 
 	public object[] persFlags;
 
+	public string zoneName;
+
 	public int deaths;
 
-	public void UpdateCharacterInfo(string name, int exp, List<int> items, List<int> equipItems, List<int> boxItems, int[] party, int[] hp, int[] weapon, int[] armor, int playTime, int zone, int gold, object[] flags)
+	public void UpdateCharacterInfo(string name, int exp, List<int> items, int[] weapon, int[] armor, bool susieActive, bool noelleActive, int playTime, int zone, int gold, string zoneName, object[] flags)
 	{
 		this.name = name;
 		this.exp = exp;
 		this.items = new List<int>(items);
-		this.equipItems = new List<int>(equipItems);
-		this.boxItems = new List<int>(boxItems);
-		this.party = (int[])party.Clone();
-		this.hp = (int[])hp.Clone();
 		this.weapon = (int[])weapon.Clone();
 		this.armor = (int[])armor.Clone();
+		this.susieActive = susieActive;
+		this.noelleActive = noelleActive;
 		this.playTime = playTime;
 		this.zone = zone;
 		this.gold = gold;
+		this.zoneName = zoneName;
 		this.flags = (object[])flags.Clone();
 	}
 

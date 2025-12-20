@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class CutsceneBase : SelectableBehaviour
+public class CutsceneBase : TranslatableSelectableBehaviour
 {
 	protected GameManager gm;
 
@@ -10,8 +10,6 @@ public class CutsceneBase : SelectableBehaviour
 	protected int state;
 
 	protected bool isPlaying;
-
-	protected bool initialized;
 
 	protected TextBox txt;
 
@@ -27,8 +25,6 @@ public class CutsceneBase : SelectableBehaviour
 
 	protected OverworldPlayer kris;
 
-	protected OverworldPlayer player;
-
 	protected OverworldPartyMember susie;
 
 	protected OverworldPartyMember noelle;
@@ -37,29 +33,25 @@ public class CutsceneBase : SelectableBehaviour
 
 	protected void Awake()
 	{
+		stringSubFolder = "cutscene";
 		frames = 0;
 		state = 0;
-		cam = Util.FindObjectOfType<CameraController>();
+		cam = UnityEngine.Object.FindObjectOfType<CameraController>();
 		aud = base.gameObject.AddComponent<AudioSource>();
-		kris = (player = Util.OverworldPlayer());
-		if ((bool)GameObject.Find("Susie"))
-		{
-			susie = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
-		}
-		if ((bool)GameObject.Find("Noelle"))
-		{
-			noelle = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
-		}
-		gm = Util.GameManager();
-		fade = Util.FindObjectOfType<Fade>();
+		kris = UnityEngine.Object.FindObjectOfType<OverworldPlayer>();
+		susie = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
+		noelle = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
+		gm = UnityEngine.Object.FindObjectOfType<GameManager>();
+		fade = UnityEngine.Object.FindObjectOfType<Fade>();
 	}
 
 	public virtual void StartCutscene(params object[] par)
 	{
 		int num = 0;
-		if ((bool)Util.OverworldPlayer())
+		SetStrings(GetDefaultStrings(), GetType());
+		if ((bool)UnityEngine.Object.FindObjectOfType<OverworldPlayer>())
 		{
-			Util.OverworldPlayer().SetCollision(onoff: false);
+			UnityEngine.Object.FindObjectOfType<OverworldPlayer>().SetCollision(false);
 		}
 		try
 		{
@@ -78,7 +70,7 @@ public class CutsceneBase : SelectableBehaviour
 			EndCutscene();
 			return;
 		}
-		gm.DisablePlayerMovement(deactivatePartyMembers: true);
+		gm.DisablePlayerMovement(true);
 		isPlaying = true;
 	}
 
@@ -92,9 +84,9 @@ public class CutsceneBase : SelectableBehaviour
 		isPlaying = false;
 		if (enablePlayerMovement)
 		{
-			if ((bool)Util.OverworldPlayer())
+			if ((bool)UnityEngine.Object.FindObjectOfType<OverworldPlayer>())
 			{
-				Util.OverworldPlayer().SetCollision(onoff: true);
+				UnityEngine.Object.FindObjectOfType<OverworldPlayer>().SetCollision(true);
 			}
 			gm.EnablePlayerMovement();
 		}
@@ -107,12 +99,23 @@ public class CutsceneBase : SelectableBehaviour
 		txt = new GameObject("CutsceneText").AddComponent<TextBox>();
 		if (pos == -1)
 		{
-			txt.CreateBox(text, sounds, speeds, giveBackControl: false, portraits);
+			txt.CreateBox(text, sounds, speeds, false, portraits);
 		}
 		else
 		{
-			txt.CreateBox(text, sounds, speeds, pos, giveBackControl: false, portraits);
+			txt.CreateBox(text, sounds, speeds, pos, false, portraits);
 		}
+	}
+
+	protected void StartText(TextSet textSet)
+	{
+		diagCheck = -1;
+		txt = new GameObject("CutsceneText").AddComponent<TextBox>();
+		if (textSet.location == -1)
+		{
+			textSet.location = 0;
+		}
+		txt.CreateBox(textSet);
 	}
 
 	protected void StartSelection(string optionA, string optionB, int defaultNextState, int pos)
@@ -126,7 +129,7 @@ public class CutsceneBase : SelectableBehaviour
 				num = 310;
 			}
 			sels = txt.GetUIBox().AddComponent<Selection>();
-			sels.CreateSelections(new string[1, 2] { { optionA, optionB } }, new Vector2(-116f, -283 + num), new Vector2(192f, 0f), new Vector2(-15f, 94f), "DTM-Mono", useSoul: true, makeSound: false, this, defaultNextState);
+			sels.CreateSelections(new string[1, 2] { { optionA, optionB } }, new Vector2(-116f, -283 + num), new Vector2(192f, 0f), new Vector2(-15f, 94f), "DTM-Mono", true, false, this, defaultNextState);
 		}
 	}
 
@@ -282,30 +285,18 @@ public class CutsceneBase : SelectableBehaviour
 
 	protected void RestorePlayerControl()
 	{
-		kris.SetSelfAnimControl(setAnimControl: true);
-		foreach (OverworldPartyMember partyMember in kris.GetPartyMembers())
-		{
-			partyMember.SetSelfAnimControl(setAnimControl: true);
-		}
-		cam.SetFollowPlayer(follow: true);
+		kris.SetSelfAnimControl(true);
+		susie.SetSelfAnimControl(true);
+		noelle.SetSelfAnimControl(true);
+		cam.SetFollowPlayer(true);
 	}
 
 	protected void RevokePlayerControl()
 	{
-		gm.DisablePlayerMovement(deactivatePartyMembers: true);
-		kris.SetSelfAnimControl(setAnimControl: false);
-		foreach (OverworldPartyMember partyMember in kris.GetPartyMembers())
-		{
-			partyMember.SetSelfAnimControl(setAnimControl: false);
-		}
-		if ((bool)susie)
-		{
-			susie.SetSelfAnimControl(setAnimControl: false);
-		}
-		if ((bool)noelle)
-		{
-			noelle.SetSelfAnimControl(setAnimControl: false);
-		}
-		cam.SetFollowPlayer(follow: false);
+		gm.DisablePlayerMovement(true);
+		kris.SetSelfAnimControl(false);
+		susie.SetSelfAnimControl(false);
+		noelle.SetSelfAnimControl(false);
+		cam.SetFollowPlayer(false);
 	}
 }

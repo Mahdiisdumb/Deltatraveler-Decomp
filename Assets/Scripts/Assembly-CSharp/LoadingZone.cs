@@ -45,12 +45,8 @@ public class LoadingZone : OverworldManipulator
 
 	private void Start()
 	{
-		fade = Util.FindObjectOfType<Fade>();
+		fade = Object.FindObjectOfType<Fade>();
 		activated = false;
-		if (Util.GameManager().GetSessionFlagInt(17) == 1)
-		{
-			fadeMusic = true;
-		}
 	}
 
 	private void Update()
@@ -62,22 +58,22 @@ public class LoadingZone : OverworldManipulator
 		if ((int)Util.GameManager().GetSessionFlag(17) == 1)
 		{
 			Util.GameManager().SetSessionFlag(17, 0);
-			Util.GameManager().ForceLoadArea(132);
+			Util.GameManager().ForceLoadArea(6);
 		}
 		else
 		{
-			if (!Util.FindObjectOfType<PunchCard>() && punchCardDetected)
+			if (!Object.FindObjectOfType<PunchCard>() && punchCardDetected)
 			{
 				if (newScene == 87 && (int)Util.GameManager().GetFlag(208) == 1 && (int)Util.GameManager().GetFlag(231) == 0)
 				{
 					newScene = 102;
-					Util.GameManager().SetPartyMembers(susie: false, noelle: false);
+					Util.GameManager().SetPartyMembers(false, false);
 					Util.GameManager().SetFlag(178, 0);
 					Util.GameManager().UnlockMenu();
 				}
-				Util.GameManager().TriggerWrongWarp();
+				Object.FindObjectOfType<GameManager>().TriggerWrongWarp();
 			}
-			Util.GameManager().EnablePlayerMovement();
+			Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
 			Vector2 dir = (vertical ? Vector2.up : Vector2.right);
 			if (downOrLeft)
 			{
@@ -85,29 +81,29 @@ public class LoadingZone : OverworldManipulator
 			}
 			if (newScene == 81 && (int)Util.GameManager().GetPersistentFlag(1) == 0)
 			{
-				int maxExclusive = 50;
-				if (PersistentSAVE.GetInt("completion", 0) < 3 && (int)Util.GameManager().GetFlag(12) == 1 && GameManager.UsingRecordingSoftware())
+				int max = 50;
+				if (PlayerPrefs.GetInt("CompletionState", 0) < 3 && (int)Util.GameManager().GetFlag(12) == 1 && GameManager.UsingRecordingSoftware())
 				{
-					maxExclusive = 1;
+					max = 1;
 				}
-				if (Random.Range(0, maxExclusive) == 0)
+				if (Random.Range(0, max) == 0)
 				{
 					newScene = 101;
 					if (Util.GameManager().SusieInParty())
 					{
 						Util.GameManager().SetSessionFlag(2, 1);
 					}
-					Util.GameManager().SetPartyMembers(susie: false, noelle: false);
+					Util.GameManager().SetPartyMembers(false, false);
 				}
 			}
-			Util.GameManager().LoadArea(newScene, fadeIn: true, newPos, dir);
+			Object.FindObjectOfType<GameManager>().LoadArea(newScene, true, newPos, dir);
 		}
 		activated = false;
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		if (!(collision.transform.tag == "Player") || activated || Util.OverworldPlayer().IsInitiatingBattle())
+		if (!(collision.transform.tag == "Player") || activated || Object.FindObjectOfType<OverworldPlayer>().IsInitiatingBattle())
 		{
 			return;
 		}
@@ -116,8 +112,8 @@ public class LoadingZone : OverworldManipulator
 			if (newScene == 95 && (int)Util.GameManager().GetFlag(254) == 1)
 			{
 				int num = (int)Util.GameManager().GetFlag(255);
-				Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
-				Util.OverworldPlayer().transform.position += new Vector3(1f / 24f, 0f);
+				Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+				Object.FindObjectOfType<OverworldPlayer>().transform.position += new Vector3(1f / 24f, 0f);
 				switch (num)
 				{
 				case 0:
@@ -150,7 +146,7 @@ public class LoadingZone : OverworldManipulator
 			{
 				if (newScene == 95)
 				{
-					Util.GameManager().SetPartyMembers(susie: true, noelle: false);
+					Util.GameManager().SetPartyMembers(true, false);
 					Util.GameManager().SetSessionFlag(14, (Util.GameManager().GetCurrentZone() == 96) ? 1 : 0);
 				}
 				else if (newScene == 94 || newScene == 96)
@@ -159,30 +155,31 @@ public class LoadingZone : OverworldManipulator
 					{
 						Util.GameManager().SetFlag(254, 0);
 					}
-					Util.GameManager().SetPartyMembers(susie: true, noelle: true);
+					Util.GameManager().SetPartyMembers(true, true);
 				}
 			}
 		}
 		if (newScene == 111)
 		{
-			Util.GameManager().SetPartyMembers(susie: true, noelle: true);
+			Util.GameManager().SetPartyMembers(true, true);
 		}
-		if ((forceActivationFlag > -1 && (int)Util.GameManager().GetFlag(forceActivationFlag) == 0) || forceActivationTrigger)
+		if ((forceActivationFlag > -1 && (int)Object.FindObjectOfType<GameManager>().GetFlag(forceActivationFlag) == 0) || forceActivationTrigger)
 		{
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
-			Util.OverworldPlayer().transform.position += denyNudge;
+			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+			Object.FindObjectOfType<OverworldPlayer>().transform.position += denyNudge;
 			new GameObject("txt").AddComponent<TextBox>().CreateBox(new string[1] { denyText }, new string[1] { denySound }, new int[1], new string[1] { denyPortrait });
 			return;
 		}
-		if ((bool)Util.FindObjectOfType<PunchCard>())
+		if ((bool)Object.FindObjectOfType<PunchCard>())
 		{
 			punchCardDetected = true;
 		}
-		GameObject.Find("GameManager").GetComponent<GameManager>().DisablePlayerMovement(deactivatePartyMembers: true);
+		GameObject.Find("GameManager").GetComponent<GameManager>().DisablePlayerMovement(true);
 		if (fadeType == 0)
 		{
 			fade.FadeOut(7);
-			BoxCollider2D boxCollider2D = Util.FindObjectOfType<ActionSOUL>()?.GetComponent<BoxCollider2D>();
+			ActionSOUL actionSOUL = Object.FindObjectOfType<ActionSOUL>();
+			BoxCollider2D boxCollider2D = (((object)actionSOUL != null) ? actionSOUL.GetComponent<BoxCollider2D>() : null);
 			if (boxCollider2D != null)
 			{
 				boxCollider2D.enabled = false;

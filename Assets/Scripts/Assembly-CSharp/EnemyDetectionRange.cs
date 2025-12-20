@@ -11,7 +11,7 @@ public class EnemyDetectionRange : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision && (bool)collision.gameObject.GetComponent<OverworldPlayer>())
+		if ((bool)collision.gameObject.GetComponent<OverworldPlayer>())
 		{
 			enemy.DetectPlayer();
 			GetComponent<BoxCollider2D>().enabled = false;

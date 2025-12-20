@@ -26,6 +26,6 @@ public class PKFreezeSnowBullet : BulletBase
 
 	public void SetDirection(int degree)
 	{
-		direction = new Vector3(Mathf.Sin((float)degree * (MathF.PI / 180f)), Mathf.Cos((float)degree * (MathF.PI / 180f)));
+		direction = new Vector3(Mathf.Sin((float)degree * ((float)Math.PI / 180f)), Mathf.Cos((float)degree * ((float)Math.PI / 180f)));
 	}
 }

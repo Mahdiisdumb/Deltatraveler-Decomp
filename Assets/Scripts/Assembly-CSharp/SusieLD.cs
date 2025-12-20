@@ -12,11 +12,11 @@ public class SusieLD : EnemyBase
 		enemyName = "Susie";
 		fileName = "susie";
 		checkDesc = "* Strong-headed \"mean girl\"\n  trying to help you.";
-		maxHp = PartyMembers.GetMaxHP(1);
+		maxHp = Util.GameManager().GetMaxHP(1);
 		hp = maxHp;
-		atk = PartyMembers.GetATK(1);
+		atk = Util.GameManager().GetATK(1);
 		def = 0;
-		displayedDef = PartyMembers.GetDEF(1);
+		displayedDef = Util.GameManager().GetDEF(1);
 		canSpareViaFight = false;
 		chatter = new string[1] { "Kris im morbing out" };
 		flavorTxt = new string[1] { "* Susie is sparing you." };
@@ -91,7 +91,7 @@ public class SusieLD : EnemyBase
 
 	public override bool IsDone()
 	{
-		if (!Util.FindObjectOfType<LesserDog>().IsKilled() || Util.GameManager().NoelleInParty() || spared)
+		if (!Object.FindObjectOfType<LesserDog>().IsKilled() || Util.GameManager().NoelleInParty() || spared)
 		{
 			return true;
 		}
@@ -103,14 +103,14 @@ public class SusieLD : EnemyBase
 		if (!IsDone())
 		{
 			doAttack = true;
-			hp = PartyMembers.GetHP(1);
+			hp = Util.GameManager().GetHP(1);
 			if (hp <= 0)
 			{
 				hp = 1;
 			}
-			Util.GameManager().SetPartyMembers(susie: false, noelle: false);
-			Util.FindObjectOfType<BattleManager>().UpdatePartyMembers();
-			Util.FindObjectOfType<PartyPanels>().SetXPositions();
+			Util.GameManager().SetPartyMembers(false, false);
+			Object.FindObjectOfType<BattleManager>().UpdatePartyMembers();
+			Object.FindObjectOfType<PartyPanels>().SetXPositions();
 		}
 		if (doneAttack)
 		{

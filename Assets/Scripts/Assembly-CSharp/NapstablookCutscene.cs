@@ -34,7 +34,7 @@ public class NapstablookCutscene : CutsceneBase
 		if (state == 1 && geno && !txt)
 		{
 			kris.InitiateBattle(8);
-			EndCutscene(enablePlayerMovement: false);
+			EndCutscene(false);
 		}
 		if (state == 1 && !geno)
 		{

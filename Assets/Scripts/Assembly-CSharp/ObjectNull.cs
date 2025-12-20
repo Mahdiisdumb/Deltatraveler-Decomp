@@ -28,17 +28,7 @@ public class ObjectNull : Record
 
 	public override string ToString()
 	{
-		object obj;
-		if (repeats <= 1)
-		{
-			obj = "ObjectNull";
-		}
-		else
-		{
-			int num = repeats;
-			obj = "ObjectNull x " + num;
-		}
-		return (string)obj + string.Format(" @ 0x%08x", offset);
+		return ((repeats > 1) ? ("ObjectNull x " + repeats) : "ObjectNull") + string.Format(" @ 0x%08x", offset);
 	}
 
 	public override RecordType GetRecordType()

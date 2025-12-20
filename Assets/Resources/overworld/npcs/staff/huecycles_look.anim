@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!74 &7400000
 AnimationClip:
-  serializedVersion: 7
+  serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -18,15 +18,19 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - serializedVersion: 2
-    curve:
+  - curve:
     - time: 0
-      value: {fileID: 21300000, guid: 4da8c9d43bf1c0d4f8831db879908744, type: 2}
+      value: {fileID: 21300000, guid: 3660e5e83590830419a5c7ea5d71d6a0, type: 2}
+    - time: 0.16666667
+      value: {fileID: 21300000, guid: d207cb5b53132ad438ea1a21f6baccd7, type: 2}
+    - time: 0.33333334
+      value: {fileID: 21300000, guid: 9d4a4c822203a354f97ee08e2a35f215, type: 2}
+    - time: 0.6666667
+      value: {fileID: 21300000, guid: 34eeba6b1691ce04792c70f4a027add7, type: 2}
     attribute: m_Sprite
     path:
     classID: 212
     script: {fileID: 0}
-    flags: 2
   m_SampleRate: 6
   m_WrapMode: 0
   m_Bounds:
@@ -41,16 +45,17 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
-      isIntCurve: 0
-      isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 4da8c9d43bf1c0d4f8831db879908744, type: 2}
+    - {fileID: 21300000, guid: 3660e5e83590830419a5c7ea5d71d6a0, type: 2}
+    - {fileID: 21300000, guid: d207cb5b53132ad438ea1a21f6baccd7, type: 2}
+    - {fileID: 21300000, guid: 9d4a4c822203a354f97ee08e2a35f215, type: 2}
+    - {fileID: 21300000, guid: 34eeba6b1691ce04792c70f4a027add7, type: 2}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.16666667
+    m_StopTime: 1
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -69,4 +74,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 1
+    functionName: PlayNewAnimation
+    data: huecycles_embarrassed
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

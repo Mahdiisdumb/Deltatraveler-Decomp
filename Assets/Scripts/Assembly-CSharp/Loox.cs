@@ -99,11 +99,11 @@ public class Loox : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 		if (i == 1)
 		{
@@ -116,7 +116,7 @@ public class Loox : EnemyBase
 			}
 			return new string[2] { "* Susie picked on Loox.", "su_teeth`snd_txtsus`* I'm gonna throw you\n  against the wall like\n  a dodgeball." };
 		}
-		return base.PerformAssistAct_Old(i);
+		return base.PerformAssistAct(i);
 	}
 
 	public override void Chat(string[] text, string type, string sound, Vector2 pos, bool canSkip, int speed)
@@ -146,11 +146,11 @@ public class Loox : EnemyBase
 
 	public override int GetNextAttack()
 	{
-		if (Util.FindObjectsOfType<Loox>().Length == 2 && !Util.FindObjectsOfType<Loox>()[0].IsDone() && !Util.FindObjectsOfType<Loox>()[1].IsDone())
+		if (Object.FindObjectsOfType<Loox>().Length == 2 && !Object.FindObjectsOfType<Loox>()[0].IsDone() && !Object.FindObjectsOfType<Loox>()[1].IsDone())
 		{
 			return 19;
 		}
-		if ((bool)Util.FindObjectOfType<Vegetoid>() && !Util.FindObjectOfType<Vegetoid>().IsDone())
+		if ((bool)Object.FindObjectOfType<Vegetoid>() && !Object.FindObjectOfType<Vegetoid>().IsDone())
 		{
 			return 21;
 		}

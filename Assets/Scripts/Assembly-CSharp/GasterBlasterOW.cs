@@ -79,12 +79,12 @@ public class GasterBlasterOW : ActionBulletBase
 			return;
 		}
 		float num2 = (float)(frames - (30 + delayOffset)) / 15f;
-		num2 = 1f - Mathf.Cos(num2 * MathF.PI * 0.5f);
+		num2 = 1f - Mathf.Cos(num2 * (float)Math.PI * 0.5f);
 		if (frames >= 45 + delayOffset)
 		{
 			num2 = 1f;
 		}
-		Vector3 vector = new Vector3(0f - Mathf.Sin(angle * (MathF.PI / 180f)), Mathf.Cos(angle * (MathF.PI / 180f))) * 13f;
+		Vector3 vector = new Vector3(0f - Mathf.Sin(angle * ((float)Math.PI / 180f)), Mathf.Cos(angle * ((float)Math.PI / 180f))) * 13f;
 		base.transform.localPosition = Vector3.Lerp(position, (Vector3)position + vector, num2);
 		int num3 = Mathf.FloorToInt((float)(frames - 30 + delayOffset) / 6f) % 2 + 4;
 		sr.sprite = sprites[num3];
@@ -118,7 +118,7 @@ public class GasterBlasterOW : ActionBulletBase
 				GetComponent<BoxCollider2D>().enabled = false;
 				isBlasting = false;
 			}
-			num4 = Mathf.Sin(num4 * MathF.PI * 0.5f);
+			num4 = Mathf.Sin(num4 * (float)Math.PI * 0.5f);
 			if (frames >= 30 + delayOffset + blastFrames)
 			{
 				num4 = 1f;
@@ -186,6 +186,6 @@ public class GasterBlasterOW : ActionBulletBase
 
 	public Vector2 GetFaceDirection()
 	{
-		return new Vector2(Mathf.Sin((angle - 180f) * (MathF.PI / 180f)), Mathf.Cos(angle * (MathF.PI / 180f)));
+		return new Vector2(Mathf.Sin((angle - 180f) * ((float)Math.PI / 180f)), Mathf.Cos(angle * ((float)Math.PI / 180f)));
 	}
 }

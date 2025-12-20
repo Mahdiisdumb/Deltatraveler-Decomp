@@ -12,7 +12,7 @@ public class LetterScenarioHandler : MonoBehaviour
 		}
 		if (!Util.GameManager().SusieInParty())
 		{
-			GameObject.Find("Susie").GetComponent<OverworldPartyMember>().transform.position = new Vector3(-3.38f, 2.3f);
+			GameObject.Find("Susie").transform.position = new Vector3(-3.38f, 2.3f);
 			GameObject.Find("SusieTalk").transform.position = new Vector3(-3.392f, 1.808f);
 		}
 		GameObject.Find("Papyrus").GetComponent<Animator>().SetFloat("dirX", -1f);

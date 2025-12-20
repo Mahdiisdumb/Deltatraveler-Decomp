@@ -10,11 +10,11 @@ public class TripleCultistDefeat : CutsceneBase
 			if ((int)gm.GetFlag(13) >= 5 && num == 1)
 			{
 				gm.PlayGlobalSFX("sounds/snd_ominous");
-				Util.FindObjectOfType<CultistWallGenerator>().CreateDeadEnemies(age: false);
+				Object.FindObjectOfType<CultistWallGenerator>().CreateDeadEnemies(false);
 			}
 			else
 			{
-				Util.FindObjectOfType<CultistWallGenerator>().EliminateEverything();
+				Object.FindObjectOfType<CultistWallGenerator>().EliminateEverything();
 				if ((int)gm.GetFlag(12) == 1)
 				{
 					WeirdChecker.Abort(gm);

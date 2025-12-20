@@ -28,7 +28,7 @@ public class GreaterDogIntroCutscene : CutsceneBase
 			}
 			else if (AtLine(9))
 			{
-				SetSprite(susie, "spr_su_shrug", flipX: true);
+				SetSprite(susie, "spr_su_shrug", true);
 			}
 			else if (AtLine(11))
 			{
@@ -44,7 +44,7 @@ public class GreaterDogIntroCutscene : CutsceneBase
 		else
 		{
 			kris.InitiateBattle(72);
-			EndCutscene(enablePlayerMovement: false);
+			EndCutscene(false);
 		}
 	}
 
@@ -52,9 +52,9 @@ public class GreaterDogIntroCutscene : CutsceneBase
 	{
 		base.StartCutscene(par);
 		RevokePlayerControl();
-		SetMoveAnim(kris, isMoving: false);
-		SetMoveAnim(susie, isMoving: false);
-		SetMoveAnim(noelle, isMoving: false);
+		SetMoveAnim(kris, false);
+		SetMoveAnim(susie, false);
+		SetMoveAnim(noelle, false);
 		SetSprite(kris, "spr_kr_surprise");
 		SetSprite(noelle, "spr_no_surprise");
 		ChangeDirection(kris, Vector2.right);

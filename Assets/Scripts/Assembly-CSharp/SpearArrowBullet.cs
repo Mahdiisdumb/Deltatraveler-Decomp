@@ -27,7 +27,7 @@ public class SpearArrowBullet : BulletBase
 		baseDmg = 7;
 		karmaImpact = 4;
 		tpGrazeValue = 2.5f;
-		boxcol = Util.FindObjectOfType<BoxCollider2D>();
+		boxcol = UnityEngine.Object.FindObjectOfType<BoxCollider2D>();
 	}
 
 	private void Update()
@@ -66,7 +66,7 @@ public class SpearArrowBullet : BulletBase
 		{
 			frames++;
 			float num3 = Mathf.Lerp(1.5f, -1.5f, (float)frames / 10f);
-			float f = Mathf.Lerp(base.transform.rotation.eulerAngles.z, base.transform.rotation.eulerAngles.z - 180f, (float)frames / 10f) * (MathF.PI / 180f);
+			float f = Mathf.Lerp(base.transform.rotation.eulerAngles.z, base.transform.rotation.eulerAngles.z - 180f, (float)frames / 10f) * ((float)Math.PI / 180f);
 			if (IsVertical())
 			{
 				base.transform.position = new Vector3(0f, -0.042f) + new Vector3(Mathf.Cos(f), num3 * dir.y);

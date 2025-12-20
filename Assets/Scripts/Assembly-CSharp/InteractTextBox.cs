@@ -68,7 +68,7 @@ public class InteractTextBox : Interactable
 		{
 			talkedToBefore = true;
 		}
-		if (vanishAtFlag > -1 && (int)Util.GameManager().GetFlag(vanishAtFlag) >= vanishAtCount)
+		if (vanishAtFlag > -1 && (int)Object.FindObjectOfType<GameManager>().GetFlag(vanishAtFlag) >= vanishAtCount)
 		{
 			Object.Destroy(base.gameObject);
 		}
@@ -137,19 +137,19 @@ public class InteractTextBox : Interactable
 		if ((int)Util.GameManager().GetSessionFlag(6) == 1)
 		{
 			txt = new GameObject("InteractTextBox", typeof(TextBox)).GetComponent<TextBox>();
-			txt.CreateBox(new string[1] { "* ..." }, giveBackControl: true);
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+			txt.CreateBox(new string[1] { "* ..." }, true);
+			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 			return;
 		}
 		if (talkedToBefore && secondaryLines)
 		{
-			CreateTextBox(lines2, sounds2, speed2, giveBackControl: true, portraits2, remarks2);
+			CreateTextBox(lines2, sounds2, speed2, true, portraits2, remarks2);
 		}
 		else
 		{
-			CreateTextBox(lines, sounds, speed, giveBackControl: true, portraits, remarks);
+			CreateTextBox(lines, sounds, speed, true, portraits, remarks);
 		}
-		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 		talkedToBefore = true;
 		if (triggerFlag > -1 && Util.GameManager().GetFlagInt(triggerFlag) == 0)
 		{

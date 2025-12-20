@@ -199,7 +199,7 @@ public class Doggo : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		switch (i)
 		{
@@ -209,7 +209,7 @@ public class Doggo : EnemyBase
 				if (!tired)
 				{
 					tired = true;
-					Hit(3, 1f, playSound: true);
+					Hit(3, 1f, true);
 					Util.GameManager().SetSessionFlag(4, 1);
 					return new string[2] { "* Susie snuck behind Doggo's\n  sentry station and shook it.", "* Doggo jumped and hit his\n  head on the ceiling." };
 				}
@@ -226,7 +226,7 @@ public class Doggo : EnemyBase
 			}
 			return new string[2] { "no_confused_side`snd_txtnoe`* (Wait,^05 Kris,^05 we don't\n  want to freak him\n  out!)", "no_happy`snd_txtnoe`* (Maybe we should make\n  our presence known\n  first...)" };
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 

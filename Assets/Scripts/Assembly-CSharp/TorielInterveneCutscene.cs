@@ -20,7 +20,7 @@ public class TorielInterveneCutscene : CutsceneBase
 				toriel.SetFloat("speed", 1f);
 				kris.ChangeDirection(Vector2.down);
 				susie.DisableAnimator();
-				susie.SetSprite("unhappy/spr_su_down_0_unhappy");
+				susie.SetSprite("spr_su_down_unhappy_0");
 				toriel.Play("WalkUp", 0, 0f);
 			}
 			toriel.transform.position = Vector3.Lerp(new Vector3(0f, -7f), new Vector3(0f, -2.5f), (float)frames / 30f);

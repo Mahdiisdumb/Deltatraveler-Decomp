@@ -33,11 +33,9 @@ public class MirrorPlayer : MonoBehaviour
 
 	private bool canRunAnim;
 
-	private string curSpriteName = "";
-
 	private void Awake()
 	{
-		player = Util.OverworldPlayer();
+		player = Object.FindObjectOfType<OverworldPlayer>();
 		anim = GetComponent<Animator>();
 		sr = GetComponent<SpriteRenderer>();
 		if (!reflectParent)
@@ -101,9 +99,19 @@ public class MirrorPlayer : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		if (anim.enabled)
+		if (Util.GameManager().GetFlagInt(108) != 1 || Util.GameManager().GetFlagInt(13) < 2 || Util.GameManager().GetFlagInt(127) != 1)
 		{
-			curSpriteName = player.GetOverrideSprite(sr, curSpriteName);
+			return;
+		}
+		string text = "g";
+		string text2 = sr.sprite.name + "_" + text;
+		if (text2 != sr.sprite.name)
+		{
+			Sprite sprite = Resources.Load<Sprite>("player/Frisk/" + text + "/" + text2);
+			if (sprite != null)
+			{
+				sr.sprite = sprite;
+			}
 		}
 	}
 

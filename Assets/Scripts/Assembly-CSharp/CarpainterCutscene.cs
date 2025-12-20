@@ -47,7 +47,7 @@ public class CarpainterCutscene : CutsceneBase
 		frames++;
 		if (frames == 1)
 		{
-			cam.SetFollowPlayer(follow: false);
+			cam.SetFollowPlayer(false);
 			camPos = cam.transform.position;
 			gm.StopMusic();
 			PlaySFX("sounds/snd_enemypsi");
@@ -83,7 +83,7 @@ public class CarpainterCutscene : CutsceneBase
 			}
 			else
 			{
-				reflectBall.transform.position = kris.transform.position + new Vector3(0f, (Util.GameManager().GetPartyMember(3) == 3) ? 0.95f : 0.79f);
+				reflectBall.transform.position = kris.transform.position + new Vector3(0f, (gm.GetMiniPartyMember() == 1) ? 0.95f : 0.79f);
 			}
 		}
 		lightning.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
@@ -96,7 +96,7 @@ public class CarpainterCutscene : CutsceneBase
 			GameObject.Find("Black").GetComponent<SpriteRenderer>().color = new Color(0f, 0f, 0f, 0f);
 			Object.Destroy(reflectBall.gameObject);
 			kris.InitiateBattle(28, new Vector2(-5.646f, -4.48f), 10);
-			EndCutscene(enablePlayerMovement: false);
+			EndCutscene(false);
 		}
 	}
 
@@ -118,7 +118,7 @@ public class CarpainterCutscene : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		carpainter = Util.FindObjectOfType<CarpainterNPC>();
+		carpainter = Object.FindObjectOfType<CarpainterNPC>();
 		lightning = GameObject.Find("Lightning").GetComponent<SpriteRenderer>();
 		reflectBall = GameObject.Find("ReflectBall").GetComponent<SpriteRenderer>();
 		reflectBallSprites = new Sprite[2]
@@ -135,7 +135,7 @@ public class CarpainterCutscene : CutsceneBase
 			StartText(new string[4] { "* Thanks for coming!^05\n* I've been waiting for you\n  three.", "* I need your assistance to make\n  the world blue,^05 and change it\n  into a peaceful society.", "* I know of your violent\n  tendencies,^05 so you would make\n  a very helpful asset.", "* Will you be my right-hand\n  assistants?" }, new string[4] { "snd_text", "snd_text", "snd_text", "snd_text" }, new int[4], new string[4] { "", "", "", "" });
 			txt.EnableSelectionAtEnd();
 		}
-		else if (Util.GameManager().GetPartyMember(3) == 3)
+		else if (gm.GetMiniPartyMember() == 1)
 		{
 			StartText(new string[4] { "* P-^05Paula???^05\n* How did you...?", "* Umm,^05 maybe invest in\n  stronger cells next\n  time.", "* Get ready for us\n  to beat the HELL\n  out of you!", "* Not if you taste the power\n  of my crash boom-boom attack!" }, new string[5] { "snd_text", "snd_txtpau", "snd_txtsus", "snd_text", "snd_text" }, new int[5], new string[5] { "", "pau_confident", "su_pissed", "", "" });
 			state = 1;

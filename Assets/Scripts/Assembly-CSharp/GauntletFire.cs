@@ -49,7 +49,7 @@ public class GauntletFire : ActionBulletBase
 		if (num > 0)
 		{
 			GetComponent<BoxCollider2D>().enabled = true;
-			base.transform.localPosition = new Vector3(Mathf.Lerp(-5f, 5f, (Mathf.Sin((float)((frames - 3) * 3) * (MathF.PI / 180f)) + 1f) / 2f), base.transform.localPosition.y);
+			base.transform.localPosition = new Vector3(Mathf.Lerp(-5f, 5f, (Mathf.Sin((float)((frames - 3) * 3) * ((float)Math.PI / 180f)) + 1f) / 2f), base.transform.localPosition.y);
 			if (frames % 6 == 3)
 			{
 				UnityEngine.Object.Instantiate(prefab, base.transform.position + Vector3.down, Quaternion.identity, base.transform.parent);

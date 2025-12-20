@@ -20,7 +20,7 @@ public class GasterSection3Cutscene : CutsceneBase
 		}
 		if (state == 0)
 		{
-			Tilemap[] array = Util.FindObjectsOfType<Tilemap>();
+			Tilemap[] array = Object.FindObjectsOfType<Tilemap>();
 			foreach (Tilemap obj in array)
 			{
 				float t = 1f;
@@ -35,7 +35,7 @@ public class GasterSection3Cutscene : CutsceneBase
 				frames++;
 				if (frames == 60)
 				{
-					array = Util.FindObjectsOfType<Tilemap>();
+					array = Object.FindObjectsOfType<Tilemap>();
 					for (int i = 0; i < array.Length; i++)
 					{
 						array[i].color = Color.black;
@@ -177,9 +177,9 @@ public class GasterSection3Cutscene : CutsceneBase
 			if ((int)gm.GetSessionFlag(2) == 1)
 			{
 				gm.SetSessionFlag(2, 0);
-				gm.SetPartyMembers(susie: true, noelle: true);
+				gm.SetPartyMembers(true, true);
 			}
-			gm.LoadArea(81, fadeIn: false, kris.transform.position, kris.GetDirection());
+			gm.LoadArea(81, false, kris.transform.position, kris.GetDirection());
 			state = 3;
 			creepygastershit = false;
 		}
@@ -193,7 +193,7 @@ public class GasterSection3Cutscene : CutsceneBase
 		{
 			variance = 0;
 		}
-		else if (PersistentSAVE.GetInt("completion", 0) < 3)
+		else if (PlayerPrefs.GetInt("CompletionState", 0) < 3)
 		{
 			variance = (GameManager.UsingRecordingSoftware() ? 3 : 2);
 		}
@@ -219,9 +219,9 @@ public class GasterSection3Cutscene : CutsceneBase
 			"#v_gaster_s3_initial_20", "#v_gaster_s3_initial_21", "#v_gaster_s3_initial_22", "#v_gaster_s3_initial_23", "#v_gaster_s3_initial_24", "#v_gaster_s3_initial_25", "#v_gaster_s3_initial_26", "#v_gaster_s3_initial_27", "#v_gaster_s3_initial_28", "#v_gaster_s3_initial_29",
 			"#v_gaster_s3_initial_30", "#v_gaster_s3_initial_31", "#v_gaster_s3_initial_32", "#v_gaster_s3_initial_33", "#v_gaster_s3_initial_34", "#v_gaster_s3_initial_35", "#v_gaster_s3_initial_36", "#v_gaster_s3_initial_37", "#v_gaster_s3_initial_38", "#v_gaster_s3_initial_39"
 		}, new int[1] { 1 }, new string[0]);
-		if (PersistentSAVE.GetInt("gaster-s3", 0) == 0)
+		if (PlayerPrefs.GetInt("GasterSection3", 0) == 0)
 		{
-			PersistentSAVE.SetInt("gaster-s3", 1);
+			PlayerPrefs.SetInt("GasterSection3", 1);
 			txt.MakeUnskippable();
 		}
 	}

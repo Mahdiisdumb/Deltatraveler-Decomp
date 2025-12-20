@@ -7,7 +7,8 @@ public static class Serializer
 
 	public static string Serialize(Type type, object value)
 	{
-		_serializer.TrySerialize(type, value, out var data).AssertSuccessWithoutWarnings();
+		fsData data;
+		_serializer.TrySerialize(type, value, out data).AssertSuccessWithoutWarnings();
 		return fsJsonPrinter.PrettyJson(data);
 	}
 

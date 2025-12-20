@@ -32,8 +32,6 @@ public class MirrorPartyMember : MonoBehaviour
 
 	private SpriteRenderer sr;
 
-	private string curSpriteName = "";
-
 	private void Awake()
 	{
 		anim = GetComponent<Animator>();
@@ -93,9 +91,29 @@ public class MirrorPartyMember : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		if (anim.enabled)
+		if (!partyMember.IsUnhappy())
 		{
-			curSpriteName = partyMember.GetOverrideSprite(sr, curSpriteName);
+			return;
+		}
+		string text = "player/" + partyMember.gameObject.name + "/" + GetComponent<SpriteRenderer>().sprite.name;
+		string text2 = text;
+		if (partyMember.IsUnhappy())
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				text2 = text2.Replace("_" + i, "_unhappy_" + i);
+			}
+		}
+		Sprite sprite = Resources.Load<Sprite>(text2);
+		if (sprite != null)
+		{
+			GetComponent<SpriteRenderer>().sprite = sprite;
+			return;
+		}
+		sprite = Resources.Load<Sprite>(text);
+		if (sprite != null)
+		{
+			GetComponent<SpriteRenderer>().sprite = sprite;
 		}
 	}
 

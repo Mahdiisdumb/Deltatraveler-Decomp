@@ -62,11 +62,11 @@ namespace MarioBrosMayhem
 			else if (index == 1)
 			{
 				pauseSfx.Play();
-				Util.FindObjectOfType<MusicPlayer>().GetComponent<AudioSource>().volume = 1f;
-				PlayerHUD[] array = Util.FindObjectsOfType<PlayerHUD>();
+				Object.FindObjectOfType<MusicPlayer>().GetComponent<AudioSource>().volume = 1f;
+				PlayerHUD[] array = Object.FindObjectsOfType<PlayerHUD>();
 				for (int i = 0; i < array.Length; i++)
 				{
-					array[i].SetLivesVisible(enabled: false);
+					array[i].SetLivesVisible(false);
 				}
 				Image[] componentsInChildren = GetComponentsInChildren<Image>();
 				for (int i = 0; i < componentsInChildren.Length; i++)
@@ -78,7 +78,7 @@ namespace MarioBrosMayhem
 				{
 					componentsInChildren2[i].enabled = false;
 				}
-				Util.FindObjectOfType<MarioBrosManager>().QuitGame();
+				Object.FindObjectOfType<MarioBrosManager>().QuitGame();
 				no = true;
 			}
 		}
@@ -86,14 +86,14 @@ namespace MarioBrosMayhem
 		public void Pause()
 		{
 			Time.timeScale = 0f;
-			Util.FindObjectOfType<MusicPlayer>().GetComponent<AudioSource>().volume = 0.5f;
+			Object.FindObjectOfType<MusicPlayer>().GetComponent<AudioSource>().volume = 0.5f;
 			paused = true;
 			holdFrame = true;
 			pauseSfx.Play();
-			PlayerHUD[] array = Util.FindObjectsOfType<PlayerHUD>();
+			PlayerHUD[] array = Object.FindObjectsOfType<PlayerHUD>();
 			for (int i = 0; i < array.Length; i++)
 			{
-				array[i].SetLivesVisible(enabled: true);
+				array[i].SetLivesVisible(true);
 			}
 			Image[] componentsInChildren = GetComponentsInChildren<Image>();
 			for (int i = 0; i < componentsInChildren.Length; i++)
@@ -106,12 +106,12 @@ namespace MarioBrosMayhem
 				componentsInChildren2[i].enabled = true;
 			}
 			string text = "";
-			if ((bool)Util.FindObjectOfType<MarioBrosManager>())
+			if ((bool)Object.FindObjectOfType<MarioBrosManager>())
 			{
-				text = (Util.FindObjectOfType<MarioBrosManager>().GetPhaseNumber() + 1).ToString().PadLeft(2, ' ');
+				text = (Object.FindObjectOfType<MarioBrosManager>().GetPhaseNumber() + 1).ToString().PadLeft(2, ' ');
 				base.transform.Find("PhaseTextP").GetComponent<SpriteText>().Text = "Phase " + text;
 			}
-			base.transform.Find("1").GetComponent<SpriteText>().Text = "Save/Quit";
+			base.transform.Find("1").GetComponent<SpriteText>().Text = "Quit";
 			index = 0;
 			PositionCursor();
 		}
@@ -124,12 +124,12 @@ namespace MarioBrosMayhem
 		public void Unpause()
 		{
 			Time.timeScale = 1f;
-			Util.FindObjectOfType<MusicPlayer>().GetComponent<AudioSource>().volume = 1f;
+			Object.FindObjectOfType<MusicPlayer>().GetComponent<AudioSource>().volume = 1f;
 			paused = false;
-			PlayerHUD[] array = Util.FindObjectsOfType<PlayerHUD>();
+			PlayerHUD[] array = Object.FindObjectsOfType<PlayerHUD>();
 			for (int i = 0; i < array.Length; i++)
 			{
-				array[i].SetLivesVisible(enabled: false);
+				array[i].SetLivesVisible(false);
 			}
 			Image[] componentsInChildren = GetComponentsInChildren<Image>();
 			for (int i = 0; i < componentsInChildren.Length; i++)

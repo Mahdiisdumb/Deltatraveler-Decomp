@@ -29,13 +29,13 @@ public class PorkyFlameBullet : BulletBase
 		float num = (float)frames / 45f;
 		if (num < 1f)
 		{
-			num = Mathf.Sin(num * MathF.PI * 0.5f);
+			num = Mathf.Sin(num * (float)Math.PI * 0.5f);
 		}
 		else
 		{
 			UnityEngine.Object.Destroy(base.gameObject);
 		}
-		base.transform.position = basePos + new Vector3(Mathf.Sin((float)angle * (MathF.PI / 180f)), Mathf.Cos((float)angle * (MathF.PI / 180f))) * Mathf.Lerp(0f, distance, num);
+		base.transform.position = basePos + new Vector3(Mathf.Sin((float)angle * ((float)Math.PI / 180f)), Mathf.Cos((float)angle * ((float)Math.PI / 180f))) * Mathf.Lerp(0f, distance, num);
 		sr.color = new Color(1f, 1f, 1f, (float)(45 - frames) / 10f);
 	}
 

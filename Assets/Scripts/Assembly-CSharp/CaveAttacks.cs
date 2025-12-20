@@ -35,7 +35,7 @@ public class CaveAttacks : AttackBase
 	protected override void Awake()
 	{
 		base.Awake();
-		RoughMole[] array = Util.FindObjectsOfType<RoughMole>();
+		RoughMole[] array = Object.FindObjectsOfType<RoughMole>();
 		foreach (RoughMole roughMole in array)
 		{
 			if (!roughMole.IsDone())
@@ -48,7 +48,7 @@ public class CaveAttacks : AttackBase
 				totalCount++;
 			}
 		}
-		MrBatty[] array2 = Util.FindObjectsOfType<MrBatty>();
+		MrBatty[] array2 = Object.FindObjectsOfType<MrBatty>();
 		foreach (MrBatty mrBatty in array2)
 		{
 			if (!mrBatty.IsDone() && !mrBatty.IsDisabled())
@@ -67,16 +67,16 @@ public class CaveAttacks : AttackBase
 				totalCount++;
 			}
 		}
-		if ((bool)Util.FindObjectOfType<MightyBear>() && !Util.FindObjectOfType<MightyBear>().IsDone())
+		if ((bool)Object.FindObjectOfType<MightyBear>() && !Object.FindObjectOfType<MightyBear>().IsDone())
 		{
 			bearAttack = Random.Range(0, 2);
 			bearCount++;
 			totalCount++;
 			if (bearAttack == 0 || totalCount > 1)
 			{
-				Util.FindObjectOfType<MightyBear>().SetToBulletBoard(toBulletBoard: true);
+				Object.FindObjectOfType<MightyBear>().SetToBulletBoard(true);
 			}
-			startHoneyAnger = Util.FindObjectOfType<MightyBear>().AreBeesPissed();
+			startHoneyAnger = Object.FindObjectOfType<MightyBear>().AreBeesPissed();
 		}
 		if (moleCount == totalCount)
 		{
@@ -101,14 +101,14 @@ public class CaveAttacks : AttackBase
 
 	private void OnDestroy()
 	{
-		MrBatty[] array = Util.FindObjectsOfType<MrBatty>();
+		MrBatty[] array = Object.FindObjectsOfType<MrBatty>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			array[i].Reenable();
 		}
-		if ((bool)Util.FindObjectOfType<MightyBear>() && !Util.FindObjectOfType<MightyBear>().IsDone())
+		if ((bool)Object.FindObjectOfType<MightyBear>() && !Object.FindObjectOfType<MightyBear>().IsDone())
 		{
-			Util.FindObjectOfType<MightyBear>().SetToBulletBoard(toBulletBoard: false);
+			Object.FindObjectOfType<MightyBear>().SetToBulletBoard(false);
 		}
 	}
 

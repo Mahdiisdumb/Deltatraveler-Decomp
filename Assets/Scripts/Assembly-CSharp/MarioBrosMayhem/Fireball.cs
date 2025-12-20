@@ -57,8 +57,8 @@ namespace MarioBrosMayhem
 			base.Awake();
 			aud = GetComponents<AudioSource>()[0];
 			dieAud = GetComponents<AudioSource>()[1];
-			hard = Util.FindObjectOfType<ServerSessionManager>().GetRuleValue(0, 3) == 1;
-			secondFireball = Util.FindObjectsOfType<Fireball>().Length > 1;
+			hard = Object.FindObjectOfType<ServerSessionManager>().GetRuleValue(0, 3) == 1;
+			secondFireball = Object.FindObjectsOfType<Fireball>().Length > 1;
 			if (hard && (!secondFireball || (secondFireball && red)))
 			{
 				spawnTime = 2f;
@@ -75,7 +75,7 @@ namespace MarioBrosMayhem
 
 		private void FixedUpdate()
 		{
-			if (!spawned && Util.FindObjectOfType<MarioBrosManager>().GetEnemyCount() > 0)
+			if (!spawned && Object.FindObjectOfType<MarioBrosManager>().GetEnemyCount() > 0)
 			{
 				spawnTimer += Time.fixedDeltaTime;
 				if (spawnTimer >= spawnTime)
@@ -83,7 +83,7 @@ namespace MarioBrosMayhem
 					spawned = true;
 					spawnTimer = 0f;
 					List<Player> list = new List<Player>();
-					Player[] array = Util.FindObjectsOfType<Player>();
+					Player[] array = Object.FindObjectsOfType<Player>();
 					foreach (Player player in array)
 					{
 						if (!player.IsDead())
@@ -209,7 +209,7 @@ namespace MarioBrosMayhem
 
 		private void OnTriggerStay2D(Collider2D collision)
 		{
-			if ((bool)collision && !die && !dead && (bool)collision.GetComponent<Player>() && collision.GetComponent<Player>().CanInteract() && !collision.GetComponent<Player>().IsInvincible())
+			if (!die && !dead && (bool)collision.GetComponent<Player>() && collision.GetComponent<Player>().CanInteract() && !collision.GetComponent<Player>().IsInvincible())
 			{
 				collision.GetComponent<Player>().Damage(new Vector3((float)((!(base.transform.position.x > collision.transform.position.x)) ? 1 : (-1)) / 15f, 0.15f), 0);
 				Die();
@@ -249,7 +249,7 @@ namespace MarioBrosMayhem
 
 		public void Kill(int playerId, bool playSound = true)
 		{
-			Die(playSound, instant: true);
+			Die(playSound, true);
 		}
 
 		public void SpawnIn(Vector3 spawnPosition, bool movingRight, float rowY)

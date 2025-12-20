@@ -20,7 +20,7 @@ public class MultiVegAttack : AttackBase
 			veggieFucker[i] = Random.Range(0, 2);
 			vegSpawnRate[i] = ((veggieFucker[i] == 1) ? 30 : 10);
 		}
-		Vegetoid[] array = Util.FindObjectsOfType<Vegetoid>();
+		Vegetoid[] array = Object.FindObjectsOfType<Vegetoid>();
 		for (int j = 0; j < array.Length; j++)
 		{
 			if (array[j].ExpectingGreensEaten())
@@ -33,7 +33,7 @@ public class MultiVegAttack : AttackBase
 
 	public void OnDestroy()
 	{
-		Vegetoid[] array = Util.FindObjectsOfType<Vegetoid>();
+		Vegetoid[] array = Object.FindObjectsOfType<Vegetoid>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			array[i].DisableEatingGreens();

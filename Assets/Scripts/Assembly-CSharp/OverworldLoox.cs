@@ -13,7 +13,7 @@ public class OverworldLoox : OverworldEnemyBase
 
 	protected override void Awake()
 	{
-		if ((int)Util.GameManager().GetFlag(108) == 1)
+		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(108) == 1)
 		{
 			hardMode = true;
 		}
@@ -100,7 +100,7 @@ public class OverworldLoox : OverworldEnemyBase
 		anim.Play("Astigmatism Chase");
 		if (runFromPlayer)
 		{
-			if (Vector3.Distance(base.transform.position, Util.OverworldPlayer().transform.position) < 2f)
+			if (Vector3.Distance(base.transform.position, Object.FindObjectOfType<OverworldPlayer>().transform.position) < 2f)
 			{
 				runToNextPoint = true;
 			}

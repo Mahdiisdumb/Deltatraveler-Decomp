@@ -104,7 +104,7 @@ public class GreaterDog : EnemyBase
 				attacks[0] = -1;
 				playerMultiplier = 999f;
 				displayedDef = -21;
-				Util.FindObjectOfType<BattleManager>().PlayMusic("music/mus_dogsong", 0.8f);
+				Object.FindObjectOfType<BattleManager>().PlayMusic("music/mus_dogsong", 0.8f);
 				checkDesc = "* This dog is ready for\n  a well needed nap.";
 				return new string[3] { "no_happy`snd_txtnoe`* C'mon,^05 who's a good\n  boy?", "* Without its harnesses holding\n  it back,^05 Greater Dog leaps\n  into your lap...", "* ... Completely disregarding\n  that it was trained to kill." };
 			}
@@ -125,14 +125,14 @@ public class GreaterDog : EnemyBase
 				if (distracted)
 				{
 					Object.Instantiate(Resources.Load<GameObject>("battle/acts/GreaterDogSnatch"));
-					return new string[1] { $"* Aim to grab GREATERDOG's\n  {arg}!\n^05* (Press ^Z to grab!)^10 " };
+					return new string[1] { string.Format("* Aim to grab GREATERDOG's\n  {0}!\n^05* (Press ^Z to grab!)^10 ", arg) };
 				}
 				Util.GameManager().PlayGlobalSFX("sounds/snd_hurt");
 				Util.GameManager().Damage(0, 3);
 				Util.GameManager().Damage(1, 3);
 				return new string[2]
 				{
-					$"* You and Susie tried\n  snatching GREATERDOG's\n  {arg}...",
+					string.Format("* You and Susie tried\n  snatching GREATERDOG's\n  {0}...", arg),
 					"* But failed!^05\n* GREATERDOG stabs both of\n  you!"
 				};
 			}
@@ -188,7 +188,7 @@ public class GreaterDog : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		switch (i)
 		{
@@ -208,7 +208,7 @@ public class GreaterDog : EnemyBase
 			}
 			return new string[2] { "* Noelle spoke softly to\n  GREATERDOG.", "* Nothing happened." };
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 

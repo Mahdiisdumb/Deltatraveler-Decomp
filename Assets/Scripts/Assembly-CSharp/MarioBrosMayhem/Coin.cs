@@ -37,7 +37,7 @@ namespace MarioBrosMayhem
 			if (spawnLife >= 100 && !spawned && !startedSpawn && !collected && !stationary)
 			{
 				startedSpawn = true;
-				SpawnFromNearestPipe(disableCollisions: true);
+				SpawnFromNearestPipe(true);
 			}
 		}
 
@@ -73,14 +73,14 @@ namespace MarioBrosMayhem
 				if (!stationary && collectedByPlayer && !showScore && collectTimer >= 2f / 3f)
 				{
 					showScore = true;
-					Util.FindObjectOfType<MarioBrosNetworkManager>().CreateScoreGraphic(800, base.transform.position);
+					Object.FindObjectOfType<MarioBrosNetworkManager>().CreateScoreGraphic(800, base.transform.position);
 				}
 			}
 		}
 
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
-			if ((bool)collision && !respawning && !collected && spawned)
+			if (!respawning && !collected && spawned)
 			{
 				if ((bool)collision.GetComponent<Player>() && collision.GetComponent<Player>().CanInteract())
 				{
@@ -92,7 +92,7 @@ namespace MarioBrosMayhem
 				}
 				if (!respawning && (bool)collision.GetComponent<EnterPipe>() && ((base.transform.position.x > 0f && movingRight) || (base.transform.position.x < 0f && !movingRight)))
 				{
-					EnterPipe(serverCall: true);
+					EnterPipe(true);
 				}
 			}
 		}
@@ -118,7 +118,7 @@ namespace MarioBrosMayhem
 				collectedByPlayer = true;
 				if (!stationary)
 				{
-					Util.FindObjectOfType<Player>().AddPoints(800);
+					Object.FindObjectOfType<Player>().AddPoints(800);
 				}
 			}
 			collected = true;

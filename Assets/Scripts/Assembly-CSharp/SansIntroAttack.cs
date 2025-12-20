@@ -14,26 +14,20 @@ public class SansIntroAttack : AttackBase
 	protected override void Awake()
 	{
 		base.Awake();
-		sans = Util.FindObjectOfType<Sans>();
+		sans = UnityEngine.Object.FindObjectOfType<Sans>();
 		soulPos.y = -1.2f;
 		bbSize = new Vector2(185f, 185f);
-		bb.StartMovement(bbSize, bbPos + new Vector2(100f, 0f), instant: true);
-		Util.FindObjectOfType<PartyPanels>().transform.position = new Vector3(100f, 0f);
+		bb.StartMovement(bbSize, bbPos + new Vector2(100f, 0f), true);
+		UnityEngine.Object.FindObjectOfType<PartyPanels>().transform.position = new Vector3(100f, 0f);
 		blasterPrefab = Resources.Load<GameObject>("battle/attacks/bullets/GasterBlaster");
 		formation1 = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/sans/IntroBoneFormation1"), base.transform).transform;
 		formation2 = new GameObject("Formation2").transform;
 		formation2.parent = base.transform;
 		GameObject original = Resources.Load<GameObject>("battle/attacks/bullets/sans/Bone");
-		SOUL sOUL = SOUL.FindPlayerSOUL();
-		if (Util.GameManager().GetEXP() == 0 && Util.GameManager().IsEasyMode())
-		{
-			sOUL.GetComponent<SOUL>().SetInvFrames(60, easyOverride: true);
-			sOUL.GetComponent<SOUL>().SetDamageMultiplier(0.725f);
-		}
 		for (int i = 0; i < 25; i++)
 		{
 			float x = 3f + (float)i * 0.5f;
-			float num = Mathf.Sin((float)i * 14.4f * (MathF.PI / 180f)) * 1.26f;
+			float num = Mathf.Sin((float)i * 14.4f * ((float)Math.PI / 180f)) * 1.26f;
 			UnityEngine.Object.Instantiate(original, new Vector3(x, 2.64f + num), Quaternion.identity, formation2).GetComponent<BoneBullet>().ChangeHeight(50f);
 			UnityEngine.Object.Instantiate(original, new Vector3(x, -5.14f + num), Quaternion.identity, formation2).GetComponent<BoneBullet>().ChangeHeight(50f);
 		}
@@ -56,7 +50,7 @@ public class SansIntroAttack : AttackBase
 				}
 				else
 				{
-					sans.Chat(new string[8] { "so...", "you three are \nganging up on me?", "some heroes you are.", "to think you ruined \nmy life...", "and came back to \nruin it again.", "heheheheh.", "you're gonna get \nwhat you deserve.", "and me...?" }, "snd_txtsans", Util.GameManager().IsTestMode(), 1);
+					sans.Chat(new string[8] { "so...", "you three are ganging \nup on me?", "some heroes you are.", "to think you ruined \nmy life...", "and came back to \nruin it again.", "heheheheh.", "you're gonna get what \nyou deserve.", "and me...?" }, "snd_txtsans", Util.GameManager().IsTestMode(), 1);
 					Util.GameManager().SetSessionFlag(16, 1);
 				}
 				frames = 0;
@@ -89,29 +83,29 @@ public class SansIntroAttack : AttackBase
 		if (frames == 1)
 		{
 			sans.PlaySFX("sounds/snd_noise");
-			Util.FindObjectOfType<BattleManager>().GetBattleFade().FadeOut(0, Color.black);
-			Util.FindObjectOfType<BattleManager>().StopMusic();
-			bb.StartMovement(bbSize, bbPos, instant: true);
+			UnityEngine.Object.FindObjectOfType<BattleManager>().GetBattleFade().FadeOut(0, Color.black);
+			UnityEngine.Object.FindObjectOfType<BattleManager>().StopMusic();
+			bb.StartMovement(bbSize, bbPos, true);
 		}
 		if (frames == 15)
 		{
-			Util.FindObjectOfType<BattleManager>().GetBattleFade().FadeIn(0, Color.black);
+			UnityEngine.Object.FindObjectOfType<BattleManager>().GetBattleFade().FadeIn(0, Color.black);
 			sans.ResetBreatheAnimation();
 			sans.PlaySFX("sounds/snd_noise");
-			Util.FindObjectOfType<PartyPanels>().transform.position = Vector3.zero;
-			Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = true;
-			Util.FindObjectOfType<SOUL>().SetControllable(boo: true);
+			UnityEngine.Object.FindObjectOfType<PartyPanels>().transform.position = Vector3.zero;
+			UnityEngine.Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = true;
+			UnityEngine.Object.FindObjectOfType<SOUL>().SetControllable(true);
 			sans.SetFace("empty_down");
 			sans.transform.position = new Vector3(0f, 0.979f);
 		}
 		if (frames == 45)
 		{
-			sans.Chat(new string[1] { "I'm \ngonna \nhave a \ngreat \ntime." }, "RightSmall", "", new Vector2(180f, 131f), canSkip: false, 1);
+			sans.Chat(new string[1] { "I'm \ngonna \nhave a \ngreat \ntime." }, "RightSmall", "", new Vector2(180f, 131f), false, 1);
 			frames = 65;
 		}
 		if (frames == 65)
 		{
-			Util.FindObjectOfType<BattleManager>().PlayMusic("music/mus_vsufsans", 1f, hasIntro: true);
+			UnityEngine.Object.FindObjectOfType<BattleManager>().PlayMusic("music/mus_vsufsans", 1f, true);
 		}
 		if (frames == 130)
 		{
@@ -123,7 +117,7 @@ public class SansIntroAttack : AttackBase
 			GasterBlaster component = UnityEngine.Object.Instantiate(blasterPrefab, new Vector3(-8.27f, 6.68f), Quaternion.identity).GetComponent<GasterBlaster>();
 			component.Mute();
 			component.Activate(2, 2, 0f, new Vector2(0f, 2.9f), 20);
-			Util.FindObjectOfType<BattleManager>().DoSOULSparkle();
+			UnityEngine.Object.FindObjectOfType<BattleManager>().DoSOULSparkle();
 		}
 		if (frames == 160)
 		{
@@ -135,20 +129,24 @@ public class SansIntroAttack : AttackBase
 			{
 				UnityEngine.Object.Destroy(sans.GetTextBubble().gameObject);
 			}
-			Util.FindObjectOfType<SansBG>()?.FadeIn();
+			SansBG sansBG = UnityEngine.Object.FindObjectOfType<SansBG>();
+			if ((object)sansBG != null)
+			{
+				sansBG.FadeIn();
+			}
 		}
 		if (frames == 175)
 		{
-			UnityEngine.Object.Instantiate(blasterPrefab, new Vector3(-8.27f, 6.68f), Quaternion.identity).GetComponent<GasterBlaster>().Activate(2, 2, 90f, new Vector2(-3.79f, 0.68f), 20, inSpearAttack: false, -5);
+			UnityEngine.Object.Instantiate(blasterPrefab, new Vector3(-8.27f, 6.68f), Quaternion.identity).GetComponent<GasterBlaster>().Activate(2, 2, 90f, new Vector2(-3.79f, 0.68f), 20, false, -5);
 			GasterBlaster component2 = UnityEngine.Object.Instantiate(blasterPrefab, new Vector3(-8.27f, 6.68f), Quaternion.identity).GetComponent<GasterBlaster>();
 			component2.Mute();
-			component2.Activate(2, 2, 0f, new Vector2(-1.34f, 2.81f), 20, inSpearAttack: false, -5);
+			component2.Activate(2, 2, 0f, new Vector2(-1.34f, 2.81f), 20, false, -5);
 			GasterBlaster component3 = UnityEngine.Object.Instantiate(blasterPrefab, new Vector3(-8.27f, 6.68f), Quaternion.identity).GetComponent<GasterBlaster>();
 			component3.Mute();
-			component3.Activate(2, 2, 180f, new Vector2(1.48f, -4.8f), 20, inSpearAttack: false, -5);
+			component3.Activate(2, 2, 180f, new Vector2(1.48f, -4.8f), 20, false, -5);
 			GasterBlaster component4 = UnityEngine.Object.Instantiate(blasterPrefab, new Vector3(-8.27f, 6.68f), Quaternion.identity).GetComponent<GasterBlaster>();
 			component4.Mute();
-			component4.Activate(2, 2, -90f, new Vector2(4.43f, -2.83f), 20, inSpearAttack: false, -5);
+			component4.Activate(2, 2, -90f, new Vector2(4.43f, -2.83f), 20, false, -5);
 		}
 		if (frames == 190)
 		{
@@ -156,7 +154,7 @@ public class SansIntroAttack : AttackBase
 		}
 		if (frames == 220)
 		{
-			Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+			UnityEngine.Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 			sans.GetComponent<SansGravityManager>().Slam(Vector2.right);
 		}
 		if (frames == 230)
@@ -187,7 +185,7 @@ public class SansIntroAttack : AttackBase
 		}
 		if (frames == 335)
 		{
-			Util.FindObjectOfType<SOUL>().ChangeSOULMode(0);
+			UnityEngine.Object.FindObjectOfType<SOUL>().ChangeSOULMode(0);
 			UnityEngine.Object.Instantiate(blasterPrefab, new Vector3(-8.27f, 6.68f), Quaternion.identity).GetComponent<GasterBlaster>().Activate(2, 2, -90f, new Vector2(4.43f, -2.83f), 20);
 		}
 		if (frames == 350)
@@ -211,7 +209,7 @@ public class SansIntroAttack : AttackBase
 		{
 			UnityEngine.Object.Instantiate(blasterPrefab, new Vector3(-12f, 0f), Quaternion.Euler(0f, 0f, -90f)).GetComponent<GasterBlaster>().Activate(5, 5, 90f, new Vector2(-4.48f, -1.2f), 30);
 			UnityEngine.Object.Instantiate(blasterPrefab, new Vector3(12f, 0f), Quaternion.Euler(0f, 0f, 90f)).GetComponent<GasterBlaster>().Activate(5, 5, -90f, new Vector2(4.48f, -1.2f), 30);
-			GasterBlaster[] array = Util.FindObjectsOfType<GasterBlaster>();
+			GasterBlaster[] array = UnityEngine.Object.FindObjectsOfType<GasterBlaster>();
 			for (int i = 0; i < array.Length; i++)
 			{
 				array[i].SetTPBuildRate(1f / 6f);
@@ -227,8 +225,8 @@ public class SansIntroAttack : AttackBase
 	public override void StartAttack()
 	{
 		base.StartAttack();
-		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
-		Util.FindObjectOfType<SOUL>().SetControllable(boo: false);
+		UnityEngine.Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
+		UnityEngine.Object.FindObjectOfType<SOUL>().SetControllable(false);
 		sans.SetFace("closed_down");
 	}
 }

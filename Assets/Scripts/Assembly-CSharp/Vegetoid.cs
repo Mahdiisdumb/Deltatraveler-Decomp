@@ -77,10 +77,10 @@ public class Vegetoid : EnemyBase
 			if (CanSpare())
 			{
 				Spare();
-				Util.GameManager().Heal(0, 5);
-				Util.GameManager().Heal(1, 5);
-				Util.GameManager().PlayGlobalSFX("sounds/snd_swallow");
-				Util.GameManager().PlayTimedHealSound();
+				Object.FindObjectOfType<GameManager>().Heal(0, 5);
+				Object.FindObjectOfType<GameManager>().Heal(1, 5);
+				Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_swallow");
+				Object.FindObjectOfType<GameManager>().PlayTimedHealSound();
 				return new string[1] { "* You and Susie took a\n  bite out of Vegetoid.\n* You each recovered 5 HP!" };
 			}
 			return new string[1] { "* You and Susie tried to\n  eat Vegetoid,^10 but it wasn't\n  weakened enough." };
@@ -93,11 +93,11 @@ public class Vegetoid : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 		if (i == 1)
 		{
@@ -108,7 +108,7 @@ public class Vegetoid : EnemyBase
 			}
 			return new string[1] { "* Vegetoid is already\n  sufficiently weakened.\n* It is ripe for consumption." };
 		}
-		return base.PerformAssistAct_Old(i);
+		return base.PerformAssistAct(i);
 	}
 
 	public override void Chat(string[] text, string type, string sound, Vector2 pos, bool canSkip, int speed)
@@ -129,11 +129,11 @@ public class Vegetoid : EnemyBase
 
 	public override int GetNextAttack()
 	{
-		if (Util.FindObjectsOfType<Vegetoid>().Length == 2 && !Util.FindObjectsOfType<Vegetoid>()[0].IsDone() && !Util.FindObjectsOfType<Vegetoid>()[1].IsDone())
+		if (Object.FindObjectsOfType<Vegetoid>().Length == 2 && !Object.FindObjectsOfType<Vegetoid>()[0].IsDone() && !Object.FindObjectsOfType<Vegetoid>()[1].IsDone())
 		{
 			return 20;
 		}
-		if ((bool)Util.FindObjectOfType<Loox>() && !Util.FindObjectOfType<Loox>().IsDone())
+		if ((bool)Object.FindObjectOfType<Loox>() && !Object.FindObjectOfType<Loox>().IsDone())
 		{
 			return 21;
 		}

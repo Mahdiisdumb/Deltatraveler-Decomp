@@ -1,65 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBase : MonoBehaviour
+public class EnemyBase : TranslatableBehaviour
 {
-	public struct MiniACT
-	{
-		private string name;
+	public static readonly string SACTION_DEFAULT = "S-Action";
 
-		private string description;
-
-		private int id;
-
-		private int tpCost;
-
-		public MiniACT(string name, int id, string description = "", int tpCost = 0)
-		{
-			this.name = name;
-			this.description = description;
-			this.id = id;
-			this.tpCost = tpCost;
-		}
-
-		public void SetName(string name)
-		{
-			this.name = name;
-		}
-
-		public string GetName()
-		{
-			return name;
-		}
-
-		public string GetDescription()
-		{
-			return description;
-		}
-
-		public int GetID()
-		{
-			return id;
-		}
-
-		public int GetTPCost()
-		{
-			return tpCost;
-		}
-	}
-
-	public static readonly string SACTION_DEFAULT_NAME = "S-Action";
-
-	public static readonly string NACTION_DEFAULT_NAME = "N-Action";
-
-	public static readonly string CACTION_DEFAULT_NAME = "C-Action";
-
-	public static readonly MiniACT SACTION_DEFAULT = new MiniACT(SACTION_DEFAULT_NAME, 0);
-
-	public static readonly MiniACT NACTION_DEFAULT = new MiniACT(NACTION_DEFAULT_NAME, 0);
-
-	public static readonly MiniACT CACTION_DEFAULT = new MiniACT(CACTION_DEFAULT_NAME, 0);
-
-	protected static readonly string CHECK_NAME = "Check";
+	public static readonly string NACTION_DEFAULT = "N-Action";
 
 	protected string enemyName;
 
@@ -176,21 +123,28 @@ public class EnemyBase : MonoBehaviour
 
 	private int hurtSoundFrames;
 
-	protected MiniACT[] susieMiniACTs = new MiniACT[1] { SACTION_DEFAULT };
+	protected string sActionName = SACTION_DEFAULT;
 
-	protected MiniACT[] noelleMiniACTs = new MiniACT[1] { NACTION_DEFAULT };
+	protected string nActionName = NACTION_DEFAULT;
 
-	protected MiniACT[] sansMiniACTs = new MiniACT[1] { CACTION_DEFAULT };
+	public override Dictionary<string, string[]> GetDefaultStrings()
+	{
+		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
+		dictionary.Add("enemy_name", new string[1] { "Enemy" });
+		dictionary.Add("enemy_check_description", new string[1] { "" });
+		dictionary.Add("enemy_acts", new string[1] { GetBMString("act_check", 0) });
+		dictionary.Add("enemy_flavor_text", new string[1] { "* Error errors." });
+		dictionary.Add("enemy_satisfied_text", new string[1] { "* Error is satisfied." });
+		dictionary.Add("enemy_dying_text", new string[1] { "* Error is dying" });
+		dictionary.Add("enemy_chatter", new string[1] { "I am error" });
+		return dictionary;
+	}
 
 	protected virtual void Awake()
 	{
-		enemyName = "Enemy";
-		checkDesc = "";
-		actNames = new string[1] { CHECK_NAME };
-		flavorTxt = new string[1] { "* Error errors." };
-		satisfyTxt = new string[1] { "* Error is satisfied." };
-		dyingTxt = new string[1] { "* Error is dying." };
-		chatter = new string[1] { "I am error" };
+		stringSubFolder = "enemies";
+		SetStrings(GetDefaultStrings(), GetType());
+		SetInfoFromStrings();
 		fileName = "kris";
 		checkDesc = "";
 		maxHp = 50;
@@ -225,9 +179,9 @@ public class EnemyBase : MonoBehaviour
 		string[] array = actNames;
 		actNames = new string[6];
 		int num = 0;
-		if (array[0] != CHECK_NAME)
+		if (array[0] != GetBMString("act_check", 0))
 		{
-			actNames[0] = CHECK_NAME;
+			actNames[0] = GetBMString("act_check", 0);
 			num++;
 		}
 		string[] array2 = array;
@@ -357,11 +311,11 @@ public class EnemyBase : MonoBehaviour
 				component.gameObject.name = "EnemyHP" + obj.transform.parent.gameObject.name[5];
 				component.transform.localScale = new Vector2(1f, 1f);
 				component.transform.localPosition = hpPos;
-				component.StartHP(num, num2, GetMaxHP(), partyMember, hpWidth, mercy: false, emptyHPBarWhenZero);
+				component.StartHP(num, num2, GetMaxHP(), partyMember, hpWidth, false, emptyHPBarWhenZero);
 			}
 			else
 			{
-				GameObject.Find(text2).GetComponent<EnemyHPBar>().StartHP(num, num2, GetMaxHP(), partyMember, mercy: false, emptyHPBarWhenZero);
+				GameObject.Find(text2).GetComponent<EnemyHPBar>().StartHP(num, num2, GetMaxHP(), partyMember, false, emptyHPBarWhenZero);
 			}
 		}
 	}
@@ -369,56 +323,56 @@ public class EnemyBase : MonoBehaviour
 	public virtual int CalculateDamage(int partyMember, float rawDmg, bool forceMagic = false)
 	{
 		GameManager gameManager = Util.GameManager();
-		if (PartyMembers.GetWeapon(partyMember) == -1)
+		if (gameManager.GetWeapon(partyMember) == -1)
 		{
 			rawDmg *= 0.75f;
 		}
-		else if (Items.GetWeaponType(PartyMembers.GetWeapon(partyMember)) == 1 && gameManager.GetLV() < 9)
+		else if (Items.GetWeaponType(gameManager.GetWeapon(partyMember)) == 1 && gameManager.GetLV() < 9)
 		{
 			rawDmg = ((gameManager.GetLV() >= 6) ? (rawDmg * 0.9f) : ((gameManager.GetLV() < 3) ? (rawDmg * 0.8f) : (rawDmg * 0.85f)));
 		}
-		float num = (float)(8 + PartyMembers.GetATK(partyMember)) * rawDmg / 8f - (float)def;
-		float magic = PartyMembers.GetMagic(partyMember);
-		if (forceMagic || (bool)Util.FindObjectOfType<SpecialAttackEffect>())
+		float num = (float)(8 + gameManager.GetATK(partyMember)) * rawDmg / 8f - (float)def;
+		float magic = gameManager.GetMagic(partyMember);
+		if (forceMagic || (bool)UnityEngine.Object.FindObjectOfType<SpecialAttackEffect>())
 		{
-			if (partyMember == 0 && (forceMagic || (bool)Util.FindObjectOfType<CrossSlash>()))
+			if (partyMember == 0 && (forceMagic || (bool)UnityEngine.Object.FindObjectOfType<CrossSlash>()))
 			{
-				num = (float)(8 + PartyMembers.GetATKRaw(partyMember) + 20) * rawDmg / 8f - (float)def;
+				num = (float)(8 + gameManager.GetATKRaw(partyMember) + 15) * rawDmg / 8f - (float)def;
 			}
-			else if ((forceMagic || (bool)Util.FindObjectOfType<RudeBusterEffect>()) && partyMember == 1)
+			else if ((forceMagic || (bool)UnityEngine.Object.FindObjectOfType<RudeBusterEffect>()) && partyMember == 1)
 			{
-				num = (float)(6 + PartyMembers.GetATK(partyMember)) / 2f * 9f + magic * 5f - (float)def;
+				num = (float)(6 + gameManager.GetATK(partyMember)) / 2f * 9f + magic * 5f - (float)def;
 				if (rawDmg == 40f)
 				{
 					num += 20f;
 				}
-				if (PartyMembers.GetWeapon(partyMember) == -1)
+				if (gameManager.GetWeapon(partyMember) == -1)
 				{
 					num *= 0.6f;
 				}
 			}
-			else if ((forceMagic || (bool)Util.FindObjectOfType<RedBusterEffect>()) && partyMember == 1)
+			else if ((forceMagic || (bool)UnityEngine.Object.FindObjectOfType<RedBusterEffect>()) && partyMember == 1)
 			{
-				num = 90f + (float)(6 + PartyMembers.GetATK(partyMember)) / 2f * 13f + magic * 6f - (float)(def * 2);
+				num = 90f + (float)(6 + gameManager.GetATK(partyMember)) / 2f * 13f + magic * 6f - (float)(def * 2);
 				if (rawDmg == 70f)
 				{
 					num += 40f;
 				}
 			}
-			else if ((forceMagic || (bool)Util.FindObjectOfType<IceShock>()) && partyMember == 2)
+			else if ((forceMagic || (bool)UnityEngine.Object.FindObjectOfType<IceShock>()) && partyMember == 2)
 			{
 				num = 10f + magic * 8f + (float)UnityEngine.Random.Range(-5, 5);
 			}
-			else if ((forceMagic || (bool)Util.FindObjectOfType<PKFireEffect>() || (bool)Util.FindObjectOfType<PKFreezeEffect>()) && partyMember == 3)
+			else if ((forceMagic || (bool)UnityEngine.Object.FindObjectOfType<PKFireEffect>() || (bool)UnityEngine.Object.FindObjectOfType<PKFreezeEffect>()) && partyMember == 3)
 			{
-				num = (magic + (float)PartyMembers.GetATK(partyMember)) * rawDmg / 5f;
+				num = (float)(8 + gameManager.GetATK(partyMember)) * rawDmg / 5f;
 			}
 		}
 		float num2 = 1f;
-		if (PartyMembers.GetArmor(partyMember) == 33)
+		if (gameManager.GetArmor(partyMember) == 33)
 		{
-			int num3 = PartyMembers.GetMaxHP(partyMember) / 2;
-			num2 = ((PartyMembers.GetHP(partyMember) < num3) ? Mathf.Lerp(1.5f, 1f, (float)PartyMembers.GetHP(partyMember) / (float)num3) : Mathf.Lerp(1f, 0.8f, ((float)PartyMembers.GetHP(partyMember) - (float)num3) / (float)num3));
+			int num3 = gameManager.GetMaxHP(partyMember) / 2;
+			num2 = ((gameManager.GetHP(partyMember) < num3) ? Mathf.Lerp(1.5f, 1f, (float)gameManager.GetHP(partyMember) / (float)num3) : Mathf.Lerp(1f, 0.8f, ((float)gameManager.GetHP(partyMember) - (float)num3) / (float)num3));
 		}
 		if (gameManager.IsEasyMode())
 		{
@@ -441,9 +395,9 @@ public class EnemyBase : MonoBehaviour
 		}
 		for (int j = 0; j < 10; j++)
 		{
-			float f = UnityEngine.Random.Range(0f, MathF.PI * 2f);
+			float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
 			Vector3 vector = new Vector3(Mathf.Cos(f), Mathf.Sin(f));
-			SpareDust component = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SpareDust"), base.transform, worldPositionStays: false).GetComponent<SpareDust>();
+			SpareDust component = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SpareDust"), base.transform, false).GetComponent<SpareDust>();
 			component.GetComponent<SpriteRenderer>().color = new Color(1f, 0.5f, 0.5f);
 			component.transform.position = GetEnemyObject().transform.Find("atkpos").position + vector * 0.25f;
 			component.StartMovement(vector);
@@ -523,37 +477,28 @@ public class EnemyBase : MonoBehaviour
 
 	public virtual string[] PerformAct(int i)
 	{
-		if (i != 0)
-		{
-			if (!(GetActNames()[i] == REDBUSTER_NAME))
-			{
-				if (!(GetActNames()[i] == DUALHEAL_NAME))
-				{
-					if (!(GetActNames()[i] == "") && GetActNames()[i] != null)
-					{
-						return new string[1] { "* But nothing happened.\n* So this is an error." };
-					}
-					return new string[1] { "* But it didn't exist.\n* So this is an error." };
-				}
-				return new string[2] { "* Your SOUL shined its power\n  onto Noelle!", "* Noelle cast DUAL HEAL!" };
-			}
-			return new string[2] { "* Your SOUL shined its power\n  onto Susie!", "* Susie cast RED BUSTER!" };
-		}
-		return new string[1] { $"* {enemyName.ToUpper()} - ATK {atk + GetBuff(0)} DEF {displayedDef + GetBuff(1)}\n{checkDesc}" };
-	}
-
-	public virtual string[] PerformAssistAct(int partyMember, int i)
-	{
 		if (i == 0)
 		{
-			return PerformAssistAct_Old(partyMember);
+			return Localizer.FormatArray(GetBMStringArray("check_desc_base"), enemyName.ToUpper(), atk + GetBuff(0), displayedDef + GetBuff(1), checkDesc);
 		}
-		return new string[1] { $"* Mini-ACT {i} from {PartyMembers.GetMemberName(partyMember)}" };
+		if (!(GetActNames()[i] == REDBUSTER_NAME))
+		{
+			if (!(GetActNames()[i] == DUALHEAL_NAME))
+			{
+				if (!(GetActNames()[i] == "") && GetActNames()[i] != null)
+				{
+					return new string[1] { GetBMString("error_acts", 1) };
+				}
+				return new string[1] { GetBMString("error_acts", 0) };
+			}
+			return new string[2] { "* Your SOUL shined its power\n  onto Noelle!", "* Noelle cast DUAL HEAL!" };
+		}
+		return new string[2] { "* Your SOUL shined its power\n  onto Susie!", "* Susie cast RED BUSTER!" };
 	}
 
-	public virtual string[] PerformAssistAct_Old(int partyMember)
+	public virtual string[] PerformAssistAct(int i)
 	{
-		switch (partyMember)
+		switch (i)
 		{
 		case 1:
 			if (!spared)
@@ -568,7 +513,7 @@ public class EnemyBase : MonoBehaviour
 			}
 			return new string[1] { "* Noelle tried to ACT,\n  but " + enemyName + " was\n  already spared!" };
 		default:
-			return new string[1] { $"* Mini-ACT {0} from {PartyMembers.GetMemberName(partyMember)}" };
+			return new string[1] { "* Kris used K-ACTION!\n* But they could just ACT,\n  so nothing happened." };
 		}
 	}
 
@@ -603,11 +548,11 @@ public class EnemyBase : MonoBehaviour
 			component.gameObject.name = text;
 			component.transform.localScale = new Vector2(1f, 1f);
 			component.transform.localPosition = hpPos;
-			component.StartHP(points, satisfied - points, 100, -1, hpWidth, mercy: true);
+			component.StartHP(points, satisfied - points, 100, -1, hpWidth, true);
 		}
 		else
 		{
-			GameObject.Find(text).GetComponent<EnemyHPBar>().StartHP(points, satisfied - points, 100, -1, hpWidth, mercy: true);
+			GameObject.Find(text).GetComponent<EnemyHPBar>().StartHP(points, satisfied - points, 100, -1, hpWidth, true);
 		}
 	}
 
@@ -667,7 +612,7 @@ public class EnemyBase : MonoBehaviour
 
 	public virtual void Chat()
 	{
-		Chat(new string[1] { GetChatter() }, defaultChatSize, "snd_text", defaultChatPos, canSkip: true, 0);
+		Chat(new string[1] { GetChatter() }, defaultChatSize, "snd_text", defaultChatPos, true, 0);
 	}
 
 	public GameObject GetEnemyObject()
@@ -713,8 +658,8 @@ public class EnemyBase : MonoBehaviour
 		return new bool[3]
 		{
 			true,
-			Util.GameManager().SusieInParty(),
-			Util.GameManager().NoelleInParty()
+			UnityEngine.Object.FindObjectOfType<GameManager>().SusieInParty(),
+			UnityEngine.Object.FindObjectOfType<GameManager>().NoelleInParty()
 		};
 	}
 
@@ -758,9 +703,9 @@ public class EnemyBase : MonoBehaviour
 			component.sprite = Resources.Load<Sprite>("battle/enemies/" + enemyName.Replace(".", "") + "/spr_b_" + fileName + hurtSpriteName);
 			for (int i = 0; i < 10; i++)
 			{
-				float f = UnityEngine.Random.Range(0f, MathF.PI * 2f);
+				float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
 				Vector3 vector = new Vector3(Mathf.Cos(f), Mathf.Sin(f));
-				SpareDust component2 = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SpareDust"), base.transform, worldPositionStays: false).GetComponent<SpareDust>();
+				SpareDust component2 = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SpareDust"), base.transform, false).GetComponent<SpareDust>();
 				component2.transform.position = GetEnemyObject().transform.Find("atkpos").position + vector * 0.25f;
 				component2.StartMovement(vector);
 			}
@@ -845,6 +790,41 @@ public class EnemyBase : MonoBehaviour
 		return true;
 	}
 
+	protected void SetInfoFromStrings()
+	{
+		enemyName = GetString("enemy_name", 0);
+		checkDesc = GetString("enemy_check_description", 0);
+		actNames = GetStringArray("enemy_acts");
+		flavorTxt = GetStringArray("enemy_flavor_text");
+		if (StringArrayExists("enemy_satisfied_text"))
+		{
+			satisfyTxt = GetStringArray("enemy_satisfied_text");
+		}
+		else
+		{
+			satisfyTxt = GetStringArray("enemy_flavor_text");
+		}
+		if (StringArrayExists("enemy_dying_text"))
+		{
+			dyingTxt = GetStringArray("enemy_dying_text");
+		}
+		else
+		{
+			dyingTxt = GetStringArray("enemy_flavor_text");
+		}
+		chatter = GetStringArray("enemy_chatter");
+	}
+
+	protected string GetBMString(string key, int index)
+	{
+		return UnityEngine.Object.FindObjectOfType<BattleManager>().GetString(key, index);
+	}
+
+	protected string[] GetBMStringArray(string key)
+	{
+		return UnityEngine.Object.FindObjectOfType<BattleManager>().GetStringArray(key);
+	}
+
 	protected static string MakeSpecialActString(string partyMembers, string name, string description = "", int tpCost = -1)
 	{
 		if (description != "")
@@ -858,31 +838,14 @@ public class EnemyBase : MonoBehaviour
 		return partyMembers + "!" + name;
 	}
 
-	public MiniACT[] GetMiniACTs(int partyMember)
+	public string GetSActionName()
 	{
-		return partyMember switch
-		{
-			1 => susieMiniACTs, 
-			2 => noelleMiniACTs, 
-			5 => sansMiniACTs, 
-			_ => new MiniACT[1]
-			{
-				new MiniACT("Mini-ACT", 0, "You shouldn't see this...")
-			}, 
-		};
+		return sActionName;
 	}
 
-	public bool HasMiniACT(int partyMember, int i)
+	public string GetNActionName()
 	{
-		MiniACT[] miniACTs = GetMiniACTs(partyMember);
-		foreach (MiniACT miniACT in miniACTs)
-		{
-			if (miniACT.GetID() == i)
-			{
-				return true;
-			}
-		}
-		return false;
+		return nActionName;
 	}
 
 	public virtual int GetCardCount()

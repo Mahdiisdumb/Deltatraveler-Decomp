@@ -95,16 +95,16 @@ public class UnoBattleManager : BattleManager
 		cardHand.SetSpread(3f);
 		cardHand.SetMaxOverlap(6f);
 		cardHand.SetXOffset(2f);
-		UnityEngine.Object.Instantiate(Resources.Load<GameObject>("uno/UnoCanvasObjects")).transform.SetParent(GameObject.Find("BattleCanvas").transform, worldPositionStays: false);
-		BattleButton[] array = Util.FindObjectsOfType<BattleButton>();
+		UnityEngine.Object.Instantiate(Resources.Load<GameObject>("uno/UnoCanvasObjects")).transform.SetParent(GameObject.Find("BattleCanvas").transform, false);
+		BattleButton[] array = UnityEngine.Object.FindObjectsOfType<BattleButton>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			array[i].ChangeButtonSuffix("_uno");
 		}
 		lastCard = GameObject.Find("TopCard").GetComponent<Card>();
-		lastCard.gameObject.SetActive(value: false);
+		lastCard.gameObject.SetActive(false);
 		secondToLastCard = GameObject.Find("BottomCard").GetComponent<Card>();
-		secondToLastCard.gameObject.SetActive(value: false);
+		secondToLastCard.gameObject.SetActive(false);
 		frames = 30;
 		saidUno = true;
 		canChallenge = false;
@@ -114,7 +114,7 @@ public class UnoBattleManager : BattleManager
 		delayFrames = 0;
 		startTextSeen = false;
 		stackText = GameObject.Find("Remaining").transform;
-		unoPanels = Util.FindObjectOfType<UnoPanels>();
+		unoPanels = UnityEngine.Object.FindObjectOfType<UnoPanels>();
 	}
 
 	public override void StartBattle(int bgColorID)
@@ -125,21 +125,22 @@ public class UnoBattleManager : BattleManager
 		soul.GetComponent<SOUL>().ChangeSOULMode(Util.GameManager().GetFlagInt(312));
 		soul.GetComponent<SpriteRenderer>().flipY = false;
 		partyPanels.Reinitialize();
-		bg = EnemyGenerator.GetBattleBG(75);
-		if ((bool)Util.FindObjectOfType<SansBG>())
+		object[] battleBG = EnemyGenerator.GetBattleBG(75);
+		bg.StartBG(int.Parse(battleBG[0].ToString()), float.Parse(battleBG[1].ToString()), float.Parse(battleBG[2].ToString()), (Color)battleBG[3], (bool)battleBG[4]);
+		if ((bool)UnityEngine.Object.FindObjectOfType<SansBG>())
 		{
-			Util.FindObjectOfType<SansBG>().FadeIn(moveBones: false);
+			UnityEngine.Object.FindObjectOfType<SansBG>().FadeIn(false);
 		}
 		if ((int)gm.GetFlag(204) == 1)
 		{
 			partyPanels.SetSprite(0, "eye/spr_kr_down_0_eye");
 		}
-		soul.GetComponent<SOUL>().SetFrozen(boo: true);
+		soul.GetComponent<SOUL>().SetFrozen(true);
 		drawCount = 1;
 		selectedColor = 0;
 		preemptiveSayUno = false;
 		clientPlayer = UnoGameManager.instance.GetClientPlayer();
-		EnemyBase[] array = new UnoEnemy[Util.FindObjectsOfType<UnoPlayer>().Length - 1];
+		EnemyBase[] array = new UnoEnemy[UnityEngine.Object.FindObjectsOfType<UnoPlayer>().Length - 1];
 		enemies = array;
 		float x = 0f;
 		float num = 0f;
@@ -171,7 +172,7 @@ public class UnoBattleManager : BattleManager
 			break;
 		}
 		int num2 = 0;
-		UnoPlayer[] array2 = Util.FindObjectsOfType<UnoPlayer>();
+		UnoPlayer[] array2 = UnityEngine.Object.FindObjectsOfType<UnoPlayer>();
 		foreach (UnoPlayer unoPlayer in array2)
 		{
 			MonoBehaviour.print(unoPlayer.GetPlayerName());
@@ -228,7 +229,7 @@ public class UnoBattleManager : BattleManager
 		fakeMaxHp = fakeHp;
 		UpdateFakeHP(1f);
 		startedBattle = true;
-		StartFormattedText(new string[1] { "           ^18UNO  ^20START!" }, actionText: true, -1, -1);
+		StartFormattedText(new string[1] { "           ^18UNO  ^20START!" }, true, -1, -1);
 	}
 
 	protected override void Update()
@@ -242,7 +243,7 @@ public class UnoBattleManager : BattleManager
 		{
 			soul.GetComponent<SpriteRenderer>().sortingOrder = 299;
 		}
-		stackText.localPosition = new Vector3(-115f, Mathf.Lerp(stackText.localPosition.y, stackSize ? 216 : 253, 0.5f));
+		stackText.localPosition = new Vector3(-115f, Mathf.Lerp(stackText.localPosition.y, stackSize ? 219 : 256, 0.5f));
 		if (fakeHp == fakeMaxHp)
 		{
 			st.Stop();
@@ -267,7 +268,7 @@ public class UnoBattleManager : BattleManager
 			{
 				boxText.SkipText();
 			}
-			soul.GetComponent<SOUL>().SetFrozen(boo: true);
+			soul.GetComponent<SOUL>().SetFrozen(true);
 			soul.GetComponent<SpriteRenderer>().enabled = true;
 			if (Mathf.RoundToInt(UTInput.GetAxisRaw("Horizontal")) != 0 && !axisIsDown)
 			{
@@ -297,17 +298,17 @@ public class UnoBattleManager : BattleManager
 			soul.transform.localPosition = new Vector2(-0.82f, -0.022f);
 			if (text != text2)
 			{
-				GameObject.Find(text).GetComponent<BattleButton>().Select(boo: true);
+				GameObject.Find(text).GetComponent<BattleButton>().Select(true);
 				if (GameObject.Find(text2) != null && GameObject.Find(text2).GetComponent<BattleButton>() != null)
 				{
-					GameObject.Find(text2).GetComponent<BattleButton>().Select(boo: false);
+					GameObject.Find(text2).GetComponent<BattleButton>().Select(false);
 				}
 			}
 			if (UTInput.GetButtonDown("Z"))
 			{
 				bool flag2 = true;
 				string[,] array = new string[4, 2];
-				_ = new string[3, 2];
+				string[,] array6 = new string[3, 2];
 				int num = 0;
 				int num2 = 0;
 				selObj = new GameObject("SelectTier1");
@@ -397,7 +398,7 @@ public class UnoBattleManager : BattleManager
 					boxText.SkipText();
 					if (!flag2)
 					{
-						selObj.AddComponent<Selection>().CreateSelections(array, new Vector2(-220f, -141 - UI_OFFSET), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", useSoul: true, makeSound: true, this, 0);
+						selObj.AddComponent<Selection>().CreateSelections(array, new Vector2(-220f, -141 - UI_OFFSET), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", true, true, this, 0);
 						selObj.transform.localScale = new Vector2(1f, 1f);
 						boxText.DestroyOldText();
 						state = 2;
@@ -478,7 +479,7 @@ public class UnoBattleManager : BattleManager
 					if (flag4)
 					{
 						state = 3;
-						GameObject.Find("FIGHT").GetComponent<BattleButton>().Select(boo: false);
+						GameObject.Find("FIGHT").GetComponent<BattleButton>().Select(false);
 						selectedCard = cardHand.GetHighlightedCard();
 						selectedCard.FlipCard();
 						selectedCard.transform.SetParent(null);
@@ -543,7 +544,7 @@ public class UnoBattleManager : BattleManager
 					}
 					else if (buttonIndex == 2)
 					{
-						SubmitDrawnCard("", play: true);
+						SubmitDrawnCard("", true);
 					}
 				}
 			}
@@ -581,7 +582,7 @@ public class UnoBattleManager : BattleManager
 					}
 					else if (buttonIndex == 2)
 					{
-						SubmitDrawnCard(component.text, play: true);
+						SubmitDrawnCard(component.text, true);
 					}
 					dareText = "";
 					UnityEngine.Object.Destroy(component.gameObject);
@@ -648,7 +649,7 @@ public class UnoBattleManager : BattleManager
 			}
 			else if (!boxText.Exists() && curDiag == diag.Length)
 			{
-				clientPlayer.SetReady(val: true);
+				clientPlayer.SetReady(true);
 			}
 			if (clientPlayer.IsHost() && !boxText.Exists())
 			{
@@ -686,7 +687,7 @@ public class UnoBattleManager : BattleManager
 									}
 								}
 							}
-							AIPlayer[] array3 = Util.FindObjectsOfType<AIPlayer>();
+							AIPlayer[] array3 = UnityEngine.Object.FindObjectsOfType<AIPlayer>();
 							foreach (AIPlayer aIPlayer in array3)
 							{
 								if (aIPlayer.GetPlayerID() != handId && aIPlayer.GetAIDifficulty() == k)
@@ -721,7 +722,7 @@ public class UnoBattleManager : BattleManager
 						{
 							return;
 						}
-						AIPlayer[] array3 = Util.FindObjectsOfType<AIPlayer>();
+						AIPlayer[] array3 = UnityEngine.Object.FindObjectsOfType<AIPlayer>();
 						foreach (AIPlayer aIPlayer2 in array3)
 						{
 							if (!saidUno && aIPlayer2.GetUnoPlayerID() == UnoGameManager.instance.GetUnoGame().GetCurrentPlayerTurn())
@@ -743,7 +744,7 @@ public class UnoBattleManager : BattleManager
 						if (curDiag == diag.Length && newCards == null)
 						{
 							DisableChallenge();
-							clientPlayer.SetReady(val: true);
+							clientPlayer.SetReady(true);
 						}
 					}
 				}
@@ -792,7 +793,7 @@ public class UnoBattleManager : BattleManager
 			frames++;
 			if (frames == 30)
 			{
-				clientPlayer.SetReady(val: true);
+				clientPlayer.SetReady(true);
 				aud.clip = Resources.Load<AudioClip>("sounds/snd_drumroll_loop");
 				aud.loop = true;
 				aud.Play();
@@ -872,7 +873,7 @@ public class UnoBattleManager : BattleManager
 				delayFrames++;
 			}
 		}
-		if (state == 15 && !Util.FindObjectOfType<FreeCardHand>())
+		if (state == 15 && !UnityEngine.Object.FindObjectOfType<FreeCardHand>())
 		{
 			MonoBehaviour.print("SENT!!!!!!");
 			state = 7;
@@ -916,7 +917,7 @@ public class UnoBattleManager : BattleManager
 		{
 			frames++;
 			float num3 = (float)frames / 30f;
-			num3 = Mathf.Sin(num3 * MathF.PI * 0.5f);
+			num3 = Mathf.Sin(num3 * (float)Math.PI * 0.5f);
 			lastCard.transform.position = Vector3.Lerp(new Vector3(5.78f, 6f), new Vector3(5.78f, 3.8f), num3);
 		}
 		if (UTInput.GetButtonDown("C") && !saidUno)
@@ -969,18 +970,18 @@ public class UnoBattleManager : BattleManager
 					soul.transform.SetParent(null);
 					soul.transform.position = new Vector2(-0.055f, -1.63f);
 					soul.GetComponent<SpriteRenderer>().enabled = false;
-					GameObject.Find("ACT").GetComponent<BattleButton>().Select(boo: false);
+					GameObject.Find("ACT").GetComponent<BattleButton>().Select(false);
 					firstButton = true;
 					UnityEngine.Object.Destroy(selObj);
 					UnityEngine.Object.Destroy(selObj);
-					SubmitDrawnCard("", play: false);
+					SubmitDrawnCard("", false);
 				}
 				else if (UnoGameManager.instance.CurrentlyStackingDrawCards() && (int)index[0] == 2)
 				{
 					soul.transform.SetParent(null);
 					soul.transform.position = new Vector2(-0.055f, -1.63f);
 					soul.GetComponent<SpriteRenderer>().enabled = false;
-					GameObject.Find("ACT").GetComponent<BattleButton>().Select(boo: false);
+					GameObject.Find("ACT").GetComponent<BattleButton>().Select(false);
 					firstButton = true;
 					UnityEngine.Object.Destroy(selObj);
 					state = 7;
@@ -989,7 +990,7 @@ public class UnoBattleManager : BattleManager
 			}
 			if (buttonIndex == 2)
 			{
-				GameObject.Find("ITEM").GetComponent<BattleButton>().Select(boo: false);
+				GameObject.Find("ITEM").GetComponent<BattleButton>().Select(false);
 				UnoCard card = null;
 				if (lastCard.isActiveAndEnabled)
 				{
@@ -1004,7 +1005,7 @@ public class UnoBattleManager : BattleManager
 					obj.name = "PlayThisCard";
 					obj.GetComponent<Text>().text = "You can play this card!\nWould you like to?";
 					selObj.transform.localScale = new Vector2(48f, 48f);
-					selObj.GetComponent<Selection>().CreateSelections(new string[1, 2] { { "* Play", "* Keep" } }, new Vector2(-220f, -205 - UI_OFFSET), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", useSoul: true, makeSound: true, this, 2);
+					selObj.GetComponent<Selection>().CreateSelections(new string[1, 2] { { "* Play", "* Keep" } }, new Vector2(-220f, -205 - UI_OFFSET), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", true, true, this, 2);
 					selObj.transform.localScale = new Vector2(1f, 1f);
 					previewCard = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("uno/Card")).GetComponent<Card>();
 					previewCard.transform.position = new Vector3(3.94f, -1.63f - OBJ_OFFSET);
@@ -1015,14 +1016,14 @@ public class UnoBattleManager : BattleManager
 				else
 				{
 					UnityEngine.Object.Destroy(selObj);
-					SubmitDrawnCard("", play: false);
+					SubmitDrawnCard("", false);
 				}
 			}
 			if (buttonIndex == 3)
 			{
 				if (index != Vector2.zero)
 				{
-					SetWinCondition(Mathf.RoundToInt(index[0] * 2f + index[1]), updated: false);
+					SetWinCondition(Mathf.RoundToInt(index[0] * 2f + index[1]), false);
 					EndUnoGame();
 					return;
 				}
@@ -1037,7 +1038,7 @@ public class UnoBattleManager : BattleManager
 				{
 					{ "* Keep going" },
 					{ "* Give up" }
-				}, new Vector2(-220f, -173 - UI_OFFSET), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", useSoul: true, makeSound: true, this, 3);
+				}, new Vector2(-220f, -173 - UI_OFFSET), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", true, true, this, 3);
 				selObj.transform.localScale = new Vector2(1f, 1f);
 			}
 		}
@@ -1071,7 +1072,7 @@ public class UnoBattleManager : BattleManager
 			}
 			else if (buttonIndex == 2)
 			{
-				SubmitDrawnCard("", play: true);
+				SubmitDrawnCard("", true);
 			}
 		}
 		if (id == 2)
@@ -1087,7 +1088,7 @@ public class UnoBattleManager : BattleManager
 			}
 			else
 			{
-				SubmitDrawnCard("", play: false);
+				SubmitDrawnCard("", false);
 			}
 		}
 		if (id == 3)
@@ -1103,7 +1104,7 @@ public class UnoBattleManager : BattleManager
 				soul.transform.SetParent(null);
 				soul.transform.position = new Vector2(-0.055f, -1.63f);
 				soul.GetComponent<SpriteRenderer>().enabled = false;
-				GameObject.Find("MERCY").GetComponent<BattleButton>().Select(boo: false);
+				GameObject.Find("MERCY").GetComponent<BattleButton>().Select(false);
 				firstButton = true;
 				UnoGameManager.instance.SubmitTurn(clientPlayer.GetPlayerID(), UnoGameManager.Actions.Forfeit, null, "");
 			}
@@ -1114,7 +1115,7 @@ public class UnoBattleManager : BattleManager
 			soul.transform.SetParent(null);
 			soul.transform.position = new Vector2(-0.055f, -1.63f);
 			soul.GetComponent<SpriteRenderer>().enabled = false;
-			GameObject.Find("ACT").GetComponent<BattleButton>().Select(boo: false);
+			GameObject.Find("ACT").GetComponent<BattleButton>().Select(false);
 			firstButton = true;
 			int num = (int)index[0];
 			if (enemies[num] != null)
@@ -1127,8 +1128,7 @@ public class UnoBattleManager : BattleManager
 					{
 						boxText.DestroyOldText();
 					}
-					int partyMember = ((UnoGameManager.GetSkinFilename(player.GetSkin()) == "susie") ? 1 : 2);
-					string text = Localizer.GetText("uno_check_" + UnoGameManager.GetSkinFilename(player.GetSkin()), PartyMembers.GetATK(partyMember).ToString(), PartyMembers.GetDEF(partyMember).ToString());
+					string text = Localizer.GetText("uno_check_" + UnoGameManager.GetSkinFilename(player.GetSkin()), gm.GetATK(1).ToString(), gm.GetDEF(1).ToString());
 					diag = new string[2] { text, "" };
 					string text2 = ((cardCount == 0) ? player.GetPronoun(0) : player.GetPronoun(7));
 					text2 = ((text2.Length <= 1) ? text2.ToUpper() : (text2.Substring(0, 1).ToUpper() + text2.Substring(1)));
@@ -1142,8 +1142,9 @@ public class UnoBattleManager : BattleManager
 						}
 						else if (cardCount >= 20)
 						{
-							ref string reference2 = ref diag[1];
-							reference2 = reference2 + "\n* WILL " + player.GetPronoun(0).ToUpper() + " SURVIVE?";
+							string[] array3 = diag;
+							int num2 = 1;
+							array3[num2] = array3[num2] + "\n* WILL " + player.GetPronoun(0).ToUpper() + " SURVIVE?";
 						}
 						else if (cardCount >= 12)
 						{
@@ -1153,8 +1154,9 @@ public class UnoBattleManager : BattleManager
 						{
 							string pronoun = player.GetPronoun(4);
 							pronoun = pronoun.Substring(0, 1).ToUpper() + pronoun.Substring(1);
-							ref string reference3 = ref diag[1];
-							reference3 = reference3 + "\n* " + pronoun + " close.";
+							string[] array4 = diag;
+							int num3 = 1;
+							array4[num3] = array4[num3] + "\n* " + pronoun + " close.";
 						}
 					}
 					else
@@ -1174,8 +1176,9 @@ public class UnoBattleManager : BattleManager
 							reference = reference + "* " + text2 + " no longer " + text3 + " cards.";
 							if (((UnoEnemy)enemies[num]).Forfeit())
 							{
-								ref string reference4 = ref diag[1];
-								reference4 = reference4 + "^15\n* Because " + player.GetPronoun(0) + " forfeited.";
+								string[] array5 = diag;
+								int num4 = 1;
+								array5[num4] = array5[num4] + "^15\n* Because " + player.GetPronoun(0) + " forfeited.";
 							}
 							break;
 						}
@@ -1218,7 +1221,7 @@ public class UnoBattleManager : BattleManager
 	private void CreateNewSelections(string[,] sels, int id)
 	{
 		selObj.transform.localScale = new Vector2(48f, 48f);
-		selObj.GetComponent<Selection>().CreateSelections(sels, new Vector2(-220f, -141 - UI_OFFSET), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", useSoul: true, makeSound: true, this, id);
+		selObj.GetComponent<Selection>().CreateSelections(sels, new Vector2(-220f, -141 - UI_OFFSET), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", true, true, this, id);
 		selObj.transform.localScale = new Vector2(1f, 1f);
 	}
 
@@ -1257,7 +1260,7 @@ public class UnoBattleManager : BattleManager
 		{
 			TogglePreemptiveUnoCall();
 		}
-		clientPlayer.SetReady(val: false);
+		clientPlayer.SetReady(false);
 		diag = dialogue;
 		this.actionText = actionText;
 		curDiag = 0;
@@ -1349,11 +1352,11 @@ public class UnoBattleManager : BattleManager
 	{
 		if (!lastCard.isActiveAndEnabled)
 		{
-			lastCard.gameObject.SetActive(value: true);
+			lastCard.gameObject.SetActive(true);
 		}
 		else if (!secondToLastCard.isActiveAndEnabled)
 		{
-			secondToLastCard.gameObject.SetActive(value: true);
+			secondToLastCard.gameObject.SetActive(true);
 		}
 		frames = 0;
 		if (secondToLastCard.isActiveAndEnabled)
@@ -1361,7 +1364,7 @@ public class UnoBattleManager : BattleManager
 			secondToLastCard.ChangeTargetCard(lastCard.GetCardData());
 		}
 		lastCard.ChangeTargetCard(card);
-		GameObject.Find("LastCard").GetComponent<Text>().text = card.GetCardName();
+		GameObject.Find("LastCard").GetComponent<Text>().text = Util.BattleHUDFontFix(card.GetCardName());
 	}
 
 	public Card GetLastCard()
@@ -1446,18 +1449,27 @@ public class UnoBattleManager : BattleManager
 
 	public void ActivateUno()
 	{
-		if (!preemptiveSayUno)
+		if (preemptiveSayUno)
 		{
-			saidUno = false;
-			unoFrames = 0;
-			bool joystickIsActive = UTInput.joystickIsActive;
-			Transform transform = GameObject.Find("SayUno").transform;
-			transform.GetComponent<Text>().enabled = true;
-			transform.GetComponent<Text>().text = string.Format("Press {0} to say UNO!", joystickIsActive ? "     " : string.Format("[{0}]", UTInput.GetKeyName("Menu")));
-			if (joystickIsActive)
+			return;
+		}
+		saidUno = false;
+		unoFrames = 0;
+		bool joystickIsActive = UTInput.joystickIsActive;
+		Transform transform = GameObject.Find("SayUno").transform;
+		transform.GetComponent<Text>().enabled = true;
+		transform.GetComponent<Text>().text = string.Format("Press {0} to say UNO!", joystickIsActive ? "       " : string.Format("[{0}]", UTInput.GetKeyName("Menu")));
+		if (!joystickIsActive)
+		{
+			return;
+		}
+		transform.GetComponentInChildren<Image>().enabled = true;
+		for (int i = 0; i < ButtonPrompts.validButtons.Length; i++)
+		{
+			if (UTInput.GetKeyOrButtonReplacement("Menu") == ButtonPrompts.GetButtonChar(ButtonPrompts.validButtons[i]))
 			{
-				transform.GetComponentInChildren<Image>().enabled = true;
-				ButtonPrompts.UpdateImageWithGraphic("Menu", transform.GetComponentInChildren<Image>());
+				transform.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("ui/buttons/" + ButtonPrompts.GetButtonGraphic(ButtonPrompts.validButtons[i]));
+				break;
 			}
 		}
 	}
@@ -1501,14 +1513,10 @@ public class UnoBattleManager : BattleManager
 
 	public void EndUnoGame()
 	{
-		int num = PersistentSAVE.GetInt("uno-personal-best", 0);
+		int num = PlayerPrefs.GetInt("UnoPersonalBest", 0);
 		if (place > 0 && (num == 0 || place < num))
 		{
-			PersistentSAVE.SetInt("uno-personal-best", place);
-			if (UnoGameManager.IsPapyrusHardMode() && PersistentSAVE.GetInt("uno-papyrus-hardmode-win", 0) == 0 && place == 1)
-			{
-				PersistentSAVE.SetInt("uno-papyrus-hardmode-win", 1);
-			}
+			PlayerPrefs.SetInt("UnoPersonalBest", place);
 		}
 		gm.EndBattle(place);
 	}
@@ -1520,16 +1528,25 @@ public class UnoBattleManager : BattleManager
 		{
 			canChallenge = true;
 		}
-		if (canChallenge)
+		if (!canChallenge)
 		{
-			bool joystickIsActive = UTInput.joystickIsActive;
-			Transform transform = GameObject.Find("Challenge").transform;
-			transform.GetComponent<Text>().enabled = true;
-			transform.GetComponent<Text>().text = string.Format("Press {0} to challenge +4 Card", joystickIsActive ? "       " : string.Format("[{0}]", UTInput.GetKeyName("Menu")));
-			if (joystickIsActive)
+			return;
+		}
+		bool joystickIsActive = UTInput.joystickIsActive;
+		Transform transform = GameObject.Find("Challenge").transform;
+		transform.GetComponent<Text>().enabled = true;
+		transform.GetComponent<Text>().text = string.Format("Press {0} to challenge +4 Card", joystickIsActive ? "       " : string.Format("[{0}]", UTInput.GetKeyName("Menu")));
+		if (!joystickIsActive)
+		{
+			return;
+		}
+		transform.GetComponentInChildren<Image>().enabled = true;
+		for (int i = 0; i < ButtonPrompts.validButtons.Length; i++)
+		{
+			if (UTInput.GetKeyOrButtonReplacement("Menu") == ButtonPrompts.GetButtonChar(ButtonPrompts.validButtons[i]))
 			{
-				transform.GetComponentInChildren<Image>().enabled = true;
-				ButtonPrompts.UpdateImageWithGraphic("Menu", transform.GetComponentInChildren<Image>());
+				transform.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("ui/buttons/" + ButtonPrompts.GetButtonGraphic(ButtonPrompts.validButtons[i]));
+				break;
 			}
 		}
 	}
@@ -1570,7 +1587,7 @@ public class UnoBattleManager : BattleManager
 			fakeHp = 1;
 		}
 		partyPanels.UnoTick(fakeHp);
-		partyPanels.UpdateHP(new int[6] { fakeHp, 30, 20, 0, 0, 0 });
+		partyPanels.UpdateHP(new int[3] { fakeHp, 30, 20 });
 	}
 
 	public static UnoPlayer[] GetUnoPlayers()

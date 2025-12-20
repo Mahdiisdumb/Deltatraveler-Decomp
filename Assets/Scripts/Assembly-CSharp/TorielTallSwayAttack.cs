@@ -36,7 +36,7 @@ public class TorielTallSwayAttack : TorielAttackBase
 		if (frames % 4 == 0)
 		{
 			Transform transform = Object.Instantiate(flamePrefab, new Vector3(0f, 0.8f), Quaternion.identity, base.transform).transform;
-			transform.GetComponent<FlameBullet>().SetBaseDamage(Util.FindObjectOfType<PartyPanels>().GetTargettedMembers()[0] ? 2 : 5);
+			transform.GetComponent<FlameBullet>().SetBaseDamage(Object.FindObjectOfType<PartyPanels>().GetTargettedMembers()[0] ? 2 : 5);
 			if (Random.Range(0, 2) == 1)
 			{
 				leftFlames.Add(transform);

@@ -113,7 +113,7 @@ public class SOULGraze : MonoBehaviour
 		while (tpBuildup >= 1f)
 		{
 			tpBuildup -= 1f;
-			Util.FindObjectOfType<TPBar>().AddTP(1);
+			Object.FindObjectOfType<TPBar>().AddTP(1);
 		}
 	}
 
@@ -143,7 +143,7 @@ public class SOULGraze : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision && collision.gameObject.tag.Contains("Bullet") && collision.gameObject.tag != "GreenBullet" && soul.GetInvFrames() == 0)
+		if (collision.gameObject.tag.Contains("Bullet") && collision.gameObject.tag != "GreenBullet" && soul.GetInvFrames() == 0)
 		{
 			bullets.Add(collision.gameObject);
 			if ((bool)collision.GetComponent<BulletBase>())
@@ -164,7 +164,7 @@ public class SOULGraze : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if ((bool)collision && bullets.Contains(collision.gameObject))
+		if (bullets.Contains(collision.gameObject))
 		{
 			bullets.Remove(collision.gameObject);
 		}

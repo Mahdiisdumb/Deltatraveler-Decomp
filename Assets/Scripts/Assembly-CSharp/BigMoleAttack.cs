@@ -9,7 +9,7 @@ public class BigMoleAttack : AttackBase
 		base.Awake();
 		maxFrames = 180;
 		bbSize = new Vector2(165f, 140f);
-		spawnRate = 12 - Util.FindObjectOfType<MondoMole>().GetDifficultyLevel();
+		spawnRate = 12 - Object.FindObjectOfType<MondoMole>().GetDifficultyLevel();
 	}
 
 	protected override void Update()

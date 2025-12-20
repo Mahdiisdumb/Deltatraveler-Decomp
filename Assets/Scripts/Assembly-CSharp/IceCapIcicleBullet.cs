@@ -30,7 +30,7 @@ public class IceCapIcicleBullet : BulletBase
 			}
 		}
 		float num = (float)frames / 50f;
-		num = Mathf.Sin(num * MathF.PI * 0.5f);
+		num = Mathf.Sin(num * (float)Math.PI * 0.5f);
 		base.transform.position = new Vector3(base.transform.position.x, Mathf.Lerp(-3.44f, -0.15f, num));
 	}
 }

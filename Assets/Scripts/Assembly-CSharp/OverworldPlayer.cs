@@ -3,8 +3,22 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
-public class OverworldPlayer : OverworldMemberBase
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(Rigidbody2D))]
+public class OverworldPlayer : MonoBehaviour
 {
+	private GameManager gm;
+
+	private SpriteRenderer sr;
+
+	private Animator anim;
+
+	private BoxCollider2D col;
+
+	private Rigidbody2D rigid2D;
+
 	private bool canMove;
 
 	private bool movePM;
@@ -18,6 +32,8 @@ public class OverworldPlayer : OverworldMemberBase
 	private float spd;
 
 	private float spdMultiplier = 1f;
+
+	private Vector2 faceDir = Vector2.down;
 
 	private Vector3 moveDir = Vector2.zero;
 
@@ -41,17 +57,23 @@ public class OverworldPlayer : OverworldMemberBase
 
 	private bool specialBattleFreeze;
 
+	private string curSpriteName = "";
+
+	private bool useCustomSprites;
+
 	private bool sliding;
 
 	private int slideFrames;
 
 	private bool forceSendPositions;
 
+	private bool animControl;
+
 	public bool cellphoneCall;
 
 	public bool noclip;
 
-	private bool useDeltaruneRun = true;
+	private bool isFrisk;
 
 	private bool canWallDance;
 
@@ -71,39 +93,59 @@ public class OverworldPlayer : OverworldMemberBase
 
 	private bool autoRun;
 
-	private List<OverworldPartyMember> partyMembers;
+	private bool useRunAnim = true;
 
-	protected override void Awake()
+	private void Awake()
 	{
-		base.Awake();
+		gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+		sr = base.transform.GetComponent<SpriteRenderer>();
+		anim = base.transform.GetComponent<Animator>();
+		anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("player/kris_ow");
+		col = base.transform.GetComponent<BoxCollider2D>();
+		col.offset = new Vector2(0f, -0.55f);
+		col.size = new Vector2(0.8f, 0.4f);
+		rigid2D = base.transform.GetComponent<Rigidbody2D>();
+		rigid2D.bodyType = RigidbodyType2D.Dynamic;
+		rigid2D.gravityScale = 0f;
+		rigid2D.freezeRotation = true;
 		spd = 6f;
 		canMove = true;
 		initiating = false;
 		iFrame = 0;
 		iFrameMax = 0;
 		moveFrames = 0;
-		ResetPartyMemberList();
-		foreach (OverworldPartyMember partyMember in partyMembers)
+		animControl = true;
+		if ((int)gm.GetFlag(107) == 1)
 		{
-			partyMember.Activate();
+			isFrisk = true;
+			canWallDance = true;
+			anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("player/frisk_ow");
+			ChangeDirection(faceDir);
+			GameObject.Find("Susie").GetComponent<OverworldPartyMember>().SetPositionOffset(new Vector3(0f, 0.352f));
 		}
-		if (partyMembers.Count > 0 && gm.GetPartyMember(0) == 6)
+		OverworldPartyMember component = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
+		OverworldPartyMember component2 = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
+		if (gm.SusieInParty())
 		{
-			partyMembers[0].GetComponent<OverworldPartyMember>().SetPositionOffset(new Vector3(0f, 0.352f));
+			component.Activate();
 		}
-		base.partyMember = gm.GetPartyMember(0);
-		useDeltaruneRun = base.partyMember != 6;
-		canWallDance = base.partyMember == 6 || SceneManager.GetActiveScene().buildIndex == 100;
+		if (gm.NoelleInParty())
+		{
+			component2.Activate();
+		}
+		if (SceneManager.GetActiveScene().buildIndex == 100)
+		{
+			canWallDance = true;
+		}
 		sr.enabled = true;
-		SetCollision(onoff: true);
+		SetCollision(true);
 		aud = GetComponents<AudioSource>();
 		autoRun = GameManager.GetOptions().autoRun.value == 1;
 		useRunAnim = GameManager.GetOptions().runAnimations.value == 1;
 	}
 
-	protected override void Start()
+	private void Start()
 	{
-		base.Start();
 		if (SceneManager.GetActiveScene().buildIndex == 101 || SceneManager.GetActiveScene().buildIndex == 102)
 		{
 			EnableStepSounds();
@@ -115,7 +157,7 @@ public class OverworldPlayer : OverworldMemberBase
 		depressed = (int)Util.GameManager().GetSessionFlag(6) == 1;
 		if (animControl)
 		{
-			if (useDeltaruneRun)
+			if (!isFrisk)
 			{
 				anim.SetFloat("speed", (CheckRun() && !depressed) ? 1.5f : 0.75f);
 			}
@@ -128,7 +170,7 @@ public class OverworldPlayer : OverworldMemberBase
 		{
 			spd = 6f;
 			runTimer = 0;
-			anim.SetBool("isMoving", value: false);
+			anim.SetBool("isMoving", false);
 		}
 		else if ((HoldingMoveButtons() || sliding) && canMove)
 		{
@@ -145,13 +187,13 @@ public class OverworldPlayer : OverworldMemberBase
 				{
 					runTimer++;
 				}
-				if (runTimer > 10)
+				if (!isFrisk && runTimer > 10)
 				{
-					spd = ((runTimer > 60 && useDeltaruneRun) ? 12 : 10);
+					spd = ((runTimer > 60) ? 12 : 10);
 				}
 				else
 				{
-					spd = 8f;
+					spd = (isFrisk ? 10 : 8);
 				}
 			}
 			else if (!CheckRun())
@@ -164,7 +206,7 @@ public class OverworldPlayer : OverworldMemberBase
 		{
 			spd = 6f;
 			runTimer = 0;
-			anim.SetBool("isMoving", value: false);
+			anim.SetBool("isMoving", false);
 			rigid2D.constraints = RigidbodyConstraints2D.FreezeAll;
 		}
 		if (sliding)
@@ -200,7 +242,7 @@ public class OverworldPlayer : OverworldMemberBase
 			}
 			if (iFrame > iFrameMax)
 			{
-				SetCollision(onoff: false);
+				SetCollision(false);
 				initiating = false;
 				iFrame = 0;
 				gm.StartBattle(battleId);
@@ -213,11 +255,11 @@ public class OverworldPlayer : OverworldMemberBase
 		return UTInput.GetButton("X") ^ autoRun;
 	}
 
-	protected override void LateUpdate()
+	private void LateUpdate()
 	{
 		if ((((ProperlyMoved() && HoldingMoveButtons()) || sliding) && movePM) || (forceSendPositions && !specialBattleFreeze))
 		{
-			OverworldPartyMember[] array = Util.FindObjectsOfType<OverworldPartyMember>();
+			OverworldPartyMember[] array = Object.FindObjectsOfType<OverworldPartyMember>();
 			foreach (OverworldPartyMember overworldPartyMember in array)
 			{
 				if (overworldPartyMember.IsActivated())
@@ -234,22 +276,87 @@ public class OverworldPlayer : OverworldMemberBase
 		{
 			movePM = false;
 		}
-		base.LateUpdate();
-		if ((bool)Util.FindObjectOfType<ActionSOUL>())
+		if (gm.GetMiniPartyMember() > 0 || (int)gm.GetFlag(102) == 1 || (int)gm.GetFlag(178) == 1 || (int)gm.GetFlag(204) == 1 || depressed || (isFrisk && gm.GetFlagInt(108) == 1 && gm.GetFlagInt(13) >= 2 && gm.GetFlagInt(127) == 1))
 		{
-			string text = sr.sprite.name;
-			if (partyMember == 6 && gm.GetFlagInt(108) == 1 && text.EndsWith("_g") && !text.StartsWith("spr_fr_run"))
+			useCustomSprites = true;
+		}
+		else
+		{
+			useCustomSprites = false;
+		}
+		if (anim.enabled && useCustomSprites)
+		{
+			string text = "";
+			if (isFrisk)
 			{
-				text = text.Substring(0, text.Length - 2);
+				if (gm.GetFlagInt(108) == 1 && gm.GetFlagInt(13) >= 2 && gm.GetFlagInt(127) == 1)
+				{
+					text = "g";
+				}
 			}
-			Util.FindObjectOfType<ActionSOUL>().UpdateSprite(text);
+			else if (gm.GetMiniPartyMember() == 1)
+			{
+				text = "pau";
+			}
+			else if (depressed)
+			{
+				text = "depressed";
+			}
+			else if ((int)gm.GetFlag(102) == 1)
+			{
+				text = "injured";
+			}
+			else if ((int)gm.GetFlag(204) == 1 && (int)gm.GetFlag(178) == 1)
+			{
+				text = "eyehold";
+			}
+			else if (SceneManager.GetActiveScene().buildIndex == 123)
+			{
+				text = "hd";
+			}
+			else if ((bool)Object.FindObjectOfType<UndyneShadow>())
+			{
+				text = "undynes";
+			}
+			else if ((int)gm.GetFlag(204) == 1)
+			{
+				text = "eye";
+			}
+			else if ((int)gm.GetFlag(178) == 1)
+			{
+				text = "hold";
+			}
+			string text2 = "Kris";
+			if (isFrisk)
+			{
+				text2 = "Frisk";
+			}
+			string text3 = sr.sprite.name + "_" + text;
+			if (sr.sprite.name != curSpriteName || text3 != sr.sprite.name)
+			{
+				Sprite sprite = Resources.Load<Sprite>("player/" + text2 + "/" + text + "/" + text3);
+				if (sprite != null)
+				{
+					sr.sprite = sprite;
+				}
+			}
+			curSpriteName = sr.sprite.name;
+		}
+		if ((bool)Object.FindObjectOfType<ActionSOUL>())
+		{
+			string text4 = sr.sprite.name;
+			if (isFrisk && gm.GetFlagInt(108) == 1 && text4.EndsWith("_g") && !text4.StartsWith("spr_fr_run"))
+			{
+				text4 = text4.Substring(0, text4.Length - 2);
+			}
+			Object.FindObjectOfType<ActionSOUL>().UpdateSprite(text4);
 		}
 		lastPos = base.transform.position;
 		if (IsMoving())
 		{
 			moveLastPos = base.transform.position;
 		}
-		rigid2D.linearVelocity = Vector2.zero;
+		rigid2D.velocity = Vector2.zero;
 	}
 
 	private void HandleRun()
@@ -306,9 +413,10 @@ public class OverworldPlayer : OverworldMemberBase
 			anim.SetBool("isMoving", ProperlyMovedLastFrame());
 			if (ProperlyMoved())
 			{
+				string text = ((SceneManager.GetActiveScene().buildIndex == 123) ? "runb" : "run");
 				if (useRunAnim)
 				{
-					anim.Play((spd >= 10f) ? "run" : "walk");
+					anim.Play((spd >= (float)(isFrisk ? 8 : 10)) ? text : "walk");
 				}
 				else
 				{
@@ -316,13 +424,13 @@ public class OverworldPlayer : OverworldMemberBase
 				}
 			}
 		}
-		if (!sliding && (bool)Util.FindObjectOfType<StepEncounterer>() && ProperlyMoved())
+		if (!sliding && (bool)Object.FindObjectOfType<StepEncounterer>() && ProperlyMoved())
 		{
 			stepEncCounter += 0.1f * (CheckRun() ? 1.5f : 0.75f);
 			if (stepEncCounter >= 1f)
 			{
 				stepEncCounter -= 1f;
-				Util.FindObjectOfType<StepEncounterer>().AddStep();
+				Object.FindObjectOfType<StepEncounterer>().AddStep();
 			}
 		}
 	}
@@ -354,10 +462,22 @@ public class OverworldPlayer : OverworldMemberBase
 			sliding = true;
 			slideFrames = 0;
 			anim.enabled = false;
-			string memberOWSpriteSuffix = PartyMembers.GetMemberOWSpriteSuffix(partyMember, "");
-			if (memberOWSpriteSuffix != "")
+			string text = "";
+			if (gm.GetMiniPartyMember() == 1)
 			{
-				SetSprite(memberOWSpriteSuffix + "/spr_kr_slide_" + memberOWSpriteSuffix);
+				text = "pau";
+			}
+			else if ((int)gm.GetFlag(102) == 1)
+			{
+				text = "injured";
+			}
+			else if ((int)gm.GetFlag(204) == 1)
+			{
+				text = "eye";
+			}
+			if (text != "")
+			{
+				SetSprite(text + "/spr_kr_slide_" + text);
 			}
 			else
 			{
@@ -403,7 +523,13 @@ public class OverworldPlayer : OverworldMemberBase
 		this.spdMultiplier = spdMultiplier;
 	}
 
-	public void SetMovement(bool newMove, bool activateMembers = true)
+	public void ChangeDirection(Vector2 dir)
+	{
+		anim.SetFloat("dirX", dir[0]);
+		anim.SetFloat("dirY", dir[1]);
+	}
+
+	public void SetMovement(bool newMove)
 	{
 		MonoBehaviour.print(newMove ? "owplayer: Movement Restore" : "owplayer: Movement Revoke");
 		if (moveState == 1)
@@ -426,7 +552,7 @@ public class OverworldPlayer : OverworldMemberBase
 		}
 		if (!col.enabled && newMove)
 		{
-			SetCollision(onoff: true);
+			SetCollision(true);
 		}
 		if (canMove && !newMove && IsMoving())
 		{
@@ -437,17 +563,6 @@ public class OverworldPlayer : OverworldMemberBase
 			movePM = true;
 		}
 		canMove = newMove;
-		foreach (OverworldPartyMember partyMember in partyMembers)
-		{
-			if (activateMembers)
-			{
-				partyMember.Activate();
-			}
-			else
-			{
-				partyMember.Deactivate();
-			}
-		}
 	}
 
 	public void SetMoveState(int moveState)
@@ -461,7 +576,7 @@ public class OverworldPlayer : OverworldMemberBase
 		{
 		case 0:
 			EnableAnimator();
-			SetSelfAnimControl(setAnimControl: true);
+			SetSelfAnimControl(true);
 			anim.SetFloat("speed", 1f);
 			if ((bool)GetComponentInChildren<SnowSculpture>())
 			{
@@ -480,7 +595,7 @@ public class OverworldPlayer : OverworldMemberBase
 			}
 			else
 			{
-				SetSelfAnimControl(setAnimControl: false);
+				SetSelfAnimControl(false);
 				anim.SetFloat("speed", 0f);
 			}
 			break;
@@ -500,6 +615,26 @@ public class OverworldPlayer : OverworldMemberBase
 	public bool CanMove()
 	{
 		return canMove;
+	}
+
+	public void SetSelfAnimControl(bool setAnimControl)
+	{
+		animControl = setAnimControl;
+	}
+
+	public void EnableAnimator()
+	{
+		anim.enabled = true;
+	}
+
+	public void DisableAnimator()
+	{
+		anim.enabled = false;
+	}
+
+	public Vector2 GetDirection()
+	{
+		return new Vector2(anim.GetFloat("dirX"), anim.GetFloat("dirY"));
 	}
 
 	public bool IsMoving()
@@ -526,13 +661,10 @@ public class OverworldPlayer : OverworldMemberBase
 		{
 			gm.PauseMusic();
 		}
-		gm.DisablePlayerMovement(deactivatePartyMembers: false);
+		gm.DisablePlayerMovement(false);
 		GetComponentInChildren<InteractionTrigger>().GetComponent<BoxCollider2D>().enabled = false;
-		OverworldPartyMember[] array = Util.FindObjectsOfType<OverworldPartyMember>();
-		for (int i = 0; i < array.Length; i++)
-		{
-			array[i].HideSprite();
-		}
+		GameObject.Find("Susie").GetComponent<SpriteRenderer>().enabled = false;
+		GameObject.Find("Noelle").GetComponent<SpriteRenderer>().enabled = false;
 		SpriteRenderer[] componentsInChildren = GameObject.Find("MAP").GetComponentsInChildren<SpriteRenderer>();
 		for (int i = 0; i < componentsInChildren.Length; i++)
 		{
@@ -565,7 +697,7 @@ public class OverworldPlayer : OverworldMemberBase
 		soulPos = toSoulPos + new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y);
 		iFrameMax = 11 + moveFrames + 5;
 		soul = Object.Instantiate(Resources.Load<GameObject>("overworld/OWSoul"), base.transform);
-		if (partyMember == 6)
+		if (isFrisk)
 		{
 			soul.transform.localPosition = new Vector3(0f, -0.254f);
 		}
@@ -607,19 +739,50 @@ public class OverworldPlayer : OverworldMemberBase
 	{
 		base.transform.position = spawnPos;
 		ChangeDirection(spawnDir);
-		foreach (OverworldPartyMember partyMember in partyMembers)
+		OverworldPartyMember component = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
+		OverworldPartyMember component2 = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
+		if (gm.SusieInParty())
 		{
-			partyMember.transform.position = spawnPos + partyMember.GetPositionOffset();
-			partyMember.ChangeDirection(spawnDir);
-			partyMember.SpawnInSamePos();
+			component.transform.position = spawnPos + component.GetPositionOffset();
+			component.ChangeDirection(spawnDir);
+			component.SpawnInSamePos();
 		}
+		if (gm.NoelleInParty())
+		{
+			component2.transform.position = spawnPos + component2.GetPositionOffset();
+			component2.ChangeDirection(spawnDir);
+			component2.SpawnInSamePos();
+		}
+		if ((bool)Object.FindObjectOfType<MoleFriend>())
+		{
+			Object.FindObjectOfType<MoleFriend>().transform.position = spawnPos + Object.FindObjectOfType<MoleFriend>().GetPositionOffset();
+			Object.FindObjectOfType<MoleFriend>().ChangeDirection(spawnDir);
+			Object.FindObjectOfType<MoleFriend>().SpawnInSamePos();
+		}
+	}
+
+	public void SetSprite(string spriteName)
+	{
+		if (isFrisk)
+		{
+			sr.sprite = Resources.Load<Sprite>("player/Frisk/" + spriteName);
+		}
+		else
+		{
+			sr.sprite = Resources.Load<Sprite>("player/Kris/" + spriteName);
+		}
+	}
+
+	public void SetSprite(Sprite sprite)
+	{
+		sr.sprite = sprite;
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
 		if (CheckRun())
 		{
-			spd = 8f;
+			spd = (isFrisk ? 10 : 8);
 			runTimer = 0;
 		}
 	}
@@ -628,7 +791,7 @@ public class OverworldPlayer : OverworldMemberBase
 	{
 		if (CheckRun() && Mathf.Abs(moveDir.x) + Mathf.Abs(moveDir.y) == 2f)
 		{
-			spd = 8f;
+			spd = (isFrisk ? 10 : 8);
 			runTimer = 0;
 		}
 	}
@@ -652,8 +815,10 @@ public class OverworldPlayer : OverworldMemberBase
 	public void SetCollision(bool onoff)
 	{
 		GetComponentInChildren<InteractionTrigger>().GetComponent<BoxCollider2D>().enabled = onoff;
-		col.enabled = !noclip && onoff;
-		MonoBehaviour.print("CollisionTime " + col.enabled);
+		if (!noclip)
+		{
+			col.enabled = onoff;
+		}
 	}
 
 	public bool IsInitiatingBattle()
@@ -691,82 +856,5 @@ public class OverworldPlayer : OverworldMemberBase
 		}
 		aud[footstep].Play();
 		footstep = (footstep + 1) % 2;
-	}
-
-	public void ResetPartyMemberList()
-	{
-		partyMembers = new List<OverworldPartyMember>();
-		for (int i = 1; i < 3; i++)
-		{
-			int i_partyMember = gm.GetPartyMember(i);
-			AddPartyMemberByID(i_partyMember);
-		}
-		if (gm.GetFlagInt(151) == 1 && (bool)Util.FindObjectOfType<MoleFriend>())
-		{
-			AddPartyMember(Util.FindObjectOfType<MoleFriend>());
-		}
-	}
-
-	public void AddPartyMemberByID(int i_partyMember)
-	{
-		if (i_partyMember > -1)
-		{
-			GameObject gameObject = GameObject.Find(PartyMembers.GetMemberName(i_partyMember));
-			if (!gameObject)
-			{
-				gameObject = Object.Instantiate(Resources.Load<GameObject>("player/" + PartyMembers.GetMemberName(i_partyMember)));
-			}
-			if ((bool)gameObject)
-			{
-				AddPartyMember(gameObject.GetComponent<OverworldPartyMember>());
-				gameObject.GetComponent<OverworldPartyMember>().SetDistanceBySlotID();
-			}
-			else
-			{
-				Debug.LogError(PartyMembers.GetMemberName(i_partyMember) + " doesn't have Party Member object!!!");
-			}
-		}
-	}
-
-	public void AddPartyMember(OverworldPartyMember partyMember)
-	{
-		partyMembers.Add(partyMember);
-	}
-
-	public void RemovePartyMember(OverworldPartyMember partyMember)
-	{
-		if (partyMembers.Contains(partyMember))
-		{
-			partyMembers.Remove(partyMember);
-		}
-	}
-
-	public List<OverworldPartyMember> GetPartyMembers()
-	{
-		return partyMembers;
-	}
-
-	public OverworldPartyMember GetPartyMemberBySlot(int slot)
-	{
-		foreach (OverworldPartyMember partyMember in partyMembers)
-		{
-			if (partyMember.GetSlotID() == slot)
-			{
-				return partyMember;
-			}
-		}
-		return null;
-	}
-
-	public OverworldPartyMember GetPartyMemberByID(int id)
-	{
-		foreach (OverworldPartyMember partyMember in partyMembers)
-		{
-			if (partyMember.GetMemberID() == id)
-			{
-				return partyMember;
-			}
-		}
-		return null;
 	}
 }

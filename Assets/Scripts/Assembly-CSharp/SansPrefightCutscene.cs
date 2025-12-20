@@ -26,15 +26,15 @@ public class SansPrefightCutscene : CutsceneBase
 			MoveTo(cam, new Vector3(0f, 6.29f, -10f), 4f);
 			if (!num)
 			{
-				SetMoveAnim(kris, isMoving: false);
+				SetMoveAnim(kris, false);
 			}
 			if (!flag)
 			{
-				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(susie, false);
 			}
 			if (!flag2)
 			{
-				SetMoveAnim(noelle, isMoving: false);
+				SetMoveAnim(noelle, false);
 			}
 			if (num || flag || flag2)
 			{
@@ -73,9 +73,9 @@ public class SansPrefightCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				SetMoveAnim(kris, isMoving: true);
-				SetMoveAnim(susie, isMoving: true);
-				SetMoveAnim(noelle, isMoving: true);
+				SetMoveAnim(kris, true);
+				SetMoveAnim(susie, true);
+				SetMoveAnim(noelle, true);
 				PlayAnimation(sans, "AttackRight");
 				sans.GetComponent<AudioSource>().volume = 0f;
 				sans.GetComponent<AudioSource>().Play();
@@ -105,17 +105,17 @@ public class SansPrefightCutscene : CutsceneBase
 					noelle.GetComponent<SpriteRenderer>().enabled = false;
 					sans.GetComponent<SpriteRenderer>().enabled = false;
 					greyDoor.position = new Vector3(10f, greyDoor.position.y);
-					TilemapRenderer[] array = Util.FindObjectsOfType<TilemapRenderer>();
+					TilemapRenderer[] array = UnityEngine.Object.FindObjectsOfType<TilemapRenderer>();
 					for (int i = 0; i < array.Length; i++)
 					{
 						array[i].enabled = false;
 					}
-					SetSprite(kris, "spr_kr_grabbed_sans_0", flipX: true);
-					cam.SetFollowPlayer(follow: false);
+					SetSprite(kris, "spr_kr_grabbed_sans_0", true);
+					cam.SetFollowPlayer(false);
 				}
 				if (frames <= 40)
 				{
-					float t = Mathf.Sin((float)(frames - 30) / 10f * MathF.PI * 0.5f);
+					float t = Mathf.Sin((float)(frames - 30) / 10f * (float)Math.PI * 0.5f);
 					kris.transform.position = new Vector3(Mathf.Lerp(-1.6f, -1.1f, t), 5.39f);
 				}
 				else
@@ -154,7 +154,7 @@ public class SansPrefightCutscene : CutsceneBase
 				noelle.GetComponent<SpriteRenderer>().enabled = true;
 				sans.GetComponent<SpriteRenderer>().enabled = true;
 				greyDoor.position = new Vector3(1f / 24f, greyDoor.position.y);
-				TilemapRenderer[] array = Util.FindObjectsOfType<TilemapRenderer>();
+				TilemapRenderer[] array = UnityEngine.Object.FindObjectsOfType<TilemapRenderer>();
 				for (int i = 0; i < array.Length; i++)
 				{
 					array[i].enabled = true;
@@ -174,12 +174,12 @@ public class SansPrefightCutscene : CutsceneBase
 			{
 				num6 = 1f;
 			}
-			num6 = Mathf.Sin(num6 * MathF.PI * 0.5f);
+			num6 = Mathf.Sin(num6 * (float)Math.PI * 0.5f);
 			kris.transform.position = Vector3.Lerp(new Vector3(-1.1f, 5.39f), new Vector3(-2.4f, 3.43f), num6);
 			if (frames < 85)
 			{
 				float num7 = (float)(frames - 70) / 15f;
-				num7 = Mathf.Sin(num7 * MathF.PI * 0.5f);
+				num7 = Mathf.Sin(num7 * (float)Math.PI * 0.5f);
 				sans.transform.position = new Vector3(Mathf.Lerp(-2.52f, -3.53f, num7), 5.27f);
 			}
 			else if (frames >= 85 && frames <= 95)
@@ -199,22 +199,22 @@ public class SansPrefightCutscene : CutsceneBase
 				if (frames == 95)
 				{
 					SetSprite(sans, "overworld/npcs/underfell/spr_ufsans_punch_1");
-					SetSprite(susie, "spr_su_surprise_right", flipX: true);
+					SetSprite(susie, "spr_su_surprise_right", true);
 					gm.PlayGlobalSFX("sounds/snd_damage");
 					PlaySFX("sounds/snd_hurt");
 				}
 				float num9 = (float)(frames - 95) / 25f;
-				num9 = Mathf.Sin(num9 * MathF.PI * 0.5f);
+				num9 = Mathf.Sin(num9 * (float)Math.PI * 0.5f);
 				susie.transform.position = Vector3.Lerp(new Vector3(0f, 5.52f), new Vector3(2.94f, 5.33f), num9);
 				if (frames == 100)
 				{
 					SetSprite(sans, "overworld/npcs/underfell/spr_ufsans_punch_2");
-					SetSprite(susie, "spr_su_kneel", flipX: true);
+					SetSprite(susie, "spr_su_kneel", true);
 					SetSprite(noelle, "spr_no_kneel_left");
 					PlaySFX("sounds/snd_bump");
 				}
 				float num10 = (float)(frames - 100) / 20f;
-				num10 = Mathf.Sin(num9 * MathF.PI * 0.5f);
+				num10 = Mathf.Sin(num9 * (float)Math.PI * 0.5f);
 				noelle.transform.position = Vector3.Lerp(new Vector3(1.6f, 5.52f), new Vector3(3.55f, 6.85f), num10);
 			}
 			if (frames == (fastVersion ? 120 : 150))
@@ -222,8 +222,8 @@ public class SansPrefightCutscene : CutsceneBase
 				PlayAnimation(sans, "idle");
 				StartText(new string[18]
 				{
-					"* c'mon,^05 susie.", "* you think i'm not paying\n  attention?", "* H...^10 how'd you...", "* heheheheh...", "* y'know,^05 i'm remembering\n  this one orphan from\n  the city.", "* she looked a lot like you.^05\n* same name,^05 even.", "* when i saw her there,^05\n  glaring at me...", "* well,^05 let's just say\n  she's one with the wind\n  now.", "* ...!", "* You...^10\n* You KILLED her!?",
-					"* finally catching on,^05 huh?", "* heheheh...", "* unfortunately,^05 i couldn't\n  watch her die.", "* didn't want to call too\n  much attention to myself,^05\n  after all.", "* but as for you three...", "* i'm gonna relish every\n  bit of this.", "* heheheheheheh...", "* time to die."
+					"*\tc'mon,^05 susie.", "*\tyou think i'm not paying\n\tattention?", "* H...^10 how'd you...", "*\theheheheh...", "*\ty'know,^05 i'm remembering\n\tthis one orphan from\n\tthe city.", "*\tshe looked a lot like you.^05\n*\tsame name,^05 even.", "*\twhen i saw her there,^05\n\tglaring at me...", "*\twell,^05 let's just say\n\tshe's one with the wind\n\tnow.", "* ...!", "* You...^10\n* You KILLED her!?",
+					"*\tfinally catching on,^05 huh?", "*\theheheh...", "*\tunfortunately,^05 i couldn't\n\twatch her die.", "*\tdidn't want to call too\n\tmuch attention to myself,^05\n\tafter all.", "*\tbut as for you three...", "*\ti'm gonna relish every\n\tbit of this.", "*\theheheheheheh...", "*\ttime to die."
 				}, new string[16]
 				{
 					"snd_txtsans", "snd_txtsans", "snd_txtsus", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsus", "snd_txtsus",
@@ -269,7 +269,7 @@ public class SansPrefightCutscene : CutsceneBase
 			{
 				if (frames == 1)
 				{
-					SetSprite(kris, "spr_kr_up_soul_yeet_5", flipX: true);
+					SetSprite(kris, "spr_kr_up_soul_yeet_5", true);
 				}
 				float num12 = 0f;
 				if (frames <= 3)
@@ -306,10 +306,10 @@ public class SansPrefightCutscene : CutsceneBase
 					SetSprite(kris, "spr_kr_jump_at_sans_1");
 					sans.GetComponent<SpriteRenderer>().sortingOrder = -50;
 				}
-				kris.transform.position = Vector3.Lerp(new Vector3(-2.4f, 3.43f), new Vector3(-1.282f, 5.416f), (float)(frames - 105) / 15f) + new Vector3(0f, Mathf.Sin((float)((frames - 105) * 12) * (MathF.PI / 180f)));
+				kris.transform.position = Vector3.Lerp(new Vector3(-2.4f, 3.43f), new Vector3(-1.282f, 5.416f), (float)(frames - 105) / 15f) + new Vector3(0f, Mathf.Sin((float)((frames - 105) * 12) * ((float)Math.PI / 180f)));
 				if (frames == 120)
 				{
-					SetSprite(susie, "spr_su_surprise_right", flipX: true);
+					SetSprite(susie, "spr_su_surprise_right", true);
 					SetSprite(noelle, "spr_no_surprise_left");
 					SetSprite(kris, "spr_kr_stab_sans");
 					sans.GetComponent<SpriteRenderer>().enabled = false;
@@ -368,7 +368,7 @@ public class SansPrefightCutscene : CutsceneBase
 				{
 					num21 = 1f;
 				}
-				num21 = Mathf.Sin(num21 * MathF.PI * 0.5f);
+				num21 = Mathf.Sin(num21 * (float)Math.PI * 0.5f);
 				kris.transform.position = new Vector3(Mathf.Lerp(-1.282f, -3.33f, num21), kris.transform.position.y);
 				if (fastVersion)
 				{
@@ -376,7 +376,7 @@ public class SansPrefightCutscene : CutsceneBase
 					{
 						PlaySFX("sounds/snd_noise");
 						PlayAnimation(sans, "Stance");
-						StartText(new string[4] { "* wow,^05 that was fast,^05 kris.", "* didja know what i was\n  talking about?", "* SHUT UP!!!", "* You're going down!" }, new string[4] { "snd_txtsans", "snd_txtsans", "snd_txtsus", "snd_txtsus" }, new int[1], new string[4] { "ufsans_empty", "ufsans_grin", "su_determined", "su_angry_hero" }, 0);
+						StartText(new string[4] { "*\twow,^05 that was fast,^05 kris.", "*\tdidja know what i was\n\ttalking about?", "* SHUT UP!!!", "* You're going down!" }, new string[4] { "snd_txtsans", "snd_txtsans", "snd_txtsus", "snd_txtsus" }, new int[1], new string[4] { "ufsans_empty", "ufsans_grin", "su_determined", "su_angry_hero" }, 0);
 						state = 3;
 						frames = 0;
 					}
@@ -390,7 +390,7 @@ public class SansPrefightCutscene : CutsceneBase
 				{
 					PlaySFX("sounds/snd_noise");
 					PlayAnimation(sans, "Stance");
-					StartText(new string[10] { "* KRIS???", "* d-^05damn kid...^10\n* always screwing things\n  up...", "* You god damn psycho!!", "* You're really gonna\n  gloat about killing\n  children!?", "* huh?^10\n* why not?", "* what's she gonna do?^05\n* tell her parents?", "* and besides...", "* you three have had this\n  coming for a LONG time.", "* SHUT UP!!!", "* I don't care what\n  you have to say\n  anymore!" }, new string[10] { "snd_txtsus", "snd_txtsans", "snd_txtsus", "snd_txtsus", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsus", "snd_txtsus" }, new int[1], new string[10] { "su_worried", "ufsans_empty", "su_pissed", "su_panic", "ufsans_neutral", "ufsans_empty", "ufsans_closed", "ufsans_grin", "su_determined", "su_angry_hero" }, 0);
+					StartText(new string[10] { "* KRIS???", "*\td-^05damn kid...^10\n*\talways screwing things\n\tup...", "* You god damn psycho!!", "* You're really gonna\n  gloat about killing\n  children!?", "*\thuh?^10\n*\twhy not?", "*\twhat's she gonna do?^05\n*\ttell her parents?", "*\tand besides...", "*\tyou three have had this\n\tcoming for a LONG time.", "* SHUT UP!!!", "* I don't care what\n  you have to say\n  anymore!" }, new string[10] { "snd_txtsus", "snd_txtsans", "snd_txtsus", "snd_txtsus", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsus", "snd_txtsus" }, new int[1], new string[10] { "su_worried", "ufsans_empty", "su_pissed", "su_panic", "ufsans_neutral", "ufsans_empty", "ufsans_closed", "ufsans_grin", "su_determined", "su_angry_hero" }, 0);
 					state = 3;
 					frames = 0;
 				}
@@ -404,20 +404,20 @@ public class SansPrefightCutscene : CutsceneBase
 				{
 					if (AtLine(3))
 					{
-						SetSprite(susie, "spr_su_wtf", flipX: true);
+						SetSprite(susie, "spr_su_wtf", true);
 					}
 					else if (AtLine(4))
 					{
-						SetSprite(susie, "spr_su_point_right_unhappy", flipX: true);
+						SetSprite(susie, "spr_su_point_right_unhappy", true);
 					}
 				}
 				else if (AtLine(3) || AtLine(9))
 				{
-					SetSprite(susie, "spr_su_wtf", flipX: true);
+					SetSprite(susie, "spr_su_wtf", true);
 				}
 				else if (AtLine(4) || AtLine(10))
 				{
-					SetSprite(susie, "spr_su_point_right_unhappy", flipX: true);
+					SetSprite(susie, "spr_su_point_right_unhappy", true);
 				}
 				return;
 			}
@@ -427,30 +427,65 @@ public class SansPrefightCutscene : CutsceneBase
 				PlaySFX("sounds/snd_weaponpull");
 				PlayAnimation(susie, "AttackStick");
 				string text = "Attack";
-				PlayAnimation(animName: gm.GetWeapon(0) switch
+				switch (gm.GetWeapon(0))
 				{
-					8 => text + "RingEye", 
-					13 => text + "ToyKnife", 
-					20 => text + "Pan", 
-					21 => text + "Bat", 
-					31 => text + "AlBat", 
-					32 => text + "Glove", 
-					34 => text + "Icicle", 
-					41 => text + "Katana", 
-					_ => text + "Pencil", 
-				}, obj: kris);
+				case 8:
+					text += "RingEye";
+					break;
+				case 13:
+					text += "ToyKnife";
+					break;
+				case 20:
+					text += "Pan";
+					break;
+				case 21:
+					text += "Bat";
+					break;
+				case 31:
+					text += "AlBat";
+					break;
+				case 32:
+					text += "Glove";
+					break;
+				case 34:
+					text += "Icicle";
+					break;
+				case 41:
+					text += "Katana";
+					break;
+				default:
+					text += "Pencil";
+					break;
+				}
+				PlayAnimation(kris, text);
 				string text2 = "Attack";
-				text2 = gm.GetWeapon(2) switch
+				switch (gm.GetWeapon(2))
 				{
-					8 => text2 + "Ring", 
-					13 => text2 + "ToyKnife", 
-					20 => text2 + "Pan", 
-					21 => text2 + "Bat", 
-					31 => text2 + "AlBat", 
-					32 => text2 + "Glove", 
-					34 => text2 + "Icicle", 
-					_ => text2 + "Pencil", 
-				};
+				case 8:
+					text2 += "Ring";
+					break;
+				case 13:
+					text2 += "ToyKnife";
+					break;
+				case 20:
+					text2 += "Pan";
+					break;
+				case 21:
+					text2 += "Bat";
+					break;
+				case 31:
+					text2 += "AlBat";
+					break;
+				case 32:
+					text2 += "Glove";
+					break;
+				case 34:
+					text2 += "Icicle";
+					break;
+				default:
+					text2 += "Pencil";
+					break;
+				}
 				noelle.GetComponent<SpriteRenderer>().flipX = true;
 				PlayAnimation(noelle, text2);
 			}
@@ -491,13 +526,13 @@ public class SansPrefightCutscene : CutsceneBase
 		{
 			string oldValue = kris.GetComponent<SpriteRenderer>().sprite.name.Substring(kris.GetComponent<SpriteRenderer>().sprite.name.LastIndexOf("_") + 1);
 			string spriteName = "player/Kris/battle/normal/" + kris.GetComponent<SpriteRenderer>().sprite.name.Replace(oldValue, "eye");
-			SetSprite(kris.transform.Find("FakeEye"), spriteName);
+			SetSprite(kris.transform.GetChild(1), spriteName);
 		}
 		if (state == 5 && !kris.GetComponent<SpriteRenderer>().enabled)
 		{
-			UnityEngine.Object.Destroy(kris.transform.Find("FakeEye").gameObject);
+			UnityEngine.Object.Destroy(kris.transform.GetChild(1).gameObject);
 			state = 6;
-			EndCutscene(enablePlayerMovement: false);
+			EndCutscene(false);
 		}
 	}
 
@@ -509,9 +544,9 @@ public class SansPrefightCutscene : CutsceneBase
 		PlayAnimation(kris, "walk");
 		PlayAnimation(susie, "walk");
 		PlayAnimation(noelle, "walk");
-		SetMoveAnim(kris, isMoving: true);
-		SetMoveAnim(susie, isMoving: true);
-		SetMoveAnim(noelle, isMoving: true);
+		SetMoveAnim(kris, true);
+		SetMoveAnim(susie, true);
+		SetMoveAnim(noelle, true);
 		ChangeDirection(kris, Vector2.up);
 		ChangeDirection(susie, Vector2.up);
 		ChangeDirection(noelle, Vector2.up);

@@ -28,7 +28,7 @@ public class TouchButton : MonoBehaviour
 
 	public void OnPointerEnter()
 	{
-		Util.GameManager().PlayGlobalSFX("sounds/snd_menumove");
+		Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_menumove");
 		GetComponent<Image>().color = new Color(1f, 1f, 0f);
 	}
 
@@ -44,10 +44,10 @@ public class TouchButton : MonoBehaviour
 			Application.Quit();
 			return;
 		}
-		UTInput.SetValue(input, value: true, pos, isDiag, goLeft);
-		if ((bool)Util.FindObjectOfType<TitleScreen>() && Util.FindObjectOfType<TitleScreen>().RebindingKey() && (input == "X" || input == "C"))
+		UTInput.SetValue(input, true, pos, isDiag, goLeft);
+		if ((bool)Object.FindObjectOfType<TitleScreen>() && Object.FindObjectOfType<TitleScreen>().RebindingKey() && (input == "X" || input == "C"))
 		{
-			Util.FindObjectOfType<TitleScreen>().CancelRebind();
+			Object.FindObjectOfType<TitleScreen>().CancelRebind();
 		}
 	}
 
@@ -55,7 +55,7 @@ public class TouchButton : MonoBehaviour
 	{
 		if (input != "quit")
 		{
-			UTInput.SetValue(input, value: false, pos, isDiag, goLeft);
+			UTInput.SetValue(input, false, pos, isDiag, goLeft);
 		}
 	}
 }

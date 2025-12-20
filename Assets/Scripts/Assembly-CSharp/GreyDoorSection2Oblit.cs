@@ -39,7 +39,7 @@ public class GreyDoorSection2Oblit : CutsceneBase
 			}
 			else
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", false);
 				kris.ChangeDirection(Vector2.up);
 			}
 			if (susie.transform.position != new Vector3(14.07f, -4.02f))
@@ -49,7 +49,7 @@ public class GreyDoorSection2Oblit : CutsceneBase
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 				susie.ChangeDirection(Vector2.up);
 			}
 			if (noelle.transform.position != new Vector3(12.67f, -4.21f))
@@ -59,7 +59,7 @@ public class GreyDoorSection2Oblit : CutsceneBase
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", false);
 				noelle.ChangeDirection(Vector2.up);
 			}
 			if (cam.transform.position != new Vector3(12.62f, -3.08f, -10f))
@@ -88,9 +88,9 @@ public class GreyDoorSection2Oblit : CutsceneBase
 				kris.GetComponent<Animator>().Play("RunUp", 0, 0f);
 				susie.GetComponent<Animator>().SetFloat("speed", 0f);
 				susie.GetComponent<Animator>().Play("RunUp", 0, 0f);
-				kris.transform.position = Vector3.Lerp(new Vector3(11.34f, -4.22f), new Vector3(11.34f, -5.08f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
-				susie.transform.position = Vector3.Lerp(new Vector3(14.07f, -4.02f), new Vector3(14.07f, -4.88f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
-				noelle.transform.position = Vector3.Lerp(new Vector3(12.67f, -4.21f), new Vector3(12.67f, -5.07f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
+				kris.transform.position = Vector3.Lerp(new Vector3(11.34f, -4.22f), new Vector3(11.34f, -5.08f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
+				susie.transform.position = Vector3.Lerp(new Vector3(14.07f, -4.02f), new Vector3(14.07f, -4.88f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
+				noelle.transform.position = Vector3.Lerp(new Vector3(12.67f, -4.21f), new Vector3(12.67f, -5.07f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
 			}
 			else if (frames >= 65 && frames <= 75)
 			{
@@ -119,7 +119,7 @@ public class GreyDoorSection2Oblit : CutsceneBase
 			if (frames <= 15)
 			{
 				float num = (float)frames / 15f;
-				num = Mathf.Sin(num * MathF.PI * 0.5f);
+				num = Mathf.Sin(num * (float)Math.PI * 0.5f);
 				kris.transform.position = Vector3.Lerp(new Vector3(11.92f, -2.82f), new Vector3(10.92f, -2.1499999f), num);
 				susie.transform.position = Vector3.Lerp(new Vector3(13.35f, -2.6f), new Vector3(14.35f, -1.9299998f), num);
 				noelle.transform.position = Vector3.Lerp(new Vector3(12.64f, -2.9f), new Vector3(12.64f, -2.23f), num);
@@ -183,7 +183,7 @@ public class GreyDoorSection2Oblit : CutsceneBase
 			}
 			if (frames == 120)
 			{
-				Util.GameManager().ForceLoadArea(74);
+				UnityEngine.Object.FindObjectOfType<GameManager>().ForceLoadArea(74);
 			}
 		}
 	}
@@ -226,22 +226,22 @@ public class GreyDoorSection2Oblit : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		kris.SetSelfAnimControl(setAnimControl: false);
+		kris.SetSelfAnimControl(false);
 		kris.GetComponent<Animator>().SetFloat("speed", 1f);
-		kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+		kris.GetComponent<Animator>().SetBool("isMoving", true);
 		kris.ChangeDirection(Vector2.up);
 		susie.UseUnhappySprites();
-		susie.SetSelfAnimControl(setAnimControl: false);
+		susie.SetSelfAnimControl(false);
 		susie.GetComponent<Animator>().SetFloat("speed", 1f);
-		susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+		susie.GetComponent<Animator>().SetBool("isMoving", true);
 		susie.GetComponent<Animator>().Play("idle");
 		susie.ChangeDirection(Vector2.up);
-		noelle.SetSelfAnimControl(setAnimControl: false);
+		noelle.SetSelfAnimControl(false);
 		noelle.GetComponent<Animator>().SetFloat("speed", 1f);
-		noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+		noelle.GetComponent<Animator>().SetBool("isMoving", true);
 		noelle.GetComponent<Animator>().Play("idle");
 		noelle.ChangeDirection(Vector2.up);
-		cam.SetFollowPlayer(follow: false);
+		cam.SetFollowPlayer(false);
 		greyDoor = GameObject.Find("GreyDoor").GetComponent<SpriteRenderer>();
 		krisBW = GameObject.Find("KrisBW").GetComponent<SpriteRenderer>();
 		susieBW = GameObject.Find("SusieBW").GetComponent<SpriteRenderer>();

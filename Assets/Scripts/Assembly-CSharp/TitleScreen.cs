@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Experimental.Input;
+using UnityEngine.Experimental.Input.LowLevel;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class TitleScreen : SelectableBehaviour
+public class TitleScreen : TranslatableSelectableBehaviour
 {
 	public enum State
 	{
@@ -23,9 +23,10 @@ public class TitleScreen : SelectableBehaviour
 		DeleteSaveOld = 9,
 		FileSelect = 10,
 		Controls = 11,
-		NameConfirm = 12,
-		Extras = 13,
-		LoadNewDimension = 14
+		LanguagePacks = 12,
+		NameConfirm = 13,
+		Extras = 14,
+		LoadNewDimension = 15
 	}
 
 	public enum SaveState
@@ -38,6 +39,8 @@ public class TitleScreen : SelectableBehaviour
 		DeleteConfirm = 5,
 		DeleteDoubleConfirm = 6
 	}
+
+	private static readonly int FULL_COMPLETION = 3;
 
 	private State state = State.Title;
 
@@ -77,13 +80,15 @@ public class TitleScreen : SelectableBehaviour
 
 	private Transform controls;
 
+	private Transform langPackMenu;
+
+	private Transform extras;
+
 	private Transform kris;
 
 	private Transform susie;
 
 	private Transform noelle;
-
-	private Transform mini;
 
 	private Transform door;
 
@@ -92,6 +97,8 @@ public class TitleScreen : SelectableBehaviour
 	private Transform[] optionsTabs;
 
 	private int optionsTab;
+
+	private Transform flavorPreview;
 
 	private TextUT deleteText;
 
@@ -149,6 +156,30 @@ public class TitleScreen : SelectableBehaviour
 
 	private string saveHeaderText = "";
 
+	private bool trainingModeUnlocked;
+
+	private bool unoUnlocked;
+
+	private bool instantLoadHardMode;
+
+	private bool flavorUnlocked;
+
+	private bool marioBrosUnlocked;
+
+	private string langPack = "";
+
+	private LanguagePack[] packList;
+
+	private int packIndex;
+
+	private int packPage;
+
+	private int packPageCount;
+
+	private int lastPage;
+
+	private int lastAxisX;
+
 	private int controlsType;
 
 	private bool rebinding;
@@ -161,9 +192,60 @@ public class TitleScreen : SelectableBehaviour
 
 	private static string[] controlNames = new string[7] { "Down", "Right", "Up", "Left", "Confirm", "Cancel", "Menu" };
 
+	private bool holdHoriz;
+
+	private static int comboProgress = 0;
+
+	private static int[] correctMBCombo = new int[8] { 0, 1, 0, 0, 1, 2, 2, 3 };
+
+	public override Dictionary<string, string[]> GetDefaultStrings()
+	{
+		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
+		dictionary.Add("title", new string[2] { "[press {0} or enter]", "Kris and Susie go places that\nthey shouldn't be at" });
+		dictionary.Add("save_files", new string[15]
+		{
+			"Please select a file.", "Choose a file to copy.", "Choose a file to copy to.", "It can't be copied.", "You can't copy there.", "Copy complete.", "The file will be overwritten.", "Choose a file to erase.", "There's nothing to erase.", "Erase complete.",
+			"Copy", "Erase", "Options", "Cancel", "It can't be loaded."
+		});
+		dictionary.Add("pack_menu", new string[3] { "--- Language Packs ---", "[press {0} to go back]", "<   PAGE {0}   >" });
+		dictionary.Add("instructions", new string[5] { "--- Instruction ---", "[{0} or ENTER] - Confirm\n[{1} or SHIFT] - Cancel\n[{2} or CTRL] - Menu (In-game)\n[F4] - Fullscreen\n[Hold ESC] - Quit\nWhen HP is 0, you lose.", "Begin Game", "Back", "     - Confirm\n     - Cancel\n     - Menu (In-game)\n[F4] - Fullscreen\n[Hold ESC] - Quit\nWhen HP is 0, you lose." });
+		dictionary.Add("options", new string[21]
+		{
+			"--- Options ---", "Master Volume", "Controls", "Window Scale", "Language Packs...", "Go Back", "Content Setting", "Low Graphics", "Visuals...", "Touchpad Settings...",
+			"Touch Color Scheme", "Touchpad Skin", "Buttons Skin", "Touchpad Resistance", "lower value = more sensitive", "Starting Flavor", "Auto-Run", "Gamepad Button Style", "Run Animations", "Automatic Button Style",
+			"Easy Mode"
+		});
+		dictionary.Add("content_settings", new string[2] { "Normal", "Reduced Blood" });
+		dictionary.Add("low_graphics", new string[2] { "OFF", "ON" });
+		dictionary.Add("button_styles", new string[3] { "XBOX", "PS4", "SWITCH" });
+		dictionary.Add("flavors", new string[11]
+		{
+			"Vanilla", "Mint", "Strawberry", "Banana", "ButtsPie", "Blueberry", "Cinnamon", "Moss", "Nerds", "Cotton Candy",
+			"Eggplant"
+		});
+		dictionary.Add("controls", new string[12]
+		{
+			"Function", "Key", "DOWN", "RIGHT", "UP", "LEFT", "CONFIRM", "CANCEL", "MENU", "Reset to default",
+			"Finish", "Gamepad"
+		});
+		dictionary.Add("name_selection", new string[15]
+		{
+			"BACK", "END", "Yes", "No", "\b          YOUR OWN NAME.", "\b        WHAT AN INTERESTING \n\b             BEHAVIOR.", "\b    AN INTERESTING COINCIDENCE.", "\b     THEY CANNOT HEAR YOU HERE.", "\b      THIS NAME SHALL COMMENCE\n\b     AN INTERESTING EXPERIMENT.", "\b               ...",
+			"\b        THIS IS YOUR NAME.", "\b       IS THIS HOW YOU INTEND \n\b       TO SPEND PRECIOUS TIME?", "\b         A NAME HAS ALREADY \n\b         BEEN CHOSEN.", "\b     INTERESTING... YOU INVOKE\n\b       THE NAME OF JUSTICE.", "\b     WHAT A DISTINGUISHED NAME."
+		});
+		dictionary.Add("file_options", new string[14]
+		{
+			"Erase this file?", "Really erase it?", "Copy over this file?", "Yes", "No", "Yes!", "No!", "[EMPTY]", "[CORRUPTED]", "\b    THIS DATA IS CORRUPT\n\b OR UNREACHABLE. DO YOU WISH\n\b TO TERMINATE ITS CONNECTION?",
+			"--- WARNING ---", "ERASE", "DO NOT", "[INCOMPATIBLE]"
+		});
+		dictionary.Add("extras", new string[6] { "--- Extras ---", "Hard Mode", "Training Mode", "UNOTRAVELER", "Mario Bros.", "Go Back" });
+		dictionary.Add("easy_mode", new string[2] { "OFF", "ON" });
+		return dictionary;
+	}
+
 	private void Awake()
 	{
-		gm = Util.GameManager();
+		gm = UnityEngine.Object.FindObjectOfType<GameManager>();
 		gm.SetDefaultValues();
 		mus = GetComponents<AudioSource>()[0];
 		menuSfx = GetComponents<AudioSource>()[1];
@@ -180,6 +262,8 @@ public class TitleScreen : SelectableBehaviour
 		deleteSave = base.transform.Find("DeleteSave");
 		saveFiles = base.transform.Find("SaveFiles");
 		controls = base.transform.Find("Controls");
+		langPackMenu = base.transform.Find("LanguageSelector");
+		extras = base.transform.Find("Extras");
 		optionsTabs = new Transform[4]
 		{
 			options.Find("MainTab"),
@@ -187,13 +271,13 @@ public class TitleScreen : SelectableBehaviour
 			options.Find("VisualsTab"),
 			options.Find("MobileButtonsTab")
 		};
+		flavorPreview = optionsTabs[2].Find("FlavorPreview");
 		selection = base.gameObject.AddComponent<Selection>();
 		deleteText = base.gameObject.AddComponent<TextUT>();
 		deleteText.EnableGasterEffect();
 		fileStatuses = new FileStatus[3];
 		gm.SetFramerate(30);
-		UTInput.SetPriority(b: true);
-		Util.GameManager().SetSessionFlag(20, 0);
+		UTInput.SetPriority(true);
 		if (UnityEngine.Random.Range(0, 1200) == 0 || (DateTime.Now.Day == 1 && DateTime.Now.Month == 4))
 		{
 			logo.sprite = Resources.Load<Sprite>("ui/title/anagrams/spr_logo_anagram_" + UnityEngine.Random.Range(0, 3));
@@ -204,53 +288,57 @@ public class TitleScreen : SelectableBehaviour
 	private void Start()
 	{
 		gm.DisableSingleBattleMode();
-		fade = Util.FindObjectOfType<Fade>();
+		fade = UnityEngine.Object.FindObjectOfType<Fade>();
 		fade.transform.parent.position = Vector3.zero;
 		base.transform.Find("Copyright").GetComponent<Text>().text = base.transform.Find("Copyright").GetComponent<Text>().text.Replace("VER", gm.GetVersion());
 		volume = gm.config.GetInt("General", "Volume", 100);
+		langPack = gm.config.GetString("General", "LanguagePack", "");
+		windowScale = PlayerPrefs.GetInt("WindowScale", 1);
 		localOptions = new Options();
 		localOptions.LoadFromConfig(ref gm.config);
-		UpdateSettingsText();
-		if (PersistentSAVE.GetInt("new-title", 0) == 1 && PersistentSAVE.GetInt("completion", 0) == 0)
+		flavorUnlocked = PlayerPrefs.GetInt("CompletionState", 0) >= 2;
+		if (!flavorUnlocked)
 		{
-			PersistentSAVE.SetInt("completion", 1);
+			UnityEngine.Object.Destroy(optionsTabs[2].Find("4").gameObject);
+			UnityEngine.Object.Destroy(optionsTabs[2].Find("Flavor").gameObject);
+			optionsTabs[2].Find("5").gameObject.name = "4";
 		}
-		if (PersistentSAVE.GetInt("completion", 0) >= 1)
+		UpdateSettingsText();
+		if (PlayerPrefs.GetInt("NewTitleScreen", 0) == 1 && PlayerPrefs.GetInt("CompletionState", 0) == 0)
+		{
+			PlayerPrefs.SetInt("CompletionState", 1);
+		}
+		trainingModeUnlocked = PlayerPrefs.GetInt("CompletionState", 0) == FULL_COMPLETION || gm.IsTestMode();
+		unoUnlocked = PlayerPrefs.GetInt("CompletionState", 0) >= 3 || gm.IsTestMode();
+		marioBrosUnlocked = PlayerPrefs.GetInt("MBUnlocked", 0) == 1 || gm.IsTestMode();
+		if (trainingModeUnlocked)
+		{
+			extras.Find("1").GetComponent<Text>().text = GetString("extras", 2);
+			extras.Find("1").GetComponent<Text>().color = Color.white;
+		}
+		if (unoUnlocked)
+		{
+			extras.Find("2").GetComponent<Text>().text = GetString("extras", 3);
+			extras.Find("2").GetComponent<Text>().color = Color.white;
+		}
+		if (marioBrosUnlocked)
+		{
+			extras.Find("3").GetComponent<Text>().text = GetString("extras", 4);
+			extras.Find("3").GetComponent<Text>().color = Color.white;
+		}
+		if (PlayerPrefs.GetInt("CompletionState", 0) >= 1)
 		{
 			mus.clip = Resources.Load<AudioClip>("music/mus_castletown");
 			kris = GameObject.Find("KrisBG").transform;
-			susie = GameObject.Find("SusieBG").transform;
-			noelle = GameObject.Find("NoelleBG").transform;
-			mini = GameObject.Find("MiniBG").transform;
-			Transform[] array = new Transform[6] { kris, susie, noelle, mini, null, null };
-			for (int i = 0; i < array.Length; i++)
+			kris.GetComponent<SpriteRenderer>().enabled = true;
+			if (PlayerPrefs.GetInt("KrisEye", 0) == 1)
 			{
-				int num = PersistentSAVE.GetInt("last-saved-pm-" + i, -1);
-				if ((bool)array[i] && num > -1)
-				{
-					array[i].GetComponent<SpriteRenderer>().enabled = true;
-				}
-				if (i == 0)
-				{
-					if (num == 0 && PersistentSAVE.GetInt("kris-eye-title", 0) == 1)
-					{
-						kris.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ui/title/spr_kris_title");
-					}
-					else if (num == 6)
-					{
-						kris.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ui/title/spr_frisk_title");
-					}
-				}
-				if (i == 1 && num == 2)
-				{
-					array[1].GetComponent<SpriteRenderer>().enabled = false;
-					array[2].GetComponent<SpriteRenderer>().enabled = true;
-				}
-				if (i == 3 && num == 3)
-				{
-					mini.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ui/title/spr_paula_title");
-				}
+				kris.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ui/title/spr_kris_title");
 			}
+			susie = GameObject.Find("SusieBG").transform;
+			susie.GetComponent<SpriteRenderer>().enabled = true;
+			noelle = GameObject.Find("NoelleBG").transform;
+			noelle.GetComponent<SpriteRenderer>().enabled = true;
 			door = GameObject.Find("DoorBG").transform;
 			door.GetComponent<SpriteRenderer>().enabled = true;
 			GameObject.Find("Deltarune").GetComponent<SpriteRenderer>().enabled = true;
@@ -274,13 +362,12 @@ public class TitleScreen : SelectableBehaviour
 		}
 		if (mobile)
 		{
-			Util.FindObjectOfType<MobileUI>().EnableButtons(dPadEnabled: true, z: true, x: true, c: true, instant: false);
-			optionsTabs[3].Find("Color").GetComponent<Text>().text = Util.FindObjectOfType<MobileUI>().GetCurrentColorName();
-			optionsTabs[3].Find("DPADSkin").GetComponent<Text>().text = Util.FindObjectOfType<MobileUI>().GetCurrentPadSkin();
-			optionsTabs[3].Find("ButtonSkin").GetComponent<Text>().text = Util.FindObjectOfType<MobileUI>().GetCurrentButtonSkin();
+			UnityEngine.Object.FindObjectOfType<MobileUI>().EnableButtons(true, true, true, true, false);
+			optionsTabs[3].Find("Color").GetComponent<Text>().text = UnityEngine.Object.FindObjectOfType<MobileUI>().GetCurrentColorName();
+			optionsTabs[3].Find("DPADSkin").GetComponent<Text>().text = UnityEngine.Object.FindObjectOfType<MobileUI>().GetCurrentPadSkin();
+			optionsTabs[3].Find("ButtonSkin").GetComponent<Text>().text = UnityEngine.Object.FindObjectOfType<MobileUI>().GetCurrentButtonSkin();
 			optionsTabs[3].Find("TouchPadSensitivityValue").GetComponent<Text>().text = PlayerPrefs.GetInt("DPADSensitivity", 10).ToString();
 		}
-		Util.FindObjectOfType<EndNameEvent>().SetTextObject(base.transform.Find("Letters").Find("Name").GetComponent<RectTransform>());
 		gm.DeactivateCheckpoint();
 		mus.Play();
 	}
@@ -354,6 +441,10 @@ public class TitleScreen : SelectableBehaviour
 						controls.Find(text2 + "-Text").GetComponent<Text>().color = new Color(0f, 1f, 1f);
 					}
 				}
+				else if (state == State.Options && flavorUnlocked && optionsTab == 2)
+				{
+					flavorPreview.gameObject.SetActive(index == 4);
+				}
 			}
 			else if (GetAxisRaw() == 0f && holdingAxis)
 			{
@@ -367,20 +458,17 @@ public class TitleScreen : SelectableBehaviour
 				kris.position = Vector3.Lerp(kris.position, Vector3.zero, 0.2f);
 				susie.position = Vector3.Lerp(susie.position, Vector3.zero, 0.2f);
 				noelle.position = Vector3.Lerp(noelle.position, Vector3.zero, 0.2f);
-				mini.position = Vector3.Lerp(mini.position, Vector3.zero, 0.2f);
 				door.position = Vector3.Lerp(door.position, Vector3.zero, 0.2f);
 				frames++;
-				soul.transform.localPosition = new Vector3(0f, -192f + Mathf.Sin((float)(frames * 2) * (MathF.PI / 180f)) * 6f);
+				soul.transform.localPosition = new Vector3(0f, -192f + Mathf.Sin((float)(frames * 2) * ((float)Math.PI / 180f)) * 6f);
 			}
-			UpdateUnresponsive();
-			if (UTInput.GetButtonDown("Z") || UTInput.GetButtonDown("C"))
+			if (UTInput.GetButtonDown("Z"))
 			{
 				if (usingNewTitle)
 				{
 					kris.GetComponent<SpriteRenderer>().enabled = false;
 					susie.GetComponent<SpriteRenderer>().enabled = false;
 					noelle.GetComponent<SpriteRenderer>().enabled = false;
-					mini.GetComponent<SpriteRenderer>().enabled = false;
 					door.GetComponent<SpriteRenderer>().enabled = false;
 				}
 				soul.GetComponent<Image>().enabled = true;
@@ -392,7 +480,7 @@ public class TitleScreen : SelectableBehaviour
 				}
 				frames = 0;
 				selSfx.Play();
-				base.transform.Find("Unresponsive").gameObject.SetActive(value: false);
+				base.transform.Find("Unresponsive").GetComponent<Text>().enabled = false;
 			}
 		}
 		else if (state == State.NewGame)
@@ -426,7 +514,7 @@ public class TitleScreen : SelectableBehaviour
 				characters.position = Vector3.zero;
 				characters.Find("Susie").localPosition = new Vector3(640f, 0f);
 				characters.Find("Kris").localPosition = new Vector3(640f, 0f);
-				Util.FindObjectOfType<EndNameEvent>().transform.Find("Kris").position = new Vector3(0f, -2.2f);
+				UnityEngine.Object.FindObjectOfType<EndNameEvent>().transform.Find("Kris").position = new Vector3(0f, -2.2f);
 			}
 		}
 		else if (state == State.ContinueGame)
@@ -447,7 +535,7 @@ public class TitleScreen : SelectableBehaviour
 			else if (UTInput.GetButtonDown("Z") && index == 0)
 			{
 				selSfx.Play();
-				gm.SpawnFromLastSave(respawn: false);
+				gm.SpawnFromLastSave(false);
 			}
 		}
 		else if (state == State.Options)
@@ -459,6 +547,7 @@ public class TitleScreen : SelectableBehaviour
 				{
 					if (optionsTab == 2)
 					{
+						flavorPreview.gameObject.SetActive(false);
 						index = 6;
 					}
 					else if (optionsTab == 3)
@@ -469,9 +558,9 @@ public class TitleScreen : SelectableBehaviour
 					{
 						index = 0;
 					}
-					optionsTabs[optionsTab].gameObject.SetActive(value: false);
+					optionsTabs[optionsTab].gameObject.SetActive(false);
 					optionsTab = 0;
-					optionsTabs[optionsTab].gameObject.SetActive(value: true);
+					optionsTabs[optionsTab].gameObject.SetActive(true);
 					menuLimit = 8;
 				}
 				else
@@ -508,14 +597,23 @@ public class TitleScreen : SelectableBehaviour
 						if (!mobile)
 						{
 							selSfx.Play();
-							gm.SetWindowScale(gm.GetWindowScale() + 1);
-							gm.UpdateWindow();
+							windowScale = PlayerPrefs.GetInt("WindowScale") + 1;
+							Resolution currentResolution = Screen.currentResolution;
+							if (windowScale * 640 > currentResolution.width || windowScale * 480 > currentResolution.height)
+							{
+								windowScale = 1;
+							}
+							if (PlayerPrefs.GetInt("fullscreen") != 1)
+							{
+								Screen.SetResolution(640 * windowScale, 480 * windowScale, false);
+							}
+							PlayerPrefs.SetInt("WindowScale", windowScale);
 							UpdateSettingsText();
 						}
 						else
 						{
-							optionsTabs[0].gameObject.SetActive(value: false);
-							optionsTabs[3].gameObject.SetActive(value: true);
+							optionsTabs[0].gameObject.SetActive(false);
+							optionsTabs[3].gameObject.SetActive(true);
 							menuLimit = 4;
 							index = 0;
 							optionsTab = 3;
@@ -562,9 +660,9 @@ public class TitleScreen : SelectableBehaviour
 					}
 					else if (index == 6)
 					{
-						optionsTabs[0].gameObject.SetActive(value: false);
-						optionsTabs[2].gameObject.SetActive(value: true);
-						menuLimit = 5;
+						optionsTabs[0].gameObject.SetActive(false);
+						optionsTabs[2].gameObject.SetActive(true);
+						menuLimit = (flavorUnlocked ? 6 : 5);
 						index = 0;
 						optionsTab = 2;
 						selSfx.Play();
@@ -575,33 +673,37 @@ public class TitleScreen : SelectableBehaviour
 					if (index == 0)
 					{
 						selSfx.Play();
-						localOptions.autoButton.Increase();
+						localOptions.lowGraphics.Increase();
 						GameManager.SetOptions(localOptions);
 						UpdateSettingsText();
 					}
 					if (index == 1)
 					{
 						selSfx.Play();
-						localOptions.buttonStyle.Increase();
+						localOptions.autoButton.Increase();
 						GameManager.SetOptions(localOptions);
 						UpdateSettingsText();
 					}
 					if (index == 2)
 					{
 						selSfx.Play();
-						localOptions.vSync.Increase();
+						localOptions.buttonStyle.Increase();
 						GameManager.SetOptions(localOptions);
 						UpdateSettingsText();
-						gm.SetFramerate();
 					}
 					if (index == 3)
 					{
 						selSfx.Play();
-						localOptions.monitorInfo.Increase();
+						localOptions.runAnimations.Increase();
 						GameManager.SetOptions(localOptions);
 						UpdateSettingsText();
-						gm.SetFramerate();
-						gm.SetMonitorInfoEnabled(localOptions.monitorInfo.value == 1);
+					}
+					if (index == 4 && flavorUnlocked)
+					{
+						selSfx.Play();
+						localOptions.startingFlavor.Increase();
+						GameManager.SetOptions(localOptions);
+						UpdateSettingsText();
 					}
 				}
 				else if (optionsTab == 3)
@@ -609,33 +711,22 @@ public class TitleScreen : SelectableBehaviour
 					if (index == 0)
 					{
 						selSfx.Play();
-						Util.FindObjectOfType<MobileUI>().CycleButtonColors();
-						optionsTabs[3].Find("Color").GetComponent<Text>().text = Util.FindObjectOfType<MobileUI>().GetCurrentColorName();
+						UnityEngine.Object.FindObjectOfType<MobileUI>().CycleButtonColors();
+						optionsTabs[3].Find("Color").GetComponent<Text>().text = UnityEngine.Object.FindObjectOfType<MobileUI>().GetCurrentColorName();
 					}
 					else if (index == 1)
 					{
 						selSfx.Play();
-						Util.FindObjectOfType<MobileUI>().CyclePadSkin();
-						optionsTabs[3].Find("DPADSkin").GetComponent<Text>().text = Util.FindObjectOfType<MobileUI>().GetCurrentPadSkin();
+						UnityEngine.Object.FindObjectOfType<MobileUI>().CyclePadSkin();
+						optionsTabs[3].Find("DPADSkin").GetComponent<Text>().text = UnityEngine.Object.FindObjectOfType<MobileUI>().GetCurrentPadSkin();
 					}
 					else if (index == 2)
 					{
 						selSfx.Play();
-						Util.FindObjectOfType<MobileUI>().CycleButtonSkin();
-						optionsTabs[3].Find("ButtonSkin").GetComponent<Text>().text = Util.FindObjectOfType<MobileUI>().GetCurrentButtonSkin();
+						UnityEngine.Object.FindObjectOfType<MobileUI>().CycleButtonSkin();
+						optionsTabs[3].Find("ButtonSkin").GetComponent<Text>().text = UnityEngine.Object.FindObjectOfType<MobileUI>().GetCurrentButtonSkin();
 					}
 				}
-			}
-			if (optionsTab == 2)
-			{
-				characters.Find("Kris").GetComponent<Image>().enabled = index != 2;
-				characters.Find("Susie").GetComponent<Image>().enabled = index != 2;
-				optionsTabs[2].Find("vSyncText").GetComponent<Text>().enabled = index == 2;
-			}
-			else
-			{
-				characters.Find("Kris").GetComponent<Image>().enabled = true;
-				characters.Find("Susie").GetComponent<Image>().enabled = true;
 			}
 		}
 		else if (state == State.VolumeSlider)
@@ -751,7 +842,7 @@ public class TitleScreen : SelectableBehaviour
 				letters.GetChild(29).GetComponent<Text>().color = new Color(1f, 1f, 0f);
 				letters.GetChild(30).GetComponent<Text>().enabled = true;
 				letters.GetChild(30).GetComponent<Text>().color = Color.white;
-				Util.FindObjectOfType<EndNameEvent>().StartNameShake();
+				UnityEngine.Object.FindObjectOfType<EndNameEvent>().StartNameShake();
 				deleteText.DestroyOldText();
 				string text4 = letters.Find("Name").Find("Text").GetComponent<Text>()
 					.text;
@@ -764,33 +855,33 @@ public class TitleScreen : SelectableBehaviour
 				if (correction >= 1 && !disappointment && text4 == "AAAAAAAAAAAA")
 				{
 					disappointment = true;
-					deleteText.StartText("\b       IS THIS HOW YOU INTEND \n\b       TO SPEND PRECIOUS TIME?", new Vector2(0f, 111f), "", 2);
+					deleteText.StartText(GetString("name_selection", 11), new Vector2(0f, 111f), "", 2);
 				}
 				else if (list.Contains(text4))
 				{
-					deleteText.StartText("\b    AN INTERESTING COINCIDENCE.", new Vector2(0f, 111f), "", 2);
+					deleteText.StartText(GetString("name_selection", 6), new Vector2(0f, 111f), "", 2);
 				}
 				else
 				{
 					switch (text4)
 					{
 					case "KRIS":
-						deleteText.StartText("\b     THEY CANNOT HEAR YOU HERE.", new Vector2(0f, 111f), "", 2);
+						deleteText.StartText(GetString("name_selection", 7), new Vector2(0f, 111f), "", 2);
 						break;
 					case "FRISK":
-						deleteText.StartText("\b      THIS NAME SHALL COMMENCE\n\b     AN INTERESTING EXPERIMENT.", new Vector2(0f, 111f), "", 2);
+						deleteText.StartText(GetString("name_selection", 8), new Vector2(0f, 111f), "", 2);
 						break;
 					case "DESS":
-						deleteText.StartText("\b               ...", new Vector2(0f, 111f), "", 2);
+						deleteText.StartText(GetString("name_selection", 9), new Vector2(0f, 111f), "", 2);
 						break;
 					case "CLOVER":
-						deleteText.StartText("\b     INTERESTING... YOU INVOKE\n\b       THE NAME OF JUSTICE.", new Vector2(0f, 111f), "", 2);
+						deleteText.StartText(GetString("name_selection", 13), new Vector2(0f, 111f), "", 2);
 						break;
 					case "CEROBA":
-						deleteText.StartText("\b     WHAT A DISTINGUISHED NAME.", new Vector2(0f, 111f), "", 2);
+						deleteText.StartText(GetString("name_selection", 14), new Vector2(0f, 111f), "", 2);
 						break;
 					default:
-						deleteText.StartText("\b        THIS IS YOUR NAME.", new Vector2(0f, 111f), "", 2);
+						deleteText.StartText(GetString("name_selection", 10), new Vector2(0f, 111f), "", 2);
 						break;
 					}
 				}
@@ -812,10 +903,21 @@ public class TitleScreen : SelectableBehaviour
 			{
 				if (index == 0)
 				{
+					if (instantLoadHardMode)
+					{
+						gm.SetFileID(3);
+					}
 					deleteText.DestroyOldText();
-					gm.NewGame(letters.Find("Name").Find("Text").GetComponent<Text>()
+					gm.SetPlayerName(letters.Find("Name").Find("Text").GetComponent<Text>()
 						.text);
-						Util.FindObjectOfType<EndNameEvent>().StartScene(gm.GetPlayerName());
+						if (gm.GetPlayerName() == "FRISK")
+						{
+							gm.SetFlag(107, 1);
+							gm.SetFlag(108, 1);
+							gm.ForceWeapon(0, 25);
+						}
+						gm.SetFlag(223, localOptions.startingFlavor.value);
+						UnityEngine.Object.FindObjectOfType<EndNameEvent>().StartScene(gm.GetPlayerName());
 						soul.GetComponent<Image>().enabled = false;
 						for (int j = 0; j < letters.childCount; j++)
 						{
@@ -826,8 +928,15 @@ public class TitleScreen : SelectableBehaviour
 						}
 						state = State.LoadNewGame;
 						mus.Stop();
+						gm.SetPartyMembers(true, false);
 						selecting = false;
-						Util.FindObjectOfType<Fade>().UTFadeOut();
+						UnityEngine.Object.FindObjectOfType<Fade>().UTFadeOut();
+					}
+					else if (instantLoadHardMode)
+					{
+						UnityEngine.Object.FindObjectOfType<EndNameEvent>().StopNameShake();
+						deleteText.DestroyOldText();
+						LoadExtras();
 					}
 					else
 					{
@@ -840,11 +949,11 @@ public class TitleScreen : SelectableBehaviour
 						if (correction >= 10 && !correctionNotice)
 						{
 							correctionNotice = true;
-							deleteText.StartText("\b        WHAT AN INTERESTING \n\b             BEHAVIOR.", new Vector2(0f, 149f), "", 2);
+							deleteText.StartText(GetString("name_selection", 5), new Vector2(0f, 149f), "", 2);
 						}
 						else
 						{
-							deleteText.StartText("\b          YOUR OWN NAME.", new Vector2(0f, 111f), "", 2);
+							deleteText.StartText(GetString("name_selection", 4), new Vector2(0f, 111f), "", 2);
 						}
 						for (int k = 0; k < 28; k++)
 						{
@@ -857,10 +966,10 @@ public class TitleScreen : SelectableBehaviour
 			}
 			else if (state == State.LoadNewGame)
 			{
-				if (!Util.FindObjectOfType<Fade>().IsPlaying())
+				if (!UnityEngine.Object.FindObjectOfType<Fade>().IsPlaying())
 				{
 					gm.StartTime();
-					gm.LoadArea(7, fadeIn: true, new Vector3(0.16f, -0.08f), Vector2.down);
+					gm.LoadArea(7, true, new Vector3(0.16f, -0.08f), Vector2.down);
 					state = State.None;
 				}
 			}
@@ -895,7 +1004,7 @@ public class TitleScreen : SelectableBehaviour
 					gm.PlayGlobalSFX("sounds/snd_appearance");
 					corruptSoul = new GameObject("SOULDie", typeof(SOUL)).GetComponent<SOUL>();
 					corruptSoul.transform.position = saveFiles.Find("file" + saveIndex).Find("soulpos").transform.position;
-					corruptSoul.CreateSOUL(Color.red, monster: false, player: false);
+					corruptSoul.CreateSOUL(Color.red, false, false);
 					corruptSoul.Break();
 					frames = 0;
 				}
@@ -909,7 +1018,7 @@ public class TitleScreen : SelectableBehaviour
 				frames++;
 				if (frames == 19)
 				{
-					Util.FindObjectOfType<SOUL>().Break();
+					UnityEngine.Object.FindObjectOfType<SOUL>().Break();
 				}
 				if (frames == 120)
 				{
@@ -977,7 +1086,7 @@ public class TitleScreen : SelectableBehaviour
 							if (fileStatuses[saveIndex] == FileStatus.Newer)
 							{
 								saveHeaderResetFrames = 0;
-								saveFiles.GetChild(0).GetComponent<Text>().text = "It can't be loaded.";
+								saveFiles.GetChild(0).GetComponent<Text>().text = GetString("save_files", 14);
 								Util.GameManager().PlayGlobalSFX("sounds/snd_cantselect");
 							}
 							else
@@ -1002,22 +1111,22 @@ public class TitleScreen : SelectableBehaviour
 							{
 								index = 0;
 								saveIndex = 0;
-								saveFiles.Find("0").GetComponent<Text>().text = "Cancel";
+								saveFiles.Find("0").GetComponent<Text>().text = GetString("save_files", 13);
 								saveFiles.Find("1").GetComponent<Text>().enabled = false;
 								saveFiles.Find("2").GetComponent<Text>().enabled = false;
 								saveFiles.Find("Extras").GetComponent<Text>().enabled = false;
-								saveHeaderText = "Choose a file to copy.";
+								saveHeaderText = GetString("save_files", 1);
 								saveState = SaveState.CopyFrom;
 							}
 							if (index == 1)
 							{
 								index = 0;
 								saveIndex = 0;
-								saveFiles.Find("0").GetComponent<Text>().text = "Cancel";
+								saveFiles.Find("0").GetComponent<Text>().text = GetString("save_files", 13);
 								saveFiles.Find("1").GetComponent<Text>().enabled = false;
 								saveFiles.Find("2").GetComponent<Text>().enabled = false;
 								saveFiles.Find("Extras").GetComponent<Text>().enabled = false;
-								saveHeaderText = "Choose a file to erase.";
+								saveHeaderText = GetString("save_files", 7);
 								saveState = SaveState.DeleteSelect;
 							}
 							if (index == 2)
@@ -1027,11 +1136,8 @@ public class TitleScreen : SelectableBehaviour
 						}
 						else if (saveIndex == 4)
 						{
-							fade.FadeOut(15);
-							state = State.Extras;
+							LoadExtras();
 							selSfx.Play();
-							mus.Stop();
-							frames = 0;
 						}
 					}
 					if (saveHeaderResetFrames < 90)
@@ -1064,7 +1170,7 @@ public class TitleScreen : SelectableBehaviour
 						{
 							backSfx.Play();
 							saveHeaderResetFrames = 0;
-							saveFiles.GetChild(0).GetComponent<Text>().text = "It can't be copied.";
+							saveFiles.GetChild(0).GetComponent<Text>().text = GetString("save_files", 3);
 						}
 						else
 						{
@@ -1072,7 +1178,7 @@ public class TitleScreen : SelectableBehaviour
 							copiedSaveIndex = saveIndex;
 							saveIndex = 0;
 							saveState = SaveState.CopyTo;
-							saveHeaderText = "Choose a file to copy to.";
+							saveHeaderText = GetString("save_files", 2);
 						}
 					}
 				}
@@ -1084,7 +1190,7 @@ public class TitleScreen : SelectableBehaviour
 						saveIndex = copiedSaveIndex;
 						copiedSaveIndex = -1;
 						saveState = SaveState.CopyFrom;
-						saveHeaderText = "Choose a file to copy.";
+						saveHeaderText = GetString("save_files", 1);
 					}
 					else if (UTInput.GetButtonDown("Z"))
 					{
@@ -1092,7 +1198,7 @@ public class TitleScreen : SelectableBehaviour
 						{
 							backSfx.Play();
 							saveHeaderResetFrames = 0;
-							saveFiles.GetChild(0).GetComponent<Text>().text = "You can't copy there.";
+							saveFiles.GetChild(0).GetComponent<Text>().text = GetString("save_files", 4);
 						}
 						else if (saveIndex == 3)
 						{
@@ -1103,7 +1209,7 @@ public class TitleScreen : SelectableBehaviour
 						else if (saves[saveIndex] != null)
 						{
 							selSfx.Play();
-							saveHeaderText = "The file will be overwritten.";
+							saveHeaderText = GetString("save_files", 6);
 							saveState = SaveState.CopyOverwriteConfirm;
 							saveFiles.GetChild(saveIndex + 1).Find("name").GetComponent<Text>()
 								.enabled = false;
@@ -1112,13 +1218,13 @@ public class TitleScreen : SelectableBehaviour
 							saveFiles.GetChild(saveIndex + 1).Find("location").GetComponent<Text>()
 								.enabled = false;
 							saveFiles.GetChild(saveIndex + 1).Find("erasetext").GetComponent<Text>()
-								.text = "Copy over this file?";
+								.text = GetString("file_options", 2);
 							saveFiles.GetChild(saveIndex + 1).Find("selection").GetChild(0)
 								.GetComponent<Text>()
-								.text = "Yes";
+								.text = GetString("file_options", 3);
 							saveFiles.GetChild(saveIndex + 1).Find("selection").GetChild(1)
 								.GetComponent<Text>()
-								.text = "No";
+								.text = GetString("file_options", 4);
 							selecting = true;
 							menuLimit = 2;
 						}
@@ -1127,7 +1233,7 @@ public class TitleScreen : SelectableBehaviour
 							gm.PlayGlobalSFX("sounds/snd_appearance");
 							gm.CopyFile(copiedSaveIndex, saveIndex);
 							saveHeaderResetFrames = 0;
-							saveFiles.GetChild(0).GetComponent<Text>().text = "Copy complete.";
+							saveFiles.GetChild(0).GetComponent<Text>().text = GetString("save_files", 5);
 							ResetSaveState();
 							SetSAVEStrings();
 						}
@@ -1155,7 +1261,7 @@ public class TitleScreen : SelectableBehaviour
 						saveIndex = copiedSaveIndex;
 						copiedSaveIndex = -1;
 						saveState = SaveState.CopyFrom;
-						saveHeaderText = "Choose a file to copy.";
+						saveHeaderText = GetString("save_files", 1);
 					}
 					else if (UTInput.GetButtonDown("Z"))
 					{
@@ -1178,7 +1284,7 @@ public class TitleScreen : SelectableBehaviour
 							gm.PlayGlobalSFX("sounds/snd_appearance");
 							gm.CopyFile(copiedSaveIndex, saveIndex);
 							saveHeaderResetFrames = 0;
-							saveFiles.GetChild(0).GetComponent<Text>().text = "Copy complete.";
+							saveFiles.GetChild(0).GetComponent<Text>().text = GetString("save_files", 5);
 							ResetSaveState();
 							SetSAVEStrings();
 						}
@@ -1211,7 +1317,7 @@ public class TitleScreen : SelectableBehaviour
 						{
 							backSfx.Play();
 							saveHeaderResetFrames = 0;
-							saveFiles.GetChild(0).GetComponent<Text>().text = "There's nothing to erase.";
+							saveFiles.GetChild(0).GetComponent<Text>().text = GetString("save_files", 8);
 						}
 						else
 						{
@@ -1223,13 +1329,13 @@ public class TitleScreen : SelectableBehaviour
 							saveFiles.GetChild(saveIndex + 1).Find("location").GetComponent<Text>()
 								.enabled = false;
 							saveFiles.GetChild(saveIndex + 1).Find("erasetext").GetComponent<Text>()
-								.text = "Erase this file?";
+								.text = GetString("file_options", 0);
 							saveFiles.GetChild(saveIndex + 1).Find("selection").GetChild(0)
 								.GetComponent<Text>()
-								.text = "Yes";
+								.text = GetString("file_options", 3);
 							saveFiles.GetChild(saveIndex + 1).Find("selection").GetChild(1)
 								.GetComponent<Text>()
-								.text = "No";
+								.text = GetString("file_options", 4);
 							saveState = SaveState.DeleteConfirm;
 							selecting = true;
 							menuLimit = 2;
@@ -1256,7 +1362,7 @@ public class TitleScreen : SelectableBehaviour
 							.text = "";
 						backSfx.Play();
 						saveState = SaveState.DeleteSelect;
-						saveHeaderText = "Choose a file to erase.";
+						saveHeaderText = GetString("save_files", 7);
 					}
 					else if (UTInput.GetButtonDown("Z"))
 					{
@@ -1265,13 +1371,13 @@ public class TitleScreen : SelectableBehaviour
 							selSfx.Play();
 							saveState = SaveState.DeleteDoubleConfirm;
 							saveFiles.GetChild(saveIndex + 1).Find("erasetext").GetComponent<Text>()
-								.text = "Really erase it?";
+								.text = GetString("file_options", 1);
 							saveFiles.GetChild(saveIndex + 1).Find("selection").GetChild(0)
 								.GetComponent<Text>()
-								.text = "Yes!";
+								.text = GetString("file_options", 5);
 							saveFiles.GetChild(saveIndex + 1).Find("selection").GetChild(1)
 								.GetComponent<Text>()
-								.text = "No!";
+								.text = GetString("file_options", 6);
 						}
 						else if (index == 1)
 						{
@@ -1315,7 +1421,7 @@ public class TitleScreen : SelectableBehaviour
 							.text = "";
 						backSfx.Play();
 						saveState = SaveState.DeleteSelect;
-						saveHeaderText = "Choose a file to erase.";
+						saveHeaderText = GetString("save_files", 7);
 					}
 					else if (UTInput.GetButtonDown("Z"))
 					{
@@ -1337,12 +1443,12 @@ public class TitleScreen : SelectableBehaviour
 						{
 							SOUL component = new GameObject("SOULDie", typeof(SOUL)).GetComponent<SOUL>();
 							component.transform.position = soul.localPosition / 48f;
-							component.CreateSOUL(Color.red, monster: false, player: false);
+							component.CreateSOUL(Color.red, false, false);
 							component.Break();
 							gm.PlayGlobalSFX("sounds/snd_appearance");
 							gm.DeleteFile(saveIndex);
 							saveHeaderResetFrames = 0;
-							saveFiles.GetChild(0).GetComponent<Text>().text = "Erase complete.";
+							saveFiles.GetChild(0).GetComponent<Text>().text = GetString("save_files", 9);
 							index = 1;
 							ResetSaveState();
 							SetSAVEStrings();
@@ -1482,21 +1588,156 @@ public class TitleScreen : SelectableBehaviour
 					}
 				}
 			}
+			else if (state == State.LanguagePacks)
+			{
+				int num2 = (int)UTInput.GetAxisRaw("Horizontal");
+				if (lastAxisX != num2 && num2 != 0)
+				{
+					packPage += num2;
+					if (packPage < 0)
+					{
+						packPage = packPageCount - 1;
+					}
+					if (packPage > packPageCount - 1)
+					{
+						packPage = 0;
+					}
+					menuSfx.Play();
+					UpdatePackList(false);
+				}
+				lastAxisX = num2;
+				if (UTInput.GetButtonDown("X"))
+				{
+					backSfx.Play();
+					LoadOptions();
+				}
+				packIndex = index + packPage * 3;
+				if (UTInput.GetButtonDown("Z"))
+				{
+					selSfx.Play();
+					Util.PackManager().SetPack(packList[packIndex].GetFileNameWithoutExtension());
+					UpdatePackList(false);
+					UpdateAllText();
+				}
+				langPack = Util.PackManager().GetPackName();
+				soul.localPosition = Vector3.Lerp(soul.localPosition, langPackMenu.Find("pack" + index).Find("soulpos").transform.position * 48f, 0.4f);
+			}
 			else if (state == State.Extras)
 			{
-				if (!UnityEngine.Object.FindObjectOfType<Fade>().IsPlaying())
+				soul.localPosition = Vector3.Lerp(soul.localPosition, new Vector3(extras.GetChild(index).localPosition.x - 36f, extras.GetChild(index).localPosition.y + 16f), 0.4f);
+				if (UTInput.GetButtonDown("X") || (UTInput.GetButtonDown("Z") && index == menuLimit - 1))
 				{
-					SceneManager.LoadScene(132);
+					LoadSAVEFiles();
+					if (UTInput.GetButtonDown("X"))
+					{
+						backSfx.Play();
+					}
+					else
+					{
+						selSfx.Play();
+					}
+				}
+				else if (UTInput.GetButtonDown("Z"))
+				{
+					if (index == 0)
+					{
+						selSfx.Play();
+						LoadHardModeName();
+					}
+					else if (index == 1 || index == 2)
+					{
+						if (index == 1 && trainingModeUnlocked)
+						{
+							gm.SetDefaultValues();
+							gm.SetPartyMembers(true, true);
+							gm.SetFlag(223, localOptions.startingFlavor.value);
+							gm.StartSingleBattle(55);
+						}
+						if (index == 2 && unoUnlocked)
+						{
+							gm.SetDefaultValues();
+							gm.SetFlag(204, 1);
+							gm.SetFlag(223, localOptions.startingFlavor.value);
+							gm.SetFlag(292, 1);
+							for (int n = 0; n < 5; n++)
+							{
+								gm.SetFlag(307 + n, 1);
+							}
+							gm.SetSessionFlag(17, 1);
+							gm.SetPartyMembers(true, true);
+							gm.LockMenu();
+							gm.LoadArea(116, true, new Vector2(0f, -3.745f), Vector2.up);
+						}
+					}
+					else if (index == 3 && marioBrosUnlocked)
+					{
+						loadToScene = 103;
+						frames = 0;
+						selSfx.Play();
+						mus.Stop();
+						fade.FadeOut(20, Color.white);
+						state = State.LoadNewDimension;
+					}
+					else
+					{
+						Util.GameManager().PlayGlobalSFX("sounds/snd_cantselect");
+					}
+				}
+				if (index == 3 && !marioBrosUnlocked && trainingModeUnlocked)
+				{
+					if (UTInput.GetButtonDown("Z"))
+					{
+						HandleMarioBrosCode(2);
+					}
+					else if (UTInput.GetButtonDown("C"))
+					{
+						HandleMarioBrosCode(3);
+					}
+					if (holdHoriz && UTInput.GetAxis("Horizontal") == 0f)
+					{
+						holdHoriz = false;
+					}
+					else if (!holdHoriz && UTInput.GetAxis("Horizontal") != 0f)
+					{
+						holdHoriz = true;
+						if (UTInput.GetAxis("Horizontal") > 0f)
+						{
+							HandleMarioBrosCode(1);
+						}
+						if (UTInput.GetAxis("Horizontal") < 0f)
+						{
+							HandleMarioBrosCode(0);
+						}
+					}
+				}
+				if (marioBrosUnlocked)
+				{
+					if (index == 3 && !extras.Find("MBInfo").GetComponentInChildren<Text>().enabled)
+					{
+						Text[] componentsInChildren = extras.Find("MBInfo").GetComponentsInChildren<Text>();
+						for (int m = 0; m < componentsInChildren.Length; m++)
+						{
+							componentsInChildren[m].enabled = true;
+						}
+					}
+					else if (index != 3 && extras.Find("MBInfo").GetComponentInChildren<Text>().enabled)
+					{
+						Text[] componentsInChildren = extras.Find("MBInfo").GetComponentsInChildren<Text>();
+						for (int m = 0; m < componentsInChildren.Length; m++)
+						{
+							componentsInChildren[m].enabled = false;
+						}
+					}
 				}
 			}
-			else if (state == State.LoadNewDimension && !Util.FindObjectOfType<Fade>().IsPlaying())
+			else if (state == State.LoadNewDimension && !UnityEngine.Object.FindObjectOfType<Fade>().IsPlaying())
 			{
 				frames++;
 				if (frames >= 10)
 				{
 					if (loadToScene == -1)
 					{
-						gm.SpawnFromLastSave(respawn: false);
+						gm.SpawnFromLastSave(false);
 					}
 					else if (loadToScene == 103)
 					{
@@ -1519,11 +1760,11 @@ public class TitleScreen : SelectableBehaviour
 			saveIndex = 3;
 			saveState = SaveState.Select;
 			copiedSaveIndex = -1;
-			saveFiles.Find("0").GetComponent<Text>().text = "Copy";
+			saveFiles.Find("0").GetComponent<Text>().text = GetString("save_files", 10);
 			saveFiles.Find("1").GetComponent<Text>().enabled = true;
 			saveFiles.Find("2").GetComponent<Text>().enabled = true;
 			saveFiles.Find("Extras").GetComponent<Text>().enabled = true;
-			saveHeaderText = "Please select a file.";
+			saveHeaderText = GetString("save_files", 0);
 			savePages = 5;
 		}
 
@@ -1577,7 +1818,7 @@ public class TitleScreen : SelectableBehaviour
 				state = State.ContinueGame;
 				saveinfo.localPosition = Vector3.zero;
 				saveCharacters.localPosition = Vector3.zero;
-				characters.Find("Kris").GetComponent<Image>().enabled = gm.save.party[0] == 0;
+				characters.Find("Kris").GetComponent<Image>().enabled = (int)gm.GetSaveFlag(107) == 0;
 				if ((int)gm.GetSaveFlag(102) == 1)
 				{
 					characters.Find("Kris").GetComponent<Image>().sprite = Resources.Load<Sprite>("player/Kris/injured/spr_kr_down_0_injured");
@@ -1586,14 +1827,14 @@ public class TitleScreen : SelectableBehaviour
 				{
 					characters.Find("Kris").GetComponent<Image>().sprite = Resources.Load<Sprite>("player/Kris/eye/spr_kr_down_0_eye");
 				}
-				characters.Find("Susie").GetComponent<Image>().enabled = gm.save.party[1] == 1 || gm.save.party[2] == 1;
+				characters.Find("Susie").GetComponent<Image>().enabled = gm.save.susieActive;
 				saveCharacters.Find("Toriel").GetComponent<Image>().enabled = (int)gm.GetSaveFlag(8) == 1 && (int)gm.GetSaveFlag(56) == 0;
-				saveCharacters.Find("Noelle").GetComponent<Image>().enabled = gm.save.party[1] == 2 || gm.save.party[2] == 2;
+				saveCharacters.Find("Noelle").GetComponent<Image>().enabled = gm.save.noelleActive;
 				saveCharacters.Find("Sans").GetComponent<Image>().enabled = (int)gm.GetSaveFlag(60) == 1;
 				saveCharacters.Find("Mom").GetComponent<Image>().enabled = (int)gm.GetSaveFlag(84) > 0 && ((int)gm.GetSaveFlag(154) == 0 || (int)gm.GetSaveFlag(87) >= 5);
 				saveCharacters.Find("Ralsei").GetComponent<Image>().enabled = (int)gm.GetSaveFlag(33) == 1 || (int)gm.GetSaveFlag(66) == 1;
-				saveCharacters.Find("Paula").GetComponent<Image>().enabled = gm.save.party[3] == 3;
-				saveCharacters.Find("Frisk").GetComponent<Image>().enabled = gm.save.party[0] == 6;
+				saveCharacters.Find("Paula").GetComponent<Image>().enabled = (int)gm.GetSaveFlag(86) == 1;
+				saveCharacters.Find("Frisk").GetComponent<Image>().enabled = (int)gm.GetSaveFlag(107) == 1;
 				saveCharacters.Find("Ness").GetComponent<Image>().enabled = (int)gm.GetSaveFlag(154) != 0 && (int)gm.GetSaveFlag(87) >= 5;
 				saveCharacters.Find("TorielS2").GetComponent<Image>().enabled = (int)gm.GetSaveFlag(154) != 0 && (int)gm.GetSaveFlag(87) < 5;
 				saveCharacters.Find("Papyrus").GetComponent<Image>().enabled = gm.GetSaveFlagInt(281) == 2;
@@ -1619,13 +1860,20 @@ public class TitleScreen : SelectableBehaviour
 			gamerules.localPosition = Vector3.zero;
 			if (UTInput.joystickIsActive)
 			{
-				string text = "     - Confirm\n     - Cancel\n     - Menu (In-game)\n[F4] - Fullscreen\n[Hold ESC] - Quit\nWhen HP is 0, you lose.";
-				gamerules.Find("Rules").GetComponent<Text>().text = text;
+				gamerules.Find("Rules").GetComponent<Text>().text = GetString("instructions", 4);
 				string[] array = new string[3] { "Z", "X", "C" };
+				string[] array2 = new string[3] { "Confirm", "Cancel", "Menu" };
 				for (int i = 0; i < 3; i++)
 				{
-					ButtonPrompts.UpdateImageWithGraphic(array[i], gamerules.Find(array[i]).GetComponent<Image>());
-					gamerules.Find(array[i]).GetComponent<Image>().enabled = true;
+					for (int j = 0; j < ButtonPrompts.validButtons.Length; j++)
+					{
+						if (UTInput.GetKeyOrButtonReplacement(array2[i]) == ButtonPrompts.GetButtonChar(ButtonPrompts.validButtons[j]))
+						{
+							gamerules.Find(array[i]).GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/buttons/" + ButtonPrompts.GetButtonGraphic(ButtonPrompts.validButtons[j]));
+							gamerules.Find(array[i]).GetComponent<Image>().enabled = true;
+							break;
+						}
+					}
 				}
 				if (mobile)
 				{
@@ -1633,8 +1881,7 @@ public class TitleScreen : SelectableBehaviour
 				}
 				return;
 			}
-			string format = "[{0} or ENTER] - Confirm\n[{1} or SHIFT] - Cancel\n[{2} or CTRL] - Menu (In-game)\n[F4] - Fullscreen\n[Hold ESC] - Quit\nWhen HP is 0, you lose.";
-			gamerules.Find("Rules").GetComponent<Text>().text = string.Format(format, UTInput.GetKeyName("Confirm"), UTInput.GetKeyName("Cancel"), UTInput.GetKeyName("Menu"));
+			gamerules.Find("Rules").GetComponent<Text>().text = string.Format(GetString("instructions", 1), UTInput.GetKeyName("Confirm"), UTInput.GetKeyName("Cancel"), UTInput.GetKeyName("Menu"));
 			gamerules.Find("Z").GetComponent<Image>().enabled = false;
 			gamerules.Find("X").GetComponent<Image>().enabled = false;
 			gamerules.Find("C").GetComponent<Image>().enabled = false;
@@ -1663,6 +1910,7 @@ public class TitleScreen : SelectableBehaviour
 			saveCharacters.localPosition = new Vector3(640f, 0f);
 			options.localPosition = Vector3.zero;
 			saveFiles.localPosition = new Vector3(640f, 0f);
+			langPackMenu.localPosition = new Vector3(640f, 0f);
 			selVertical = true;
 			soulMoveRate = 0.25f;
 			state = State.Options;
@@ -1671,7 +1919,7 @@ public class TitleScreen : SelectableBehaviour
 
 		public void LoadDeleteOption()
 		{
-			deleteText.StartText("\b    THIS DATA IS CORRUPT\n\b OR UNREACHABLE. DO YOU WISH\n\b TO TERMINATE ITS CONNECTION?", new Vector2(16f, 35f), "", 2);
+			deleteText.StartText(GetString("file_options", 9), new Vector2(16f, 35f), "", 2);
 			characters.localPosition = new Vector3(640f, 0f);
 			options.localPosition = new Vector3(1640f, 0f);
 			saveFiles.localPosition = new Vector3(640f, 0f);
@@ -1684,6 +1932,19 @@ public class TitleScreen : SelectableBehaviour
 			selecting = true;
 			menuLimit = 2;
 			index = 0;
+		}
+
+		public void LoadLanguagePackOptions()
+		{
+			packIndex = 0;
+			characters.localPosition = new Vector3(640f, 0f);
+			options.localPosition = new Vector3(640f, 0f);
+			langPackMenu.localPosition = Vector2.zero;
+			state = State.LanguagePacks;
+			packList = Util.PackManager().GetPacks(true);
+			packPage = 0;
+			packPageCount = (int)Mathf.Ceil((float)packList.Length / 3f);
+			UpdatePackList(true);
 		}
 
 		public void LoadSAVEFiles()
@@ -1699,6 +1960,7 @@ public class TitleScreen : SelectableBehaviour
 			characters.localPosition = new Vector3(640f, 0f);
 			saveCharacters.localPosition = new Vector3(640f, 0f);
 			options.localPosition = new Vector3(1640f, 0f);
+			extras.localPosition = new Vector3(640f, 0f);
 			saveFiles.localPosition = Vector3.zero;
 			if (usingNewTitle)
 			{
@@ -1722,10 +1984,75 @@ public class TitleScreen : SelectableBehaviour
 			characters.Find("Kris").GetComponent<Image>().sprite = Resources.Load<Sprite>("player/Kris/spr_kr_down_0");
 			characters.Find("Kris").GetComponent<Image>().enabled = true;
 			characters.Find("Susie").GetComponent<Image>().enabled = true;
-			saveFiles.Find("Extras").GetComponent<Text>().color = ((PersistentSAVE.GetInt("new-extra", 0) == 1) ? new Color(1f, 1f, 0f) : Color.white);
 			selVertical = false;
 			savePages = 5;
 			state = State.FileSelect;
+		}
+
+		public void LoadExtras()
+		{
+			base.transform.Find("Copyright").GetComponent<Text>().enabled = false;
+			if (instantLoadHardMode)
+			{
+				backSfx.Play();
+				for (int i = 0; i < 28; i++)
+				{
+					letters.GetChild(i).GetComponent<Text>().enabled = true;
+				}
+				letters.Find("Name").Find("Text").GetComponent<Text>()
+					.text = "";
+				letters.GetChild(29).GetComponent<Text>().enabled = false;
+				letters.GetChild(29).GetComponent<Text>().color = Color.white;
+				letters.GetChild(30).GetComponent<Text>().enabled = false;
+				letters.GetChild(30).GetComponent<Text>().color = Color.white;
+				letters.localPosition = new Vector3(640f, 0f);
+				soul.GetComponent<Image>().sprite = Resources.Load<Sprite>("battle/spr_soul");
+				instantLoadHardMode = false;
+				UnityEngine.Object.FindObjectOfType<EndNameEvent>().transform.Find("Kris").position = new Vector3(0f, -6000f);
+			}
+			index = 0;
+			gamerules.localPosition = new Vector3(640f, 0f);
+			saveFiles.localPosition = new Vector3(640f, 0f);
+			saveinfo.localPosition = new Vector3(640f, 0f);
+			characters.localPosition = new Vector3(640f, 0f);
+			extras.localPosition = Vector3.zero;
+			selecting = true;
+			selVertical = true;
+			soulMoveRate = 0.25f;
+			state = State.Extras;
+			menuLimit = 8;
+		}
+
+		public void LoadHardModeName()
+		{
+			instantLoadHardMode = true;
+			letters.localPosition = Vector3.zero;
+			for (int i = 0; i < 28; i++)
+			{
+				letters.GetChild(i).GetComponent<Text>().enabled = false;
+			}
+			letters.GetChild(29).GetComponent<Text>().enabled = true;
+			letters.GetChild(29).GetComponent<Text>().color = new Color(1f, 1f, 0f);
+			letters.GetChild(30).GetComponent<Text>().enabled = true;
+			letters.GetChild(30).GetComponent<Text>().color = Color.white;
+			UnityEngine.Object.FindObjectOfType<EndNameEvent>().StartNameShake();
+			UnityEngine.Object.FindObjectOfType<EndNameEvent>().transform.Find("Kris").position = new Vector3(0f, -2.2f);
+			extras.localPosition = new Vector3(640f, 0f);
+			soul.GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/spr_blurry_soul");
+			letters.Find("Name").Find("Text").GetComponent<Text>()
+				.text = "FRISK";
+			letters.Find("Name").Find("Text").GetComponent<Text>()
+				.enabled = true;
+			letters.Find("Name").Find("Text").localPosition = new Vector2(-letters.Find("Name").Find("Text").GetComponent<Text>()
+				.text.Length * 7, 123f);
+			letters.Find("Name").Find("Text").GetComponent<RectTransform>()
+				.sizeDelta = new Vector2(letters.Find("Name").Find("Text").GetComponent<Text>()
+				.text.Length * 16, 32f);
+			deleteText.StartText(GetString("name_selection", 8), new Vector2(0f, 111f), "", 2);
+			state = State.NameConfirm;
+			selVertical = false;
+			menuLimit = 2;
+			index = 0;
 		}
 
 		public void SetSAVEStrings()
@@ -1738,8 +2065,10 @@ public class TitleScreen : SelectableBehaviour
 				{
 					try
 					{
-						using FileStream fs = File.Open(path, FileMode.Open);
-						fileStatuses[i] = SAVEFileIO.ReadFile(ref saves[i], fs);
+						using (FileStream fs = File.Open(path, FileMode.Open))
+						{
+							fileStatuses[i] = SAVEFileIO.ReadFile(ref saves[i], fs);
+						}
 					}
 					catch (EndOfStreamException ex)
 					{
@@ -1761,13 +2090,13 @@ public class TitleScreen : SelectableBehaviour
 				switch (fileStatuses[i])
 				{
 				case FileStatus.Empty:
-					transform.Find("name").GetComponent<Text>().text = "[EMPTY]";
+					transform.Find("name").GetComponent<Text>().text = GetString("file_options", 7);
 					transform.Find("time").GetComponent<Text>().text = "––:––";
 					transform.Find("location").GetComponent<Text>().text = "------------";
 					break;
 				case FileStatus.Corrupted:
 				case FileStatus.Newer:
-					transform.Find("name").GetComponent<Text>().text = ((fileStatuses[i] == FileStatus.Corrupted) ? "[CORRUPTED]" : "[INCOMPATIBLE]");
+					transform.Find("name").GetComponent<Text>().text = GetString("file_options", (fileStatuses[i] == FileStatus.Corrupted) ? 8 : 13);
 					transform.Find("time").GetComponent<Text>().text = "––:––";
 					transform.Find("location").GetComponent<Text>().text = "------------";
 					break;
@@ -1789,6 +2118,7 @@ public class TitleScreen : SelectableBehaviour
 		public void SaveSettings()
 		{
 			gm.config.SetInt("General", "Volume", volume);
+			gm.config.SetString("General", "LanguagePack", langPack);
 			localOptions.SaveToConfig(ref gm.config);
 			gm.config.Write();
 		}
@@ -1796,22 +2126,39 @@ public class TitleScreen : SelectableBehaviour
 		public void UpdateSettingsText()
 		{
 			optionsTabs[0].Find("Volume").GetComponent<Text>().text = volume + "%";
-			optionsTabs[0].Find("Scale").GetComponent<Text>().text = "x" + gm.GetWindowScale();
-			optionsTabs[0].Find("Content").GetComponent<Text>().text = ((localOptions.contentSetting.value == 1) ? "Reduced Blood" : "Normal");
-			optionsTabs[0].Find("AutoRun").GetComponent<Text>().text = ((localOptions.autoRun.value == 1) ? "ON" : "OFF");
-			optionsTabs[0].Find("EasyMode").GetComponent<Text>().text = ((localOptions.easyMode.value == 1) ? "ON" : "OFF");
-			optionsTabs[2].Find("AutoButton").GetComponent<Text>().text = ((localOptions.autoButton.value == 1) ? "ON" : "OFF");
-			optionsTabs[2].Find("Buttons").GetComponent<Text>().text = (new string[5] { "XBOX", "PS4", "NINTENDO", "PS5", "PS3-" })[localOptions.buttonStyle.value];
-			optionsTabs[2].Find("vSync").GetComponent<Text>().text = ((localOptions.vSync.value == 1) ? "ON" : "OFF");
-			optionsTabs[2].Find("Debugger").GetComponent<Text>().text = ((localOptions.monitorInfo.value == 1) ? "ON" : "OFF");
+			optionsTabs[0].Find("Scale").GetComponent<Text>().text = "x" + windowScale;
+			optionsTabs[0].Find("Content").GetComponent<Text>().text = GetString("content_settings", localOptions.contentSetting.value);
+			optionsTabs[0].Find("AutoRun").GetComponent<Text>().text = GetString("low_graphics", localOptions.autoRun.value);
+			optionsTabs[0].Find("EasyMode").GetComponent<Text>().text = GetString("easy_mode", localOptions.easyMode.value);
+			optionsTabs[2].Find("Graphics").GetComponent<Text>().text = GetString("low_graphics", localOptions.lowGraphics.value);
+			optionsTabs[2].Find("AutoButton").GetComponent<Text>().text = GetString("low_graphics", localOptions.autoButton.value);
+			optionsTabs[2].Find("Buttons").GetComponent<Text>().text = GetString("button_styles", localOptions.buttonStyle.value);
+			optionsTabs[2].Find("RunAnimations").GetComponent<Text>().text = GetString("low_graphics", localOptions.runAnimations.value);
+			if (flavorUnlocked)
+			{
+				int value = localOptions.startingFlavor.value;
+				optionsTabs[2].Find("Flavor").GetComponent<Text>().text = GetString("flavors", value);
+				flavorPreview.GetComponent<Image>().color = UIBackground.borderColors[value];
+				flavorPreview.Find("SelText").GetComponent<Text>().color = Selection.selectionColors[value];
+				flavorPreview.Find("TestButton").GetComponent<Image>().color = BattleButton.buttonColors[value];
+				flavorPreview.Find("TestButtonSel").GetComponent<Image>().color = Selection.selectionColors[value];
+			}
 		}
 
 		private void UpdateControlText()
 		{
 			for (int i = 0; i < 7; i++)
 			{
-				controls.Find(i + "-Text").GetComponent<Text>().text = UTInput.GetKeyName(controlNames[i]);
-				ButtonPrompts.UpdateImageWithGraphic(controlNames[i], controls.Find(i + "-Button").GetComponent<Image>());
+				string text = i.ToString();
+				controls.Find(text + "-Text").GetComponent<Text>().text = UTInput.GetKeyName(controlNames[i]);
+			}
+			for (int j = 0; j < 7; j++)
+			{
+				string text2 = j.ToString();
+				Sprite sprite = Resources.Load<Sprite>("ui/buttons/" + ButtonPrompts.GetButtonGraphic(UTInput.GetButtonName(controlNames[j])));
+				controls.Find(text2 + "-Button").GetComponent<Image>().sprite = sprite;
+				controls.Find(text2 + "-Button").GetComponent<Image>().rectTransform.localScale = new Vector3(1f, 1f, 1f);
+				controls.Find(text2 + "-Button").GetComponent<Image>().rectTransform.sizeDelta = new Vector2(sprite.textureRect.width, sprite.textureRect.height) * 2f;
 			}
 		}
 
@@ -1823,22 +2170,126 @@ public class TitleScreen : SelectableBehaviour
 			}
 		}
 
+		public void UpdatePackList(bool force)
+		{
+			if (lastPage != packPage || force)
+			{
+				index = 0;
+				menuLimit = 0;
+			}
+			langPackMenu.Find("PageNumber").GetComponent<Text>().text = string.Format(GetString("pack_menu", 2), (packPage + 1).ToString());
+			for (int i = 0; i < 3; i++)
+			{
+				int num = packPage * 3 + i;
+				if (num < packList.Length)
+				{
+					Transform transform = langPackMenu.Find("pack" + i);
+					transform.gameObject.SetActive(true);
+					transform.Find("Name").GetComponent<Text>().text = packList[num].GetPackInfo().language;
+					transform.Find("Description").GetComponent<Text>().text = packList[num].GetPackInfo().description;
+					if (lastPage != packPage || force)
+					{
+						menuLimit++;
+					}
+					if (packList[num].GetFileNameWithoutExtension() == Util.PackManager().GetPackName())
+					{
+						transform.Find("Name").GetComponent<Text>().color = new Color(0f, 1f, 0f, 1f);
+						transform.Find("Description").GetComponent<Text>().color = new Color(0f, 1f, 0f, 0.75f);
+					}
+					else
+					{
+						transform.Find("Name").GetComponent<Text>().color = Color.white;
+						transform.Find("Description").GetComponent<Text>().color = new Color(1f, 1f, 1f, 0.75f);
+					}
+				}
+				else
+				{
+					langPackMenu.Find("pack" + i).gameObject.SetActive(false);
+				}
+			}
+		}
+
 		public void UpdateAllText()
 		{
-			saveHeaderText = "Please select a file.";
+			SetStrings(GetDefaultStrings(), GetType());
+			saveHeaderText = GetString("save_files", 0);
+			saveFiles.Find("Header").GetComponent<Text>().text = GetString("save_files", 0);
+			saveFiles.Find("0").GetComponent<Text>().text = GetString("save_files", 10);
+			saveFiles.Find("1").GetComponent<Text>().text = GetString("save_files", 11);
+			saveFiles.Find("2").GetComponent<Text>().text = GetString("save_files", 12);
 			for (int i = 0; i < 3; i++)
 			{
 				saveFiles.Find("file" + i).Find("name").GetComponent<Text>()
-					.text = "[EMPTY]";
+					.text = GetString("file_options", 7);
 			}
-			UpdateUnresponsive();
-			string format = "[{0} or ENTER] - Confirm\n[{1} or SHIFT] - Cancel\n[{2} or CTRL] - Menu (In-game)\n[F4] - Fullscreen\n[Hold ESC] - Quit\nWhen HP is 0, you lose.";
-			gamerules.Find("Rules").GetComponent<Text>().text = string.Format(format, UTInput.GetKeyName("Confirm"), UTInput.GetKeyName("Cancel"), UTInput.GetKeyName("Menu"));
+			if ((bool)logo && (bool)logo.gameObject.transform.Find("Subtitle"))
+			{
+				logo.gameObject.transform.Find("Subtitle").GetComponent<Text>().text = GetString("title", 1);
+			}
+			base.gameObject.transform.Find("Unresponsive").GetComponent<Text>().text = string.Format(GetString("title", 0), UTInput.GetKeyName("Confirm").ToLower());
+			langPackMenu.Find("PackHeader").GetComponent<Text>().text = GetString("pack_menu", 0);
+			langPackMenu.Find("Unresponsive").GetComponent<Text>().text = string.Format(GetString("pack_menu", 1), UTInput.GetKeyName("Cancel").ToLower());
+			gamerules.Find("Header").GetComponent<Text>().text = GetString("instructions", 0);
+			gamerules.Find("Rules").GetComponent<Text>().text = string.Format(GetString("instructions", 1), UTInput.GetKeyName("Confirm"), UTInput.GetKeyName("Cancel"), UTInput.GetKeyName("Menu"));
+			gamerules.Find("0").GetComponent<Text>().text = GetString("instructions", 2);
+			gamerules.Find("1").GetComponent<Text>().text = GetString("instructions", 3);
+			options.Find("OptionsHeader").GetComponent<Text>().text = GetString("options", 0);
+			optionsTabs[0].Find("0").GetComponent<Text>().text = GetString("options", 1);
+			optionsTabs[0].Find("1").GetComponent<Text>().text = GetString("options", (!mobile) ? 3 : 9);
+			optionsTabs[0].Find("2").GetComponent<Text>().text = GetString("options", 2);
+			if (mobile)
+			{
+				optionsTabs[0].Find("2").GetComponent<Text>().text = "Keyboard / Controller";
+			}
+			optionsTabs[0].Find("3").GetComponent<Text>().text = GetString("options", 6);
+			optionsTabs[0].Find("4").GetComponent<Text>().text = GetString("options", 16);
+			optionsTabs[0].Find("5").GetComponent<Text>().text = GetString("options", 20);
+			optionsTabs[0].Find("6").GetComponent<Text>().text = GetString("options", 8);
+			optionsTabs[0].Find("7").GetComponent<Text>().text = GetString("options", 5);
+			optionsTabs[2].Find("0").GetComponent<Text>().text = GetString("options", 7);
+			optionsTabs[2].Find("1").GetComponent<Text>().text = GetString("options", 19);
+			optionsTabs[2].Find("2").GetComponent<Text>().text = GetString("options", 17);
+			optionsTabs[2].Find("3").GetComponent<Text>().text = GetString("options", 18);
+			optionsTabs[2].Find("4").GetComponent<Text>().text = GetString("options", 15);
+			optionsTabs[2].Find("5").GetComponent<Text>().text = GetString("options", 5);
+			optionsTabs[3].Find("0").GetComponent<Text>().text = GetString("options", 10);
+			optionsTabs[3].Find("1").GetComponent<Text>().text = GetString("options", 11);
+			optionsTabs[3].Find("2").GetComponent<Text>().text = GetString("options", 12);
+			optionsTabs[3].Find("3").GetComponent<Text>().text = GetString("options", 5);
+			letters.Find("BACK").GetComponent<Text>().text = GetString("name_selection", 0);
+			letters.Find("END").GetComponent<Text>().text = GetString("name_selection", 1);
+			letters.Find("0").GetComponent<Text>().text = GetString("name_selection", 2);
+			letters.Find("1").GetComponent<Text>().text = GetString("name_selection", 3);
+			if (!mobile)
+			{
+				controls.Find("Header-Key").GetComponent<Text>().text = GetString("controls", 1);
+			}
+			controls.Find("Header-Function").GetComponent<Text>().text = GetString("controls", 0);
+			controls.Find("Header-Gamepad").GetComponent<Text>().text = GetString("controls", 11);
+			controls.Find("0").GetComponent<Text>().text = GetString("controls", 2);
+			controls.Find("1").GetComponent<Text>().text = GetString("controls", 3);
+			controls.Find("2").GetComponent<Text>().text = GetString("controls", 4);
+			controls.Find("3").GetComponent<Text>().text = GetString("controls", 5);
+			controls.Find("4").GetComponent<Text>().text = GetString("controls", 6);
+			controls.Find("5").GetComponent<Text>().text = GetString("controls", 7);
+			controls.Find("6").GetComponent<Text>().text = GetString("controls", 8);
+			controls.Find("7").GetComponent<Text>().text = GetString("controls", 9);
+			controls.Find("8").GetComponent<Text>().text = GetString("controls", 10);
+			extras.Find("ExtrasHeader").GetComponent<Text>().text = GetString("extras", 0);
+			extras.Find("0").GetComponent<Text>().text = GetString("extras", 1);
+			extras.Find("7").GetComponent<Text>().text = GetString("extras", 5);
+			extras.Find("MBInfo").Find("Score").GetComponent<Text>()
+				.text = PlayerPrefs.GetInt("MBScore", 20000).ToString();
+			extras.Find("MBInfo").Find("Phase").GetComponent<Text>()
+				.text = PlayerPrefs.GetInt("MBPhase", 3).ToString();
+			deleteSave.Find("0").GetComponent<Text>().text = GetString("file_options", 11);
+			deleteSave.Find("1").GetComponent<Text>().text = GetString("file_options", 12);
+			deleteSave.Find("Header").GetComponent<Text>().text = GetString("file_options", 10);
 		}
 
 		public void LoadGMSettings()
 		{
-			Util.GameManager().LoadConfigData();
+			UnityEngine.Object.FindObjectOfType<GameManager>().LoadConfigData();
 			localOptions = GameManager.GetOptions();
 		}
 
@@ -1853,27 +2304,33 @@ public class TitleScreen : SelectableBehaviour
 
 		public void CancelRebind()
 		{
-			string n = index.ToString();
-			controls.Find(n).GetComponent<Text>().color = new Color(0f, 1f, 1f);
+			string text = index.ToString();
+			controls.Find(text).GetComponent<Text>().color = new Color(0f, 1f, 1f);
+			if (!mobile)
+			{
+				controls.Find(text + "-Text").GetComponent<Text>().color = new Color(0f, 1f, 1f);
+			}
 			selecting = true;
 			rebinding = false;
 		}
 
-		private void UpdateUnresponsive()
+		private void HandleMarioBrosCode(int input)
 		{
-			bool joystickIsActive = UTInput.joystickIsActive;
-			Text component = base.transform.Find("Unresponsive").GetComponent<Text>();
-			if (joystickIsActive)
+			if (input == correctMBCombo[comboProgress])
 			{
-				component.text = "[press    or    ]";
-				ButtonPrompts.UpdateImageWithGraphic("Confirm", component.transform.Find("Confirm").GetComponent<Image>(), 2f, ButtonPrompts.ButtonType.Small);
-				ButtonPrompts.UpdateImageWithGraphic("Menu", component.transform.Find("Menu").GetComponent<Image>(), 2f, ButtonPrompts.ButtonType.Small);
+				comboProgress++;
+				if (comboProgress == correctMBCombo.Length)
+				{
+					marioBrosUnlocked = true;
+					extras.Find(index.ToString()).GetComponent<Text>().text = GetString("extras", 4);
+					extras.Find(index.ToString()).GetComponent<Text>().color = Color.white;
+					gm.PlayGlobalSFX("mariobros/sounds/snd_coin");
+					PlayerPrefs.SetInt("MBUnlocked", 1);
+				}
 			}
 			else
 			{
-				component.text = string.Format("[press {0} or enter]", UTInput.GetKeyName("Confirm").ToLower());
+				comboProgress = 0;
 			}
-			component.transform.Find("Confirm").GetComponent<Image>().enabled = joystickIsActive;
-			component.transform.Find("Menu").GetComponent<Image>().enabled = joystickIsActive;
 		}
 	}

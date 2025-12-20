@@ -51,7 +51,7 @@ public class TrainingDummy : EnemyBase
 		case 1:
 			susieAttack = rawDmg;
 			lastAttackHit = true;
-			if ((bool)Util.FindObjectOfType<RudeBusterEffect>())
+			if ((bool)Object.FindObjectOfType<RudeBusterEffect>())
 			{
 				rudeBuster = true;
 			}
@@ -59,7 +59,7 @@ public class TrainingDummy : EnemyBase
 		case 2:
 			noelleAttack = rawDmg;
 			lastAttackHit = true;
-			if ((bool)Util.FindObjectOfType<IceShock>())
+			if ((bool)Object.FindObjectOfType<IceShock>())
 			{
 				iceShock = true;
 			}
@@ -67,7 +67,7 @@ public class TrainingDummy : EnemyBase
 		default:
 			miniAttack = rawDmg;
 			lastAttackHit = true;
-			if ((bool)Util.FindObjectOfType<SpecialAttackEffect>())
+			if ((bool)Object.FindObjectOfType<SpecialAttackEffect>())
 			{
 				psi = true;
 			}
@@ -80,7 +80,7 @@ public class TrainingDummy : EnemyBase
 	{
 		if (GetActNames()[i] == "WeaponMenu")
 		{
-			Object.Instantiate(Resources.Load<GameObject>("battle/acts/TrainingMenu"), GameObject.Find("BattleCanvas").transform, worldPositionStays: false);
+			Object.Instantiate(Resources.Load<GameObject>("battle/acts/TrainingMenu"), GameObject.Find("BattleCanvas").transform, false);
 			return new string[1] { "* Use LEFT and RIGHT to change\n  weapons. Setting Susie/Noelle\n  to None will deactivate them." };
 		}
 		if (GetActNames()[i] == "IncreaseLV")
@@ -104,6 +104,14 @@ public class TrainingDummy : EnemyBase
 		{
 			Util.GameManager().PlayGlobalSFX("sounds/snd_awkward");
 			Util.GameManager().SetEXP(0);
+			if (Util.GameManager().GetMiniPartyMember() > 0)
+			{
+				Util.GameManager().SetHP(0, 20 + Util.GameManager().GetMiniMemberMaxHP());
+			}
+			else
+			{
+				Util.GameManager().SetHP(0, 20);
+			}
 			Util.GameManager().SetHP(1, 30);
 			Util.GameManager().SetHP(2, 20);
 			return new string[1] { "* You became weaker." };
@@ -119,14 +127,17 @@ public class TrainingDummy : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
-		return i switch
+		switch (i)
 		{
-			1 => new string[1] { "* Susie prepped her weapon..." }, 
-			2 => new string[1] { "* Noelle's hands became cold..." }, 
-			_ => base.PerformAssistAct_Old(i), 
-		};
+		case 1:
+			return new string[1] { "* Susie prepped her weapon..." };
+		case 2:
+			return new string[1] { "* Noelle's hands became cold..." };
+		default:
+			return base.PerformAssistAct(i);
+		}
 	}
 
 	public override void Chat(string[] text, string type, string sound, Vector2 pos, bool canSkip, int speed)
@@ -182,7 +193,7 @@ public class TrainingDummy : EnemyBase
 
 	public override void Spare(bool sleepMist = false)
 	{
-		if ((int)Util.GameManager().GetFlag(108) == 0)
+		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(108) == 0)
 		{
 			base.Spare(sleepMist);
 			obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/" + enemyName.Replace(".", "") + "/spr_b_" + fileName + "_main");

@@ -63,7 +63,7 @@ public class InteractItemBox : InteractSelectionBase
 
 	private void Awake()
 	{
-		if (flag > -1 && (int)Util.GameManager().GetFlag(flag) == 1)
+		if (flag > -1 && (int)Object.FindObjectOfType<GameManager>().GetFlag(flag) == 1)
 		{
 			empty = true;
 			GetComponent<SpriteRenderer>().sprite = emptySprite;
@@ -75,15 +75,15 @@ public class InteractItemBox : InteractSelectionBase
 		if (!txt && enabled)
 		{
 			txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 			if (!empty)
 			{
-				txt.CreateBox(lines, sounds, speed, giveBackControl: false, portraits);
+				txt.CreateBox(lines, sounds, speed, false, portraits);
 				txt.EnableSelectionAtEnd();
 			}
 			else
 			{
-				txt.CreateBox(emptyLines, emptySounds, emptySpeed, giveBackControl: true, emptyPortraits);
+				txt.CreateBox(emptyLines, emptySounds, emptySpeed, true, emptyPortraits);
 			}
 		}
 	}
@@ -92,21 +92,21 @@ public class InteractItemBox : InteractSelectionBase
 	{
 		if (index == Vector2.left)
 		{
-			if (Util.GameManager().NumItemFreeSpace(Items.IsEquipment(itemID)) == 0)
+			if (Object.FindObjectOfType<GameManager>().NumItemFreeSpace() == 0)
 			{
 				txt = new GameObject("InteractTextBoxItem", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(noSpaceLines, noSpaceSounds, noSpaceSpeed, giveBackControl: true, noSpacePortraits);
+				txt.CreateBox(noSpaceLines, noSpaceSounds, noSpaceSpeed, true, noSpacePortraits);
 			}
 			else
 			{
-				Util.GameManager().PlayGlobalSFX("sounds/snd_item");
-				Util.GameManager().AddAmbiguousItem(itemID);
+				Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_item");
+				Object.FindObjectOfType<GameManager>().AddItem(itemID);
 				if (flag > -1)
 				{
-					Util.GameManager().SetFlag(flag, 1);
+					Object.FindObjectOfType<GameManager>().SetFlag(flag, 1);
 				}
 				txt = new GameObject("InteractTextBoxItem", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(purchaseLines, purchaseSounds, purchaseSpeed, giveBackControl: true, purchasePortraits);
+				txt.CreateBox(purchaseLines, purchaseSounds, purchaseSpeed, true, purchasePortraits);
 				empty = true;
 				GetComponent<SpriteRenderer>().sprite = emptySprite;
 			}
@@ -116,11 +116,11 @@ public class InteractItemBox : InteractSelectionBase
 			if (rejectLines.Length != 0)
 			{
 				txt = new GameObject("InteractTextBoxItem", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(rejectLines, rejectSounds, rejectSpeed, giveBackControl: true, rejectPortraits);
+				txt.CreateBox(rejectLines, rejectSounds, rejectSpeed, true, rejectPortraits);
 			}
 			else
 			{
-				Util.GameManager().EnablePlayerMovement();
+				Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
 			}
 		}
 		selectActivated = false;

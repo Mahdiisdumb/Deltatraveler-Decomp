@@ -16,14 +16,14 @@ public class FlagEditor : MonoBehaviour
 
 	private void Awake()
 	{
-		player = Util.OverworldPlayer();
+		player = Object.FindObjectOfType<OverworldPlayer>();
 		base.transform.SetParent(GameObject.Find("Canvas").transform);
 		base.gameObject.AddComponent<UIBackground>().CreateElement("FlagEditorBG", new Vector2(0f, 0f), new Vector2(512f, 212f));
 		textParent = Object.Instantiate(Resources.Load<GameObject>("ui/debug/FlagEditorText"), base.transform).transform;
 		newFlags = new object[1000];
 		for (int i = 0; i < newFlags.Length; i++)
 		{
-			newFlags[i] = Util.GameManager().GetFlag(i);
+			newFlags[i] = Object.FindObjectOfType<GameManager>().GetFlag(i);
 		}
 		aud = base.gameObject.AddComponent<AudioSource>();
 		aud.clip = Resources.Load<AudioClip>("sounds/snd_menumove");
@@ -33,14 +33,14 @@ public class FlagEditor : MonoBehaviour
 
 	private void Start()
 	{
-		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 	}
 
 	private void Update()
 	{
 		if ((bool)player && player.CanMove())
 		{
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 		}
 		if (UTInput.GetButtonDown("Left"))
 		{
@@ -132,6 +132,7 @@ public class FlagEditor : MonoBehaviour
 					num2 = 2;
 				}
 				newFlags[curFlag] = num2;
+				Object.FindObjectOfType<GameManager>().SetMiniPartyMember(num2);
 				break;
 			case FlagType.IntNumber:
 				num2 += num;
@@ -163,11 +164,11 @@ public class FlagEditor : MonoBehaviour
 		{
 			for (int i = 0; i < newFlags.Length; i++)
 			{
-				Util.GameManager().SetFlag(i, newFlags[i]);
+				Object.FindObjectOfType<GameManager>().SetFlag(i, newFlags[i]);
 			}
 			if ((bool)player)
 			{
-				Util.GameManager().LoadArea(SceneManager.GetActiveScene().buildIndex, fadeIn: true, player.transform.position, player.GetDirection());
+				Object.FindObjectOfType<GameManager>().LoadArea(SceneManager.GetActiveScene().buildIndex, true, player.transform.position, player.GetDirection());
 			}
 			else
 			{

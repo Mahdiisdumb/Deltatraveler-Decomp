@@ -59,7 +59,7 @@ public class FlavorChangerNPC : InteractSelectionBase
 		else if (index == Vector2.up)
 		{
 			txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-			txt.CreateBox(adviceLines, adviceSounds, adviceSpeed, giveBackControl: true, advicePortraits);
+			txt.CreateBox(adviceLines, adviceSounds, adviceSpeed, true, advicePortraits);
 			if (Util.GameManager().GetCurrentZone() == 56)
 			{
 				Util.GameManager().SetFlag(251, 1);
@@ -68,7 +68,7 @@ public class FlavorChangerNPC : InteractSelectionBase
 		else
 		{
 			txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-			txt.CreateBox(new string[1] { "* Let me know if you change\n  your mind!" }, giveBackControl: true);
+			txt.CreateBox(new string[1] { "* Let me know if you change\n  your mind!" }, true);
 		}
 	}
 

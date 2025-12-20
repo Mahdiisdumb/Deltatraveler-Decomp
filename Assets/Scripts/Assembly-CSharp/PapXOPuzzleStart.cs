@@ -175,7 +175,7 @@ public class PapXOPuzzleStart : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		papyrus = Util.FindObjectOfType<InteractPapyrusTextbox>();
+		papyrus = Object.FindObjectOfType<InteractPapyrusTextbox>();
 		ChangeDirection(papyrus, Vector2.left);
 		papyrus.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
 		susie.UseUnhappySprites();

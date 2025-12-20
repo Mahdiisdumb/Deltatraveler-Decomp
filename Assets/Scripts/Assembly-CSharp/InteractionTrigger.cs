@@ -14,9 +14,9 @@ public class InteractionTrigger : MonoBehaviour
 			base.transform.localPosition = Vector3.zero;
 			triggering = false;
 		}
-		if (UTInput.GetButtonDown("Z") && Util.OverworldPlayer().CanMove())
+		if (UTInput.GetButtonDown("Z") && Object.FindObjectOfType<OverworldPlayer>().CanMove())
 		{
-			base.transform.localPosition = Util.OverworldPlayer().GetDirection() * 0.25f;
+			base.transform.localPosition = Object.FindObjectOfType<OverworldPlayer>().GetDirection() * 0.25f;
 			triggering = true;
 		}
 	}
@@ -56,7 +56,7 @@ public class InteractionTrigger : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (triggering && (bool)collision && (bool)collision.gameObject.GetComponent<Interactable>() && passAttempt < 1 && collision.gameObject.GetComponent<Interactable>().enabled && (!collision.gameObject.GetComponent<OverworldPartyMember>() || ((bool)collision.gameObject.GetComponent<OverworldPartyMember>() && !collision.gameObject.GetComponent<OverworldPartyMember>().IsPlayer())))
+		if (triggering && (bool)collision.gameObject.GetComponent<Interactable>() && passAttempt < 1 && collision.gameObject.GetComponent<Interactable>().enabled && (!collision.gameObject.GetComponent<OverworldPartyMember>() || ((bool)collision.gameObject.GetComponent<OverworldPartyMember>() && !collision.gameObject.GetComponent<OverworldPartyMember>().IsPlayer())))
 		{
 			passAttempt++;
 			AttemptInteract(collision.gameObject.GetComponent<Interactable>());
@@ -65,7 +65,7 @@ public class InteractionTrigger : MonoBehaviour
 
 	private void OnTriggerStay2D(Collider2D collision)
 	{
-		if (triggering && (bool)collision && (bool)collision.gameObject.GetComponent<Interactable>() && passAttempt < 1 && collision.gameObject.GetComponent<Interactable>().enabled && (!collision.gameObject.GetComponent<OverworldPartyMember>() || ((bool)collision.gameObject.GetComponent<OverworldPartyMember>() && !collision.gameObject.GetComponent<OverworldPartyMember>().IsPlayer())))
+		if (triggering && (bool)collision.gameObject.GetComponent<Interactable>() && passAttempt < 1 && collision.gameObject.GetComponent<Interactable>().enabled && (!collision.gameObject.GetComponent<OverworldPartyMember>() || ((bool)collision.gameObject.GetComponent<OverworldPartyMember>() && !collision.gameObject.GetComponent<OverworldPartyMember>().IsPlayer())))
 		{
 			passAttempt++;
 			AttemptInteract(collision.gameObject.GetComponent<Interactable>());

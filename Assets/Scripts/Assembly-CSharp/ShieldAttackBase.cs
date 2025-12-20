@@ -18,7 +18,7 @@ public class ShieldAttackBase : AttackBase
 		base.Awake();
 		bbSize = new Vector2(85f, 140f);
 		bbPos = new Vector2(0.05f, -1.66f);
-		Util.FindObjectOfType<SOUL>().ChangeSOULMode(2);
+		Object.FindObjectOfType<SOUL>().ChangeSOULMode(2);
 		soulPos = new Vector3(0f, -1.63f);
 		spawnRate = 10;
 		spawnPerRate = 1;
@@ -27,18 +27,18 @@ public class ShieldAttackBase : AttackBase
 
 	protected virtual void OnDestroy()
 	{
-		if ((bool)Util.FindObjectOfType<SOULShield>())
+		if ((bool)Object.FindObjectOfType<SOULShield>())
 		{
-			Util.FindObjectOfType<SOULShield>().SetToDestroy();
+			Object.FindObjectOfType<SOULShield>().SetToDestroy();
 		}
-		if ((bool)Util.FindObjectOfType<BattleManager>())
+		if ((bool)Object.FindObjectOfType<BattleManager>())
 		{
 			try
 			{
-				Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().sortingOrder = 199;
-				Util.FindObjectOfType<BattleManager>().GetBattleFade().FadeIn(8, new Color32(0, 0, 0, 132));
+				Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().sortingOrder = 199;
+				Object.FindObjectOfType<BattleManager>().GetBattleFade().FadeIn(8, new Color32(0, 0, 0, 132));
 				bb.transform.Find("Background").GetComponent<SpriteMask>().enabled = true;
-				Util.FindObjectOfType<PartyPanels>().GetComponent<Canvas>().sortingOrder = 99;
+				Object.FindObjectOfType<PartyPanels>().GetComponent<Canvas>().sortingOrder = 99;
 				GameObject.Find("BattleCanvas").GetComponent<Canvas>().sortingOrder = 400;
 			}
 			catch
@@ -56,7 +56,7 @@ public class ShieldAttackBase : AttackBase
 		}
 		if (frames < 3)
 		{
-			Util.FindObjectOfType<SOUL>().transform.position = Vector3.Lerp(soulPos, new Vector3(0f, -0.042f), (float)(frames + 1) / 3f);
+			Object.FindObjectOfType<SOUL>().transform.position = Vector3.Lerp(soulPos, new Vector3(0f, -0.042f), (float)(frames + 1) / 3f);
 		}
 		int num = Mathf.FloorToInt((float)frames / (float)spawnRate) * spawnPerRate;
 		for (int i = num; i < num + spawnPerRate; i++)
@@ -82,7 +82,7 @@ public class ShieldAttackBase : AttackBase
 				}
 				component2.transform.rotation = Quaternion.Euler(0f, 0f, num2 - 180f);
 				component2.transform.position = new Vector3(0f, -0.042f) - vector * 10f;
-				component2.Activate((int)bulletInfo[i][4], (int)bulletInfo[i][5], num2, new Vector2(0f, -0.042f) - (Vector2)vector * 3f + (Vector2)(Vector3)bulletInfo[i][3], (int)bulletInfo[i][1], inSpearAttack: true);
+				component2.Activate((int)bulletInfo[i][4], (int)bulletInfo[i][5], num2, new Vector2(0f, -0.042f) - (Vector2)vector * 3f + (Vector2)(Vector3)bulletInfo[i][3], (int)bulletInfo[i][1], true);
 				gasterBlasters.Add(component2);
 			}
 		}
@@ -96,12 +96,12 @@ public class ShieldAttackBase : AttackBase
 	public override void StartAttack()
 	{
 		base.StartAttack();
-		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().sortingOrder = 402;
-		Util.FindObjectOfType<PartyPanels>().GetComponent<Canvas>().sortingOrder = 402;
+		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().sortingOrder = 402;
+		Object.FindObjectOfType<PartyPanels>().GetComponent<Canvas>().sortingOrder = 402;
 		GameObject.Find("BattleCanvas").GetComponent<Canvas>().sortingOrder = 402;
 		Object.Instantiate(Resources.Load<GameObject>("battle/attacks/SOULShield"));
 		bb.StartMovement(new Vector2(85f, 85f), new Vector2(0.05f, 0.525f));
-		Util.FindObjectOfType<BattleManager>().GetBattleFade().FadeOut(8, new Color32(0, 0, 0, 132));
+		Object.FindObjectOfType<BattleManager>().GetBattleFade().FadeOut(8, new Color32(0, 0, 0, 132));
 	}
 
 	public void SetNewLeadBullet(GameObject prevGameObject)

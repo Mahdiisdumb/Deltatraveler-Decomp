@@ -134,7 +134,7 @@ public class DogiPostCutscene : CutsceneBase
 				}
 				else if (AtLine(3))
 				{
-					SetSprite(susie, "spr_su_throw_ready", flipX: true);
+					SetSprite(susie, "spr_su_throw_ready", true);
 					if (replayTrollDeath)
 					{
 						ChangeDirection(kris, Vector2.up);
@@ -171,7 +171,7 @@ public class DogiPostCutscene : CutsceneBase
 				SetSprite(noelle, "spr_no_surprise_left");
 				if (replayTrollDeath)
 				{
-					SetSprite(susie, "spr_su_surprise_right", flipX: true);
+					SetSprite(susie, "spr_su_surprise_right", true);
 				}
 			}
 			if (frames >= 38 && frames <= 41)
@@ -242,7 +242,7 @@ public class DogiPostCutscene : CutsceneBase
 					}
 					else if (AtLine(6))
 					{
-						SetSprite(susie, "spr_su_throw_ready", flipX: true);
+						SetSprite(susie, "spr_su_throw_ready", true);
 						txt.GetComponent<ShakingText>().Stop();
 					}
 					else if (AtLine(7))
@@ -267,7 +267,7 @@ public class DogiPostCutscene : CutsceneBase
 				}
 				else if (AtLine(5))
 				{
-					SetSprite(susie, "spr_su_throw_ready", flipX: true);
+					SetSprite(susie, "spr_su_throw_ready", true);
 					txt.GetComponent<ShakingText>().Stop();
 				}
 				else if (AtLine(6))
@@ -286,13 +286,13 @@ public class DogiPostCutscene : CutsceneBase
 				PlayAnimation(kris, "walk");
 				kris.EnableAnimator();
 				susie.EnableAnimator();
-				SetMoveAnim(kris, isMoving: true);
-				SetMoveAnim(susie, isMoving: true);
-				SetMoveAnim(noelle, isMoving: true);
+				SetMoveAnim(kris, true);
+				SetMoveAnim(susie, true);
+				SetMoveAnim(noelle, true);
 			}
 			if (!MoveTo(kris, new Vector3(4.11f, -1.62f), 4f))
 			{
-				SetMoveAnim(kris, isMoving: false);
+				SetMoveAnim(kris, false);
 				ChangeDirection(kris, Vector2.right);
 				if (replayTrollDeath && kris.GetComponent<Animator>().enabled)
 				{
@@ -302,12 +302,12 @@ public class DogiPostCutscene : CutsceneBase
 			}
 			if (!MoveTo(susie, new Vector3(9.43f, -1.47f), 4f))
 			{
-				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(susie, false);
 				ChangeDirection(susie, Vector2.left);
 			}
 			if (!MoveTo(noelle, new Vector3(7.64f, 0.65f), 6f))
 			{
-				SetMoveAnim(noelle, isMoving: false);
+				SetMoveAnim(noelle, false);
 				ChangeDirection(noelle, Vector2.down);
 			}
 			if (frames == 60)
@@ -344,7 +344,7 @@ public class DogiPostCutscene : CutsceneBase
 				{
 					if (AtLine(2))
 					{
-						SetSprite(susie, "spr_su_threaten_stick", flipX: true);
+						SetSprite(susie, "spr_su_threaten_stick", true);
 					}
 					else if (AtLine(3))
 					{
@@ -370,7 +370,7 @@ public class DogiPostCutscene : CutsceneBase
 				}
 				else if (AtLine(8))
 				{
-					SetSprite(susie, "spr_su_threaten_stick", flipX: true);
+					SetSprite(susie, "spr_su_threaten_stick", true);
 				}
 				else if (AtLine(10))
 				{
@@ -432,11 +432,11 @@ public class DogiPostCutscene : CutsceneBase
 		dogamy = GameObject.Find("Dogamy").GetComponent<InteractTextBox>();
 		dogaressa = GameObject.Find("Dogaressa").GetComponent<InteractTextBox>();
 		endState = int.Parse(par[0].ToString());
-		gm.SetPartyMembers(susie: true, noelle: true);
+		gm.SetPartyMembers(true, true);
 		if (endState == 2)
 		{
 			WeirdChecker.Abort(gm);
-			StartText(new string[4] { ";MPdogamy; I still don't know if you're\n  a human or a puppy,^05 but...\n  You're nice???", ";MPdogaressa; (Most of the monsters here are\n  just mean,^05 so...)", ";MPdogaressa; (I guess we won't eliminate\n  you.)", ";MPdogamy; Thanks,^05 weird human-puppy\n  thing!" }, new string[1] { "snd_text" }, new int[1], new string[1] { "" });
+			StartText(new string[4] { "* I still don't know if you're\n  a human or a puppy,^05 but...\n  You're nice???", "* (Most of the monsters here are\n  just mean,^05 so...)", "* (I guess we won't eliminate\n  you.)", "* Thanks,^05 weird human-puppy\n  thing!" }, new string[1] { "snd_text" }, new int[1], new string[1] { "" });
 			dogamy.SetTalkable(txt);
 			return;
 		}

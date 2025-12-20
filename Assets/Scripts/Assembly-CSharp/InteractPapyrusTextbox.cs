@@ -37,8 +37,8 @@ public class InteractPapyrusTextbox : InteractTextBox
 		base.Update();
 		if (stare)
 		{
-			GetComponent<Animator>().SetFloat("dirX", Util.OverworldPlayer().transform.position.x - base.transform.position.x);
-			GetComponent<Animator>().SetFloat("dirY", Util.OverworldPlayer().transform.position.y - base.transform.position.y);
+			GetComponent<Animator>().SetFloat("dirX", Object.FindObjectOfType<OverworldPlayer>().transform.position.x - base.transform.position.x);
+			GetComponent<Animator>().SetFloat("dirY", Object.FindObjectOfType<OverworldPlayer>().transform.position.y - base.transform.position.y);
 		}
 	}
 

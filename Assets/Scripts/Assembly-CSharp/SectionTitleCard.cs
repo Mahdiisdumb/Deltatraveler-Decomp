@@ -31,7 +31,7 @@ public class SectionTitleCard : MonoBehaviour
 			{
 				num = 1f;
 			}
-			num = Mathf.Sin(num * MathF.PI * 0.5f);
+			num = Mathf.Sin(num * (float)Math.PI * 0.5f);
 			base.transform.localPosition = new Vector3(Mathf.Lerp(140f, 0f, num), 0f);
 			float a = (float)frames / 30f;
 			if (frames > 150)

@@ -19,7 +19,7 @@ public class FallSwitch : Interactable
 
 	private void Awake()
 	{
-		if ((int)Util.GameManager().GetFlag(34) == 1)
+		if ((int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(34) == 1)
 		{
 			GetComponent<SpriteRenderer>().sprite = triggerSprite;
 			triggered = true;
@@ -49,27 +49,27 @@ public class FallSwitch : Interactable
 			else
 			{
 				playCut = false;
-				Util.GameManager().EnablePlayerMovement();
-				Util.FindObjectOfType<CameraController>().SetFollowPlayer(follow: true);
+				UnityEngine.Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
+				UnityEngine.Object.FindObjectOfType<CameraController>().SetFollowPlayer(true);
 			}
 		}
-		Util.FindObjectOfType<CameraController>().transform.position = Util.FindObjectOfType<CameraController>().GetClampedPos() + new Vector3((float)moveBody / 48f, 0f);
+		UnityEngine.Object.FindObjectOfType<CameraController>().transform.position = UnityEngine.Object.FindObjectOfType<CameraController>().GetClampedPos() + new Vector3((float)moveBody / 48f, 0f);
 	}
 
 	public override void DoInteract()
 	{
 		if (!triggered)
 		{
-			Util.GameManager().SetFlag(34, 1);
+			UnityEngine.Object.FindObjectOfType<GameManager>().SetFlag(34, 1);
 			GetComponent<AudioSource>().Play();
 			GetComponent<SpriteRenderer>().sprite = triggerSprite;
 			triggered = true;
 			GameObject.Find("Spikes").GetComponent<SpriteRenderer>().sprite = spikeSprite;
 			GameObject.Find("Spikes").GetComponent<BoxCollider2D>().isTrigger = true;
 			playCut = true;
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
-			Util.FindObjectOfType<CameraController>().SetFollowPlayer(follow: false);
-			Util.FindObjectOfType<CameraController>().transform.position = Util.FindObjectOfType<CameraController>().GetClampedPos() + new Vector3((float)moveBody / 48f, 0f);
+			UnityEngine.Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+			UnityEngine.Object.FindObjectOfType<CameraController>().SetFollowPlayer(false);
+			UnityEngine.Object.FindObjectOfType<CameraController>().transform.position = UnityEngine.Object.FindObjectOfType<CameraController>().GetClampedPos() + new Vector3((float)moveBody / 48f, 0f);
 		}
 	}
 
