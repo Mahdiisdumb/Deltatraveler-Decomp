@@ -14,7 +14,7 @@ public class GyftrotAttack : AttackBase
 	{
 		base.Awake();
 		bbSize = new Vector2(185f, 140f);
-		rage = Util.FindObjectOfType<Gyftrot>().GetRage();
+		rage = Object.FindObjectOfType<Gyftrot>().GetRage();
 		type = Random.Range(0, 2);
 		type = 1;
 		maxFrames = 120;
@@ -53,7 +53,7 @@ public class GyftrotAttack : AttackBase
 		else if (type == 1 && !presentsActivated)
 		{
 			presentsActivated = true;
-			GyftrotPresentBullet[] array = Util.FindObjectsOfType<GyftrotPresentBullet>();
+			GyftrotPresentBullet[] array = Object.FindObjectsOfType<GyftrotPresentBullet>();
 			for (int i = 0; i < array.Length; i++)
 			{
 				array[i].Activate();

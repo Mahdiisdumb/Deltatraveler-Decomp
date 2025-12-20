@@ -36,7 +36,7 @@ public class RoboLaserBullet : BulletBase
 			{
 				if ((bool)ufo)
 				{
-					ufo.SetMovement(canMove: true);
+					ufo.SetMovement(true);
 				}
 				if ((bool)robo)
 				{
@@ -44,7 +44,7 @@ public class RoboLaserBullet : BulletBase
 				}
 				setToMove = true;
 			}
-			base.transform.position += new Vector3(0f - Mathf.Sin(angle * (MathF.PI / 180f)), Mathf.Cos(angle * (MathF.PI / 180f))) * 10f / 48f;
+			base.transform.position += new Vector3(0f - Mathf.Sin(angle * ((float)Math.PI / 180f)), Mathf.Cos(angle * ((float)Math.PI / 180f))) * 10f / 48f;
 		}
 		if (base.transform.position.y < -5f)
 		{
@@ -55,7 +55,7 @@ public class RoboLaserBullet : BulletBase
 	public void Activate(LilUFO ufo)
 	{
 		this.ufo = ufo;
-		base.transform.up = Util.FindObjectOfType<SOUL>().transform.position - base.transform.position;
+		base.transform.up = UnityEngine.Object.FindObjectOfType<SOUL>().transform.position - base.transform.position;
 		angle = base.transform.eulerAngles.z;
 		activated = true;
 	}
@@ -63,7 +63,7 @@ public class RoboLaserBullet : BulletBase
 	public void Activate(SpinRobo robo)
 	{
 		this.robo = robo;
-		base.transform.up = Util.FindObjectOfType<SOUL>().transform.position - base.transform.position;
+		base.transform.up = UnityEngine.Object.FindObjectOfType<SOUL>().transform.position - base.transform.position;
 		angle = base.transform.eulerAngles.z;
 		activated = true;
 	}

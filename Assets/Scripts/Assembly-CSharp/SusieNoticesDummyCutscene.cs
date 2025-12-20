@@ -42,7 +42,7 @@ public class SusieNoticesDummyCutscene : CutsceneBase
 			toriel.transform.position = new Vector3(-3.45f, -0.33f);
 			susie.transform.position = new Vector3(-6.148f, -1.127f);
 			GameObject.Find("susieinteract").transform.position = new Vector3(-6.229f, -1.65f);
-			gm.SetPartyMembers(susie: false, noelle: false);
+			gm.SetPartyMembers(false, false);
 			StartText(new string[13]
 			{
 				"* As a human living in\n  the UNDERGROUND,^10\n  monsters may attack you.", "* As you likely already\n  know...", "* You will need to be\n  prepared for this\n  situation.", "* However,^10 worry not!^10\n* The process is simple.", "* When you encounter a\n  monster,^10 you will enter\n  a FIGHT.", "* While you are in a\n  FIGHT,^10 strike up a\n  friendly conversation.", "* Or you could fight\n  back,^05 if they're--", "* Child,^05 do not listen\n  to her!", "* Practice talking to\n  the dummy.", "* Or beat it up???",

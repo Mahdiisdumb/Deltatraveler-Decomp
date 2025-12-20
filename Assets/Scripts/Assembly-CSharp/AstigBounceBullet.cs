@@ -50,11 +50,11 @@ public class AstigBounceBullet : BulletBase
 		{
 			if ((lookingForRight && base.transform.position.x > 1.614f) || (!lookingForRight && base.transform.position.x < -1.614f))
 			{
-				HitWall(vertical: false);
+				HitWall(false);
 			}
 			else if ((lookingForUp && base.transform.position.y > -0.524f) || (!lookingForUp && base.transform.position.y < -2.8f))
 			{
-				HitWall(vertical: true);
+				HitWall(true);
 			}
 			return;
 		}

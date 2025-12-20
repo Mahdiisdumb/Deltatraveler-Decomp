@@ -4,34 +4,29 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public static class ExceptionHandler
+public class ExceptionHandler : MonoBehaviour
 {
-	private static string logFolder = "";
+	private string logFolder = "";
 
-	public static string cond;
+	private string cond;
 
-	public static string stack;
+	private string stack;
 
-	public static void Init()
+	public static bool alreadyCrashed;
+
+	private void Awake()
 	{
 		logFolder = Path.Combine(Directory.GetParent(Application.dataPath).ToString(), "logs/");
-		Reset();
-	}
-
-	public static void Reset()
-	{
-		cond = null;
-		stack = null;
 		Application.logMessageReceived += HandleException;
 	}
 
-	private static void HandleException(string condition, string stackTrace, LogType type)
+	private void HandleException(string condition, string stackTrace, LogType type)
 	{
-		if (type != LogType.Exception)
+		if (type != LogType.Exception || condition.StartsWith("SocketException"))
 		{
 			return;
 		}
-		if (logFolder != "")
+		if (!alreadyCrashed && logFolder != "")
 		{
 			Scene activeScene = SceneManager.GetActiveScene();
 			string text = DateTime.Now.ToString().Replace('/', '-').Replace(' ', '-')
@@ -61,10 +56,21 @@ public static class ExceptionHandler
 		cond = condition;
 		stack = stackTrace;
 		SceneManager.LoadScene(1, LoadSceneMode.Single);
-		Application.logMessageReceived -= HandleException;
+		SceneManager.sceneLoaded += OnAreaLoaded;
+		alreadyCrashed = true;
 	}
 
-	public static string GetExtraDebugInfo()
+	private void OnAreaLoaded(Scene ascene, LoadSceneMode aMode)
+	{
+		SceneManager.sceneLoaded -= OnAreaLoaded;
+	}
+
+	public void ListException()
+	{
+		UnityEngine.Object.FindObjectOfType<ExceptionHandlerUI>().ListException(cond, stack);
+	}
+
+	public string GetExtraDebugInfo()
 	{
 		try
 		{
@@ -72,7 +78,7 @@ public static class ExceptionHandler
 			string text = "";
 			if (activeScene.buildIndex == 2)
 			{
-				BattleManager battleManager = Util.FindObjectOfType<BattleManager>();
+				BattleManager battleManager = UnityEngine.Object.FindObjectOfType<BattleManager>();
 				if ((bool)battleManager)
 				{
 					List<string> list = new List<string>();
@@ -84,7 +90,7 @@ public static class ExceptionHandler
 					text = text + "Battle ID: " + battleManager.GetBattleID() + " (" + string.Join(", ", list.ToArray()) + ")";
 				}
 			}
-			CutsceneStart[] array = Util.FindObjectsOfType<CutsceneStart>();
+			CutsceneStart[] array = UnityEngine.Object.FindObjectsOfType<CutsceneStart>();
 			foreach (CutsceneStart cutsceneStart in array)
 			{
 				if ((bool)cutsceneStart && (bool)cutsceneStart.GetCutscene() && cutsceneStart.GetCutscene().IsPlaying())

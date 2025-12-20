@@ -33,7 +33,7 @@ public class SOULChargeEffect : MonoBehaviour
 		}
 		for (int i = 0; i < 3; i++)
 		{
-			float num = Mathf.Abs(Mathf.Sin(180f / (float)(30 + 10 * i) * (float)frames * (MathF.PI / 180f)));
+			float num = Mathf.Abs(Mathf.Sin(180f / (float)(30 + 10 * i) * (float)frames * ((float)Math.PI / 180f)));
 			base.transform.GetChild(i).localScale = new Vector3(1f + num, 1f + num, 1f);
 			if ((bool)parentSOUL)
 			{

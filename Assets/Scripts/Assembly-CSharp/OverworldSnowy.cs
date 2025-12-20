@@ -156,15 +156,15 @@ public class OverworldSnowy : OverworldEnemyBase
 			speed += 0.1f;
 		}
 		float num = ((!runFromPlayer) ? 1 : (-1));
-		anim.SetFloat("dirX", (Util.OverworldPlayer().transform.position.x - base.transform.position.x) * num);
-		anim.SetFloat("dirY", (Util.OverworldPlayer().transform.position.y - base.transform.position.y) * num);
+		anim.SetFloat("dirX", (Object.FindObjectOfType<OverworldPlayer>().transform.position.x - base.transform.position.x) * num);
+		anim.SetFloat("dirY", (Object.FindObjectOfType<OverworldPlayer>().transform.position.y - base.transform.position.y) * num);
 	}
 
 	public override void DetectPlayer()
 	{
 		base.DetectPlayer();
 		anim.SetFloat("speed", 0f);
-		anim.SetFloat("dirX", Util.OverworldPlayer().transform.position.x - base.transform.position.x);
-		anim.SetFloat("dirY", Util.OverworldPlayer().transform.position.y - base.transform.position.y);
+		anim.SetFloat("dirX", Object.FindObjectOfType<OverworldPlayer>().transform.position.x - base.transform.position.x);
+		anim.SetFloat("dirY", Object.FindObjectOfType<OverworldPlayer>().transform.position.y - base.transform.position.y);
 	}
 }

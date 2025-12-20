@@ -50,19 +50,11 @@ public class UndertalePapyrus : InteractTextBox
 		}
 		if (talkedToBefore)
 		{
-			if (Util.GameManager().GetFlagInt(286) == 1)
+			if (Util.GameManager().GetItemList().Contains(16))
 			{
-				if (Util.GameManager().NumItemFreeSpace(equipment: true) == 0)
-				{
-					txt = new GameObject("InteractTextBox", typeof(TextBox)).GetComponent<TextBox>();
-					txt.CreateBox(new string[8] { "WHAT'S THIS...?", "AN EGG?", "FOR ME?????", "A PERFECT UNION OF \nPAPYRUS AND EGG!", "IN RETURN,^05 I SHALL \nGIVE A ONE-OF-A-KIND \nITEM!", "... YOU DO NOT HAVE \nANY EQUIPMENT SPACE?", "WELL DO COME BACK \nONCE YOU HAVE MADE \nROOM.", "I AM MORE IMPRESSED \nWITH HOW YOU KNEW \nIT WAS EQUIPMENT!" }, new string[1] { "snd_txtpap" }, new int[1], giveBackControl: true, new string[8] { "pap_side", "pap_blush", "pap_blush", "pap_flush", "pap_neutral", "pap_side", "pap_laugh", "pap_neutral" });
-					playOminous = Util.GameManager().GetFlagInt(293) == 0;
-					Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
-					return;
-				}
-				Util.GameManager().SetFlag(286, 0);
+				Util.GameManager().RemoveItem(Util.GameManager().GetItemList().IndexOf(16));
 				Util.GameManager().SetFlag(300, 1);
-				Util.GameManager().AddEquipment(42);
+				Util.GameManager().AddItem(42);
 				doEggSound = true;
 				SetNewLines();
 				talkedToBefore = false;
@@ -80,9 +72,9 @@ public class UndertalePapyrus : InteractTextBox
 				{
 					text = "* (Guess Kris doesn't\n  wanna tell the guy that\n  owns the damn place.)";
 				}
-				txt.CreateBox(new string[8] { "WHAT THE HECK!!!", "THIS IS THE KEY \nTO THE BASEMENT!", "SANS BORROWED IT A \nLONG TIME AGO AND \nNEVER RETURNED IT.", "MIND CHECKING THE \nBASEMENT FOR ME?", "IT IS THE ENTRANCE \nBEHIND MY HOUSE.", "THE HOUSE WITH THE \nSKELETON FLAG ON IT!", "NYEH HEH HEH!!!", text }, new string[8] { "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtsus" }, new int[1], giveBackControl: true, new string[8] { "pap_mad", "pap_mad", "pap_side", "pap_neutral", "pap_neutral", "pap_laugh", "pap_laugh", "su_inquisitive" });
+				txt.CreateBox(new string[8] { "WHAT THE HECK!!!", "THIS IS THE KEY \nTO THE BASEMENT!", "SANS BORROWED IT A \nLONG TIME AGO AND \nNEVER RETURNED IT.", "MIND CHECKING THE \nBASEMENT FOR ME?", "IT IS THE ENTRANCE \nBEHIND MY HOUSE.", "THE HOUSE WITH THE \nSKELETON FLAG ON IT!", "NYEH HEH HEH!!!", text }, new string[8] { "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtsus" }, new int[1], true, new string[8] { "pap_mad", "pap_mad", "pap_side", "pap_neutral", "pap_neutral", "pap_laugh", "pap_laugh", "su_inquisitive" });
 				playOminous = Util.GameManager().GetFlagInt(293) == 0;
-				Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+				Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 				return;
 			}
 		}

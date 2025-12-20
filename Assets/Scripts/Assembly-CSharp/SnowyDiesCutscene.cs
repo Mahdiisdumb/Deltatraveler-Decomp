@@ -54,7 +54,7 @@ public class SnowyDiesCutscene : CutsceneBase
 			{
 				ChangeDirection(kris, Vector2.down);
 				RestorePlayerControl();
-				Util.FindObjectOfType<SectionTitleCard>().Activate();
+				Object.FindObjectOfType<SectionTitleCard>().Activate();
 				EndCutscene();
 			}
 		}
@@ -70,7 +70,7 @@ public class SnowyDiesCutscene : CutsceneBase
 				{
 					noelleMove = true;
 					ChangeDirection(noelle, Vector2.right);
-					SetMoveAnim(noelle, isMoving: true);
+					SetMoveAnim(noelle, true);
 					noelle.SetCustomSpritesetPrefix("pissed");
 				}
 				else if (AtLine(9))
@@ -85,11 +85,11 @@ public class SnowyDiesCutscene : CutsceneBase
 					MoveTo(noelle, susie.transform.position, 2f);
 					if (rageFrames == 5 && txt.GetCurrentStringNum() < 9)
 					{
-						SetSprite(susie, "spr_su_surprise_right", flipX: true);
+						SetSprite(susie, "spr_su_surprise_right", true);
 					}
 					if (rageFrames >= 10)
 					{
-						SetMoveAnim(noelle, isMoving: false);
+						SetMoveAnim(noelle, false);
 						noelleMove = false;
 					}
 				}
@@ -98,7 +98,7 @@ public class SnowyDiesCutscene : CutsceneBase
 			{
 				if (noelleMove)
 				{
-					SetMoveAnim(noelle, isMoving: false);
+					SetMoveAnim(noelle, false);
 				}
 				frames++;
 				if (frames == 1)
@@ -119,7 +119,7 @@ public class SnowyDiesCutscene : CutsceneBase
 			if (MoveTo(noelle, new Vector3(17.6f, -2.33f), 4f))
 			{
 				ChangeDirection(noelle, Vector2.right);
-				SetMoveAnim(noelle, isMoving: true);
+				SetMoveAnim(noelle, true);
 				if (noelle.transform.position.x > 10.58f)
 				{
 					ChangeDirection(kris, Vector2.right);
@@ -164,7 +164,7 @@ public class SnowyDiesCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				SetMoveAnim(susie, isMoving: true);
+				SetMoveAnim(susie, true);
 			}
 			MoveTo(susie, new Vector3(17.6f, -2.33f), 6f);
 			if (frames == 10)
@@ -173,7 +173,7 @@ public class SnowyDiesCutscene : CutsceneBase
 			}
 			if (frames >= 30 && !ended && !MoveTo(cam, cam.GetClampedPos(), 2f))
 			{
-				Util.FindObjectOfType<SectionTitleCard>().Activate();
+				Object.FindObjectOfType<SectionTitleCard>().Activate();
 				ChangeDirection(kris, Vector2.down);
 				RestorePlayerControl();
 				gm.EnablePlayerMovement();
@@ -192,7 +192,7 @@ public class SnowyDiesCutscene : CutsceneBase
 			gm.SetFlag(13, 8);
 			gm.SetFlag(87, 8);
 			oblit = true;
-			gm.SetPartyMembers(susie: false, noelle: false);
+			gm.SetPartyMembers(false, false);
 		}
 		noelle.ChangeDirection(Vector2.up);
 		noelle.UseUnhappySprites();

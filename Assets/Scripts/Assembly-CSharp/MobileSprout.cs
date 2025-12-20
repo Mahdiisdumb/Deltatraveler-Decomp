@@ -55,22 +55,25 @@ public class MobileSprout : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 		if (satisfied < 100)
 		{
 			AddActPoints(25);
 		}
-		return i switch
+		switch (i)
 		{
-			1 => new string[1] { "* Susie spit on Mobile Spout." }, 
-			2 => new string[1] { "* Noelle threw a little\n  bit of river water onto\n  Mobile Sprout." }, 
-			_ => base.PerformAssistAct_Old(i), 
-		};
+		case 1:
+			return new string[1] { "* Susie spit on Mobile Spout." };
+		case 2:
+			return new string[1] { "* Noelle threw a little\n  bit of river water onto\n  Mobile Sprout." };
+		default:
+			return base.PerformAssistAct(i);
+		}
 	}
 
 	protected override void Update()
@@ -96,6 +99,6 @@ public class MobileSprout : EnemyBase
 		aud.clip = Resources.Load<AudioClip>("sounds/snd_dust");
 		aud.Play();
 		CombineParts();
-		obj.transform.Find("mainbody").GetComponent<ParticleDuplicator>().Activate(includeBlack: true, Vector2.zero);
+		obj.transform.Find("mainbody").GetComponent<ParticleDuplicator>().Activate(true, Vector2.zero);
 	}
 }

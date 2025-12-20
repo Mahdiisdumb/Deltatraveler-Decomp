@@ -37,7 +37,7 @@ public class JerrySlashYellow : BulletBase
 	{
 		base.Awake();
 		echo = Resources.Load<GameObject>("battle/attacks/bullets/jerry/JerrySlashEcho");
-		baseDmg = Util.FindObjectOfType<Jerry>().GetDamageValue();
+		baseDmg = UnityEngine.Object.FindObjectOfType<Jerry>().GetDamageValue();
 		destroyOnHit = true;
 		turnDeceleration = minTurnRate / (float)turnDecelerationFrames;
 		decelerateAngle = UnityEngine.Random.Range(45, 60);
@@ -60,7 +60,7 @@ public class JerrySlashYellow : BulletBase
 		{
 			base.transform.GetChild(0).GetComponent<SpriteRenderer>().color = Color.Lerp(new Color(1f, 1f, 0f), Color.red, (float)frames / 10f);
 		}
-		float t = Mathf.Abs(Mathf.Sin((float)(frames * 36) * (MathF.PI / 180f)));
+		float t = Mathf.Abs(Mathf.Sin((float)(frames * 36) * ((float)Math.PI / 180f)));
 		base.transform.localScale = Vector3.Lerp(new Vector3(1f, 1f, 1f), new Vector3(1.2f, 0.8f, 1f), t);
 		if (big)
 		{
@@ -86,7 +86,7 @@ public class JerrySlashYellow : BulletBase
 			}
 			float num = (onLeft ? (180f - angle) : angle);
 			base.transform.eulerAngles = new Vector3(0f, 0f, num);
-			Vector3 vector = new Vector3(Mathf.Cos(num * (MathF.PI / 180f)), Mathf.Sin(num * (MathF.PI / 180f)));
+			Vector3 vector = new Vector3(Mathf.Cos(num * ((float)Math.PI / 180f)), Mathf.Sin(num * ((float)Math.PI / 180f)));
 			base.transform.position += vector * velocity * speedMultiplier;
 			if (frames % 10 == 0)
 			{
@@ -117,7 +117,7 @@ public class JerrySlashYellow : BulletBase
 		if (!big || bigshot || (big && bigHealth <= 1))
 		{
 			UnityEngine.Object.Instantiate(echo, base.transform.position, base.transform.rotation).GetComponent<JerrySlashEcho>().Activate(velocity * speedMultiplier, fallDir, base.transform.localScale, base.transform.GetChild(0).GetComponent<SpriteRenderer>().color);
-			Util.FindObjectOfType<SOULGraze>().AddTPBuildup(bigshot ? 0.2f : 0.25f);
+			UnityEngine.Object.FindObjectOfType<SOULGraze>().AddTPBuildup(bigshot ? 0.2f : 0.25f);
 			Util.GameManager().PlayGlobalSFX("sounds/snd_bomb");
 			UnityEngine.Object.Destroy(base.gameObject);
 		}
@@ -125,7 +125,7 @@ public class JerrySlashYellow : BulletBase
 		{
 			bigHealth--;
 			PlaySFX("sounds/snd_mtt_burst");
-			Util.FindObjectOfType<SOULGraze>().AddTPBuildup(0.2f);
+			UnityEngine.Object.FindObjectOfType<SOULGraze>().AddTPBuildup(0.2f);
 			velocity = -1f / 6f;
 		}
 	}
@@ -143,7 +143,7 @@ public class JerrySlashYellow : BulletBase
 
 	public void StartFalling()
 	{
-		base.transform.right = Util.FindObjectOfType<SOUL>().transform.position + new Vector3(UnityEngine.Random.Range(-1f, 1f), 0f) - base.transform.position;
+		base.transform.right = UnityEngine.Object.FindObjectOfType<SOUL>().transform.position + new Vector3(UnityEngine.Random.Range(-1f, 1f), 0f) - base.transform.position;
 		fall = true;
 		if (!red)
 		{
@@ -154,6 +154,6 @@ public class JerrySlashYellow : BulletBase
 	public override void PreSOULHit()
 	{
 		base.PreSOULHit();
-		baseDmg = Util.FindObjectOfType<Jerry>().GetDamageValue();
+		baseDmg = UnityEngine.Object.FindObjectOfType<Jerry>().GetDamageValue();
 	}
 }

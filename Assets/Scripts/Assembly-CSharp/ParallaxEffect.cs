@@ -17,8 +17,8 @@ public class ParallaxEffect : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		Vector3 vector = Util.FindObjectOfType<CameraController>().transform.position - basePos;
-		base.transform.position = Util.FindObjectOfType<CameraController>().transform.position - new Vector3(vector.x * xMultiplier, vector.y * yMultiplier, -10f);
+		Vector3 vector = Object.FindObjectOfType<CameraController>().transform.position - basePos;
+		base.transform.position = Object.FindObjectOfType<CameraController>().transform.position - new Vector3(vector.x * xMultiplier, vector.y * yMultiplier, -10f);
 	}
 
 	public float GetXMultiplier()

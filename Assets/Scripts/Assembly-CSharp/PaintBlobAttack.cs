@@ -11,7 +11,7 @@ public class PaintBlobAttack : AttackBase
 	protected override void Awake()
 	{
 		base.Awake();
-		BlueCultist[] array = Util.FindObjectsOfType<BlueCultist>();
+		BlueCultist[] array = Object.FindObjectsOfType<BlueCultist>();
 		foreach (BlueCultist obj in array)
 		{
 			if (!obj.IsDone())
@@ -26,7 +26,7 @@ public class PaintBlobAttack : AttackBase
 		maxFrames = 230;
 		bbSize = new Vector2(260f, 140f);
 		soulPos = new Vector2(-0.055f, -2.83f);
-		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 		attackAllTargets = false;
 	}
 
@@ -49,7 +49,7 @@ public class PaintBlobAttack : AttackBase
 
 	private void OnDestroy()
 	{
-		BlueCultist[] array = Util.FindObjectsOfType<BlueCultist>();
+		BlueCultist[] array = Object.FindObjectsOfType<BlueCultist>();
 		foreach (BlueCultist blueCultist in array)
 		{
 			if (!blueCultist.IsDone())
@@ -66,19 +66,19 @@ public class PaintBlobAttack : AttackBase
 	public void GetHit()
 	{
 		gottenHit = true;
-		BlueCultist[] array = Util.FindObjectsOfType<BlueCultist>();
+		BlueCultist[] array = Object.FindObjectsOfType<BlueCultist>();
 		foreach (BlueCultist blueCultist in array)
 		{
 			if (!blueCultist.IsDone() && blueCultist.LookingForHit())
 			{
 				string text = "";
-				if ((int)Util.GameManager().GetFlag(102) == 1)
+				if ((int)Object.FindObjectOfType<GameManager>().GetFlag(102) == 1)
 				{
 					text = "_injured";
 				}
-				Util.FindObjectOfType<PartyPanels>().SetSprite(0, "spr_kr_paintedblue" + text);
-				Util.FindObjectOfType<PartyPanels>().SetSprite(2, "spr_no_paintedblue");
-				Util.FindObjectOfType<PartyPanels>().SetSprite(3, "spr_paula_paintedblue");
+				Object.FindObjectOfType<PartyPanels>().SetSprite(0, "spr_kr_paintedblue" + text);
+				Object.FindObjectOfType<PartyPanels>().SetSprite(2, "spr_no_paintedblue");
+				Object.FindObjectOfType<PartyPanels>().SetSprite(3, "spr_paula_paintedblue");
 				blueCultist.RewardLooking();
 			}
 		}

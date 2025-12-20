@@ -4,758 +4,1888 @@ using UnityEngine;
 
 public class EnemyGenerator
 {
-	public struct Enemy
-	{
-		public Type type;
-
-		public float xPos;
-
-		public Enemy(Type type, float xPos)
-		{
-			this.type = type;
-			this.xPos = xPos;
-		}
-	}
-
-	public struct Encounter
-	{
-		public Enemy[] enemies;
-
-		public string approachText;
-
-		public BackgroundID background;
-
-		public string music;
-
-		public float musicPitch;
-
-		public bool isBoss;
-
-		public int introAttack;
-
-		public int stateFlag;
-
-		public int endCutscene;
-
-		public Encounter(Enemy[] enemies, BackgroundID background = BackgroundID.None, string approachText = "", string music = "music/mus_battle", float musicPitch = 1f, bool isBoss = false, int introAttack = -1, int stateFlag = -1, int endCutscene = -1)
-		{
-			this.enemies = enemies;
-			this.background = background;
-			this.approachText = approachText;
-			this.music = music;
-			this.musicPitch = musicPitch;
-			this.isBoss = isBoss;
-			this.introAttack = introAttack;
-			this.stateFlag = stateFlag;
-			this.endCutscene = endCutscene;
-		}
-	}
-
-	public enum ID
-	{
-		None = -1,
-		Kris = 0,
-		FloweyIntro = 1,
-		Dummy = 2,
-		Froggit = 3,
-		TwoFroggits = 4,
-		Whimsun = 5,
-		FroggitAndWhimsun = 6,
-		Moldsmals = 7,
-		Napstablook = 8,
-		Loox = 9,
-		Vegetoid = 10,
-		TwoLoox = 11,
-		TwoVegetoids = 12,
-		LooxAndVegetoid = 13,
-		Flowey = 14,
-		MobileSprout = 15,
-		TwoMobileSprouts = 16,
-		LilUFO = 17,
-		SpinningRobo = 18,
-		UFOsAndSprout = 19,
-		SproutAndOak = 20,
-		Smorgasbord = 21,
-		TwoSproutsAndOak = 22,
-		CoilSnake = 23,
-		FirstCultist = 24,
-		CaveCultists = 25,
-		CabinCultists = 26,
-		MazeCultists = 27,
-		Carpainter = 28,
-		Toriel = 29,
-		FinalFroggit = 30,
-		TwoFinalFroggits = 31,
-		Whimsalot = 32,
-		FFroggitAndWhimsalot = 33,
-		Moldessas = 34,
-		Astigmatism = 35,
-		Parsnik = 36,
-		TwoAstigmatisms = 37,
-		TwoParsniks = 38,
-		AstigmatismAndParsnik = 39,
-		HardmodeFlowey = 40,
-		HardmodeBladeKnight = 41,
-		RoughMole = 42,
-		MrBatty = 43,
-		MoleAndBat = 44,
-		TwoMoles = 45,
-		MolesAndBat = 46,
-		MrAndMrBatty = 47,
-		MightyBear = 48,
-		MoleAndBear = 49,
-		CavernBeasts = 50,
-		MondoMole = 51,
-		Porky = 52,
-		NessAndPaula = 53,
-		PaulaTest = 54,
-		TrainingMode = 55,
-		Snowdrake = 56,
-		Doggo = 57,
-		IceCap = 58,
-		Jerry = 59,
-		IceCapAndSnowdrake = 60,
-		TwoSnowdrakes = 61,
-		Feraldrake1 = 62,
-		Feraldrake2 = 63,
-		Feraldrake3 = 64,
-		FeralChilldrake = 65,
-		Dogi = 66,
-		IceCaps = 67,
-		LesserDog = 68,
-		Gyftrot = 69,
-		JerryTest = 70,
-		Ice_Caps = 71,
-		GreaterDog = 72,
-		Sans = 73,
-		WaterfallMole = 74,
-		UNOBattle = 75
-	}
-
-	public enum BackgroundID
-	{
-		None = -1,
-		EarthboundTest = 0,
-		EarthboundSprout = 1,
-		EarthboundUFO = 2,
-		EarthboundRobo = 3,
-		TSStardust = 4,
-		EarthboundBlueBlue = 5,
-		EarthboundCarpainter = 6,
-		EarthboundMole = 7,
-		EarthboundBat = 8,
-		EarthboundBear = 9,
-		EarthboundMondo = 10,
-		EarthboundPorky = 11,
-		EarthboundNess = 12,
-		EarthboundPaula = 13,
-		UFSans = 14,
-		UNOFrankness = 15,
-		UTYAxis = 16,
-		UTYCeroba = 17,
-		UTYDalv = 18,
-		UTYMartlet = 19,
-		UTYStarlo = 20,
-		UTBase = 21,
-		UTBoss = 22,
-		Deltarune = 23,
-		LOSTCORE = 24,
-		TrainingMode = 25,
-		UTUndyne = 26,
-		UTYDunes = 27
-	}
-
-	private static Encounter[] encounters = new Encounter[76]
-	{
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Kris), 0f),
-			new Enemy(typeof(Gringus), 3f)
-		}, BackgroundID.Deltarune, "* It's the evil Kris!!!", "music/mus_battledelta", 1f, isBoss: false, -1, 3, 0),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(FloweyCutscene), 0.063f)
-		}, BackgroundID.None, "* You shouldn't be seeing this", "music/mus_flowey", 1f, isBoss: false, 3, -1, 3),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Dummy), -1.03f)
-		}, BackgroundID.UTBase, "* You encountered the Dummy.", "music/mus_prebattle", 1f, isBoss: false, -1, 6, 6),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Froggit), -1.06f)
-		}, BackgroundID.UTBase, "* Froggit hopped close!"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Froggit), -3.1f),
-			new Enemy(typeof(Froggit), 1.07f)
-		}, BackgroundID.UTBase, "* A pair of Froggits hop\n  towards you."),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Whimsun), -1.05f)
-		}, BackgroundID.UTBase, "* Whimsun approached meekly!"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Froggit), -1.06f),
-			new Enemy(typeof(Whimsun), 1.05f)
-		}, BackgroundID.UTBase, "* Froggit and Whimsun drew near!"),
-		new Encounter(new Enemy[3]
-		{
-			new Enemy(typeof(Moldsmal), -4.39f),
-			new Enemy(typeof(Moldsmal), -0.26f),
-			new Enemy(typeof(Moldsmal), 3.87f)
-		}, BackgroundID.UTBase, "* You tripped into a\n  line of Moldsmals."),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Napstablook), 0f)
-		}, BackgroundID.UTBoss, "* Here comes Napstablook.", "music/mus_ghostbattle", 1f, isBoss: false, -1, 127, 12),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Loox), -1.02f)
-		}, BackgroundID.UTBase, "* Loox drew near!"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Vegetoid), -1.02f)
-		}, BackgroundID.UTBase, "* Vegetoid came out of the earth!"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Loox), -3.07f),
-			new Enemy(typeof(Loox), 1.12f)
-		}, BackgroundID.UTBase, "* A pair of Loox\n  decided to pick on you!"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Vegetoid), -3.07f),
-			new Enemy(typeof(Vegetoid), 1.12f)
-		}, BackgroundID.UTBase, "* A pair of Vegetoids\n  came out of the ground!"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Loox), -3.07f),
-			new Enemy(typeof(Vegetoid), 1.12f)
-		}, BackgroundID.UTBase, "* Vegetoid and Loox attacked!"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Flowey), 0f)
-		}, BackgroundID.None, "* FLOWEY attacks!", "music/mus_floweyboss", 1f, isBoss: true, 22, 58, 21),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(MobileSprout), 0f)
-		}, BackgroundID.EarthboundSprout, "* Mobile Sprout ran into you!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(MobileSprout), -2f),
-			new Enemy(typeof(MobileSprout), 2f)
-		}, BackgroundID.EarthboundSprout, "* A couple of sprouts stumbled\n  in the way!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(LilUFO), 0f)
-		}, BackgroundID.EarthboundUFO, "* A tiny li'l UFO zoomed in\n  your sight!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(SpinRobo), 0f)
-		}, BackgroundID.EarthboundRobo, "* Spinning Robo spun into view!", "music/mus_machinebattle"),
-		new Encounter(new Enemy[3]
-		{
-			new Enemy(typeof(LilUFO), -3f),
-			new Enemy(typeof(MobileSprout), 0f),
-			new Enemy(typeof(LilUFO), 3f)
-		}, BackgroundID.EarthboundUFO, "* Two UFOs and a sprout\n  block your way!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(MobileSprout), -2f),
-			new Enemy(typeof(ExplosiveOak), 2f)
-		}, BackgroundID.EarthboundSprout, "* Mobile Sprout and its\n  explosive cohort appeared!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[3]
-		{
-			new Enemy(typeof(SpinRobo), -3.5f),
-			new Enemy(typeof(ExplosiveOak), 0f),
-			new Enemy(typeof(LilUFO), 3.5f)
-		}, BackgroundID.EarthboundRobo, "* Smorgasbord Strikes Back.", "music/mus_machinebattle"),
-		new Encounter(new Enemy[3]
-		{
-			new Enemy(typeof(MobileSprout), -3.5f),
-			new Enemy(typeof(MobileSprout), 0f),
-			new Enemy(typeof(ExplosiveOak), 3.5f)
-		}, BackgroundID.EarthboundSprout, "* The deities of nature\n  ambush you!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(CoilSnake), 0f)
-		}, BackgroundID.EarthboundSprout, "* Coil Snake blocks the way!", "music/mus_battle_eb", 1f, isBoss: false, -1, 89, 32),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(BlueCultist), 0f)
-		}, BackgroundID.EarthboundBlueBlue, "* Blue Cultist ambushes you!", "music/mus_unsettling_battle", 1f, isBoss: false, -1, 97, 34),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(BlueCultist), -2f),
-			new Enemy(typeof(BlueCultist), 2f)
-		}, BackgroundID.EarthboundBlueBlue, "* Two cultists come to paint\n  you blue!", "music/mus_unsettling_battle"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(BlueCultist), -2f),
-			new Enemy(typeof(BlueCultist), 2f)
-		}, BackgroundID.EarthboundBlueBlue, "* Two cultists are ordered to\n  attack you!", "music/mus_unsettling_battle", 1f, isBoss: false, -1, 106, 37),
-		new Encounter(new Enemy[3]
-		{
-			new Enemy(typeof(BlueCultist), -3f),
-			new Enemy(typeof(BlueCultist), 0f),
-			new Enemy(typeof(BlueCultist), 3f)
-		}, BackgroundID.EarthboundBlueBlue, "* Three cultists block your\n  way!", "music/mus_unsettling_battle", 1f, isBoss: false, -1, 109, 52),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Carpainter), 0f)
-		}, BackgroundID.EarthboundCarpainter, "* Mr. Carpainter attacks!", "music/mus_otherworldfoe_intro", 1f, isBoss: false, 37, 116, 40),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Toriel), 0.04f)
-		}, BackgroundID.UTBoss, "* Toriel blocks the way!", "", 1f, isBoss: true, 40, -1, 44),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(FinalFroggit), -1.16f)
-		}, BackgroundID.UTBase, "* Final Froggit has been\n  expecting you two.", "music/mus_battle_hard"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(FinalFroggit), -3.1f),
-			new Enemy(typeof(FinalFroggit), 1.07f)
-		}, BackgroundID.UTBase, "* The Final Duo closed in\n  on you!", "music/mus_battle_hard"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Whimsalot), -1.05f)
-		}, BackgroundID.UTBase, "* Whimsalot rushed in!", "music/mus_battle_hard"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(FinalFroggit), -3.22f),
-			new Enemy(typeof(Whimsalot), 3.21f)
-		}, BackgroundID.UTBase, "* Whimsalot and Final Froggit\n  appeared.", "music/mus_battle_hard"),
-		new Encounter(new Enemy[3]
-		{
-			new Enemy(typeof(Moldessa), -4.39f),
-			new Enemy(typeof(Moldessa), -0.26f),
-			new Enemy(typeof(Moldessa), 3.87f)
-		}, BackgroundID.UTBase, "* A line of Moldessas block the\n  path.", "music/mus_battle_hard"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Astigmatism), -1.02f)
-		}, BackgroundID.UTBase, "* Astigmatism drew near.", "music/mus_battle_hard"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Parsnik), -1.02f)
-		}, BackgroundID.UTBase, "* Parsnik slithered out of the\n  earth!", "music/mus_battle_hard"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Astigmatism), -3.07f),
-			new Enemy(typeof(Astigmatism), 1.12f)
-		}, BackgroundID.UTBase, "* What an eyesore.", "music/mus_battle_hard"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Parsnik), -3.07f),
-			new Enemy(typeof(Parsnik), 1.12f)
-		}, BackgroundID.UTBase, "* Parsniks hissed out of the\n  earth!", "music/mus_battle_hard"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Astigmatism), -3.07f),
-			new Enemy(typeof(Parsnik), 1.12f)
-		}, BackgroundID.UTBase, "* Not only potatoes have eyes.", "music/mus_battle_hard"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Flowey), 0f)
-		}, BackgroundID.None, "* FLOWEY attacks!", "music/mus_floweyboss", 1.1f, isBoss: true, 22, 58, 46),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(BladeKnight), 0f)
-		}, BackgroundID.LOSTCORE, "* BLADEKNIGHT appears.", "", 1f, isBoss: false, -1, 124),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(RoughMole), 0f)
-		}, BackgroundID.EarthboundMole, "* Rough Mole rushed in!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(MrBatty), 0f)
-		}, BackgroundID.EarthboundBat, "* Mr. Batty swooped towards\n  you!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(RoughMole), -2f),
-			new Enemy(typeof(MrBatty), 2f)
-		}, BackgroundID.EarthboundBat, "* Rough Mole and Mr. Batty came\n  rushing in!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(RoughMole), -2f),
-			new Enemy(typeof(RoughMole), 2f)
-		}, BackgroundID.EarthboundMole, "* A pair of moles cornered\n  you!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[3]
-		{
-			new Enemy(typeof(RoughMole), -3f),
-			new Enemy(typeof(RoughMole), 0f),
-			new Enemy(typeof(MrBatty), 3f)
-		}, BackgroundID.EarthboundMole, "* The underground deviants come\n  in fiercely!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(MrBatty), -2f),
-			new Enemy(typeof(MrBatty), 2f)
-		}, BackgroundID.EarthboundBat, "* Mr. and Mr. Batty accidentally\n  bump into you!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(MightyBear), 0f)
-		}, BackgroundID.EarthboundBear, "* The Mighty Bear comes forth!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(RoughMole), -2f),
-			new Enemy(typeof(MightyBear), 2f)
-		}, BackgroundID.EarthboundBear, "* The small mole and the big bear\n  appeared!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[3]
-		{
-			new Enemy(typeof(RoughMole), -3f),
-			new Enemy(typeof(MightyBear), 0f),
-			new Enemy(typeof(MrBatty), 3f)
-		}, BackgroundID.EarthboundBear, "* The cavern's beasts have all\n  come after you!", "music/mus_battle_eb"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(MondoMole), 0f)
-		}, BackgroundID.EarthboundMondo, "* Mondo Mole attacks!", "music/mus_sanctuaryboss_intro", 1f, isBoss: false, -1, 150, 49),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Porky), 0f)
-		}, BackgroundID.EarthboundPorky, "* Porky suddenly appears!", "music/mus_pokeyboss_intro", 1f, isBoss: true, -1, 154, 53),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Ness), -2.5f),
-			new Enemy(typeof(Paula), 2.5f)
-		}, BackgroundID.EarthboundNess, "* Ness and Paula block the way!", "music/mus_nessboss", 1f, isBoss: true, -1, 173, 56),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Paula), 0f)
-		}, BackgroundID.EarthboundPaula, "* Paula phase 2 test", "music/mus_megalovania_frakture", 1f, isBoss: true, -1, 173, 56),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(TrainingDummy), 0f)
-		}, BackgroundID.TrainingMode, "* TRAINING MODE", "music/mus_castle_funk"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Snowdrake), -0.37f)
-		}, BackgroundID.UTBase, "* Chilldrake rushes in!", "music/mus_battle_hard"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Doggo), -1.02f)
-		}, BackgroundID.UTBase, "* Doggo blocks the way!", "music/mus_battle_hard", 1f, isBoss: false, -1, 185, 62),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(IceCap), -1.04f)
-		}, BackgroundID.UTBase, "* Icecap struts into view.", "music/mus_battle_hard"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Glyde), 0f),
-			new Enemy(typeof(Jerry), 100f)
-		}, BackgroundID.UTBase, "* Glyde swooped in!", "music/mus_battle", 1f, isBoss: false, -1, 270, 90),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(IceCap), -3.1f),
-			new Enemy(typeof(Snowdrake), 1.24f)
-		}, BackgroundID.UTBase, "* Icecap and Chilldrake\n  pose like bad guys.", "music/mus_battle_hard"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Snowdrake), -2.12f),
-			new Enemy(typeof(Snowdrake), 2.12f)
-		}, BackgroundID.UTBase, "* Chilldrakes flutter forth!", "music/mus_battle_hard"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Feraldrake), -0.37f)
-		}, BackgroundID.UTBase, "* Feraldrake ambushes you!", "music/mus_battle_hard", 1f, isBoss: false, -1, 205, 70),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Feraldrake), -0.37f)
-		}, BackgroundID.UTBase, "* Feraldrake ambushes you from\n  the shadows!", "music/mus_battle_hard"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Feraldrake), -0.37f)
-		}, BackgroundID.UTBase, "* Feraldrake ambushes you!", "music/mus_battle_hard"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Feraldrake), -0.37f)
-		}, BackgroundID.UTBase, "* A feral Chilldrake emerges\n  from the shadows!", "music/mus_battle_hard", 1f, isBoss: false, -1, 209, 80),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(Dogamy), 0f),
-			new Enemy(typeof(Dogaressa), 0f)
-		}, BackgroundID.UTBase, "* Dogi assault you!", "music/mus_battle", 1f, isBoss: false, -1, 241, 86),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(IceCap), -2.12f),
-			new Enemy(typeof(IceCap), 2.12f)
-		}, BackgroundID.UTBase, "* The IceCaps ambush you!^05\n* With their caps!", "music/mus_battle_hard"),
-		new Encounter(new Enemy[2]
-		{
-			new Enemy(typeof(LesserDog), 0f),
-			new Enemy(typeof(SusieLD), 0f)
-		}, BackgroundID.UTBase, "* You approach the Lesser Dog.", "music/mus_doggers", 0.4f, isBoss: false, -1, 253, 87),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Gyftrot), 0f)
-		}, BackgroundID.None, "* Gyftrot stumbles into you!", "music/mus_battle_hard"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Jerry), 0f)
-		}, BackgroundID.UTBase, "* Jerry test", "music/mus_jerry_intro", 1f, isBoss: false, -1, 270, 90),
-		new Encounter(new Enemy[3]
-		{
-			new Enemy(typeof(IceCap), -3.5f),
-			new Enemy(typeof(IceCap), 0f),
-			new Enemy(typeof(IceCap), 3.5f)
-		}, BackgroundID.UTBase, "* A gang of Ice_Caps emerge\n  from the snow poff!", "music/mus_battle_hard"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(GreaterDog), 0f)
-		}, BackgroundID.UTBase, "* GREATERDOG blocks the way!", "music/mus_doggers", 0.9f, isBoss: false, -1, 245, 93),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(Sans), 0f)
-		}, BackgroundID.UFSans, "", "music/mus_f_wind_intro", 1f, isBoss: true, 108, 281, 97),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(RoughMole), 0f)
-		}, BackgroundID.UTBase, "* Rough Mole rushed in...?"),
-		new Encounter(new Enemy[1]
-		{
-			new Enemy(typeof(UnoEnemy), 0f)
-		}, BackgroundID.None, "", "", 1f, isBoss: false, -1, -1, 101)
-	};
-
-	private static string[] bgNames = new string[28]
-	{
-		"Earthbound/Test", "Earthbound/Sprout", "Earthbound/UFO", "Earthbound/Robo", "Stardust", "Earthbound/BlueBlue", "Earthbound/Carpainter", "Earthbound/Mole", "Earthbound/Bat", "Earthbound/Bear",
-		"Earthbound/Mondo", "Earthbound/Porky", "Earthbound/Ness", "Earthbound/Paula", "SansBG", "PapyrusBalls", "UTY/AxisBG", "UTY/CerobaBG", "UTY/DalvBG", "UTY/MartletBG",
-		"UTY/StarloBG", "Undertale/Base", "Undertale/Boss", "Undertale/Deltarune", "Undertale/LOSTCORE", "Undertale/TrainingMode", "Undertale/Undyne", "UTY/DunesBG"
-	};
-
-	private static List<BackgroundID> needsFallback = new List<BackgroundID>
-	{
-		BackgroundID.EarthboundSprout,
-		BackgroundID.EarthboundUFO,
-		BackgroundID.EarthboundRobo,
-		BackgroundID.EarthboundBlueBlue,
-		BackgroundID.EarthboundCarpainter,
-		BackgroundID.EarthboundMole,
-		BackgroundID.EarthboundBat,
-		BackgroundID.EarthboundBear,
-		BackgroundID.EarthboundMondo,
-		BackgroundID.EarthboundPorky,
-		BackgroundID.EarthboundNess
-	};
-
-	private static Dictionary<int, BackgroundID> customUnoBGs = new Dictionary<int, BackgroundID>
+	private static Dictionary<int, Type[]> enemies = new Dictionary<int, Type[]>
 	{
 		{
 			0,
-			BackgroundID.UTBase
+			new Type[1] { typeof(Kris) }
 		},
 		{
 			1,
-			BackgroundID.UTBase
+			new Type[1] { typeof(FloweyCutscene) }
 		},
 		{
 			2,
-			BackgroundID.UTBase
+			new Type[1] { typeof(Dummy) }
 		},
 		{
 			3,
-			BackgroundID.UTUndyne
+			new Type[1] { typeof(Froggit) }
+		},
+		{
+			4,
+			new Type[2]
+			{
+				typeof(Froggit),
+				typeof(Froggit)
+			}
 		},
 		{
 			5,
-			BackgroundID.Deltarune
+			new Type[1] { typeof(Whimsun) }
 		},
 		{
 			6,
-			BackgroundID.Deltarune
+			new Type[2]
+			{
+				typeof(Froggit),
+				typeof(Whimsun)
+			}
 		},
 		{
 			7,
-			BackgroundID.Deltarune
+			new Type[3]
+			{
+				typeof(Moldsmal),
+				typeof(Moldsmal),
+				typeof(Moldsmal)
+			}
 		},
 		{
 			8,
-			BackgroundID.Deltarune
+			new Type[1] { typeof(Napstablook) }
 		},
 		{
 			9,
-			BackgroundID.UTBase
+			new Type[1] { typeof(Loox) }
 		},
 		{
 			10,
-			BackgroundID.EarthboundBlueBlue
+			new Type[1] { typeof(Vegetoid) }
+		},
+		{
+			11,
+			new Type[2]
+			{
+				typeof(Loox),
+				typeof(Loox)
+			}
 		},
 		{
 			12,
-			BackgroundID.EarthboundPorky
+			new Type[2]
+			{
+				typeof(Vegetoid),
+				typeof(Vegetoid)
+			}
 		},
 		{
 			13,
-			BackgroundID.UFSans
+			new Type[2]
+			{
+				typeof(Loox),
+				typeof(Vegetoid)
+			}
 		},
 		{
 			14,
-			BackgroundID.UNOFrankness
+			new Type[1] { typeof(Flowey) }
 		},
 		{
 			15,
-			BackgroundID.UTYDunes
+			new Type[1] { typeof(MobileSprout) }
 		},
 		{
 			16,
-			BackgroundID.UTYDalv
+			new Type[2]
+			{
+				typeof(MobileSprout),
+				typeof(MobileSprout)
+			}
 		},
 		{
 			17,
-			BackgroundID.UTYMartlet
+			new Type[1] { typeof(LilUFO) }
 		},
 		{
 			18,
-			BackgroundID.UTYStarlo
+			new Type[1] { typeof(SpinRobo) }
 		},
 		{
 			19,
-			BackgroundID.UTYAxis
+			new Type[3]
+			{
+				typeof(LilUFO),
+				typeof(MobileSprout),
+				typeof(LilUFO)
+			}
 		},
 		{
 			20,
-			BackgroundID.UTYCeroba
+			new Type[2]
+			{
+				typeof(MobileSprout),
+				typeof(ExplosiveOak)
+			}
+		},
+		{
+			21,
+			new Type[3]
+			{
+				typeof(SpinRobo),
+				typeof(ExplosiveOak),
+				typeof(LilUFO)
+			}
+		},
+		{
+			22,
+			new Type[3]
+			{
+				typeof(MobileSprout),
+				typeof(MobileSprout),
+				typeof(ExplosiveOak)
+			}
+		},
+		{
+			23,
+			new Type[1] { typeof(CoilSnake) }
+		},
+		{
+			24,
+			new Type[1] { typeof(BlueCultist) }
+		},
+		{
+			25,
+			new Type[2]
+			{
+				typeof(BlueCultist),
+				typeof(BlueCultist)
+			}
+		},
+		{
+			26,
+			new Type[2]
+			{
+				typeof(BlueCultist),
+				typeof(BlueCultist)
+			}
+		},
+		{
+			27,
+			new Type[3]
+			{
+				typeof(BlueCultist),
+				typeof(BlueCultist),
+				typeof(BlueCultist)
+			}
+		},
+		{
+			28,
+			new Type[1] { typeof(Carpainter) }
+		},
+		{
+			29,
+			new Type[1] { typeof(Toriel) }
+		},
+		{
+			30,
+			new Type[1] { typeof(FinalFroggit) }
+		},
+		{
+			31,
+			new Type[2]
+			{
+				typeof(FinalFroggit),
+				typeof(FinalFroggit)
+			}
+		},
+		{
+			32,
+			new Type[1] { typeof(Whimsalot) }
+		},
+		{
+			33,
+			new Type[2]
+			{
+				typeof(FinalFroggit),
+				typeof(Whimsalot)
+			}
+		},
+		{
+			34,
+			new Type[3]
+			{
+				typeof(Moldessa),
+				typeof(Moldessa),
+				typeof(Moldessa)
+			}
+		},
+		{
+			35,
+			new Type[1] { typeof(Astigmatism) }
+		},
+		{
+			36,
+			new Type[1] { typeof(Parsnik) }
+		},
+		{
+			37,
+			new Type[2]
+			{
+				typeof(Astigmatism),
+				typeof(Astigmatism)
+			}
+		},
+		{
+			38,
+			new Type[2]
+			{
+				typeof(Parsnik),
+				typeof(Parsnik)
+			}
+		},
+		{
+			39,
+			new Type[2]
+			{
+				typeof(Astigmatism),
+				typeof(Parsnik)
+			}
+		},
+		{
+			40,
+			new Type[1] { typeof(Flowey) }
+		},
+		{
+			41,
+			new Type[1] { typeof(BladeKnight) }
+		},
+		{
+			42,
+			new Type[1] { typeof(RoughMole) }
+		},
+		{
+			43,
+			new Type[1] { typeof(MrBatty) }
+		},
+		{
+			44,
+			new Type[2]
+			{
+				typeof(RoughMole),
+				typeof(MrBatty)
+			}
+		},
+		{
+			45,
+			new Type[2]
+			{
+				typeof(RoughMole),
+				typeof(RoughMole)
+			}
+		},
+		{
+			46,
+			new Type[3]
+			{
+				typeof(RoughMole),
+				typeof(RoughMole),
+				typeof(MrBatty)
+			}
+		},
+		{
+			47,
+			new Type[2]
+			{
+				typeof(MrBatty),
+				typeof(MrBatty)
+			}
+		},
+		{
+			48,
+			new Type[1] { typeof(MightyBear) }
+		},
+		{
+			49,
+			new Type[2]
+			{
+				typeof(RoughMole),
+				typeof(MightyBear)
+			}
+		},
+		{
+			50,
+			new Type[3]
+			{
+				typeof(RoughMole),
+				typeof(MightyBear),
+				typeof(MrBatty)
+			}
+		},
+		{
+			51,
+			new Type[1] { typeof(MondoMole) }
+		},
+		{
+			52,
+			new Type[1] { typeof(Porky) }
+		},
+		{
+			53,
+			new Type[2]
+			{
+				typeof(Ness),
+				typeof(Paula)
+			}
+		},
+		{
+			54,
+			new Type[1] { typeof(Paula) }
+		},
+		{
+			55,
+			new Type[1] { typeof(TrainingDummy) }
+		},
+		{
+			56,
+			new Type[1] { typeof(Snowdrake) }
+		},
+		{
+			57,
+			new Type[1] { typeof(Doggo) }
+		},
+		{
+			58,
+			new Type[1] { typeof(IceCap) }
+		},
+		{
+			59,
+			new Type[2]
+			{
+				typeof(Glyde),
+				typeof(Jerry)
+			}
+		},
+		{
+			60,
+			new Type[2]
+			{
+				typeof(IceCap),
+				typeof(Snowdrake)
+			}
+		},
+		{
+			61,
+			new Type[2]
+			{
+				typeof(Snowdrake),
+				typeof(Snowdrake)
+			}
+		},
+		{
+			62,
+			new Type[1] { typeof(Feraldrake) }
+		},
+		{
+			63,
+			new Type[1] { typeof(Feraldrake) }
+		},
+		{
+			64,
+			new Type[1] { typeof(Feraldrake) }
+		},
+		{
+			65,
+			new Type[1] { typeof(Feraldrake) }
+		},
+		{
+			66,
+			new Type[2]
+			{
+				typeof(Dogamy),
+				typeof(Dogaressa)
+			}
+		},
+		{
+			67,
+			new Type[2]
+			{
+				typeof(IceCap),
+				typeof(IceCap)
+			}
+		},
+		{
+			68,
+			new Type[2]
+			{
+				typeof(LesserDog),
+				typeof(SusieLD)
+			}
+		},
+		{
+			69,
+			new Type[1] { typeof(Gyftrot) }
+		},
+		{
+			70,
+			new Type[1] { typeof(Jerry) }
+		},
+		{
+			71,
+			new Type[3]
+			{
+				typeof(IceCap),
+				typeof(IceCap),
+				typeof(IceCap)
+			}
+		},
+		{
+			72,
+			new Type[1] { typeof(GreaterDog) }
+		},
+		{
+			73,
+			new Type[1] { typeof(Sans) }
+		},
+		{
+			74,
+			new Type[1] { typeof(RoughMole) }
+		},
+		{
+			75,
+			new Type[1] { typeof(UnoEnemy) }
+		}
+	};
+
+	private static Dictionary<int, float[]> xValues = new Dictionary<int, float[]>
+	{
+		{
+			0,
+			new float[1]
+		},
+		{
+			1,
+			new float[1] { 0.063f }
+		},
+		{
+			2,
+			new float[1] { -1.03f }
+		},
+		{
+			3,
+			new float[1] { -1.06f }
+		},
+		{
+			4,
+			new float[2] { -3.1f, 1.07f }
+		},
+		{
+			5,
+			new float[1] { -1.05f }
+		},
+		{
+			6,
+			new float[2] { -1.06f, 1.05f }
+		},
+		{
+			7,
+			new float[3] { -4.39f, -0.26f, 3.87f }
+		},
+		{
+			8,
+			new float[1]
+		},
+		{
+			9,
+			new float[1] { -1.02f }
+		},
+		{
+			10,
+			new float[1] { -1.02f }
+		},
+		{
+			11,
+			new float[2] { -3.07f, 1.12f }
+		},
+		{
+			12,
+			new float[2] { -3.07f, 1.12f }
+		},
+		{
+			13,
+			new float[2] { -3.07f, 1.12f }
+		},
+		{
+			14,
+			new float[1]
+		},
+		{
+			15,
+			new float[1]
+		},
+		{
+			16,
+			new float[2] { -2f, 2f }
+		},
+		{
+			17,
+			new float[1]
+		},
+		{
+			18,
+			new float[1]
+		},
+		{
+			19,
+			new float[3] { -3f, 0f, 3f }
+		},
+		{
+			20,
+			new float[2] { -2f, 2f }
+		},
+		{
+			21,
+			new float[3] { -3.5f, 0f, 3.5f }
+		},
+		{
+			22,
+			new float[3] { -3.5f, 0f, 3.5f }
+		},
+		{
+			23,
+			new float[1]
+		},
+		{
+			24,
+			new float[1]
+		},
+		{
+			25,
+			new float[2] { -2f, 2f }
+		},
+		{
+			26,
+			new float[2] { -2f, 2f }
+		},
+		{
+			27,
+			new float[3] { -3f, 0f, 3f }
+		},
+		{
+			28,
+			new float[1]
+		},
+		{
+			29,
+			new float[1] { 0.04f }
+		},
+		{
+			30,
+			new float[1] { -1.16f }
+		},
+		{
+			31,
+			new float[2] { -3.1f, 1.07f }
+		},
+		{
+			32,
+			new float[1] { -1.05f }
+		},
+		{
+			33,
+			new float[2] { -3.22f, 3.21f }
+		},
+		{
+			34,
+			new float[3] { -4.39f, -0.26f, 3.87f }
+		},
+		{
+			35,
+			new float[1] { -1.02f }
+		},
+		{
+			36,
+			new float[1] { -1.02f }
+		},
+		{
+			37,
+			new float[2] { -3.07f, 1.12f }
+		},
+		{
+			38,
+			new float[2] { -3.07f, 1.12f }
+		},
+		{
+			39,
+			new float[2] { -3.07f, 1.12f }
+		},
+		{
+			40,
+			new float[1]
+		},
+		{
+			41,
+			new float[1]
+		},
+		{
+			42,
+			new float[1]
+		},
+		{
+			43,
+			new float[1]
+		},
+		{
+			44,
+			new float[2] { -2f, 2f }
+		},
+		{
+			45,
+			new float[2] { -2f, 2f }
+		},
+		{
+			46,
+			new float[3] { -3f, 0f, 3f }
+		},
+		{
+			47,
+			new float[2] { -2f, 2f }
+		},
+		{
+			48,
+			new float[1]
+		},
+		{
+			49,
+			new float[2] { -2f, 2f }
+		},
+		{
+			50,
+			new float[3] { -3f, 0f, 3f }
+		},
+		{
+			51,
+			new float[1]
+		},
+		{
+			52,
+			new float[1]
+		},
+		{
+			53,
+			new float[2] { -2.5f, 2.5f }
+		},
+		{
+			54,
+			new float[1]
+		},
+		{
+			55,
+			new float[1]
+		},
+		{
+			56,
+			new float[1] { -0.37f }
+		},
+		{
+			57,
+			new float[1] { -1.02f }
+		},
+		{
+			58,
+			new float[1] { -1.04f }
+		},
+		{
+			59,
+			new float[2] { 0f, 100f }
+		},
+		{
+			60,
+			new float[2] { -3.1f, 1.24f }
+		},
+		{
+			61,
+			new float[2] { -2.12f, 2.12f }
+		},
+		{
+			62,
+			new float[1] { -0.37f }
+		},
+		{
+			63,
+			new float[1] { -0.37f }
+		},
+		{
+			64,
+			new float[1] { -0.37f }
+		},
+		{
+			65,
+			new float[1] { -0.37f }
+		},
+		{
+			66,
+			new float[2]
+		},
+		{
+			67,
+			new float[2] { -2.12f, 2.12f }
+		},
+		{
+			68,
+			new float[2]
+		},
+		{
+			69,
+			new float[1]
+		},
+		{
+			70,
+			new float[1]
+		},
+		{
+			71,
+			new float[3] { -3.5f, 0f, 3.5f }
+		},
+		{
+			72,
+			new float[1]
+		},
+		{
+			73,
+			new float[1]
+		},
+		{
+			74,
+			new float[1]
+		}
+	};
+
+	private static Dictionary<int, object[]> music = new Dictionary<int, object[]>
+	{
+		{
+			0,
+			new object[2] { "music/mus_battledelta", 1 }
+		},
+		{
+			1,
+			new object[2] { "music/mus_flowey", 1 }
+		},
+		{
+			2,
+			new object[2] { "music/mus_prebattle", 1 }
+		},
+		{
+			8,
+			new object[2] { "music/mus_ghostbattle", 1 }
+		},
+		{
+			14,
+			new object[2] { "music/mus_floweyboss", 1 }
+		},
+		{
+			15,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			16,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			17,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			18,
+			new object[2] { "music/mus_machinebattle", 1 }
+		},
+		{
+			19,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			20,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			21,
+			new object[2] { "music/mus_machinebattle", 1 }
+		},
+		{
+			22,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			23,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			24,
+			new object[2] { "music/mus_unsettling_battle", 1 }
+		},
+		{
+			25,
+			new object[2] { "music/mus_unsettling_battle", 1 }
+		},
+		{
+			26,
+			new object[2] { "music/mus_unsettling_battle", 1 }
+		},
+		{
+			27,
+			new object[2] { "music/mus_unsettling_battle", 1 }
+		},
+		{
+			28,
+			new object[2] { "music/mus_otherworldfoe_intro", 1 }
+		},
+		{
+			29,
+			new object[2] { "", 1 }
+		},
+		{
+			30,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			31,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			32,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			33,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			34,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			35,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			36,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			37,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			38,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			39,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			40,
+			new object[2] { "music/mus_floweyboss", 1.1f }
+		},
+		{
+			41,
+			new object[2] { "", 1 }
+		},
+		{
+			42,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			43,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			44,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			45,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			46,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			47,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			48,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			49,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			50,
+			new object[2] { "music/mus_battle_eb", 1 }
+		},
+		{
+			51,
+			new object[2] { "music/mus_sanctuaryboss_intro", 1 }
+		},
+		{
+			52,
+			new object[2] { "music/mus_pokeyboss_intro", 1 }
+		},
+		{
+			53,
+			new object[2] { "music/mus_nessboss", 1 }
+		},
+		{
+			54,
+			new object[2] { "music/mus_megalovania_frakture", 1 }
+		},
+		{
+			55,
+			new object[2] { "music/mus_castle_funk", 1 }
+		},
+		{
+			56,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			57,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			58,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			60,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			61,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			62,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			63,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			64,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			65,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			67,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			68,
+			new object[2] { "music/mus_doggers", 0.4f }
+		},
+		{
+			69,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			70,
+			new object[2] { "music/mus_jerry_intro", 1 }
+		},
+		{
+			71,
+			new object[2] { "music/mus_battle_hard", 1 }
+		},
+		{
+			72,
+			new object[2] { "music/mus_doggers", 0.9f }
+		},
+		{
+			73,
+			new object[2] { "music/mus_f_wind_intro", 1 }
+		},
+		{
+			75,
+			new object[2] { "", 1 }
+		}
+	};
+
+	private static Dictionary<int, string> approach = new Dictionary<int, string>
+	{
+		{ 0, "* It's the evil Kris!!!" },
+		{ 1, "* You shouldn't be seeing this" },
+		{ 2, "* You encountered the Dummy." },
+		{ 3, "* Froggit hopped close!" },
+		{ 4, "* A pair of Froggits hop\n  towards you." },
+		{ 5, "* Whimsun approached meekly!" },
+		{ 6, "* Froggit and Whimsun drew near!" },
+		{ 7, "* You tripped into a\n  line of Moldsmals." },
+		{ 8, "* Here comes Napstablook." },
+		{ 9, "* Loox drew near!" },
+		{ 10, "* Vegetoid came out of the earth!" },
+		{ 11, "* A pair of Loox\n  decided to pick on you!" },
+		{ 12, "* A pair of Vegetoids\n  came out of the ground!" },
+		{ 13, "* Vegetoid and Loox attacked!" },
+		{ 14, "* FLOWEY attacks!" },
+		{ 15, "* Mobile Sprout ran into you!" },
+		{ 16, "* A couple of sprouts stumbled\n  in the way!" },
+		{ 17, "* A tiny li'l UFO zoomed in\n  your sight!" },
+		{ 18, "* Spinning Robo spun into view!" },
+		{ 19, "* Two UFOs and a sprout\n  block your way!" },
+		{ 20, "* Mobile Sprout and its\n  explosive cohort appeared!" },
+		{ 21, "* Smorgasbord Strikes Back." },
+		{ 22, "* The deities of nature\n  ambush you!" },
+		{ 23, "* Coil Snake blocks the way!" },
+		{ 24, "* Blue Cultist ambushes you!" },
+		{ 25, "* Two cultists come to paint\n  you blue!" },
+		{ 26, "* Two cultists are ordered to\n  attack you!" },
+		{ 27, "* Three cultists block your\n  way!" },
+		{ 28, "* Mr. Carpainter attacks!" },
+		{ 29, "* Toriel blocks the way!" },
+		{ 30, "* Final Froggit has been\n  expecting you two." },
+		{ 31, "* The Final Duo closed in\n  on you!" },
+		{ 32, "* Whimsalot rushed in!" },
+		{ 33, "* Whimsalot and Final Froggit\n  appeared." },
+		{ 34, "* A line of Moldessas block the\n  path." },
+		{ 35, "* Astigmatism drew near." },
+		{ 36, "* Parsnik slithered out of the\n  earth!" },
+		{ 37, "* What an eyesore." },
+		{ 38, "* Parsniks hissed out of the\n  earth!" },
+		{ 39, "* Not only potatoes have eyes." },
+		{ 40, "* FLOWEY attacks!" },
+		{ 41, "* BLADEKNIGHT appears." },
+		{ 42, "* Rough Mole rushed in!" },
+		{ 43, "* Mr. Batty swooped towards\n  you!" },
+		{ 44, "* Rough Mole and Mr. Batty came\n  rushing in!" },
+		{ 45, "* A pair of moles cornered\n  you!" },
+		{ 46, "* The underground deviants come\n  in fiercely!" },
+		{ 47, "* Mr. and Mr. Batty accidentally\n  bump into you!" },
+		{ 48, "* The Mighty Bear comes forth!" },
+		{ 49, "* The small mole and the big bear\n  appeared!" },
+		{ 50, "* The cavern's beasts have all\n  come after you!" },
+		{ 51, "* Mondo Mole attacks!" },
+		{ 52, "* Porky suddenly appears!" },
+		{ 53, "* Ness and Paula block the way!" },
+		{ 54, "* Paula phase 2 test" },
+		{ 55, "* TRAINING MODE" },
+		{ 56, "* Chilldrake rushes in!" },
+		{ 57, "* Doggo blocks the way!" },
+		{ 58, "* Icecap struts into view." },
+		{ 59, "* Glyde swooped in!" },
+		{ 60, "* Icecap and Chilldrake\n  pose like bad guys." },
+		{ 61, "* Chilldrakes flutter forth!" },
+		{ 62, "* Feraldrake ambushes you!" },
+		{ 63, "* Feraldrake ambushes you from\n  the shadows!" },
+		{ 64, "* Feraldrake ambushes you!" },
+		{ 65, "* A feral Chilldrake emerges\n  from the shadows!" },
+		{ 66, "* Dogi assault you!" },
+		{ 67, "* The IceCaps ambush you!^05\n* With their caps!" },
+		{ 68, "* You approach the Lesser Dog." },
+		{ 69, "* Gyftrot stumbles into you!" },
+		{ 70, "* Jerry test" },
+		{ 71, "* A gang of Ice_Caps emerge\n  from the snow poff!" },
+		{ 72, "* GREATERDOG blocks the way!" },
+		{ 74, "* Rough Mole rushed in...?" },
+		{ 75, "* UNO Battle" }
+	};
+
+	private static Dictionary<int, object[]> bg = new Dictionary<int, object[]>
+	{
+		{
+			0,
+			new object[5]
+			{
+				1,
+				0.1f,
+				60,
+				(Color)new Color32(116, 0, 150, byte.MaxValue),
+				false
+			}
+		},
+		{
+			1,
+			new object[5]
+			{
+				3,
+				0.1f,
+				60,
+				new Color(0.259f, 0f, 0.259f),
+				false
+			}
+		},
+		{
+			8,
+			new object[5]
+			{
+				0,
+				0,
+				0,
+				new Color(0.1333f, 0.694f, 0.298f),
+				true
+			}
+		},
+		{
+			14,
+			new object[5]
+			{
+				3,
+				0,
+				0,
+				new Color(0.1333f, 0.694f, 0.298f),
+				true
+			}
+		},
+		{
+			15,
+			new object[5]
+			{
+				4,
+				1,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			16,
+			new object[5]
+			{
+				4,
+				1,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			17,
+			new object[5]
+			{
+				4,
+				2,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			18,
+			new object[5]
+			{
+				4,
+				3,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			19,
+			new object[5]
+			{
+				4,
+				2,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			20,
+			new object[5]
+			{
+				4,
+				1,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			21,
+			new object[5]
+			{
+				4,
+				3,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			22,
+			new object[5]
+			{
+				4,
+				1,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			23,
+			new object[5]
+			{
+				4,
+				1,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			24,
+			new object[5]
+			{
+				4,
+				5,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			25,
+			new object[5]
+			{
+				4,
+				5,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			26,
+			new object[5]
+			{
+				4,
+				5,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			27,
+			new object[5]
+			{
+				4,
+				5,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			28,
+			new object[5]
+			{
+				4,
+				6,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			29,
+			new object[5]
+			{
+				0,
+				0,
+				0,
+				new Color(0.1333f, 0.694f, 0.298f),
+				true
+			}
+		},
+		{
+			40,
+			new object[5]
+			{
+				3,
+				0,
+				0,
+				new Color(0.1333f, 0.694f, 0.298f),
+				true
+			}
+		},
+		{
+			41,
+			new object[5]
+			{
+				1,
+				0.1f,
+				60,
+				(Color)new Color32(123, 123, 123, byte.MaxValue),
+				false
+			}
+		},
+		{
+			42,
+			new object[5]
+			{
+				4,
+				7,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			43,
+			new object[5]
+			{
+				4,
+				8,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			44,
+			new object[5]
+			{
+				4,
+				8,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			45,
+			new object[5]
+			{
+				4,
+				7,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			46,
+			new object[5]
+			{
+				4,
+				7,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			47,
+			new object[5]
+			{
+				4,
+				8,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			48,
+			new object[5]
+			{
+				4,
+				9,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			49,
+			new object[5]
+			{
+				4,
+				9,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			50,
+			new object[5]
+			{
+				4,
+				9,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			51,
+			new object[5]
+			{
+				4,
+				10,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			52,
+			new object[5]
+			{
+				4,
+				11,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			53,
+			new object[5]
+			{
+				4,
+				12,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			54,
+			new object[5]
+			{
+				4,
+				13,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			55,
+			new object[5]
+			{
+				1,
+				0.1f,
+				60,
+				(Color)new Color32(0, 107, 183, byte.MaxValue),
+				false
+			}
+		},
+		{
+			69,
+			new object[5]
+			{
+				3,
+				0,
+				0,
+				new Color(0.1333f, 0.694f, 0.298f),
+				true
+			}
+		},
+		{
+			73,
+			new object[5]
+			{
+				4,
+				14,
+				0,
+				Color.white,
+				false
+			}
+		}
+	};
+
+	private static Dictionary<int, object[]> fallbackBG = new Dictionary<int, object[]>
+	{
+		{
+			1,
+			new object[5]
+			{
+				1,
+				0.1f,
+				60f,
+				(Color)new Color32(239, 239, 23, byte.MaxValue),
+				false
+			}
+		},
+		{
+			2,
+			new object[5]
+			{
+				1,
+				0.8f,
+				60f,
+				(Color)new Color32(104, 120, 4, byte.MaxValue),
+				false
+			}
+		},
+		{
+			3,
+			new object[5]
+			{
+				2,
+				5f,
+				5f,
+				(Color)new Color32(192, 56, 152, byte.MaxValue),
+				false
+			}
+		},
+		{
+			5,
+			new object[5]
+			{
+				1,
+				1f,
+				60f,
+				(Color)new Color32(128, 24, 168, byte.MaxValue),
+				false
+			}
+		},
+		{
+			6,
+			new object[5]
+			{
+				1,
+				0.3f,
+				60f,
+				(Color)new Color32(0, 0, 196, byte.MaxValue),
+				true
+			}
+		},
+		{
+			7,
+			new object[5]
+			{
+				2,
+				4f,
+				60f,
+				(Color)new Color32(239, 239, 23, byte.MaxValue),
+				false
+			}
+		},
+		{
+			8,
+			new object[5]
+			{
+				1,
+				1f,
+				30f,
+				(Color)new Color32(176, 176, 120, byte.MaxValue),
+				false
+			}
+		},
+		{
+			9,
+			new object[5]
+			{
+				2,
+				2f,
+				100f,
+				(Color)new Color32(176, 176, 120, byte.MaxValue),
+				false
+			}
+		},
+		{
+			10,
+			new object[5]
+			{
+				2,
+				1f,
+				80f,
+				(Color)new Color32(168, 24, 88, byte.MaxValue),
+				true
+			}
+		},
+		{
+			11,
+			new object[5]
+			{
+				1,
+				1f,
+				60f,
+				Color.red,
+				true
+			}
+		},
+		{
+			12,
+			new object[5]
+			{
+				1,
+				0.1f,
+				60f,
+				Color.blue,
+				true
+			}
+		}
+	};
+
+	private static string[] bgNames = new string[21]
+	{
+		"Earthbound/Test", "Earthbound/Sprout", "Earthbound/UFO", "Earthbound/Robo", "Stardust", "Earthbound/BlueBlue", "Earthbound/Carpainter", "Earthbound/Mole", "Earthbound/Bat", "Earthbound/Bear",
+		"Earthbound/Mondo", "Earthbound/Porky", "Earthbound/Ness", "Earthbound/Paula", "SansBG", "PapyrusBalls", "UTY/AxisBG", "UTY/CerobaBG", "UTY/DalvBG", "UTY/MartletBG",
+		"UTY/StarloBG"
+	};
+
+	private static Dictionary<int, object[]> customUnoBGs = new Dictionary<int, object[]>
+	{
+		{
+			2,
+			bg[14]
+		},
+		{
+			3,
+			new object[5]
+			{
+				1,
+				0.3f,
+				60,
+				new Color(0.1333f, 0.694f, 0.298f),
+				false
+			}
+		},
+		{
+			4,
+			bg[14]
+		},
+		{
+			5,
+			bg[0]
+		},
+		{
+			6,
+			bg[0]
+		},
+		{
+			7,
+			bg[0]
+		},
+		{
+			8,
+			bg[0]
+		},
+		{
+			10,
+			bg[24]
+		},
+		{
+			11,
+			bg[14]
+		},
+		{
+			12,
+			bg[52]
+		},
+		{
+			13,
+			bg[73]
+		},
+		{
+			14,
+			new object[5]
+			{
+				4,
+				15,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			15,
+			new object[5]
+			{
+				0,
+				0,
+				0,
+				(Color)new Color32(byte.MaxValue, 204, 0, byte.MaxValue),
+				false
+			}
+		},
+		{
+			16,
+			new object[5]
+			{
+				4,
+				18,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			17,
+			new object[5]
+			{
+				4,
+				19,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			18,
+			new object[5]
+			{
+				4,
+				20,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			19,
+			new object[5]
+			{
+				4,
+				16,
+				0,
+				Color.white,
+				false
+			}
+		},
+		{
+			20,
+			new object[5]
+			{
+				4,
+				17,
+				0,
+				Color.white,
+				false
+			}
 		}
 	};
 
 	public static EnemyBase[] GetEnemies(int battleId)
 	{
-		if (battleId > -1 && battleId < encounters.Length)
+		if (enemies.ContainsKey(battleId))
 		{
-			int num = encounters[battleId].enemies.Length;
+			int num = enemies[battleId].Length;
 			if (num > 3)
 			{
 				num = 3;
 			}
+			if (num < xValues[battleId].Length)
+			{
+				num = xValues[battleId].Length;
+			}
 			EnemyBase[] array = new EnemyBase[num];
 			for (int i = 0; i < num; i++)
 			{
-				Type type = encounters[battleId].enemies[i].type;
-				float xPos = encounters[battleId].enemies[i].xPos;
-				array[i] = new GameObject("Enemy" + (i + 1), type).GetComponent<EnemyBase>();
-				array[i].transform.position = new Vector2(xPos, 0f);
+				array[i] = new GameObject("Enemy" + (i + 1), enemies[battleId][i]).GetComponent<EnemyBase>();
+				array[i].transform.position = new Vector2(xValues[battleId][i], 0f);
 			}
 			return array;
 		}
 		return null;
 	}
 
-	public static string GetMusic(int battleId)
+	public static object[] GetMusic(int battleId)
 	{
-		if (battleId > -1 && battleId < encounters.Length)
+		if (music.ContainsKey(battleId))
 		{
-			return encounters[battleId].music;
+			if (music[battleId].Length < 1)
+			{
+				return new object[2]
+				{
+					music[battleId][0],
+					1
+				};
+			}
+			return music[battleId];
 		}
-		return "music/mus_battle";
-	}
-
-	public static float GetMusicPitch(int battleId)
-	{
-		if (battleId > -1 && battleId < encounters.Length)
-		{
-			return encounters[battleId].musicPitch;
-		}
-		return 1f;
+		return new object[2] { "music/mus_battle", 1 };
 	}
 
 	public static string GetApproachText(int battleId)
 	{
-		if (battleId > -1 && battleId < encounters.Length)
+		Dictionary<int, string> serializedClass = Util.PackManager().GetSerializedClass<Dictionary<int, string>>("EnemyGenerator");
+		if (approach.ContainsKey(battleId))
 		{
+			if (serializedClass != null && serializedClass.ContainsKey(battleId))
+			{
+				return serializedClass[battleId];
+			}
 			if (battleId == 8 && (int)Util.GameManager().GetFlag(108) == 1)
 			{
-				return "* Here comes Napstablook.^05\n* Same as usual.";
+				return Util.MiscStrings().GetString("napsta_approach_hardmode", 0);
 			}
 			if (battleId == 56 && (int)Util.GameManager().GetFlag(180) == 0)
 			{
 				return "* A familiar face rushes\n  in...?";
 			}
-			return encounters[battleId].approachText;
+			return approach[battleId];
 		}
-		return "* Enemy approaches!";
+		return Util.MiscStrings().GetString("default_enemy_approach", 0);
 	}
 
-	public static GameObject GetBattleBG(int battleId)
+	public static object[] GetBattleBG(int battleId)
 	{
-		int num = -1;
-		if (battleId > -1 && battleId < encounters.Length)
+		object[] array = new object[5]
 		{
-			num = (int)encounters[battleId].background;
+			0,
+			0,
+			0,
+			new Color(0.1333f, 0.694f, 0.298f),
+			false
+		};
+		if (bg.ContainsKey(battleId))
+		{
+			array = bg[battleId];
 		}
 		if (battleId == 75 && customUnoBGs.ContainsKey(MusicChooser.musicID))
 		{
-			num = (int)customUnoBGs[MusicChooser.musicID];
+			array = customUnoBGs[MusicChooser.musicID];
 		}
-		if (num > -1)
+		int num = (int)array[0];
+		int key = (int)float.Parse(array[1].ToString());
+		if (num == 4 && fallbackBG.ContainsKey(key) && GameManager.GetOptions().lowGraphics.value == 1)
 		{
-			return UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/BattleBGEffect/" + GetBGName((BackgroundID)num)));
+			array = fallbackBG[key];
 		}
-		return null;
+		return array;
 	}
 
-	public static bool IsBossEncounter(int battleId)
+	public static string GetBGName(int index)
 	{
-		if (battleId > -1 && battleId < encounters.Length)
+		if (index >= 0 && index < bgNames.Length)
 		{
-			return encounters[battleId].isBoss;
+			return bgNames[index];
 		}
-		return false;
-	}
-
-	public static int GetIntroAttack(int battleId)
-	{
-		if (battleId > -1 && battleId < encounters.Length)
-		{
-			return encounters[battleId].introAttack;
-		}
-		return -1;
-	}
-
-	public static int GetStateFlag(int battleId)
-	{
-		if (battleId > -1 && battleId < encounters.Length)
-		{
-			return encounters[battleId].stateFlag;
-		}
-		return -1;
-	}
-
-	public static int GetEndCutscene(int battleId)
-	{
-		if (battleId > -1 && battleId < encounters.Length)
-		{
-			return encounters[battleId].endCutscene;
-		}
-		return -1;
-	}
-
-	public static string GetBGName(BackgroundID index)
-	{
-		if (needsFallback.Contains(index) && GameManager.GetOptions().lowGraphics.value == 1)
-		{
-			return "Fallback/" + bgNames[(int)index];
-		}
-		return bgNames[(int)index];
+		return "";
 	}
 
 	public static int GetEncounterCount()
 	{
-		return encounters.Length;
+		return enemies.Count;
 	}
 
 	public static string GetEncounterName(int battleId)
 	{
-		if (battleId < 0 || battleId >= encounters.Length)
+		if (enemies[battleId] == null)
 		{
 			return "EMPTY DO NOT USE";
 		}
 		List<string> list = new List<string>();
-		Enemy[] enemies = encounters[battleId].enemies;
-		for (int i = 0; i < enemies.Length; i++)
+		Type[] array = enemies[battleId];
+		foreach (Type type in array)
 		{
-			Enemy enemy = enemies[i];
-			list.Add(enemy.type.ToString());
+			list.Add(type.ToString());
 		}
 		return string.Join(", ", list.ToArray());
 	}

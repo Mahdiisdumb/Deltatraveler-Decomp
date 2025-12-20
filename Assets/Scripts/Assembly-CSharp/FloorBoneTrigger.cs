@@ -16,7 +16,7 @@ public class FloorBoneTrigger : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (!collision || !collision.GetComponent<OverworldPlayer>())
+		if (!collision.GetComponent<OverworldPlayer>())
 		{
 			return;
 		}

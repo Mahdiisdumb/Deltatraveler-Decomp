@@ -46,7 +46,7 @@ namespace MarioBrosMayhem
 					num = 0f;
 					jumping = false;
 				}
-				base.transform.localPosition = new Vector3(base.transform.localPosition.x, Mathf.RoundToInt(Mathf.Lerp(-19f, 23f, Mathf.Sin(num * MathF.PI * 0.5f))));
+				base.transform.localPosition = new Vector3(base.transform.localPosition.x, Mathf.RoundToInt(Mathf.Lerp(-19f, 23f, Mathf.Sin(num * (float)Math.PI * 0.5f))));
 			}
 			else if (walking)
 			{
@@ -68,7 +68,7 @@ namespace MarioBrosMayhem
 			sr.sprite = sprites[4];
 			if (base.transform.localPosition.x < 0f)
 			{
-				Util.GameManager().PlayGlobalSFX("mariobros/sounds/snd_player_jump");
+				UnityEngine.Object.FindObjectOfType<GameManager>().PlayGlobalSFX("mariobros/sounds/snd_player_jump");
 			}
 		}
 

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1612363535843093
+--- !u!1 &1653921350890332
 GameObject:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -8,11 +8,11 @@ GameObject:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Component:
-  - component: {fileID: 4999422291184667}
-  - component: {fileID: 212522135733162819}
-  - component: {fileID: 114145478921143535}
-  - component: {fileID: 95718726911415139}
-  - component: {fileID: 82036315675402427}
+  - component: {fileID: 4125915512182236}
+  - component: {fileID: 212696670439429180}
+  - component: {fileID: 114397424747042327}
+  - component: {fileID: 95774666602545621}
+  - component: {fileID: 82590249864602915}
   m_Layer: 0
   m_Name: WaterPillar
   m_TagString: Untagged
@@ -20,41 +20,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4999422291184667
+--- !u!4 &4125915512182236
 Transform:
-  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612363535843093}
+  m_GameObject: {fileID: 1653921350890332}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 20.38, y: 32.36, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &212522135733162819
+--- !u!212 &212696670439429180
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612363535843093}
+  m_GameObject: {fileID: 1653921350890332}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -66,7 +59,6 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -79,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a28602f92a3a81b4cb8da3f06724aeaa, type: 2}
+  m_Sprite: {fileID: 21300000, guid: a9217b0f02d8dc84591080af39f15879, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -90,13 +82,13 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &114145478921143535
+--- !u!114 &114397424747042327
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612363535843093}
+  m_GameObject: {fileID: 1653921350890332}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8260b9153b5a5091eed0b784e0b4809c, type: 3}
@@ -104,40 +96,36 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   destroyOnAudioSourceComplete: 1
   waitForAnimToConfirmFinished: 0
---- !u!95 &95718726911415139
+--- !u!95 &95774666602545621
 Animator:
-  serializedVersion: 7
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612363535843093}
+  m_GameObject: {fileID: 1653921350890332}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8cca080edcbcb6d4c931faa43206ad2f, type: 2}
+  m_Controller: {fileID: 9100000, guid: c33b3bbd168c74e4f9459cab5c88ca78, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
   m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!82 &82036315675402427
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!82 &82590249864602915
 AudioSource:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612363535843093}
+  m_GameObject: {fileID: 1653921350890332}
   m_Enabled: 1
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 355983997, guid: 0000000deadbeef15deadf00d0000000, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 3dc6fcc8e87bff54c9d1e53dadfe3f8f, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

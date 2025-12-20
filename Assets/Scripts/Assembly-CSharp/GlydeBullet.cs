@@ -15,7 +15,7 @@ public class GlydeBullet : BulletBase
 		base.Awake();
 		destroyOnHit = false;
 		baseDmg = 8;
-		if (Util.FindObjectOfType<Glyde>().StrongerAttack())
+		if (Object.FindObjectOfType<Glyde>().StrongerAttack())
 		{
 			baseDmg += 2;
 		}

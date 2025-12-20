@@ -131,7 +131,7 @@ public class FloweyIntroCutscenePt2 : CutsceneBase
 				susie.GetComponent<SpriteRenderer>().flipX = false;
 				susie.EnableAnimator();
 				toriel.Play("WalkUp");
-				susie.SetSelfAnimControl(setAnimControl: false);
+				susie.SetSelfAnimControl(false);
 			}
 			if (frames == 30)
 			{
@@ -154,7 +154,7 @@ public class FloweyIntroCutscenePt2 : CutsceneBase
 			{
 				if (frames == 10)
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+					susie.GetComponent<Animator>().SetBool("isMoving", true);
 					susie.GetComponent<Animator>().Play("walk");
 					susie.GetComponent<Animator>().SetFloat("speed", 2f);
 					StartText(new string[1] { "* Hey, wait a sec!!!" }, new string[1] { "snd_txtsus" }, new int[18], new string[1] { "su_shocked" }, 1);
@@ -162,7 +162,7 @@ public class FloweyIntroCutscenePt2 : CutsceneBase
 				susie.transform.position = Vector3.Lerp(new Vector3(1.52f, 0.08f), new Vector3(1.52f, 3f), (float)(frames - 10) / 15f);
 				if (frames == 25)
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+					susie.GetComponent<Animator>().SetBool("isMoving", false);
 					susie.GetComponent<Animator>().Play("idle");
 					susie.GetComponent<Animator>().SetFloat("speed", 1f);
 				}
@@ -187,7 +187,7 @@ public class FloweyIntroCutscenePt2 : CutsceneBase
 			if (frames == 1)
 			{
 				susie.ChangeDirection(Vector2.down);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
 				susie.GetComponent<Animator>().Play("walk");
 			}
 			susie.transform.position = Vector3.Lerp(new Vector3(1.52f, 3f), new Vector3(1.52f, 0.08f), (float)frames / 40f);
@@ -196,7 +196,7 @@ public class FloweyIntroCutscenePt2 : CutsceneBase
 			{
 				kris.ChangeDirection(Vector2.right);
 				susie.ChangeDirection(Vector2.left);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 				susie.GetComponent<Animator>().Play("idle");
 			}
 			if (frames == 50)
@@ -208,9 +208,9 @@ public class FloweyIntroCutscenePt2 : CutsceneBase
 		if (state == 5 && !txt)
 		{
 			kris.ChangeDirection(Vector2.down);
-			kris.SetSelfAnimControl(setAnimControl: true);
-			susie.SetSelfAnimControl(setAnimControl: true);
-			cam.SetFollowPlayer(follow: true);
+			kris.SetSelfAnimControl(true);
+			susie.SetSelfAnimControl(true);
+			cam.SetFollowPlayer(true);
 			gm.SetFlag(4, 1);
 			EndCutscene();
 		}
@@ -247,7 +247,7 @@ public class FloweyIntroCutscenePt2 : CutsceneBase
 			{
 				kris.ChangeDirection(Vector2.right);
 				susie.ChangeDirection(Vector2.left);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 				susie.GetComponent<Animator>().Play("idle");
 			}
 			if (frames == 20)
@@ -269,6 +269,6 @@ public class FloweyIntroCutscenePt2 : CutsceneBase
 		susie.ChangeDirection(Vector2.up);
 		susie.transform.position = new Vector3(1.52f, 0.08f);
 		base.StartCutscene(par);
-		cam.SetFollowPlayer(follow: false);
+		cam.SetFollowPlayer(false);
 	}
 }

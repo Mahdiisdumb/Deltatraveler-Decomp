@@ -33,13 +33,13 @@ public class GreaterDogSnatch : SpecialACT
 				Util.GameManager().PlayGlobalSFX("sounds/snd_grab");
 				if (snatchComm)
 				{
-					Util.FindObjectOfType<GreaterDog>().SnatchCommunicator();
-					Util.FindObjectOfType<BattleManager>().StartText(Util.FindObjectOfType<GreaterDog>().HasCollar() ? "* Snatched GREATERDOG's\n  communicator!" : "* Snatched GREATERDOG's\n  communicator!\n* It's now vulnerable!", new Vector2(-4f, -134f), "snd_txtbtl");
+					Object.FindObjectOfType<GreaterDog>().SnatchCommunicator();
+					Object.FindObjectOfType<BattleManager>().StartText(Object.FindObjectOfType<GreaterDog>().HasCollar() ? "* Snatched GREATERDOG's\n  communicator!" : "* Snatched GREATERDOG's\n  communicator!\n* It's now vulnerable!", new Vector2(-4f, -134f), "snd_txtbtl");
 				}
 				else
 				{
-					Util.FindObjectOfType<GreaterDog>().SnatchCollar();
-					Util.FindObjectOfType<BattleManager>().StartText(Util.FindObjectOfType<GreaterDog>().HasCollar() ? "* Loosened GREATERDOG's\n  collar!" : "* Snatched GREATERDOG's\n  collar!\n* It's now vulnerable!", new Vector2(-4f, -134f), "snd_txtbtl");
+					Object.FindObjectOfType<GreaterDog>().SnatchCollar();
+					Object.FindObjectOfType<BattleManager>().StartText(Object.FindObjectOfType<GreaterDog>().HasCollar() ? "* Loosened GREATERDOG's\n  collar!" : "* Snatched GREATERDOG's\n  collar!\n* It's now vulnerable!", new Vector2(-4f, -134f), "snd_txtbtl");
 				}
 				return;
 			}
@@ -58,7 +58,7 @@ public class GreaterDogSnatch : SpecialACT
 			base.transform.position = new Vector3(num2, base.transform.position.y);
 			if (num >= 1f || (UTInput.GetButtonDown("Z") && Mathf.Abs(base.transform.position.x) > 0.6f))
 			{
-				Util.FindObjectOfType<BattleManager>().StartText("* Missed...", new Vector2(-4f, -134f), "snd_txtbtl");
+				Object.FindObjectOfType<BattleManager>().StartText("* Missed...", new Vector2(-4f, -134f), "snd_txtbtl");
 				done = true;
 			}
 		}
@@ -82,7 +82,7 @@ public class GreaterDogSnatch : SpecialACT
 	{
 		reverseDir = Random.Range(0, 2) == 0;
 		moving = true;
-		snatchComm = Util.FindObjectOfType<GreaterDog>().HasCommunicator();
+		snatchComm = Object.FindObjectOfType<GreaterDog>().HasCommunicator();
 		sr = GetComponent<SpriteRenderer>();
 		sr.enabled = true;
 		base.transform.position = new Vector3(reverseDir ? (-5) : 5, snatchComm ? 2.56f : 3.02f);

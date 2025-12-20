@@ -18,7 +18,7 @@ public class DogHeartSpawner : MonoBehaviour
 
 	private void Awake()
 	{
-		sad = Util.FindObjectOfType<Dogaressa>().IsKilled();
+		sad = Object.FindObjectOfType<Dogaressa>().IsKilled();
 		frames = ((!sad) ? 65 : 0);
 		if (sad)
 		{

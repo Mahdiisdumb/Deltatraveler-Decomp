@@ -24,7 +24,7 @@ public class FriskMusic : MonoBehaviour
 
 	private void Update()
 	{
-		if (Util.OverworldPlayer().transform.position.x < 7.17f)
+		if (Object.FindObjectOfType<OverworldPlayer>().transform.position.x < 7.17f)
 		{
 			Util.GameManager().PlayMusic("music/mus_star", pitch);
 			Util.GameManager().SetFlag(252, 1);

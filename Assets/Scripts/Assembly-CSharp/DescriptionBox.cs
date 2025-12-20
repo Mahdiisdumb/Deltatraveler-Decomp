@@ -40,7 +40,7 @@ public class DescriptionBox : MonoBehaviour
 
 	private void Update()
 	{
-		if (!vanished && Util.FindObjectOfType<BulletBoard>().IsPlaying())
+		if (!vanished && Object.FindObjectOfType<BulletBoard>().IsPlaying())
 		{
 			Vanish();
 		}

@@ -25,7 +25,7 @@ public class NapstaDefeatCutscene : CutsceneBase
 			}
 			else if (endState != 1 || (int)gm.GetFlag(12) == 0)
 			{
-				WeirdChecker.Abort(Util.GameManager());
+				WeirdChecker.Abort(Object.FindObjectOfType<GameManager>());
 				gm.SetCheckpoint(22);
 				EndCutscene();
 			}

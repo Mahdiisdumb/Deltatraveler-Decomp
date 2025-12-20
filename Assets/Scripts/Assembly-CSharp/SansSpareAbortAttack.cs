@@ -11,10 +11,10 @@ public class SansSpareAbortAttack : AttackBase
 		base.Awake();
 		bbPos = new Vector2(0f, -2.37f);
 		bbSize = new Vector2(575f, 140f);
-		Util.FindObjectOfType<PartyPanels>().DeactivateTargets();
-		Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: false, susie: false, noelle: false);
-		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
-		sans = Util.FindObjectOfType<Sans>();
+		Object.FindObjectOfType<PartyPanels>().DeactivateTargets();
+		Object.FindObjectOfType<PartyPanels>().RaiseHeads(false, false, false);
+		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
+		sans = Object.FindObjectOfType<Sans>();
 	}
 
 	protected override void Update()
@@ -28,7 +28,7 @@ public class SansSpareAbortAttack : AttackBase
 			frames++;
 			if (frames == 30)
 			{
-				sans.Chat(new string[8] { "what...?", "after the massacre \ni saw you commit...", "after the torture \nyou put your \nteammates through...", "you're sparing the \none person that you \nhad every right to \nkill.", "...", "i...^10 realize how \nmuch i've gone off \nthe deep end.", "but compared to \nyou...?", "only a demented god \nwould have the gall \nto do something \nlike this." }, "snd_txtsans", canSkip: true, 1);
+				sans.Chat(new string[8] { "what...?", "after the massacre i \nsaw you commit...", "after the torture you \nput your teammates \nthrough...", "you're sparing the one \nperson that you had \nevery right to kill.", "...", "i...^10 realize how \nmuch i've gone off \nthe deep end.", "but compared to you...?", "only a demented god \nwould have the gall \nto do something \nlike this." }, "snd_txtsans", true, 1);
 				state = 1;
 				frames = 0;
 			}
@@ -67,7 +67,7 @@ public class SansSpareAbortAttack : AttackBase
 			}
 			if (frames == 75)
 			{
-				sans.Chat(new string[2] { "i'm gonna go catch \nsome z's elsewhere.", "you three can wallow \nin your pathetic \nexistence." }, "snd_txtsans", canSkip: true, 1);
+				sans.Chat(new string[2] { "i'm gonna go catch \nsome z's elsewhere.", "you three can wallow \nin your pathetic \nexistence." }, "snd_txtsans", true, 1);
 				state = 2;
 				frames = 0;
 			}
@@ -96,7 +96,7 @@ public class SansSpareAbortAttack : AttackBase
 			if (frames == 90)
 			{
 				Util.GameManager().AddGold(sans.GetGold() / 2);
-				Util.FindObjectOfType<BattleManager>().FadeEndBattle(2);
+				Object.FindObjectOfType<BattleManager>().FadeEndBattle(2);
 			}
 		}
 	}

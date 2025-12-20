@@ -46,12 +46,12 @@ public class UFFirstCutscene : CutsceneBase
 			if (frames == 1)
 			{
 				kris.EnableAnimator();
-				kris.SetSelfAnimControl(setAnimControl: false);
+				kris.SetSelfAnimControl(false);
 				susie.GetComponent<SpriteRenderer>().flipX = false;
 				susie.EnableAnimator();
-				susie.SetSelfAnimControl(setAnimControl: false);
+				susie.SetSelfAnimControl(false);
 				noelle.EnableAnimator();
-				noelle.SetSelfAnimControl(setAnimControl: false);
+				noelle.SetSelfAnimControl(false);
 				susie.UseUnhappySprites();
 				noelle.UseUnhappySprites();
 				PlaySFX("sounds/snd_wing");
@@ -204,10 +204,10 @@ public class UFFirstCutscene : CutsceneBase
 				else
 				{
 					kris.ChangeDirection(Vector2.down);
-					kris.SetSelfAnimControl(setAnimControl: true);
-					susie.SetSelfAnimControl(setAnimControl: true);
-					noelle.SetSelfAnimControl(setAnimControl: true);
-					cam.SetFollowPlayer(follow: true);
+					kris.SetSelfAnimControl(true);
+					susie.SetSelfAnimControl(true);
+					noelle.SetSelfAnimControl(true);
+					cam.SetFollowPlayer(true);
 					gm.SetCheckpoint(74);
 					EndCutscene();
 				}
@@ -242,10 +242,10 @@ public class UFFirstCutscene : CutsceneBase
 			return;
 		}
 		kris.ChangeDirection(Vector2.down);
-		kris.SetSelfAnimControl(setAnimControl: true);
-		susie.SetSelfAnimControl(setAnimControl: true);
-		noelle.SetSelfAnimControl(setAnimControl: true);
-		cam.SetFollowPlayer(follow: true);
+		kris.SetSelfAnimControl(true);
+		susie.SetSelfAnimControl(true);
+		noelle.SetSelfAnimControl(true);
+		cam.SetFollowPlayer(true);
 		gm.SetCheckpoint(74);
 		EndCutscene();
 	}
@@ -266,13 +266,16 @@ public class UFFirstCutscene : CutsceneBase
 		susie.SetSprite("spr_su_ko");
 		susie.GetComponent<SpriteRenderer>().flipX = true;
 		noelle.SetSprite("spr_no_collapsed");
-		cam.SetFollowPlayer(follow: false);
+		cam.SetFollowPlayer(false);
 		cam.transform.position = new Vector3(2.12f, 0f, -10f);
-		if (PersistentSAVE.GetInt("completion", 0) < 2)
+		if (PlayerPrefs.GetInt("CompletionState", 0) < 2)
 		{
-			PersistentSAVE.SetInt("completion", 2);
+			PlayerPrefs.SetInt("CompletionState", 2);
 		}
-		Util.GameManager().SetFlag(286, 0);
+		if (Object.FindObjectOfType<GameManager>().GetItemList().Contains(16))
+		{
+			Object.FindObjectOfType<GameManager>().RemoveItem(Object.FindObjectOfType<GameManager>().GetItemList().IndexOf(16));
+		}
 		fade.FadeIn(60);
 	}
 }

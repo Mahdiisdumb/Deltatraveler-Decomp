@@ -10,7 +10,7 @@ public class FakeIce : MonoBehaviour
 		base.transform.position += new Vector3(1f / 48f, 0f);
 		if (frames == 136)
 		{
-			Util.FindObjectOfType<IceWolf>().Activate();
+			Object.FindObjectOfType<IceWolf>().Activate();
 		}
 		if (frames == 160)
 		{

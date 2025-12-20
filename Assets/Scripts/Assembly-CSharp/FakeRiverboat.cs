@@ -9,11 +9,10 @@ public class FakeRiverboat : MonoBehaviour
 
 	private float yBase;
 
-	private GameManager gm;
+	private GameManager gm = Util.GameManager();
 
 	private void Awake()
 	{
-		gm = Util.GameManager();
 		yBase = base.transform.position.y;
 		if (gm.GetFlagInt(290) == 1)
 		{
@@ -47,6 +46,6 @@ public class FakeRiverboat : MonoBehaviour
 	public void RepositionLoadingZone()
 	{
 		Object.Destroy(GameObject.Find("COLD"));
-		Util.FindObjectOfType<LoadingZone>().transform.position = new Vector3(0f, Util.FindObjectOfType<LoadingZone>().transform.position.y);
+		Object.FindObjectOfType<LoadingZone>().transform.position = new Vector3(0f, Object.FindObjectOfType<LoadingZone>().transform.position.y);
 	}
 }

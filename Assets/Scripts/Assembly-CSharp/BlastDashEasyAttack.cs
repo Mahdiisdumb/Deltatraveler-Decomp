@@ -15,9 +15,9 @@ public class BlastDashEasyAttack : AttackBase
 		base.Awake();
 		bbSize = new Vector2(185f, 185f);
 		blasterPrefab = Resources.Load<GameObject>("battle/attacks/bullets/GasterBlaster");
-		sans = Util.FindObjectOfType<Sans>();
+		sans = Object.FindObjectOfType<Sans>();
 		sans.transform.position = new Vector3(0f, 0.979f);
-		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 		blastWarn = Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/sans/BlastWarn"), base.transform).GetComponent<SpriteRenderer>();
 		blastWarn.enabled = false;
 		maxFrames = 275;

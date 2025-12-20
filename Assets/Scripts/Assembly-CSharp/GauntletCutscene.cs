@@ -42,21 +42,21 @@ public class GauntletCutscene : CutsceneBase
 		{
 			if (Mathf.Abs(kris.transform.position.x - susie.transform.position.x) > 1.25f)
 			{
-				SetMoveAnim(susie, isMoving: true);
+				SetMoveAnim(susie, true);
 				susie.transform.position += new Vector3(0.125f, 0f);
 			}
 			else
 			{
-				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(susie, false);
 			}
 			if (Mathf.Abs(noelle.transform.position.x - susie.transform.position.x) > 1.25f)
 			{
-				SetMoveAnim(noelle, isMoving: true);
+				SetMoveAnim(noelle, true);
 				noelle.transform.position += new Vector3(0.125f, 0f);
 			}
 			else
 			{
-				SetMoveAnim(noelle, isMoving: false);
+				SetMoveAnim(noelle, false);
 			}
 			if (MoveTo(cam, new Vector3(22.87f, 0f, -10f), 6f))
 			{
@@ -113,7 +113,7 @@ public class GauntletCutscene : CutsceneBase
 				if (frames == 1)
 				{
 					ChangeDirection(qc, Vector2.right);
-					SetMoveAnim(qc, isMoving: true, 2f);
+					SetMoveAnim(qc, true, 2f);
 				}
 			}
 			MoveTo(qc, new Vector3(37.47f, 0.25f), 10f);
@@ -157,7 +157,7 @@ public class GauntletCutscene : CutsceneBase
 				{
 					if (AtLine(2) && !depressed)
 					{
-						SetSprite(susie, "spr_su_shrug", flipX: true);
+						SetSprite(susie, "spr_su_shrug", true);
 					}
 					else if (AtLine(4))
 					{
@@ -205,8 +205,8 @@ public class GauntletCutscene : CutsceneBase
 					"* It isn't puzzling,^05\n  yet deadly.^05\n* It's just deadly.",
 					"SO YOU ARE FINE \nWITH A DEADLY \nPUZZLE?",
 					"* Well,^05 at least we\n  have a CHANCE to\n  get it right.",
-					"* boss,^05 don't listen to them.",
-					"* this challenge is perfect.",
+					"*\tboss,^05 don't listen to them.",
+					"*\tthis challenge is perfect.",
 					"NO NO,^05 I SEE \nTHEIR POINT.",
 					"THIS IS AN \nUNREFINED APPROACH.",
 					"IT'S WAY TOO \nOVERKILL!",
@@ -242,18 +242,18 @@ public class GauntletCutscene : CutsceneBase
 				}
 				else if (AtLine(6))
 				{
-					SetSprite(noelle, "spr_no_surprise_left", flipX: true);
+					SetSprite(noelle, "spr_no_surprise_left", true);
 				}
 				else if (AtLine(7))
 				{
-					SetSprite(susie, "spr_su_shrug", flipX: true);
+					SetSprite(susie, "spr_su_shrug", true);
 					kris.EnableAnimator();
 					ChangeDirection(kris, Vector2.left);
 				}
 				else if (AtLine(8))
 				{
 					SetSprite(noelle, "pissed/spr_no_right_0_pissed");
-					SetSprite(susie, "spr_su_surprise_right", flipX: true);
+					SetSprite(susie, "spr_su_surprise_right", true);
 				}
 				else if (AtLine(9))
 				{
@@ -300,7 +300,7 @@ public class GauntletCutscene : CutsceneBase
 			}
 			if (frames == (fastVersion ? 30 : 100))
 			{
-				StartText(new string[2] { "I...^05 CAN'T FIND THE \nCONTROLS...", "* i figured you'd back down." }, new string[2] { "snd_txtpap", "snd_txtsans" }, new int[1], new string[2] { "ufpap_worry", "ufsans_closed" });
+				StartText(new string[2] { "I...^05 CAN'T FIND THE \nCONTROLS...", "*\ti figured you'd back down." }, new string[2] { "snd_txtpap", "snd_txtsans" }, new int[1], new string[2] { "ufpap_worry", "ufsans_closed" });
 				state = 5;
 				frames = 0;
 			}
@@ -322,18 +322,18 @@ public class GauntletCutscene : CutsceneBase
 					frames++;
 					if (frames == 1)
 					{
-						SetMoveAnim(sans, isMoving: false);
+						SetMoveAnim(sans, false);
 					}
 					if (frames == 15)
 					{
-						StartText(new string[6] { "SANS,^05 DID YOU REALLY \nJUST--", "* papyrus...", "* you forgot the one thing\n  i told you to value,^05\n  above all else.", "AND THAT IS...?", "* ...", "* This world is KILL\n  or BE KILLED." }, new string[6] { "snd_txtpap", "snd_txtsans", "snd_txtsans", "snd_txtpap", "snd_txtsans", "" }, new int[6] { 0, 0, 0, 0, 0, 4 }, new string[6] { "ufpap_mad", "ufsans_side", "ufsans_closed", "ufpap_side", "ufsans_closed", "ufsans_empty" });
+						StartText(new string[6] { "SANS,^05 DID YOU REALLY \nJUST--", "*\tpapyrus...", "*\tyou forgot the one thing\n\ti told you to value,^05\n\tabove all else.", "AND THAT IS...?", "*\t...", "* This world is KILL\n  or BE KILLED." }, new string[6] { "snd_txtpap", "snd_txtsans", "snd_txtsans", "snd_txtpap", "snd_txtsans", "" }, new int[6] { 0, 0, 0, 0, 0, 4 }, new string[6] { "ufpap_mad", "ufsans_side", "ufsans_closed", "ufpap_side", "ufsans_closed", "ufsans_empty" });
 						state = 6;
 						frames = 0;
 					}
 				}
 				else
 				{
-					SetMoveAnim(sans, isMoving: true, 0.5f);
+					SetMoveAnim(sans, true, 0.5f);
 				}
 			}
 		}
@@ -360,7 +360,7 @@ public class GauntletCutscene : CutsceneBase
 					gm.PlayGlobalSFX("sounds/snd_damage");
 					SetSprite(kris, "spr_kr_surprise");
 					SetSprite(susie, "spr_su_surprise_right");
-					SetSprite(noelle, "spr_no_surprise_left", flipX: true);
+					SetSprite(noelle, "spr_no_surprise_left", true);
 					SetSprite(papyrus, "overworld/npcs/underfell/spr_ufpap_kicked");
 				}
 				if (frames >= 5 && !papyrusCatchLedge && !MoveTo(papyrus, new Vector3(28.176f, -3.332f), 12f))
@@ -510,7 +510,7 @@ public class GauntletCutscene : CutsceneBase
 				}
 				if (frames >= 26 && frames <= 36)
 				{
-					noelle.transform.position = Vector3.Lerp(noelleOrigPos, new Vector3(14.9f, 0.77f), (float)(frames - 26) / 10f) + new Vector3(0f, Mathf.Sin((float)((frames - 26) * 18) * (MathF.PI / 180f)));
+					noelle.transform.position = Vector3.Lerp(noelleOrigPos, new Vector3(14.9f, 0.77f), (float)(frames - 26) / 10f) + new Vector3(0f, Mathf.Sin((float)((frames - 26) * 18) * ((float)Math.PI / 180f)));
 					if (frames == 36)
 					{
 						PlayAnimation(noelle, "Teeter");
@@ -552,8 +552,8 @@ public class GauntletCutscene : CutsceneBase
 			}
 			if (frames == 15)
 			{
-				SetSprite(susie, "spr_su_surprise_right", flipX: true);
-				SetSprite(kris, "spr_kr_surprise", flipX: true);
+				SetSprite(susie, "spr_su_surprise_right", true);
+				SetSprite(kris, "spr_kr_surprise", true);
 				gm.PlayGlobalSFX("music/mus_fearsting");
 			}
 			float num4 = (float)(frames - 8) / 20f;
@@ -604,7 +604,7 @@ public class GauntletCutscene : CutsceneBase
 			{
 				kris.GetComponent<SpriteRenderer>().flipX = false;
 				kris.EnableAnimator();
-				SetMoveAnim(kris, isMoving: true);
+				SetMoveAnim(kris, true);
 			}
 			if (frames >= 15 && frames <= 30 && !MoveTo(kris, new Vector3(18.5f, 0.15f), 4f))
 			{
@@ -631,14 +631,14 @@ public class GauntletCutscene : CutsceneBase
 				if (kris.transform.position.y < 0f)
 				{
 					cam.transform.position = kris.transform.position + new Vector3(0f, 0f, -10f);
-					PlayAnimation(kris, "SlideFall", 1f, startAtBeginning: false);
+					PlayAnimation(kris, "SlideFall", 1f, false);
 				}
 				if (kris.transform.position.y <= -10f)
 				{
-					Util.GameManager().SetPartyMembers(susie: false, noelle: false);
+					Util.GameManager().SetPartyMembers(false, false);
 					susie.transform.position = Vector3.zero;
-					Util.FindObjectOfType<GauntletFallScenario>().Activate();
-					EndCutscene(enablePlayerMovement: false);
+					UnityEngine.Object.FindObjectOfType<GauntletFallScenario>().Activate();
+					EndCutscene(false);
 				}
 			}
 		}
@@ -680,7 +680,7 @@ public class GauntletCutscene : CutsceneBase
 		gm.SetCheckpoint();
 		qc = GameObject.Find("QC").GetComponent<Animator>();
 		sans = GameObject.Find("Sans").GetComponent<Animator>();
-		papyrus = Util.FindObjectOfType<InteractPapyrusTextbox>();
+		papyrus = UnityEngine.Object.FindObjectOfType<InteractPapyrusTextbox>();
 		papyrus.StopStare();
 		if ((int)gm.GetFlag(12) == 1 && (int)gm.GetFlag(13) < 10)
 		{
@@ -692,9 +692,9 @@ public class GauntletCutscene : CutsceneBase
 		ChangeDirection(noelle, Vector2.right);
 		ChangeDirection(sans, Vector2.left);
 		kris.transform.position = new Vector3(19.25f, kris.transform.position.y);
-		SetMoveAnim(kris, isMoving: false);
-		SetMoveAnim(susie, isMoving: false);
-		SetMoveAnim(noelle, isMoving: false);
+		SetMoveAnim(kris, false);
+		SetMoveAnim(susie, false);
+		SetMoveAnim(noelle, false);
 		gauntlet = GameObject.Find("GauntletCutscene").transform;
 		susie.UseUnhappySprites();
 		noelle.UseUnhappySprites();

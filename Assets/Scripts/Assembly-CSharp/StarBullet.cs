@@ -35,7 +35,7 @@ public class StarBullet : BulletBase
 
 	public void Activate(float angle)
 	{
-		tradjectory = new Vector3(Mathf.Sin(angle * (MathF.PI / 180f)), Mathf.Cos(angle * (MathF.PI / 180f)));
+		tradjectory = new Vector3(Mathf.Sin(angle * ((float)Math.PI / 180f)), Mathf.Cos(angle * ((float)Math.PI / 180f)));
 		activated = true;
 	}
 }

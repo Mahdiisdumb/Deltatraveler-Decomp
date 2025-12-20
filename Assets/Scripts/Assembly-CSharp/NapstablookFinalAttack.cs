@@ -8,8 +8,8 @@ public class NapstablookFinalAttack : AttackBase
 		maxFrames = 5000;
 		bbPos = new Vector2(0f, -2.37f);
 		bbSize = new Vector2(575f, 140f);
-		Util.FindObjectOfType<PartyPanels>().DeactivateTargets();
-		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
+		Object.FindObjectOfType<PartyPanels>().DeactivateTargets();
+		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
 	}
 
 	protected override void Update()
@@ -18,26 +18,26 @@ public class NapstablookFinalAttack : AttackBase
 		{
 			return;
 		}
-		if (Util.FindObjectOfType<Napstablook>().GetNapEndState() == 2 && frames == 1)
+		if (Object.FindObjectOfType<Napstablook>().GetNapEndState() == 2 && frames == 1)
 		{
-			Util.GameManager().AddEXP(25);
-			Util.FindObjectOfType<PartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
-			Util.FindObjectOfType<Napstablook>().TurnToDust();
+			Object.FindObjectOfType<GameManager>().AddEXP(25);
+			Object.FindObjectOfType<PartyPanels>().UpdateHP(Object.FindObjectOfType<GameManager>().GetHPArray());
+			Object.FindObjectOfType<Napstablook>().TurnToDust();
 		}
 		else
 		{
-			Util.FindObjectOfType<Napstablook>().GetPart("body").GetComponent<SpriteRenderer>()
+			Object.FindObjectOfType<Napstablook>().GetPart("body").GetComponent<SpriteRenderer>()
 				.color = Color.Lerp(Color.white, new Color(1f, 1f, 1f, 0f), (float)frames / 30f);
 		}
-		if (frames == ((Util.FindObjectOfType<Napstablook>().GetNapEndState() == 2) ? 90 : 30))
+		if (frames == ((Object.FindObjectOfType<Napstablook>().GetNapEndState() == 2) ? 90 : 30))
 		{
-			if (Util.FindObjectOfType<Napstablook>().GetNapEndState() == 2)
+			if (Object.FindObjectOfType<Napstablook>().GetNapEndState() == 2)
 			{
-				Util.FindObjectOfType<BattleManager>().FadeEndBattle(1);
+				Object.FindObjectOfType<BattleManager>().FadeEndBattle(1);
 			}
 			else
 			{
-				Util.FindObjectOfType<BattleManager>().EndNormalFight(customMessage: false, "");
+				Object.FindObjectOfType<BattleManager>().EndNormalFight(false, "");
 			}
 			Object.Destroy(base.gameObject);
 		}

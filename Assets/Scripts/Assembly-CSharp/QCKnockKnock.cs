@@ -12,15 +12,15 @@ public class QCKnockKnock : InteractTextBox
 			talkedToBefore = false;
 			if ((int)Util.GameManager().GetFlag(178) == 0)
 			{
-				Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
-				Util.FindObjectOfType<Fade>().FadeOut(7);
+				Util.GameManager().DisablePlayerMovement(true);
+				Object.FindObjectOfType<Fade>().FadeOut(7);
 				fadingOut = true;
 			}
 		}
-		if (fadingOut && !Util.FindObjectOfType<Fade>().IsPlaying())
+		if (fadingOut && !Object.FindObjectOfType<Fade>().IsPlaying())
 		{
 			fadingOut = false;
-			Util.GameManager().LoadArea(88, fadeIn: true, new Vector3(0.79f, -3.37f), Vector2.up);
+			Util.GameManager().LoadArea(88, true, new Vector3(0.79f, -3.37f), Vector2.up);
 		}
 	}
 
@@ -82,6 +82,6 @@ public class QCKnockKnock : InteractTextBox
 			portraits = new string[1] { "" };
 		}
 		base.DoInteract();
-		Util.GameManager().PlayGlobalSFX("sounds/snd_knock");
+		Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_knock");
 	}
 }

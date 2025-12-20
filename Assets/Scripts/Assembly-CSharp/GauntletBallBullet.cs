@@ -38,10 +38,10 @@ public class GauntletBallBullet : ActionBulletBase
 			PlaySFX("sounds/snd_heavyswing");
 		}
 		frames++;
-		base.transform.eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(-25f, 25f, (Mathf.Sin((float)frames * 4.5f * (MathF.PI / 180f)) + 1f) / 2f));
+		base.transform.eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(-25f, 25f, (Mathf.Sin((float)frames * 4.5f * ((float)Math.PI / 180f)) + 1f) / 2f));
 		if (frames <= 180)
 		{
-			float num = Mathf.Abs((1f - Mathf.Cos((float)(frames * 2) * (MathF.PI / 180f))) / 2f);
+			float num = Mathf.Abs((1f - Mathf.Cos((float)(frames * 2) * ((float)Math.PI / 180f))) / 2f);
 			base.transform.localPosition = new Vector3(0f, Mathf.Lerp(8.21f, 16.68f, num));
 			float t = (0.5f - Mathf.Abs(0.5f - num)) * 2f;
 			chainAud.volume = Mathf.Lerp(0.3f, 0.6f, t);

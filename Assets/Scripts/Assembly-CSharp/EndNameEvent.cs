@@ -16,9 +16,9 @@ public class EndNameEvent : MonoBehaviour
 
 	private RectTransform text;
 
-	public void SetTextObject(RectTransform text)
+	private void Awake()
 	{
-		this.text = text;
+		text = Object.FindObjectOfType<TitleScreen>().transform.Find("Letters").Find("Name").GetComponent<RectTransform>();
 	}
 
 	private void Update()
@@ -56,12 +56,12 @@ public class EndNameEvent : MonoBehaviour
 						{
 							base.transform.Find(charNames[i]).position = Vector3.MoveTowards(base.transform.Find(charNames[i]).position, new Vector3(-3 + i * 3, y), 0.125f);
 							base.transform.Find(charNames[i]).GetComponent<Animator>().SetFloat("dirX", -1f);
-							base.transform.Find(charNames[i]).GetComponent<Animator>().SetBool("isMoving", value: true);
+							base.transform.Find(charNames[i]).GetComponent<Animator>().SetBool("isMoving", true);
 						}
 						else
 						{
 							base.transform.Find(charNames[i]).GetComponent<Animator>().SetFloat("dirX", 0f);
-							base.transform.Find(charNames[i]).GetComponent<Animator>().SetBool("isMoving", value: false);
+							base.transform.Find(charNames[i]).GetComponent<Animator>().SetBool("isMoving", false);
 						}
 					}
 				}

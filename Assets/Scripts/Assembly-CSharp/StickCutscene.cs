@@ -21,23 +21,23 @@ public class StickCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				cam.SetFollowPlayer(follow: false);
+				cam.SetFollowPlayer(false);
 				camInitPos = cam.transform.position;
 				noelleNewPos = kris.transform.position - new Vector3(1.25f, 0f) + noelle.GetPositionOffset();
 			}
 			cam.transform.position = Vector3.Lerp(camInitPos, new Vector3(17f, 0f), (float)frames / 25f);
 			if (noelle.transform.position != noelleNewPos)
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+				noelle.GetComponent<Animator>().SetBool("isMoving", true);
 				noelle.transform.position = Vector3.MoveTowards(noelle.transform.position, noelleNewPos, 1f / 12f);
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (susie.transform.position != new Vector3(16.27f, -2.17f))
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
 				susie.GetComponent<Animator>().SetFloat("speed", 3f);
 				susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(16.27f, -2.17f), 5f / 24f);
 			}
@@ -45,7 +45,7 @@ public class StickCutscene : CutsceneBase
 			{
 				susieGrabbedStick = true;
 				PlaySFX("sounds/snd_grab");
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 				susie.GetComponent<Animator>().SetFloat("speed", 1f);
 				susie.DisableAnimator();
 				susie.SetSprite("spr_su_grab_stick");
@@ -53,7 +53,7 @@ public class StickCutscene : CutsceneBase
 			}
 			if (susieGrabbedStick && noelle.transform.position == noelleNewPos && frames >= 45)
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", false);
 				StartText(new string[7]
 				{
 					"* HOLY SHIT IT'S A\n  REALLY COOL STICK",
@@ -95,7 +95,7 @@ public class StickCutscene : CutsceneBase
 				frames++;
 				if (frames == 1)
 				{
-					susie.SetSprite("unhappy/spr_su_right_0_unhappy");
+					susie.SetSprite("spr_su_right_unhappy_0");
 					gm.PlayMusic("music/mus_snowwalk");
 					sans.SetFloat("speed", 0.5f);
 					sans.Play("WalkLeft");
@@ -104,7 +104,7 @@ public class StickCutscene : CutsceneBase
 				sans.transform.position = Vector3.Lerp(new Vector3(25f, -2.52f), new Vector3(20f, -2.52f), (float)frames / 135f);
 				if (frames == 60)
 				{
-					noelle.SetSprite("unhappy/spr_no_right_0_unhappy");
+					noelle.SetSprite("spr_no_right_unhappy_0");
 				}
 				if (frames == 135)
 				{
@@ -121,10 +121,10 @@ public class StickCutscene : CutsceneBase
 				{
 					StartText(new string[40]
 					{
-						"* Take another step\n  forward and your\n  head is gone.", "* whoa,^05 sorry,^05 didn't\n  mean to scare ya.", "* ... Great,^05 it's\n  this guy.", "* yeah,^05 the woods are\n  pretty dark.", "* speaking of dark,^05 how\n  are ya doing?", "* Aren't you the guy\n  that runs the\n  convenience store?", "* ...i don't run a\n  convenience store.", "* i'm sans.^10\n* sans the skeleton.", "* aren't you that hoofed\n  girl from back in\n  town?", "* what are you doing\n  out here?",
-						"* What do you mean\n  by that?", "* Are you from our\n  world or something?", "* ...", "* that tells me everything\n  i need to know.", "* The hell does that\n  mean?", "* i mean,^05 seeing someone\n  from town palling around\n  with a human...", "* then that same someone\n  not recognizing me...", "* it's a bit strange\n  to say the least.", "* Wait,^05 you're not saying\n  what I think you're\n  saying...?", "* uhh,^05 let's not think\n  about that right now.",
-						"* you're trying to make\n  your way home,^05 right?", "* Yeah, we're tryna find\n  a scientist dude in\n  Hotland.", "* scientist in hotland?", "* the only person that\n  fits that description is\n  alphys.", "* she might be able to\n  help.", "* (THE HELL DOES HE\n  MEAN ALPHYS????)", "* And how do we get\n  there?", "* you're gonna have to\n  get through the forest.", "* then go through the\n  marsh until you reach\n  a laboratory.", "* that's where you'll be\n  able to meet alphys.",
-						"* Sounds pretty easy.", "* not so fast,^05 kid.", "* you've got my brother\n  to worry about.", "* Is he dangerous?", "* nah,^05 but he might\n  try to capture that\n  human.", "* he's currently out\n  setting up his puzzles.", "* you might run into\n  him on the way.", "* so if you encounter him,\n  ^10just play along.", "* Okay...", "* alright,^05 see ya up ahead."
+						"* Take another step\n  forward and your\n  head is gone.", "*\twhoa,^05 sorry,^05 didn't\n\tmean to scare ya.", "* ... Great,^05 it's\n  this guy.", "*\tyeah,^05 the woods are\n\tpretty dark.", "*\tspeaking of dark,^05 how\n\tare ya doing?", "* Aren't you the guy\n  that runs the\n  convenience store?", "*\t...i don't run a\n\tconvenience store.", "*\ti'm sans.^10\n*\tsans the skeleton.", "*\taren't you that hoofed\n\tgirl from back in\n\ttown?", "*\twhat are you doing\n\tout here?",
+						"* What do you mean\n  by that?", "* Are you from our\n  world or something?", "*\t...", "*\tthat tells me everything\n\ti need to know.", "* The hell does that\n  mean?", "*\ti mean,^05 seeing someone\n\tfrom town palling around\n\twith a human...", "*\tthen that same someone\n\tnot recognizing me...", "*\tit's a bit strange\n\tto say the least.", "* Wait,^05 you're not saying\n  what I think you're\n  saying...?", "*\tuhh,^05 let's not think\n\tabout that right now.",
+						"*\tyou're trying to make\n\tyour way home,^05 right?", "* Yeah, we're tryna find\n  a scientist dude in\n  Hotland.", "*\tscientist in hotland?", "*\tthe only person that\n\tfits that description is\n\talphys.", "*\tshe might be able to\n\thelp.", "* (THE HELL DOES HE\n  MEAN ALPHYS????)", "* And how do we get\n  there?", "*\tyou're gonna have to\n\tget through the forest.", "*\tthen go through the\n\tmarsh until you reach\n\ta laboratory.", "*\tthat's where you'll be\n\table to meet alphys.",
+						"* Sounds pretty easy.", "*\tnot so fast,^05 kid.", "*\tyou've got my brother\n\tto worry about.", "* Is he dangerous?", "*\tnah,^05 but he might\n\ttry to capture that\n\thuman.", "*\the's currently out setting\n\tup his puzzles.", "*\tyou might run into\n\thim on the way.", "*\tso if you encounter him,\n\t^10just play along.", "* Okay...", "*\talright,^05 see ya up ahead."
 					}, new string[40]
 					{
 						"snd_txtsus", "snd_txtsans", "snd_txtsus", "snd_txtsans", "snd_txtsans", "snd_txtnoe", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans",
@@ -157,7 +157,7 @@ public class StickCutscene : CutsceneBase
 				if (txt.GetCurrentStringNum() == 3 && !susieGrabbedStick)
 				{
 					susieGrabbedStick = true;
-					susie.SetSprite("unhappy/spr_su_right_0_unhappy");
+					susie.SetSprite("spr_su_right_unhappy_0");
 					PlaySFX("sounds/snd_smallswing");
 					gm.PlayMusic("music/mus_muscle");
 				}
@@ -199,9 +199,9 @@ public class StickCutscene : CutsceneBase
 		}
 		if (!txt)
 		{
-			cam.SetFollowPlayer(follow: true);
-			susie.SetSelfAnimControl(setAnimControl: true);
-			noelle.SetSelfAnimControl(setAnimControl: true);
+			cam.SetFollowPlayer(true);
+			susie.SetSelfAnimControl(true);
+			noelle.SetSelfAnimControl(true);
 			kris.ChangeDirection(Vector2.down);
 			gm.PlayMusic("music/mus_snowy");
 			Object.Destroy(sans.gameObject);
@@ -225,16 +225,15 @@ public class StickCutscene : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		MonoBehaviour.print("bo");
 		gm.SetFlag(60, 1);
 		StartText(new string[1] { "* WAIT GUYS HOLD ON" }, new string[1] { "snd_txtsus" }, new int[1], new string[1] { "su_surprised" }, 0);
 		kris.ChangeDirection(Vector2.right);
 		susie.ChangeDirection(Vector2.right);
 		noelle.ChangeDirection(Vector2.right);
-		susie.SetSelfAnimControl(setAnimControl: false);
-		susie.GetComponent<Animator>().SetBool("isMoving", value: false);
-		noelle.SetSelfAnimControl(setAnimControl: false);
-		noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+		susie.SetSelfAnimControl(false);
+		susie.GetComponent<Animator>().SetBool("isMoving", false);
+		noelle.SetSelfAnimControl(false);
+		noelle.GetComponent<Animator>().SetBool("isMoving", false);
 		sans = GameObject.Find("Sans").GetComponent<Animator>();
 	}
 }

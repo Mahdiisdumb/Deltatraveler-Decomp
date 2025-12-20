@@ -54,7 +54,7 @@ public class FinalFroggit : EnemyBase
 	public override string[] PerformAct(int i)
 	{
 		lastAct = i;
-		if (GetActNames()[i] == EnemyBase.CHECK_NAME)
+		if (GetActNames()[i] == "Check")
 		{
 			return new string[1] { "* FINAL FROGGIT - " + (30 + attackOffset) + " ATK " + (18 + def) + " DEF\n" + checkDesc };
 		}
@@ -80,18 +80,18 @@ public class FinalFroggit : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 		if (i == 1)
 		{
 			tired = true;
 			return new string[2] { "* Susie punched her fist\n  into her hand.", "* Final Froggit recognizes this\n  threat.\n* It became TIRED." };
 		}
-		return base.PerformAssistAct_Old(i);
+		return base.PerformAssistAct(i);
 	}
 
 	public override string GetChatter()
@@ -143,8 +143,8 @@ public class FinalFroggit : EnemyBase
 			{
 				bodyFrames = 0;
 			}
-			float num = 0f - Mathf.Sin((float)bodyFrames * 18.947369f * (MathF.PI / 180f));
-			float num2 = 0f - Mathf.Sin((float)bodyFrames * 9.473684f * (MathF.PI / 180f));
+			float num = 0f - Mathf.Sin((float)bodyFrames * 18.947369f * ((float)Math.PI / 180f));
+			float num2 = 0f - Mathf.Sin((float)bodyFrames * 9.473684f * ((float)Math.PI / 180f));
 			GetPart("body").transform.localScale = new Vector3(1f, 1f + num * 0.0875f, 1f);
 			float x = 0.138f + num2 * 0.148f;
 			float y = 1.792f + 0.102f * num;

@@ -79,8 +79,8 @@ public class Porky : EnemyBase
 		flavorTxt = new string[4] { "* Mechanical whirrs fill the\n  air.", "* Smells like metal and gas.", "* Porky flashes a mischievous\n  grin.", "* Porky's mech stomps idly." };
 		dyingTxt = new string[1] { "* Porky's mech is sparking." };
 		actNames = new string[4] { "Topple", "SN!XTopple", REDBUSTER_NAME, DUALHEAL_NAME };
-		susieMiniACTs[0].SetName("Topple");
-		noelleMiniACTs[0].SetName("Topple");
+		sActionName = "Topple";
+		nActionName = "Topple";
 		playerMultiplier = Mathf.Lerp(1.1f, 1f, (float)(Util.GameManager().GetLV() - 1) / 6f);
 		useCustomDamageAnimation = true;
 		canSpareViaFight = false;
@@ -219,7 +219,7 @@ public class Porky : EnemyBase
 				if (frames == 85)
 				{
 					Util.GameManager().PlayGlobalSFX("sounds/snd_crash");
-					Util.FindObjectOfType<BattleCamera>().GiantBlastShake();
+					UnityEngine.Object.FindObjectOfType<BattleCamera>().GiantBlastShake();
 					decommission = true;
 					GetPart("mech").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Porky/spr_b_porky_mech_body_nohp");
 				}
@@ -308,7 +308,7 @@ public class Porky : EnemyBase
 		}
 		else if (animFrames <= 40)
 		{
-			float t = Mathf.Sin((float)((animFrames - 30) * 18) * (MathF.PI / 180f));
+			float t = Mathf.Sin((float)((animFrames - 30) * 18) * ((float)Math.PI / 180f));
 			positions[0] = new Vector3(0f, Mathf.Lerp(2.252f, 2.14f, t));
 			for (int k = 0; k < 2; k++)
 			{
@@ -328,8 +328,8 @@ public class Porky : EnemyBase
 		aud.Stop();
 		CombineParts();
 		UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/EnemyExplosion")).transform.position += new Vector3(mainPos.x, 0f);
-		Util.FindObjectOfType<BattleManager>().GetBattleFade().FadeIn(10, Color.white);
-		Util.FindObjectOfType<BattleCamera>().GiantBlastShake();
+		UnityEngine.Object.FindObjectOfType<BattleManager>().GetBattleFade().FadeIn(10, Color.white);
+		UnityEngine.Object.FindObjectOfType<BattleCamera>().GiantBlastShake();
 		obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().enabled = false;
 		decommission = false;
 		UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/enemies/Porky/PorkyFling"));
@@ -337,7 +337,7 @@ public class Porky : EnemyBase
 
 	public override string[] PerformAct(int i)
 	{
-		if (GetActNames()[i] == EnemyBase.CHECK_NAME)
+		if (GetActNames()[i] == "Check")
 		{
 			if (inFinale)
 			{
@@ -361,7 +361,7 @@ public class Porky : EnemyBase
 		if (GetActNames()[i] == "Topple")
 		{
 			bool flag = eyeIsOpen;
-			int num = ((Util.GameManager().GetPartyMember(3) != 3) ? 1 : 2);
+			int num = ((Util.GameManager().GetMiniPartyMember() != 1) ? 1 : 2);
 			if (ToppleALeg(num))
 			{
 				toppleEyeAnim = true;
@@ -373,7 +373,7 @@ public class Porky : EnemyBase
 		if (GetActNames()[i].EndsWith("XTopple"))
 		{
 			bool flag2 = eyeIsOpen;
-			int count = ((Util.GameManager().GetPartyMember(3) == 3) ? 4 : 3);
+			int count = ((Util.GameManager().GetMiniPartyMember() == 1) ? 4 : 3);
 			if (ToppleALeg(count))
 			{
 				toppleEyeAnim = true;
@@ -391,47 +391,47 @@ public class Porky : EnemyBase
 		{
 			if (hp <= 0)
 			{
-				if (Util.GameManager().GetHP(0) < 1)
+				if (UnityEngine.Object.FindObjectOfType<GameManager>().GetHP(0) - Util.GameManager().GetMiniMemberMaxHP() < 1)
 				{
-					Util.GameManager().SetHP(0, 1);
-					Util.GameManager().PlayGlobalSFX("sounds/snd_heal");
+					UnityEngine.Object.FindObjectOfType<GameManager>().SetHP(0, 1 + Util.GameManager().GetMiniMemberMaxHP());
+					UnityEngine.Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_heal");
 				}
-				Util.FindObjectOfType<BattleManager>().ForceSoloKris(removeMiniPartyMember: true);
+				UnityEngine.Object.FindObjectOfType<BattleManager>().ForceSoloKris(true);
 				inFinale = true;
-				Util.FindObjectOfType<SOUL>().ChangeSOULMode(0);
-				Util.FindObjectOfType<PartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
+				UnityEngine.Object.FindObjectOfType<SOUL>().ChangeSOULMode(0);
+				UnityEngine.Object.FindObjectOfType<PartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
 				GetPart("mech").Find("head").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Porky/spr_b_porky_head_worry");
-				actNames = new string[1] { EnemyBase.CHECK_NAME };
-				Chat(new string[7] { "Well, well, well.\nLooks like you bested \nme.", "But I'm not done \njust yet.", "As you can see,^05 \nmy pathetic little \nmech is still alive.", "One more hit,^05 and \nit explodes and \ndies.", "You'll be rewarded \nwith EXP if you \nstrike it.", "But if you let \nit live,^05 then I \nget to run away \nwith no punishment!", "What'll you do,^05 you \nself-righteous moron?" }, defaultChatSize, "snd_txtpor", defaultChatPos, canSkip: true, 0);
+				actNames = new string[1] { GetBMString("act_check", 0) };
+				Chat(new string[7] { "Well, well, well.\nLooks like you bested \nme.", "But I'm not done \njust yet.", "As you can see,^05 \nmy pathetic little \nmech is still alive.", "One more hit,^05 and \nit explodes and \ndies.", "You'll be rewarded \nwith EXP if you \nstrike it.", "But if you let \nit live,^05 then I \nget to run away \nwith no punishment!", "What'll you do,^05 you \nself-righteous moron?" }, defaultChatSize, "snd_txtpor", defaultChatPos, true, 0);
 			}
 			else if (parryDetected && !parryPhraseStated)
 			{
 				parryPhraseStated = true;
-				Chat(new string[3] { "W-^05what did you...\n^05I thought you...", "D-^05Doesn't matter!\n^05I'll still crush \nyou!", "(Oh god why doesn't \nthis thing have a \nNORMAL ray???)" }, defaultChatSize, "snd_txtpor", defaultChatPos, canSkip: true, 0);
+				Chat(new string[3] { "W-^05what did you...\n^05I thought you...", "D-^05Doesn't matter!\n^05I'll still crush \nyou!", "(Oh god why doesn't \nthis thing have a \nNORMAL ray???)" }, defaultChatSize, "snd_txtpor", defaultChatPos, true, 0);
 			}
 			else if (!statedFirstPhrase)
 			{
 				if (startPhrase == 1)
 				{
-					Chat(new string[4] { "HAHAHAHA!!!^05\nYou IDIOTS!", "As long as my \nmachine's eye is \nclosed,^05 you can't \nhurt it!", "And you know what?", "I'll make it even \nharder for you to \ndo so!" }, defaultChatSize, "snd_txtpor", defaultChatPos, canSkip: true, 0);
+					Chat(new string[4] { "HAHAHAHA!!!^05\nYou IDIOTS!", "As long as my \nmachine's eye is \nclosed,^05 you can't \nhurt it!", "And you know what?", "I'll make it even \nharder for you to \ndo so!" }, defaultChatSize, "snd_txtpor", defaultChatPos, true, 0);
 				}
 				else if (startPhrase == 2)
 				{
-					Chat(new string[3] { "You PESTS!", "You knew what to \ndo all along,^05 didn't \nyou???", "I'll make you PAY \nfor that!" }, defaultChatSize, "snd_txtpor", defaultChatPos, canSkip: true, 0);
+					Chat(new string[3] { "You PESTS!", "You knew what to \ndo all along,^05 didn't \nyou???", "I'll make you PAY \nfor that!" }, defaultChatSize, "snd_txtpor", defaultChatPos, true, 0);
 				}
 				else
 				{
-					Chat(new string[5] { "I bet you're so \nstumped as to what \nto do...", "Well,^05 you can GIVE \nUP!", "As long as my \nmachine's eye is \nclosed,^05 you can't \nhurt it!", "And you know what?", "I'll make it even \nharder for you to \ndo so!" }, defaultChatSize, "snd_txtpor", defaultChatPos, canSkip: true, 0);
+					Chat(new string[5] { "I bet you're so \nstumped as to what \nto do...", "Well,^05 you can GIVE \nUP!", "As long as my \nmachine's eye is \nclosed,^05 you can't \nhurt it!", "And you know what?", "I'll make it even \nharder for you to \ndo so!" }, defaultChatSize, "snd_txtpor", defaultChatPos, true, 0);
 				}
 			}
 		}
 		else if (finaleKilled)
 		{
-			Chat(new string[8] { "HAHAHAHA!!!\n^05I can't believe you \nactually killed it \nto spite me!", "Did you honestly \nthink it WANTED to \nhurt you???", "ABSOLUTELY NOT!", "And you know what \nthe best part is?", "IT WON'T DO \nANYTHING TO ME!!!", "Constantly time-\ntraveling has made \nme invincible!", "I'll just be able \nto get away \nanyway!!!", "SO LONG,^05 LOSERS!" }, defaultChatSize, "snd_txtpor", defaultChatPos, canSkip: true, 0);
+			Chat(new string[8] { "HAHAHAHA!!!\n^05I can't believe you \nactually killed it \nto spite me!", "Did you honestly \nthink it WANTED to \nhurt you???", "ABSOLUTELY NOT!", "And you know what \nthe best part is?", "IT WON'T DO \nANYTHING TO ME!!!", "Constantly time-\ntraveling has made \nme invincible!", "I'll just be able \nto get away \nanyway!!!", "SO LONG,^05 LOSERS!" }, defaultChatSize, "snd_txtpor", defaultChatPos, true, 0);
 		}
 		else if (sparedInFinale)
 		{
-			Chat(new string[1] { "HA!^05\nYou've fallen into \nmy trap!" }, defaultChatSize, "snd_txtpor", defaultChatPos, canSkip: true, 0);
+			Chat(new string[1] { "HA!^05\nYou've fallen into \nmy trap!" }, defaultChatSize, "snd_txtpor", defaultChatPos, true, 0);
 		}
 	}
 
@@ -496,7 +496,7 @@ public class Porky : EnemyBase
 		}
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		bool flag = eyeIsOpen;
 		switch (i)
@@ -518,7 +518,7 @@ public class Porky : EnemyBase
 			}
 			return new string[1] { "* But the mech's legs were\n  already completely disabled." };
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 
@@ -619,17 +619,17 @@ public class Porky : EnemyBase
 			{
 				destroyed = true;
 				GetPart("mech").GetComponent<SpriteRenderer>().sprite = eyeHurt;
-				Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
-				Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
-				Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
-				Util.FindObjectOfType<BattleManager>().StopMusic();
+				UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
+				UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
+				UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
+				UnityEngine.Object.FindObjectOfType<BattleManager>().StopMusic();
 				hp = 0;
 			}
 			if (startPhrase != 2)
 			{
 				startPhrase = 1;
 			}
-			if ((partyMember == 1 && (bool)Util.FindObjectOfType<SpecialAttackEffect>()) || (partyMember == 3 && !Util.FindObjectOfType<SpecialAttackEffect>() && rawDmg >= 35f))
+			if ((partyMember == 1 && (bool)UnityEngine.Object.FindObjectOfType<SpecialAttackEffect>()) || (partyMember == 3 && !UnityEngine.Object.FindObjectOfType<SpecialAttackEffect>() && rawDmg >= 35f))
 			{
 				moveFrameMulti = 2;
 			}

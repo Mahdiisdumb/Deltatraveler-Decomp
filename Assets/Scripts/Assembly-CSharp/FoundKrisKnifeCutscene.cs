@@ -17,12 +17,12 @@ public class FoundKrisKnifeCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				kris.SetSelfAnimControl(setAnimControl: false);
-				susie.SetSelfAnimControl(setAnimControl: false);
-				kris.GetComponent<Animator>().SetBool("isMoving", value: true);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				kris.SetSelfAnimControl(false);
+				susie.SetSelfAnimControl(false);
+				kris.GetComponent<Animator>().SetBool("isMoving", true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
 				susie.GetComponent<Animator>().SetFloat("speed", 1.5f);
-				cam.SetFollowPlayer(follow: false);
+				cam.SetFollowPlayer(false);
 			}
 			if (susie.transform.position != new Vector3(0f, 0.54f) && frames <= 76)
 			{
@@ -30,7 +30,7 @@ public class FoundKrisKnifeCutscene : CutsceneBase
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (kris.transform.position != new Vector3(-1.05f, 0.19f))
 			{
@@ -38,7 +38,7 @@ public class FoundKrisKnifeCutscene : CutsceneBase
 			}
 			else
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (cam.transform.position != new Vector3(0f, 0f, -10f))
 			{
@@ -47,7 +47,7 @@ public class FoundKrisKnifeCutscene : CutsceneBase
 			if (frames > 70 && frames <= 90)
 			{
 				float t = Mathf.Abs((float)(frames - 80) / 10f);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
 				susie.GetComponent<Animator>().SetFloat("speed", 1f);
 				susie.transform.position = Vector3.Lerp(new Vector3(0f, 0.3f), new Vector3(0f, 0.54f), t);
 				if (frames == 80)
@@ -58,18 +58,18 @@ public class FoundKrisKnifeCutscene : CutsceneBase
 			if (frames == 90)
 			{
 				kris.ChangeDirection(Vector2.right);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 				susie.DisableAnimator();
 				susie.SetSprite("spr_su_knife");
 			}
 			if (frames == 110)
 			{
-				bool flag = gm.NumItemFreeSpace(equipment: true) == 0;
+				bool flag = gm.NumItemFreeSpace() == 0;
 				if (!oblit)
 				{
 					if (!flag)
 					{
-						gm.AddEquipment(26);
+						gm.AddItem(26);
 					}
 					else
 					{
@@ -104,10 +104,10 @@ public class FoundKrisKnifeCutscene : CutsceneBase
 						state = 2;
 						frames = 0;
 						PlaySFX("sounds/snd_item");
-						bool flag2 = gm.NumItemFreeSpace(equipment: true) == 0;
+						bool flag2 = gm.NumItemFreeSpace() == 0;
 						if (!flag2)
 						{
-							gm.AddEquipment(27);
+							gm.AddItem(27);
 						}
 						else
 						{
@@ -152,10 +152,10 @@ public class FoundKrisKnifeCutscene : CutsceneBase
 			}
 			else
 			{
-				cam.SetFollowPlayer(follow: true);
+				cam.SetFollowPlayer(true);
 				kris.ChangeDirection(Vector2.down);
-				kris.SetSelfAnimControl(setAnimControl: true);
-				susie.SetSelfAnimControl(setAnimControl: true);
+				kris.SetSelfAnimControl(true);
+				susie.SetSelfAnimControl(true);
 				EndCutscene();
 			}
 		}
@@ -185,10 +185,10 @@ public class FoundKrisKnifeCutscene : CutsceneBase
 		}
 		else
 		{
-			cam.SetFollowPlayer(follow: true);
+			cam.SetFollowPlayer(true);
 			kris.ChangeDirection(Vector2.down);
-			kris.SetSelfAnimControl(setAnimControl: true);
-			susie.SetSelfAnimControl(setAnimControl: true);
+			kris.SetSelfAnimControl(true);
+			susie.SetSelfAnimControl(true);
 			EndCutscene();
 		}
 	}

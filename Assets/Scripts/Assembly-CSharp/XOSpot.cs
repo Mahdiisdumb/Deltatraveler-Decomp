@@ -23,7 +23,7 @@ public class XOSpot : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision && (bool)collision.GetComponent<OverworldPlayer>() && !disabled)
+		if ((bool)collision.GetComponent<OverworldPlayer>() && !disabled)
 		{
 			steppedOn++;
 			if (steppedOn > 2)

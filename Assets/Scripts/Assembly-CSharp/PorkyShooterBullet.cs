@@ -24,7 +24,7 @@ public class PorkyShooterBullet : BulletBase
 		baseDmg = 6;
 		destroyOnHit = false;
 		spawnRate = Random.Range(10, 24);
-		if ((bool)Util.FindObjectOfType<PorkyHeliShooterAttack>())
+		if ((bool)Object.FindObjectOfType<PorkyHeliShooterAttack>())
 		{
 			spawnRate *= 2;
 		}

@@ -8,8 +8,8 @@ public class Torch : MonoBehaviour
 
 	private void Start()
 	{
-		player = Util.OverworldPlayer();
-		OverworldPartyMember[] array = Util.FindObjectsOfType<OverworldPartyMember>();
+		player = Object.FindObjectOfType<OverworldPlayer>();
+		OverworldPartyMember[] array = Object.FindObjectsOfType<OverworldPartyMember>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			array[i].UseUnhappySprites();
@@ -59,9 +59,9 @@ public class Torch : MonoBehaviour
 			{
 				a = 0f;
 			}
-			if ((bool)Util.FindObjectOfType<NeonPlayers>())
+			if ((bool)Object.FindObjectOfType<NeonPlayers>())
 			{
-				SpriteRenderer[] componentsInChildren = Util.FindObjectOfType<NeonPlayers>().GetComponentsInChildren<SpriteRenderer>();
+				SpriteRenderer[] componentsInChildren = Object.FindObjectOfType<NeonPlayers>().GetComponentsInChildren<SpriteRenderer>();
 				for (int i = 0; i < componentsInChildren.Length; i++)
 				{
 					componentsInChildren[i].color = new Color(1f, 1f, 1f, a);
@@ -73,16 +73,16 @@ public class Torch : MonoBehaviour
 	public void AttachToSconce(int i)
 	{
 		attachedToPlayer = false;
-		if ((bool)Util.FindObjectOfType<NeonPlayers>())
+		if ((bool)Object.FindObjectOfType<NeonPlayers>())
 		{
-			SpriteRenderer[] componentsInChildren = Util.FindObjectOfType<NeonPlayers>().GetComponentsInChildren<SpriteRenderer>();
+			SpriteRenderer[] componentsInChildren = Object.FindObjectOfType<NeonPlayers>().GetComponentsInChildren<SpriteRenderer>();
 			for (int j = 0; j < componentsInChildren.Length; j++)
 			{
 				componentsInChildren[j].color = new Color(1f, 1f, 1f, 0f);
 			}
 		}
 		TorchHolder torchHolder = null;
-		TorchHolder[] array = Util.FindObjectsOfType<TorchHolder>();
+		TorchHolder[] array = Object.FindObjectsOfType<TorchHolder>();
 		foreach (TorchHolder torchHolder2 in array)
 		{
 			if (torchHolder2.GetHolderID() == i)
@@ -106,10 +106,10 @@ public class Torch : MonoBehaviour
 		}
 		if (Util.GameManager().NoelleInParty())
 		{
-			LoadingZone[] array2 = Util.FindObjectsOfType<LoadingZone>();
+			LoadingZone[] array2 = Object.FindObjectsOfType<LoadingZone>();
 			for (int j = 0; j < array2.Length; j++)
 			{
-				array2[j].SetForceActivationTrigger(forceActivationTrigger: false);
+				array2[j].SetForceActivationTrigger(false);
 			}
 		}
 	}
@@ -117,12 +117,12 @@ public class Torch : MonoBehaviour
 	public void AttachToPlayer()
 	{
 		attachedToPlayer = true;
-		LoadingZone[] array = Util.FindObjectsOfType<LoadingZone>();
+		LoadingZone[] array = Object.FindObjectsOfType<LoadingZone>();
 		foreach (LoadingZone loadingZone in array)
 		{
 			if (loadingZone.GetScene() != 90 && loadingZone.GetScene() != 87)
 			{
-				loadingZone.SetForceActivationTrigger(forceActivationTrigger: true);
+				loadingZone.SetForceActivationTrigger(true);
 			}
 		}
 	}

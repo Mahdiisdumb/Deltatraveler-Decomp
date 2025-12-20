@@ -37,8 +37,8 @@ public class ToriOutisdeHomeCutscene : CutsceneBase
 			susie.transform.position = Vector3.Lerp(new Vector3(0f, -18.51f), new Vector3(0f, -16.01f), (float)(frames - 130) / 45f);
 			if (frames >= 175)
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 				if (!txt)
 				{
 					if ((int)gm.GetFlag(13) < 3)
@@ -135,9 +135,9 @@ public class ToriOutisdeHomeCutscene : CutsceneBase
 		{
 			gm.PlayMusic("zoneMusic");
 			kris.GetComponent<BoxCollider2D>().enabled = true;
-			kris.SetSelfAnimControl(setAnimControl: true);
-			susie.SetSelfAnimControl(setAnimControl: true);
-			cam.SetFollowPlayer(follow: true);
+			kris.SetSelfAnimControl(true);
+			susie.SetSelfAnimControl(true);
+			cam.SetFollowPlayer(true);
 			EndCutscene();
 		}
 		if (state == 3 && (bool)txt)
@@ -187,13 +187,13 @@ public class ToriOutisdeHomeCutscene : CutsceneBase
 				}
 				if (frames >= 10)
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+					susie.GetComponent<Animator>().SetBool("isMoving", true);
 					susie.GetComponent<Animator>().SetFloat("speed", 2f);
 					susie.transform.position = Vector3.Lerp(new Vector3(0f, -16.01f), new Vector3(1.43f, -14.82f), (float)(frames - 10) / 20f);
 				}
 				if (frames == 30)
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+					susie.GetComponent<Animator>().SetBool("isMoving", false);
 					susie.ChangeDirection(Vector2.left);
 					StartText(new string[2] { "* Kris,^05 what the hell\n  are you muttering?", "* I don't think she" }, new string[4] { "snd_txtsus", "snd_txtsus", "snd_txttor", "snd_txttor" }, new int[18], new string[7] { "su_annoyed", "su_annoyed", "tori_worry", "tori_worry", "tori_neutral", "tori_neutral", "tori_neutral" }, 0);
 				}
@@ -293,7 +293,7 @@ public class ToriOutisdeHomeCutscene : CutsceneBase
 					{
 						PlaySFX("sounds/snd_weaponpull");
 					}
-					kris.transform.position = new Vector3(Mathf.Lerp(0f, -2.3f, (num11 - 6f) / 15f), Mathf.Sin(Mathf.Lerp(0f, 170f, (num11 - 6f) / 15f) * (MathF.PI / 180f)) - 14.9f);
+					kris.transform.position = new Vector3(Mathf.Lerp(0f, -2.3f, (num11 - 6f) / 15f), Mathf.Sin(Mathf.Lerp(0f, 170f, (num11 - 6f) / 15f) * ((float)Math.PI / 180f)) - 14.9f);
 				}
 				if (num11 == 22f)
 				{
@@ -411,16 +411,16 @@ public class ToriOutisdeHomeCutscene : CutsceneBase
 		hardmode = (int)gm.GetFlag(108) == 1;
 		gm.StopMusic(30f);
 		gm.SetFlag(51, 1);
-		kris.SetSelfAnimControl(setAnimControl: false);
+		kris.SetSelfAnimControl(false);
 		kris.ChangeDirection(Vector2.up);
-		kris.GetComponent<Animator>().SetBool("isMoving", value: true);
-		susie.SetSelfAnimControl(setAnimControl: false);
+		kris.GetComponent<Animator>().SetBool("isMoving", true);
+		susie.SetSelfAnimControl(false);
 		susie.ChangeDirection(Vector2.up);
-		susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+		susie.GetComponent<Animator>().SetBool("isMoving", true);
 		toriel = GameObject.Find("Toriel").GetComponent<Animator>();
 		toriel.transform.position = new Vector3(0f, -13.22f);
 		toriel.Play("WalkUp");
-		cam.SetFollowPlayer(follow: false);
+		cam.SetFollowPlayer(false);
 		cam.transform.position = Vector3.zero;
 	}
 }

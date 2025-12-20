@@ -6,7 +6,7 @@ public class ElectricMazeWall : MonoBehaviour
 	{
 		if ((bool)collision.gameObject.GetComponent<OverworldPlayer>())
 		{
-			Util.FindObjectOfType<ElectricMazeHandler>().WallCollision();
+			Object.FindObjectOfType<ElectricMazeHandler>().WallCollision();
 		}
 	}
 
@@ -14,7 +14,7 @@ public class ElectricMazeWall : MonoBehaviour
 	{
 		if ((bool)collision.gameObject.GetComponent<OverworldPlayer>())
 		{
-			Util.FindObjectOfType<ElectricMazeHandler>().WallCollision();
+			Object.FindObjectOfType<ElectricMazeHandler>().WallCollision();
 		}
 	}
 }

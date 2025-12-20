@@ -27,7 +27,7 @@ public class NapstablookStreamBullet : BulletBase
 			velocity = 1f / 6f;
 		}
 		Vector3 vector = (isRight ? Vector3.right : Vector3.left);
-		float x = Util.FindObjectOfType<SOUL>().transform.position.x;
+		float x = Object.FindObjectOfType<SOUL>().transform.position.x;
 		if (direction.y < 0f && base.transform.position.y <= -2.92f)
 		{
 			base.transform.position = new Vector3(base.transform.position.x, -2.92f);

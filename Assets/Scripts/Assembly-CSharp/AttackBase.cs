@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AttackBase : MonoBehaviour
+public class AttackBase : TranslatableBehaviour
 {
 	protected int frames;
 
@@ -22,6 +22,7 @@ public class AttackBase : MonoBehaviour
 
 	protected virtual void Awake()
 	{
+		stringSubFolder = "attacks";
 		frames = 0;
 		maxFrames = 0;
 		state = 0;
@@ -29,7 +30,7 @@ public class AttackBase : MonoBehaviour
 		bbSize = new Vector2(300f, 140f);
 		bbPos = new Vector2(0f, -1.66f);
 		soulPos = new Vector2(-0.055f, -1.63f);
-		bb = Util.FindObjectOfType<BulletBoard>();
+		bb = Object.FindObjectOfType<BulletBoard>();
 	}
 
 	protected virtual void Update()

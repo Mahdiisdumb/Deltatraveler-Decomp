@@ -24,7 +24,7 @@ public class LooxWormBullet : BulletBase
 	{
 		frames++;
 		basePosition += velocity;
-		base.transform.position = basePosition + new Vector3(0f, Mathf.Cos((float)(12 * frames) * (MathF.PI / 180f)) / 7f);
+		base.transform.position = basePosition + new Vector3(0f, Mathf.Cos((float)(12 * frames) * ((float)Math.PI / 180f)) / 7f);
 		if (frames == 4 && level < 2)
 		{
 			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/ruins/LooxWormBullet"), origPosition, Quaternion.identity, base.transform.parent).GetComponent<LooxWormBullet>().Activate(origPosition, velocity, level + 1);

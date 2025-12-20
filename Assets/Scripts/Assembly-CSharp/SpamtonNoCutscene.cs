@@ -257,16 +257,13 @@ public class SpamtonNoCutscene : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		bool flag = false;
-		BoxUI boxUI = Util.FindObjectOfType<BoxUI>();
-		if ((bool)boxUI)
+		itemList = new List<int>(gm.GetItemList());
+		BoxUI boxUI = Object.FindObjectOfType<BoxUI>();
+		if (boxUI != null)
 		{
-			boxUI.SaveItems();
+			boxUI.WriteBoxItems();
 			Object.Destroy(boxUI.gameObject);
 		}
-		itemList = new List<int>(gm.GetItemList());
-		itemList.AddRange(new List<int>(gm.GetEquipmentItemList()));
-		itemList.AddRange(gm.GetBoxList());
-		MonoBehaviour.print(itemList.Count);
 		if (gm.GetFlagInt(292) == 1 && gm.GetFlagInt(303) == 0 && gm.GetFlagInt(87) >= 7)
 		{
 			removedItems.Add(-2);
@@ -278,15 +275,21 @@ public class SpamtonNoCutscene : CutsceneBase
 		{
 			eggValidityCheck = true;
 		}
-		for (int i = 0; i < itemList.Count; i++)
+		for (int i = 0; i < 18; i++)
 		{
 			bool flag2 = false;
+			int i2 = i;
 			int num = -1;
-			if (i < 16)
+			if (i < 8)
 			{
 				flag2 = true;
+				num = itemList[i];
 			}
-			num = itemList[i];
+			else if (gm.GetFlagInt(156) == 1)
+			{
+				i2 = 149 + i;
+				num = gm.GetFlagInt(i2);
+			}
 			if (num <= -1)
 			{
 				continue;
@@ -300,40 +303,22 @@ public class SpamtonNoCutscene : CutsceneBase
 			{
 				flag3 = true;
 			}
-			else if (num == 42 && eggValidityCheck)
+			else if ((num == 16 || num == 42) && eggValidityCheck)
 			{
 				flag3 = true;
 			}
-			if (!flag3)
+			if (flag3)
 			{
-				continue;
-			}
-			flag = true;
-			removedItems.Add(num);
-			if (flag2)
-			{
-				if (i < 8)
+				flag = true;
+				removedItems.Add(num);
+				if (flag2)
 				{
 					gm.RemoveItemByID(num);
+					continue;
 				}
-				else
-				{
-					gm.RemoveEquipmentByID(num);
-				}
-			}
-			else
-			{
 				tookFromBox = true;
-				gm.GetBoxList().RemoveAt(i - 16);
-				itemList.RemoveAt(i);
-				i--;
+				gm.SetFlag(i2, -1);
 			}
-		}
-		if (gm.GetFlagInt(286) == 1 && eggValidityCheck)
-		{
-			gm.SetFlag(286, 0);
-			removedItems.Add(16);
-			flag = true;
 		}
 		if (eggValidityCheck)
 		{
@@ -357,7 +342,7 @@ public class SpamtonNoCutscene : CutsceneBase
 			spamton = GameObject.Find("Spamton").transform;
 			spamton.position = new Vector3(15.479f, 0f);
 			gm.PlayMusic("music/mus_spamton_meeting");
-			if (gm.GetFlagInt(296) == 1 && (removedItems.Contains(42) || removedItems.Contains(16)))
+			if (gm.GetFlagInt(296) == 1)
 			{
 				StartText(new string[4] { "* HEY YOU LITTLE [[Sponge]]\n!", "* I BELIEVE YOU RECEIVED\n  AN [[Charity]] IN ERROR!", "* AND I ONLY TRUST\n  \"THE BOYS\" IN THE HANDS\n  OF [[Pacifist Route]]", "* SO THAT [[\"Fun\"]] IS\n  OFFICIALLY\n  [[Eviction Notice]]" }, new string[1] { "snd_txtspam" }, new int[1], new string[4] { "spamton_neutral", "spamton_insane", "spamton_laugh", "spamton_stare" });
 			}
@@ -372,7 +357,7 @@ public class SpamtonNoCutscene : CutsceneBase
 		else
 		{
 			state = 66;
-			EndCutscene(enablePlayerMovement: false);
+			EndCutscene(false);
 		}
 	}
 }

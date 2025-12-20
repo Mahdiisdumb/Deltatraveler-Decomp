@@ -1,20 +1,29 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CarpainterDeath : AttackBase
 {
 	private Carpainter carpainter;
 
+	public override Dictionary<string, string[]> GetDefaultStrings()
+	{
+		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
+		dictionary.Add("killed", new string[8] { "... As I assumed...", "I guess...^15 I should \ngive this to \nsomeone,^10 at least.", "It's a bomb that \nwill blow up the \ncave seal to the \neast of town.", "It was sealed to \nkeep people away from \na grey door that \nappeared there.", "... Maybe it will \nheal your violent \nnature.", "Just...", "Please...", "Spare the children..." });
+		return dictionary;
+	}
+
 	protected override void Awake()
 	{
 		base.Awake();
+		SetStrings(GetDefaultStrings(), GetType());
 		maxFrames = 5000;
 		bbPos = new Vector2(0f, -2.37f);
 		bbSize = new Vector2(575f, 140f);
-		Util.FindObjectOfType<PartyPanels>().DeactivateTargets();
-		Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: false, susie: false, noelle: false);
-		Util.FindObjectOfType<SOUL>().ChangeSOULMode(0);
-		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
-		carpainter = Util.FindObjectOfType<Carpainter>();
+		Object.FindObjectOfType<PartyPanels>().DeactivateTargets();
+		Object.FindObjectOfType<PartyPanels>().RaiseHeads(false, false, false);
+		Object.FindObjectOfType<SOUL>().ChangeSOULMode(0);
+		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
+		carpainter = Object.FindObjectOfType<Carpainter>();
 	}
 
 	protected override void Update()
@@ -33,7 +42,7 @@ public class CarpainterDeath : AttackBase
 			}
 			if (frames == 60)
 			{
-				carpainter.Chat(new string[8] { "... As I assumed...", "I guess...^15 I should \ngive this to \nsomeone,^10 at least.", "It's a bomb that \nwill blow up the \ncave seal to the \neast of town.", "It was sealed to \nkeep people away from \na grey door that \nappeared there.", "... Maybe it will \nheal your violent \nnature.", "Just...", "Please...", "Spare the children..." }, "RightWide", "snd_text", new Vector2(163f, 56f), canSkip: true, 1);
+				carpainter.Chat(GetStringArray("killed"), "RightWide", "snd_text", new Vector2(163f, 56f), true, 1);
 				state = 1;
 				frames = 0;
 			}
@@ -70,7 +79,7 @@ public class CarpainterDeath : AttackBase
 		}
 		if (frames == 120)
 		{
-			Util.FindObjectOfType<BattleManager>().EndNormalFight(customMessage: false, "");
+			Object.FindObjectOfType<BattleManager>().EndNormalFight(false, "");
 		}
 	}
 }

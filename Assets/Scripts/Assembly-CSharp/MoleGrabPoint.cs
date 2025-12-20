@@ -22,26 +22,26 @@ public class MoleGrabPoint : MonoBehaviour
 		if ((bool)soul)
 		{
 			soul.transform.parent = null;
-			soul.SetCollision(enabled: true);
+			soul.SetCollision(true);
 		}
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (soul == null && (bool)collision && (bool)collision.GetComponent<SOUL>() && collision.transform.parent == null)
+		if (soul == null && (bool)collision.GetComponent<SOUL>() && collision.transform.parent == null)
 		{
 			GetComponent<AudioSource>().Play();
 			soul = collision.GetComponent<SOUL>();
-			soul.SetControllable(boo: false);
-			soul.SetCollision(enabled: false);
+			soul.SetControllable(false);
+			soul.SetCollision(false);
 			soul.transform.parent = base.transform;
 			soul.transform.localPosition = Vector3.zero;
-			MoleClawBullet[] array = Util.FindObjectsOfType<MoleClawBullet>();
+			MoleClawBullet[] array = Object.FindObjectsOfType<MoleClawBullet>();
 			for (int i = 0; i < array.Length; i++)
 			{
 				array[i].Grabbed();
 			}
-			Util.FindObjectOfType<MoleClawAttack>().Grab();
+			Object.FindObjectOfType<MoleClawAttack>().Grab();
 		}
 	}
 }

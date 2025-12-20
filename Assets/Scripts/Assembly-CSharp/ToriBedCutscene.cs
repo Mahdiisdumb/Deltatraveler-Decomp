@@ -38,12 +38,12 @@ public class ToriBedCutscene : CutsceneBase
 			susie.ChangeDirection(Vector2.up);
 			if (susie.transform.position != new Vector3(0f, 2.13f))
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
 				susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(0f, 2.13f), 1f / 12f);
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 				frames++;
 				if (frames == 20)
 				{
@@ -64,7 +64,7 @@ public class ToriBedCutscene : CutsceneBase
 			}
 			if (frames <= 15)
 			{
-				susie.transform.position = new Vector3(Mathf.Lerp(0f, 2.89f, (float)frames / 15f), Mathf.Lerp(2.13f, 2.49f, (float)frames / 15f) + Mathf.Sin((float)frames * 12f * (MathF.PI / 180f)));
+				susie.transform.position = new Vector3(Mathf.Lerp(0f, 2.89f, (float)frames / 15f), Mathf.Lerp(2.13f, 2.49f, (float)frames / 15f) + Mathf.Sin((float)frames * 12f * ((float)Math.PI / 180f)));
 			}
 			if (frames == 15)
 			{
@@ -85,12 +85,12 @@ public class ToriBedCutscene : CutsceneBase
 			{
 				StartText(new string[2] { "* Might as well rest\n  up while we can.", "* We've got a long\n  road ahead of us." }, new string[2] { "snd_txtsus", "snd_txtsus" }, new int[18], new string[2] { "su_smirk", "su_smile" }, 1);
 				state = 3;
-				gm.SetPartyMembers(susie: false, noelle: false);
+				gm.SetPartyMembers(false, false);
 			}
 		}
 		if (state == 3 && !txt)
 		{
-			kris.SetSelfAnimControl(setAnimControl: true);
+			kris.SetSelfAnimControl(true);
 			kris.ChangeDirection(Vector2.down);
 			EndCutscene();
 		}
@@ -103,7 +103,7 @@ public class ToriBedCutscene : CutsceneBase
 			EndCutscene();
 			return;
 		}
-		cam.SetFollowPlayer(follow: false);
+		cam.SetFollowPlayer(false);
 		kris.GetComponent<BoxCollider2D>().enabled = false;
 		base.StartCutscene(par);
 		hardmode = (int)gm.GetFlag(108) == 1;
@@ -129,14 +129,14 @@ public class ToriBedCutscene : CutsceneBase
 			"tori_happy", "tori_wack", "su_side_sweat", "tori_worry", "tori_neutral", "tori_worry", "su_smirk", "tori_neutral", "tori_neutral", "su_excited",
 			"tori_happy"
 		}, 0);
-		kris.SetSelfAnimControl(setAnimControl: false);
+		kris.SetSelfAnimControl(false);
 		kris.ChangeDirection(Vector2.up);
 		kris.transform.position = new Vector3(-0.51f, -3.33f);
-		kris.GetComponent<Animator>().SetBool("isMoving", value: false);
-		susie.SetSelfAnimControl(setAnimControl: false);
+		kris.GetComponent<Animator>().SetBool("isMoving", false);
+		susie.SetSelfAnimControl(false);
 		susie.ChangeDirection(Vector2.up);
 		susie.transform.position = new Vector3(0.49f, -3.165f);
-		susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+		susie.GetComponent<Animator>().SetBool("isMoving", false);
 		toriel = GameObject.Find("Toriel").GetComponent<Animator>();
 		toriel.transform.position = new Vector3(0f, 0.18f);
 		toriel.Play("WalkDown");

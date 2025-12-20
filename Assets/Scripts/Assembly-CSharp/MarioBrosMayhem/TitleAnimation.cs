@@ -33,7 +33,7 @@ namespace MarioBrosMayhem
 		{
 			if (timer > 0f && !startMusic)
 			{
-				Util.FindObjectOfType<MusicPlayer>().Play("mus_title");
+				Object.FindObjectOfType<MusicPlayer>().Play("mus_title");
 				startMusic = true;
 			}
 			timer += Time.deltaTime;
@@ -125,14 +125,14 @@ namespace MarioBrosMayhem
 			}
 			if (UTInput.GetButtonDown("Z") || UTInput.GetButtonDown("C"))
 			{
-				Util.GameManager().PlayGlobalSFX("mariobros/sounds/snd_menu_select");
+				Object.FindObjectOfType<GameManager>().PlayGlobalSFX("mariobros/sounds/snd_menu_select");
 				Skip();
 			}
 		}
 
 		public void Skip()
 		{
-			logo.Skip(flash: true);
+			logo.Skip(true);
 			logo.transform.localPosition = new Vector3(0f, 45f);
 			mario.transform.localPosition = new Vector3(-138f, 0f);
 			luigi.transform.localPosition = new Vector3(-138f, 0f);

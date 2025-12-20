@@ -64,7 +64,7 @@ public class PostGauntletCutscene : CutsceneBase
 			}
 			if (frames == 60)
 			{
-				StartText(new string[7] { "* Sorry....", "* I-^05it's okay!", "* ...", "* Say,^05 what happened\n  to Sans?", "* i'm over here.", "* HUH???\n^05* YOU COME BACK FOR\n  MORE??!", "* nah.^05\n* look over the big ol' mound." }, new string[7] { "snd_txtsus", "snd_txtnoe", "snd_txtnoe", "snd_txtnoe", "snd_txtsans", "snd_txtsus", "snd_txtsans" }, new int[1], new string[7] { "su_depressed", "no_surprised_happy", "no_silent_side", "no_confused", "", "su_angry", "" });
+				StartText(new string[7] { "* Sorry....", "* I-^05it's okay!", "* ...", "* Say,^05 what happened\n  to Sans?", "*\ti'm over here.", "* HUH???\n^05* YOU COME BACK FOR\n  MORE??!", "*\tnah.^05\n*\tlook over the big ol' mound." }, new string[7] { "snd_txtsus", "snd_txtnoe", "snd_txtnoe", "snd_txtnoe", "snd_txtsans", "snd_txtsus", "snd_txtsans" }, new int[1], new string[7] { "su_depressed", "no_surprised_happy", "no_silent_side", "no_confused", "", "su_angry", "" });
 				state = 2;
 				frames = 0;
 			}
@@ -107,7 +107,7 @@ public class PostGauntletCutscene : CutsceneBase
 			cam.transform.position = new Vector3(1.8f, Mathf.Lerp(0f, 6.81f, (float)frames / 60f), -10f);
 			if (frames == 90)
 			{
-				StartText(new string[1] { "* heya.^05\n* how was the fall?" }, new string[1] { "snd_txtsans" }, new int[1], new string[1] { "sans_wink" }, 1);
+				StartText(new string[1] { "*\theya.^05\n*\thow was the fall?" }, new string[1] { "snd_txtsans" }, new int[1], new string[1] { "sans_wink" }, 1);
 				state = 3;
 				frames = 0;
 			}
@@ -120,7 +120,7 @@ public class PostGauntletCutscene : CutsceneBase
 			{
 				StartText(new string[11]
 				{
-					"* Oh.", "* Not THAT Sans!", "* The one that...^10\n  bounced down with us.", "* Oh shoot,^05 you're right!", "* God,^05 I'm REALLY getting\n  sick of this crazy\n  place.", "* Can we just find\n  a grey door and\n  go back to,^05 y'know...", "* The NICER underground\n  place we were in?", "* That Sans better not\n  show his ugly mug\n  around us again.", "* oh,^05 MY ugly mug?", "* NOT YOU!!!",
+					"* Oh.", "* Not THAT Sans!", "* The one that...^10\n  bounced down with us.", "* Oh shoot,^05 you're right!", "* God,^05 I'm REALLY getting\n  sick of this crazy\n  place.", "* Can we just find\n  a grey door and\n  go back to,^05 y'know...", "* The NICER underground\n  place we were in?", "* That Sans better not\n  show his ugly mug\n  around us again.", "*\toh,^05 MY ugly mug?", "* NOT YOU!!!",
 					"* Let's just go."
 				}, new string[11]
 				{
@@ -212,7 +212,7 @@ public class PostGauntletCutscene : CutsceneBase
 		kris.transform.position = new Vector3(1.8f, -1.09f);
 		SetSprite(kris, "spr_kr_ko");
 		susie.transform.position = new Vector3(3.37f, -1.03f);
-		SetSprite(susie, "spr_su_kneel", flipX: true);
+		SetSprite(susie, "spr_su_kneel", true);
 		noelle.transform.position = new Vector3(5.33f, -0.8f);
 		ChangeDirection(noelle, Vector2.left);
 		cam.transform.position = new Vector3(1.8f, 0f, -10f);

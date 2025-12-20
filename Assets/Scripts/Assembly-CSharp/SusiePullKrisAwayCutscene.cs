@@ -71,7 +71,7 @@ public class SusiePullKrisAwayCutscene : CutsceneBase
 				if (Vector3.Distance(noelle.transform.position, susie.transform.position) > 5f)
 				{
 					ChangeDirection(noelle, Vector2.right);
-					SetMoveAnim(noelle, isMoving: true);
+					SetMoveAnim(noelle, true);
 					noelleMoving = true;
 				}
 			}
@@ -85,7 +85,7 @@ public class SusiePullKrisAwayCutscene : CutsceneBase
 			}
 			else if (frames == 65)
 			{
-				gm.LoadArea(96, fadeIn: true, new Vector3(-5.91f, -0.13f), Vector2.right);
+				gm.LoadArea(96, true, new Vector3(-5.91f, -0.13f), Vector2.right);
 			}
 		}
 	}
@@ -95,6 +95,6 @@ public class SusiePullKrisAwayCutscene : CutsceneBase
 		base.StartCutscene(par);
 		RevokePlayerControl();
 		ChangeDirection(susie, kris.transform.position + new Vector3(-0.788f, 0.165f) - susie.transform.position);
-		SetMoveAnim(susie, isMoving: true);
+		SetMoveAnim(susie, true);
 	}
 }

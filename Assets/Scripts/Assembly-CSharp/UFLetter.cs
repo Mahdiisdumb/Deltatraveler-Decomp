@@ -46,20 +46,20 @@ public class UFLetter : InteractSelectionBase
 				txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
 				if ((int)Util.GameManager().GetFlag(198) == 1)
 				{
-					txt.CreateBox(new string[3] { "* How the hell did\n  he fit a bunch of\n  bones in there???", "* ... The hell is with\n  that look,^05 Kris?", "* It's not like it'll\n  have any other surprises\n  in it." }, new string[1] { "snd_txtsus" }, new int[1], giveBackControl: true, new string[3] { "su_side_sweat", "su_annoyed", "su_smirk_sweat" });
+					txt.CreateBox(new string[3] { "* How the hell did\n  he fit a bunch of\n  bones in there???", "* ... The hell is with\n  that look,^05 Kris?", "* It's not like it'll\n  have any other surprises\n  in it." }, new string[1] { "snd_txtsus" }, new int[1], true, new string[3] { "su_side_sweat", "su_annoyed", "su_smirk_sweat" });
 				}
 				else
 				{
-					txt.CreateBox(new string[1] { "* How the hell did\n  he fit a bunch of\n  bones in there???" }, new string[1] { "snd_txtsus" }, new int[1], giveBackControl: true, new string[1] { "su_side_sweat" });
+					txt.CreateBox(new string[1] { "* How the hell did\n  he fit a bunch of\n  bones in there???" }, new string[1] { "snd_txtsus" }, new int[1], true, new string[1] { "su_side_sweat" });
 				}
-				Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+				Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 			}
 			else
 			{
 				Util.GameManager().SetFlag(198, 1);
 				txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(new string[3] { "* (You noticed that there was\n  an actual message in the\n  letter.)", "* (It reads...)", "* \"I KNOW WHAT YOU ARE\"" }, giveBackControl: true);
-				Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+				txt.CreateBox(new string[3] { "* (You noticed that there was\n  an actual message in the\n  letter.)", "* (It reads...)", "* \"I KNOW WHAT YOU ARE\"" }, true);
+				Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 			}
 		}
 		else
@@ -97,7 +97,7 @@ public class UFLetter : InteractSelectionBase
 		if (index == Vector2.left)
 		{
 			Util.GameManager().SetFlag(199, 1);
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
+			Util.GameManager().DisablePlayerMovement(true);
 			CutsceneHandler.GetCutscene(66).StartCutscene();
 		}
 		else

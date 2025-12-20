@@ -15,7 +15,7 @@ public class CorrectRuinsSwitch : Interactable
 
 	private void Awake()
 	{
-		if (flag > -1 && (int)Util.GameManager().GetFlag(flag) == 1)
+		if (flag > -1 && (int)Object.FindObjectOfType<GameManager>().GetFlag(flag) == 1)
 		{
 			activated = true;
 			GameObject.Find("Spikes").GetComponent<BoxCollider2D>().isTrigger = true;
@@ -41,12 +41,12 @@ public class CorrectRuinsSwitch : Interactable
 			activated = true;
 			if (flag > -1)
 			{
-				Util.GameManager().SetFlag(flag, 1);
+				Object.FindObjectOfType<GameManager>().SetFlag(flag, 1);
 			}
 			GetComponent<AudioSource>().Play();
 			component.CreateBox(new string[1] { "* You press the " + color + " switch.\n* You hear a clicking sound." });
 		}
-		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 	}
 
 	public override int GetEventData()

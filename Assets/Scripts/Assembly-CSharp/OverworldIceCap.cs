@@ -29,7 +29,7 @@ public class OverworldIceCap : OverworldEnemyBase
 	public override void DetectPlayer()
 	{
 		base.DetectPlayer();
-		GetComponent<SpriteRenderer>().flipX = base.transform.position.x - Util.OverworldPlayer().transform.position.x > 0f;
+		GetComponent<SpriteRenderer>().flipX = base.transform.position.x - UnityEngine.Object.FindObjectOfType<OverworldPlayer>().transform.position.x > 0f;
 		anim.SetFloat("speed", 0f);
 	}
 
@@ -44,7 +44,7 @@ public class OverworldIceCap : OverworldEnemyBase
 		else if (!startSpin)
 		{
 			startSpin = true;
-			Vector3 vector = base.transform.position - Util.OverworldPlayer().transform.position;
+			Vector3 vector = base.transform.position - UnityEngine.Object.FindObjectOfType<OverworldPlayer>().transform.position;
 			distance = vector.magnitude;
 			angle = Mathf.Atan2(vector.normalized.y, vector.normalized.x) * 57.29578f;
 			MonoBehaviour.print("icecap: starting spin at " + distance + " distance and " + angle + " angle!!!!!!!!!");
@@ -54,8 +54,8 @@ public class OverworldIceCap : OverworldEnemyBase
 			acceleration += 0.1f;
 			distance -= 1f / 24f * acceleration;
 			angle -= 10f * acceleration;
-			base.transform.position = Vector3.Lerp(base.transform.position, Util.OverworldPlayer().transform.position + new Vector3(Mathf.Cos(angle * (MathF.PI / 180f)), Mathf.Sin(angle * (MathF.PI / 180f))) * distance, acceleration);
-			GetComponent<SpriteRenderer>().flipX = base.transform.position.x - Util.OverworldPlayer().transform.position.x > 0f;
+			base.transform.position = Vector3.Lerp(base.transform.position, UnityEngine.Object.FindObjectOfType<OverworldPlayer>().transform.position + new Vector3(Mathf.Cos(angle * ((float)Math.PI / 180f)), Mathf.Sin(angle * ((float)Math.PI / 180f))) * distance, acceleration);
+			GetComponent<SpriteRenderer>().flipX = base.transform.position.x - UnityEngine.Object.FindObjectOfType<OverworldPlayer>().transform.position.x > 0f;
 		}
 	}
 }

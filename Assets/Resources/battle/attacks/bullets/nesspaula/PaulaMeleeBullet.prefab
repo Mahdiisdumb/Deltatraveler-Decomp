@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1617170527613038
+--- !u!1 &1876376226444182
 GameObject:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -8,10 +8,10 @@ GameObject:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Component:
-  - component: {fileID: 4047024622197496}
-  - component: {fileID: 212550428062877759}
-  - component: {fileID: 114693929673169373}
-  - component: {fileID: 82053191489283413}
+  - component: {fileID: 4280201308966946}
+  - component: {fileID: 212687319326954055}
+  - component: {fileID: 114396524527577233}
+  - component: {fileID: 82975576788512235}
   m_Layer: 0
   m_Name: PaulaMeleeBullet
   m_TagString: Untagged
@@ -19,41 +19,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4047024622197496
+--- !u!4 &4280201308966946
 Transform:
-  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1617170527613038}
+  m_GameObject: {fileID: 1876376226444182}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1.38, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &212550428062877759
+--- !u!212 &212687319326954055
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1617170527613038}
+  m_GameObject: {fileID: 1876376226444182}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -65,7 +58,6 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -78,7 +70,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 198
-  m_Sprite: {fileID: 21300000, guid: fd397e892a52576498714e717ca01688, type: 2}
+  m_Sprite: {fileID: 21300000, guid: a85ac428d4f78904f8c3c356d00f54ae, type: 2}
   m_Color: {r: 0.627451, g: 0.627451, b: 0.627451, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -89,33 +81,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &114693929673169373
+--- !u!114 &114396524527577233
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1617170527613038}
+  m_GameObject: {fileID: 1876376226444182}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48f6386726ddfb2af445810633576936, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   sprites:
-  - {fileID: 21300000, guid: fd397e892a52576498714e717ca01688, type: 2}
-  - {fileID: 21300000, guid: 10f0ff36306954348ab0eeae281d6f62, type: 2}
---- !u!82 &82053191489283413
+  - {fileID: 21300000, guid: a85ac428d4f78904f8c3c356d00f54ae, type: 2}
+  - {fileID: 21300000, guid: b181f9502c4789d4c8dde11cdce6bb38, type: 2}
+--- !u!82 &82975576788512235
 AudioSource:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1617170527613038}
+  m_GameObject: {fileID: 1876376226444182}
   m_Enabled: 1
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 355983997, guid: 0000000deadbeef15deadf00d0000000, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 509de59bf1472b6438f5ae5bf2659b39, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

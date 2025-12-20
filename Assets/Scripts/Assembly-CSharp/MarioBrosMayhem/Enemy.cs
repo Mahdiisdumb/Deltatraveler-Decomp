@@ -86,12 +86,12 @@ namespace MarioBrosMayhem
 
 		private void Start()
 		{
-			SpawnFromNearestPipe(disableCollisions: true);
+			SpawnFromNearestPipe(true);
 		}
 
 		private void Update()
 		{
-			if ((bool)Util.FindObjectOfType<MarioBrosManager>() && !kicked && !flipped && Util.FindObjectOfType<MarioBrosManager>().GetEnemyCount() == 1 && rage < 2 && fullRageWhenAlone)
+			if ((bool)Object.FindObjectOfType<MarioBrosManager>() && !kicked && !flipped && Object.FindObjectOfType<MarioBrosManager>().GetEnemyCount() == 1 && rage < 2 && fullRageWhenAlone)
 			{
 				IncreaseRage(2);
 			}
@@ -190,7 +190,7 @@ namespace MarioBrosMayhem
 				base.transform.position = new Vector3(base.transform.position.x + speed * Time.fixedDeltaTime, Mathf.Lerp(-4.3333335f, -3.9166667f, respawnTimer * 4f));
 				if (respawnTimer >= 1.9166666f)
 				{
-					SpawnFromNearestPipe(disableCollisions: false);
+					SpawnFromNearestPipe(false);
 					respawning = false;
 					spawned = false;
 				}
@@ -236,7 +236,7 @@ namespace MarioBrosMayhem
 
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
-			if ((bool)collision && !kicked && spawned)
+			if (!kicked && spawned)
 			{
 				if ((bool)collision.GetComponent<Player>())
 				{
@@ -248,7 +248,7 @@ namespace MarioBrosMayhem
 				}
 				if (!respawning && (bool)collision.GetComponent<EnterPipe>() && !turning && ((base.transform.position.x > 0f && movingRight) || (base.transform.position.x < 0f && !movingRight)))
 				{
-					EnterPipe(serverCall: true);
+					EnterPipe(true);
 				}
 			}
 		}
@@ -315,7 +315,7 @@ namespace MarioBrosMayhem
 				velocity.y = flipVelocity;
 				flipped = !flipped;
 				flipTimer = 0f;
-				if ((bool)Util.FindObjectOfType<MarioBrosManager>() && Util.FindObjectOfType<MarioBrosManager>().GetPhaseNumber() >= 23)
+				if ((bool)Object.FindObjectOfType<MarioBrosManager>() && Object.FindObjectOfType<MarioBrosManager>().GetPhaseNumber() >= 23)
 				{
 					flipTimer = 3.7666667f;
 				}
@@ -359,11 +359,11 @@ namespace MarioBrosMayhem
 			velocity.y = flipVelocity;
 			PlaySFX("sounds/snd_enemy_downed");
 			controller.DisableCollisions();
-			Util.FindObjectOfType<MarioBrosNetworkManager>().EnemyDefeatedServerRpc(Util.FindObjectOfType<Player>(), enemyNo, Util.FindObjectOfType<MarioBrosManager>().GetMyPlayer().GetMultiKicks(), base.transform.position);
-			Object.Instantiate(Resources.Load<GameObject>("mariobros/prefabs/fx/KickEffect"), Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<Player>().transform.position, Vector3.Distance(base.transform.position, Util.FindObjectOfType<Player>().transform.position) / 2f) + new Vector3(0f, 0.1f), Quaternion.identity);
-			if ((bool)Util.FindObjectOfType<MarioBrosManager>())
+			Object.FindObjectOfType<MarioBrosNetworkManager>().EnemyDefeatedServerRpc(Object.FindObjectOfType<Player>(), enemyNo, Object.FindObjectOfType<MarioBrosManager>().GetMyPlayer().GetMultiKicks(), base.transform.position);
+			Object.Instantiate(Resources.Load<GameObject>("mariobros/prefabs/fx/KickEffect"), Vector3.MoveTowards(base.transform.position, Object.FindObjectOfType<Player>().transform.position, Vector3.Distance(base.transform.position, Object.FindObjectOfType<Player>().transform.position) / 2f) + new Vector3(0f, 0.1f), Quaternion.identity);
+			if ((bool)Object.FindObjectOfType<MarioBrosManager>())
 			{
-				Util.FindObjectOfType<MarioBrosManager>().DefeatEnemy(enemyNo);
+				Object.FindObjectOfType<MarioBrosManager>().DefeatEnemy(enemyNo);
 			}
 		}
 

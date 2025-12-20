@@ -9,7 +9,7 @@ public class PaulaFireAttack : AttackBase
 		base.Awake();
 		maxFrames = 280;
 		bbSize = new Vector2(165f, 140f);
-		misalignAngle += (float)(Util.FindObjectOfType<Paula>().GetMaxHP() - Util.FindObjectOfType<Paula>().GetHP()) / 25f;
+		misalignAngle += (float)(Object.FindObjectOfType<Paula>().GetMaxHP() - Object.FindObjectOfType<Paula>().GetHP()) / 25f;
 	}
 
 	protected override void Update()
@@ -17,7 +17,7 @@ public class PaulaFireAttack : AttackBase
 		base.Update();
 		if (isStarted && frames % 20 == 1)
 		{
-			Vector3 position = Util.FindObjectOfType<SOUL>().transform.position;
+			Vector3 position = Object.FindObjectOfType<SOUL>().transform.position;
 			if (frames % 40 == 21)
 			{
 				position = new Vector3(Random.Range(-1.32f, 1.32f), Random.Range(-2.83f, -0.48f));

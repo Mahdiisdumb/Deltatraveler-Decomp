@@ -21,12 +21,12 @@ public class PencilStatueCutscene : CutsceneBase
 				flag = false;
 				kris.ChangeDirection(Vector2.right);
 				kris.transform.position = Vector3.MoveTowards(kris.transform.position, vector2, 1f / 12f);
-				kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+				kris.GetComponent<Animator>().SetBool("isMoving", true);
 				kris.GetComponent<Animator>().SetFloat("speed", 0.75f);
 			}
 			else
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (noelle.transform.position != vector3)
 			{
@@ -40,19 +40,19 @@ public class PencilStatueCutscene : CutsceneBase
 					noelle.ChangeDirection(Vector2.down);
 				}
 				noelle.transform.position = Vector3.MoveTowards(noelle.transform.position, vector3, 0.125f);
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+				noelle.GetComponent<Animator>().SetBool("isMoving", true);
 				noelle.GetComponent<Animator>().SetFloat("speed", 1f);
 			}
 			else
 			{
 				noelle.ChangeDirection(Vector2.up);
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (susie.transform.position != vector)
 			{
 				susie.transform.position = Vector3.MoveTowards(susie.transform.position, vector, 0.125f);
 				susie.ChangeDirection(Vector2.up);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
 				susie.GetComponent<Animator>().SetFloat("speed", 1f);
 				kris.ChangeDirection(Vector2.right);
 				noelle.ChangeDirection(Vector2.up);
@@ -98,7 +98,7 @@ public class PencilStatueCutscene : CutsceneBase
 			}
 			else if (frames == 50)
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 				susie.GetComponent<Animator>().Play("walk");
 				susie.ChangeDirection(Vector2.left);
 				StartText(new string[5] { "* Nice.", "* Susie?\n^05* Do you always throw\n  things like that?", "* Uhhh...", "* It was...^10 really heavy.", "* T-that wasn't what I\n  meant,^05 but..." }, new string[5] { "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtnoe" }, new int[18], new string[5] { "su_smile", "no_confused_side", "su_surprised", "su_flustered", "no_happy" }, 0);
@@ -135,22 +135,22 @@ public class PencilStatueCutscene : CutsceneBase
 				}
 				if (frames == 30)
 				{
-					susie.SetSprite("unhappy/spr_su_down_0_unhappy");
+					susie.SetSprite("spr_su_down_unhappy_0");
 				}
 				if (frames == 45 || frames == 65)
 				{
-					susie.SetSprite("unhappy/spr_su_right_0_unhappy");
+					susie.SetSprite("spr_su_right_unhappy_0");
 				}
 				else if (frames == 55 || frames == 75)
 				{
-					susie.SetSprite("unhappy/spr_su_left_0_unhappy");
+					susie.SetSprite("spr_su_left_unhappy_0");
 				}
 				if (frames == 140)
 				{
 					noelle.DisableAnimator();
 					kris.ChangeDirection(Vector3.down);
-					noelle.SetSprite("unhappy/spr_no_down_0_unhappy");
-					susie.SetSprite("unhappy/spr_su_down_0_unhappy");
+					noelle.SetSprite("spr_no_down_unhappy_0");
+					susie.SetSprite("spr_su_down_unhappy_0");
 				}
 				if (frames <= 175)
 				{
@@ -204,7 +204,7 @@ public class PencilStatueCutscene : CutsceneBase
 			if (frames == 1)
 			{
 				susie.DisableAnimator();
-				susie.SetSprite("unhappy/spr_su_down_0_unhappy");
+				susie.SetSprite("spr_su_down_unhappy_0");
 				pickles.GetComponent<Animator>().enabled = true;
 				pickles.GetComponent<Animator>().SetFloat("speed", -1f);
 			}
@@ -244,11 +244,11 @@ public class PencilStatueCutscene : CutsceneBase
 			return;
 		}
 		gm.PlayMusic("zoneMusic");
-		cam.SetFollowPlayer(follow: true);
+		cam.SetFollowPlayer(true);
 		kris.ChangeDirection(Vector3.down);
-		kris.SetSelfAnimControl(setAnimControl: true);
-		susie.SetSelfAnimControl(setAnimControl: true);
-		noelle.SetSelfAnimControl(setAnimControl: true);
+		kris.SetSelfAnimControl(true);
+		susie.SetSelfAnimControl(true);
+		noelle.SetSelfAnimControl(true);
 		Object.Instantiate(Resources.Load<GameObject>("overworld/npcs/StalkerFlowey"), new Vector3(10.76f, 27.6f), Quaternion.identity);
 		EndCutscene();
 	}
@@ -259,13 +259,13 @@ public class PencilStatueCutscene : CutsceneBase
 		gm.SetFlag(85, 1);
 		pencil = GameObject.Find("PencilStatue").transform;
 		pickles = GameObject.Find("FuzzyPickles").transform;
-		kris.SetSelfAnimControl(setAnimControl: false);
-		susie.SetSelfAnimControl(setAnimControl: false);
-		noelle.SetSelfAnimControl(setAnimControl: false);
-		kris.GetComponent<Animator>().SetBool("isMoving", value: false);
-		susie.GetComponent<Animator>().SetBool("isMoving", value: false);
-		noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
-		cam.SetFollowPlayer(follow: false);
+		kris.SetSelfAnimControl(false);
+		susie.SetSelfAnimControl(false);
+		noelle.SetSelfAnimControl(false);
+		kris.GetComponent<Animator>().SetBool("isMoving", false);
+		susie.GetComponent<Animator>().SetBool("isMoving", false);
+		noelle.GetComponent<Animator>().SetBool("isMoving", false);
+		cam.SetFollowPlayer(false);
 		StartText(new string[2] { "* (For some weird reason,^05 a\n  pencil-shaped iron statue is\n  blocking the path.)", "* Oh my GOD,^05 what's up\n  with all this stuff\n  in our way?" }, new string[2] { "snd_text", "snd_txtsus" }, new int[2], new string[2] { "", "su_annoyed" });
 	}
 }

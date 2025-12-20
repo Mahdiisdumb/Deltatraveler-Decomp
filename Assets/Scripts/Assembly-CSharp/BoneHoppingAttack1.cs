@@ -12,7 +12,7 @@ public class BoneHoppingAttack1 : AttackBase
 		maxFrames = 285;
 		bbSize = new Vector2(250f, 140f);
 		soulPos = new Vector2(-0.055f, -2.83f);
-		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 	}
 
 	protected override void Update()
@@ -43,11 +43,11 @@ public class BoneHoppingAttack1 : AttackBase
 		}
 		if (frames == 126)
 		{
-			Util.FindObjectOfType<SansGravityManager>().Slam(Vector2.up);
+			Object.FindObjectOfType<SansGravityManager>().Slam(Vector2.up);
 		}
 		if (frames == 156)
 		{
-			Util.FindObjectOfType<Sans>().ResetBreatheAnimation();
+			Object.FindObjectOfType<Sans>().ResetBreatheAnimation();
 		}
 	}
 

@@ -84,8 +84,8 @@ public class FlavorChanger : UIComponent
 			{
 				array = new string[3] { "* What an...^05 interesting color\n  choice.", "* I could've sworn I got rid\n  of that one a long time\n  ago...", "* Well,^05 have a wonderful rest\n  of your day,^05 I suppose..." };
 			}
-			component.CreateBox(array, giveBackControl: true);
-			Util.FindObjectOfType<FlavorChangerNPC>().SetTalkable(component);
+			component.CreateBox(array, true);
+			Object.FindObjectOfType<FlavorChangerNPC>().SetTalkable(component);
 			Object.Destroy(base.gameObject);
 		}
 	}
@@ -95,13 +95,8 @@ public class FlavorChanger : UIComponent
 		list.Find("SOUL").transform.localPosition = new Vector3(-123f, 160 - 30 * index);
 		list.GetComponent<Image>().color = UIBackground.borderColors[index];
 		preview.GetComponent<Image>().color = UIBackground.borderColors[index];
-		preview.Find("SelText").GetComponent<Text>().color = Selection.SELECTION_COLORS[index];
-		preview.Find("TestButton").GetComponent<Image>().color = BattleButton.BUTTON_COLORS[index];
-		preview.Find("TestButtonSel").GetComponent<Image>().color = Selection.SELECTION_COLORS[index];
-		if (index == 9)
-		{
-			preview.Find("TestButton").GetComponent<Image>().color = Selection.SELECTION_COLORS[index];
-			preview.Find("TestButtonSel").GetComponent<Image>().color = BattleButton.BUTTON_COLORS[index];
-		}
+		preview.Find("SelText").GetComponent<Text>().color = Selection.selectionColors[index];
+		preview.Find("TestButton").GetComponent<Image>().color = BattleButton.buttonColors[index];
+		preview.Find("TestButtonSel").GetComponent<Image>().color = Selection.selectionColors[index];
 	}
 }

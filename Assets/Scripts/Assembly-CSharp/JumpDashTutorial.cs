@@ -51,44 +51,53 @@ public class JumpDashTutorial : MonoBehaviour
 
 	public void Unfreeze()
 	{
-		Util.FindObjectOfType<PlatformChallenge1>().SetFreeze(frozen: false);
-		Util.FindObjectOfType<Sans>().SetFreeze(frozen: false);
-		Util.FindObjectOfType<SansBG>().SetFreeze(frozen: false);
-		Util.FindObjectOfType<BattleManager>().GetComponent<MusicPlayer>().Resume();
+		Object.FindObjectOfType<PlatformChallenge1>().SetFreeze(false);
+		Object.FindObjectOfType<Sans>().SetFreeze(false);
+		Object.FindObjectOfType<SansBG>().SetFreeze(false);
+		Object.FindObjectOfType<BattleManager>().GetComponent<MusicPlayer>().Resume();
 		GameObject.Find("FreezeFade").GetComponent<SpriteRenderer>().enabled = false;
-		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().sortingOrder = 200;
-		Util.FindObjectOfType<SOULGraze>().enabled = true;
+		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().sortingOrder = 200;
+		Object.FindObjectOfType<SOULGraze>().enabled = true;
 	}
 
 	public void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision && (bool)collision.GetComponent<SOUL>() && !triggered)
+		if (!collision.GetComponent<SOUL>() || triggered)
 		{
-			triggered = true;
-			GetComponent<AudioSource>().Play();
-			Util.FindObjectOfType<PlatformChallenge1>().SetFreeze(frozen: true);
-			Util.FindObjectOfType<Sans>().SetFreeze(frozen: true);
-			Util.FindObjectOfType<SansBG>().SetFreeze(frozen: true);
-			Util.FindObjectOfType<BattleManager>().GetComponent<MusicPlayer>().Pause();
-			GameObject.Find("FreezeFade").GetComponent<SpriteRenderer>().enabled = true;
-			Util.FindObjectOfType<SOULGraze>().enabled = false;
-			SOUL sOUL = Util.FindObjectOfType<SOUL>();
-			sOUL.SetFrozen(boo: true);
-			sOUL.GetComponent<SpriteRenderer>().sortingOrder = 500;
-			if (sOUL.transform.position.y < -2.33f)
+			return;
+		}
+		triggered = true;
+		GetComponent<AudioSource>().Play();
+		Object.FindObjectOfType<PlatformChallenge1>().SetFreeze(true);
+		Object.FindObjectOfType<Sans>().SetFreeze(true);
+		Object.FindObjectOfType<SansBG>().SetFreeze(true);
+		Object.FindObjectOfType<BattleManager>().GetComponent<MusicPlayer>().Pause();
+		GameObject.Find("FreezeFade").GetComponent<SpriteRenderer>().enabled = true;
+		Object.FindObjectOfType<SOULGraze>().enabled = false;
+		SOUL sOUL = Object.FindObjectOfType<SOUL>();
+		sOUL.SetFrozen(true);
+		sOUL.GetComponent<SpriteRenderer>().sortingOrder = 500;
+		if (sOUL.transform.position.y < -2.33f)
+		{
+			sOUL.transform.position = new Vector3(sOUL.transform.position.x, -2.33f);
+		}
+		tutorialCanvas = Object.Instantiate(Resources.Load<GameObject>("ui/JumpDashTutorialCanvas")).transform;
+		Vector3 position = Object.FindObjectOfType<SOUL>().transform.position;
+		position.x = (float)Mathf.RoundToInt(position.x * 48f) / 48f;
+		position.y = (float)Mathf.RoundToInt(position.y * 48f) / 48f;
+		tutorialCanvas.position = position;
+		usingController = UTInput.joystickIsActive;
+		tutorialCanvas.Find("ButtonText").GetComponent<Text>().text = tutorialCanvas.Find("ButtonText").GetComponent<Text>().text.Replace("[Z]", usingController ? "       " : string.Format("[{0}]", UTInput.GetKeyName("Confirm")));
+		if (!usingController)
+		{
+			return;
+		}
+		for (int i = 0; i < ButtonPrompts.validButtons.Length; i++)
+		{
+			if (UTInput.GetKeyOrButtonReplacement("Confirm") == ButtonPrompts.GetButtonChar(ButtonPrompts.validButtons[i]))
 			{
-				sOUL.transform.position = new Vector3(sOUL.transform.position.x, -2.33f);
-			}
-			tutorialCanvas = Object.Instantiate(Resources.Load<GameObject>("ui/JumpDashTutorialCanvas")).transform;
-			Vector3 position = Util.FindObjectOfType<SOUL>().transform.position;
-			position.x = (float)Mathf.RoundToInt(position.x * 48f) / 48f;
-			position.y = (float)Mathf.RoundToInt(position.y * 48f) / 48f;
-			tutorialCanvas.position = position;
-			usingController = UTInput.joystickIsActive;
-			tutorialCanvas.Find("ButtonText").GetComponent<Text>().text = tutorialCanvas.Find("ButtonText").GetComponent<Text>().text.Replace("[Z]", usingController ? "       " : string.Format("[{0}]", UTInput.GetKeyName("Confirm")));
-			if (usingController)
-			{
-				ButtonPrompts.UpdateImageWithGraphic("Confirm", tutorialCanvas.GetComponentInChildren<Image>(), 2f, ButtonPrompts.ButtonType.Small);
+				tutorialCanvas.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("ui/buttons/" + ButtonPrompts.GetButtonGraphic(ButtonPrompts.validButtons[i]));
+				break;
 			}
 		}
 	}

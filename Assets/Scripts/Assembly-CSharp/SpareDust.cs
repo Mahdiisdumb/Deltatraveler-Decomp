@@ -26,7 +26,7 @@ public class SpareDust : MonoBehaviour
 			if (frames <= 9)
 			{
 				float num = (float)frames / 9f;
-				num = Mathf.Sin(num * MathF.PI * 0.5f);
+				num = Mathf.Sin(num * (float)Math.PI * 0.5f);
 				base.transform.position = Vector3.Lerp(startPos, finalPos, num);
 			}
 			if (frames == 12)

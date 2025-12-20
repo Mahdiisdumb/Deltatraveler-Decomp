@@ -26,9 +26,9 @@ public class Section3DreamSequencePt1 : CutsceneBase
 			}
 			else if (frames == 45)
 			{
-				if ((bool)Util.FindObjectOfType<SusieAndNoelleGoToBed>())
+				if ((bool)UnityEngine.Object.FindObjectOfType<SusieAndNoelleGoToBed>())
 				{
-					UnityEngine.Object.Destroy(Util.FindObjectOfType<SusieAndNoelleGoToBed>().gameObject);
+					UnityEngine.Object.Destroy(UnityEngine.Object.FindObjectOfType<SusieAndNoelleGoToBed>().gameObject);
 				}
 				fade.FadeIn(1);
 				GameObject.Find("DreamObjects").transform.position = Vector3.zero;
@@ -189,7 +189,7 @@ public class Section3DreamSequencePt1 : CutsceneBase
 				{
 					float t = (float)(frames - 225) / 30f;
 					GameObject.Find("SoulDream").transform.position = new Vector3(Mathf.Lerp(0f, 2.35f, t), 0f);
-					krisDream.transform.position = new Vector3(0f, Mathf.Sin((float)((frames - 225) * 6) * (MathF.PI / 180f)));
+					krisDream.transform.position = new Vector3(0f, Mathf.Sin((float)((frames - 225) * 6) * ((float)Math.PI / 180f)));
 				}
 				if (frames == 181)
 				{
@@ -291,8 +291,8 @@ public class Section3DreamSequencePt1 : CutsceneBase
 				noelle.transform.position = new Vector3(-1.87f, -4.4f);
 				PlayAnimation(susie, "idle");
 				PlayAnimation(noelle, "idle");
-				SetMoveAnim(susie, isMoving: false);
-				SetMoveAnim(noelle, isMoving: false);
+				SetMoveAnim(susie, false);
+				SetMoveAnim(noelle, false);
 				susie.UseUnhappySprites();
 				noelle.UseUnhappySprites();
 				ChangeDirection(susie, Vector2.up);
@@ -372,13 +372,13 @@ public class Section3DreamSequencePt1 : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				SetSprite(noelle, "unhappy/spr_no_sit_unhappy");
+				SetSprite(noelle, "spr_no_sit_unhappy");
 				ChangeDirection(susie, Vector2.left);
-				SetMoveAnim(susie, isMoving: true);
+				SetMoveAnim(susie, true);
 			}
 			if (!MoveTo(susie, new Vector3(-5f, -4.2f), 4f))
 			{
-				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(susie, false);
 				SetSprite(susie, "spr_su_crossed_down");
 			}
 			if (frames == 30)
@@ -403,18 +403,18 @@ public class Section3DreamSequencePt1 : CutsceneBase
 			{
 				PlayAnimation(kris, "idle");
 				ChangeDirection(kris, Vector2.down);
-				kris.SetSelfAnimControl(setAnimControl: true);
-				kris.SetMovement(newMove: true);
-				EndCutscene(enablePlayerMovement: false);
+				kris.SetSelfAnimControl(true);
+				kris.SetMovement(true);
+				EndCutscene(false);
 			}
 		}
 	}
 
 	private void LateUpdate()
 	{
-		if (state == 3 && (bool)Util.FindObjectOfType<TextUT>() && (bool)Util.FindObjectOfType<TextUT>().GetText())
+		if (state == 3 && (bool)UnityEngine.Object.FindObjectOfType<TextUT>() && (bool)UnityEngine.Object.FindObjectOfType<TextUT>().GetText())
 		{
-			Util.FindObjectOfType<TextUT>().GetText().color = Color.black;
+			UnityEngine.Object.FindObjectOfType<TextUT>().GetText().color = Color.black;
 		}
 	}
 
@@ -422,15 +422,15 @@ public class Section3DreamSequencePt1 : CutsceneBase
 	{
 		base.StartCutscene(par);
 		krisDream = GameObject.Find("KrisDream").GetComponent<Animator>();
-		kris.SetMovement(newMove: false);
+		kris.SetMovement(false);
 		oblitVariant = (int)gm.GetFlag(87) > 4 || WeirdChecker.HasCommittedBloodshed(gm);
 		if (oblitVariant && (int)gm.GetFlag(12) == 0)
 		{
 			aborted = (((int)gm.GetFlag(87) < 7) ? 1 : 2);
 		}
-		PartyMembers.SetHP(0, PartyMembers.GetMaxHP(0) + 10, forceOverheal: true);
-		PartyMembers.SetHP(1, PartyMembers.GetMaxHP(1) + 10, forceOverheal: true);
-		PartyMembers.SetHP(2, PartyMembers.GetMaxHP(2) + 10, forceOverheal: true);
+		gm.SetHP(0, gm.GetMaxHP(0) + 10, true);
+		gm.SetHP(1, gm.GetMaxHP(1) + 10, true);
+		gm.SetHP(2, gm.GetMaxHP(2) + 10, true);
 		gm.SetFlag(172, 0);
 		StartText(new string[1] { "* (You decide to climb into\n  bed.)" }, new string[1] { "snd_text" }, new int[0], new string[1] { "" });
 	}

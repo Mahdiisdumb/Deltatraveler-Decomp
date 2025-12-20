@@ -31,9 +31,9 @@ public class NessPhase1Attacks : AttackBase
 
 	private void OnDestroy()
 	{
-		if ((bool)Util.FindObjectOfType<PaulaMeleeTarget>())
+		if ((bool)Object.FindObjectOfType<PaulaMeleeTarget>())
 		{
-			Util.FindObjectOfType<PaulaMeleeTarget>().SetToDestroy();
+			Object.FindObjectOfType<PaulaMeleeTarget>().SetToDestroy();
 		}
 	}
 
@@ -61,7 +61,7 @@ public class NessPhase1Attacks : AttackBase
 		}
 		if (paulaAttack == 0 && frames % 60 == 15)
 		{
-			Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/nesspaula/PKFireMainBullet"), Util.FindObjectOfType<SOUL>().transform.position, Quaternion.identity, base.transform);
+			Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/nesspaula/PKFireMainBullet"), Object.FindObjectOfType<SOUL>().transform.position, Quaternion.identity, base.transform);
 		}
 		else
 		{

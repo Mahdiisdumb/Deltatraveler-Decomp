@@ -40,7 +40,7 @@ public class RoughMole : EnemyBase
 		defaultChatSize = "RightSmall";
 		exp = 1;
 		gold = 12;
-		geno = (int)Util.GameManager().GetFlag(13) >= 5;
+		geno = (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(13) >= 5;
 		attacks = new int[1] { 53 };
 	}
 
@@ -95,7 +95,7 @@ public class RoughMole : EnemyBase
 				CombineParts();
 				base.obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Rough Mole/spr_b_mole_normal");
 			}
-			base.obj.transform.Find("mainbody").localPosition = new Vector3(0f, Mathf.Lerp(1.234f, Mathf.Lerp(2f, 5.3f, (float)power / 100f), Mathf.Sin((float)tossFrames * 4.5f * (MathF.PI / 180f))));
+			base.obj.transform.Find("mainbody").localPosition = new Vector3(0f, Mathf.Lerp(1.234f, Mathf.Lerp(2f, 5.3f, (float)power / 100f), Mathf.Sin((float)tossFrames * 4.5f * ((float)Math.PI / 180f))));
 			base.obj.transform.Find("mainbody").eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(0f, -360f, (float)tossFrames / 40f));
 			if (tossFrames == 40)
 			{
@@ -107,8 +107,8 @@ public class RoughMole : EnemyBase
 		else if (!gotHit && (bool)base.obj)
 		{
 			animFrames++;
-			float num = Mathf.Sin((float)(animFrames * 12) * (MathF.PI / 180f));
-			float num2 = Mathf.Sin((float)(animFrames * 6) * (MathF.PI / 180f));
+			float num = Mathf.Sin((float)(animFrames * 12) * ((float)Math.PI / 180f));
+			float num2 = Mathf.Sin((float)(animFrames * 6) * ((float)Math.PI / 180f));
 			GetPart("body").localScale = new Vector3(1f + num * 0.05f, 1f - num * 0.05f);
 			GetPart("arms").localPosition = new Vector3(num * -0.15f, 0f - Mathf.Abs(num2 * 0.15f));
 		}
@@ -152,13 +152,13 @@ public class RoughMole : EnemyBase
 				Spare();
 				return new string[1] { "* You and Susie tossed the mole\n  out of the battle!" };
 			}
-			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/acts/MoleToss"), GameObject.Find("BattleCanvas").transform, worldPositionStays: false).GetComponent<MoleToss>().SetMole(this);
+			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/acts/MoleToss"), GameObject.Find("BattleCanvas").transform, false).GetComponent<MoleToss>().SetMole(this);
 			return new string[1] { "* Determine the power to toss\n  the mole!" };
 		}
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		switch (i)
 		{
@@ -169,7 +169,7 @@ public class RoughMole : EnemyBase
 			AddActPoints(5 + satisfied / 5);
 			return new string[1] { "* Noelle gave the mole a\n  big hug." };
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 

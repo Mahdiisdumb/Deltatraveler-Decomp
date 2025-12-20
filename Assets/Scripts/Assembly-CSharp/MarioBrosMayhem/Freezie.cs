@@ -39,7 +39,7 @@ namespace MarioBrosMayhem
 		{
 			base.FixedUpdate();
 			spawnCountDown -= Time.fixedDeltaTime;
-			if (spawnCountDown <= 0f && !startedSpawn && Util.FindObjectOfType<MarioBrosManager>().GetEnemyCount() > 0)
+			if (spawnCountDown <= 0f && !startedSpawn && Object.FindObjectOfType<MarioBrosManager>().GetEnemyCount() > 0)
 			{
 				if (origin == Vector3.zero)
 				{
@@ -54,7 +54,7 @@ namespace MarioBrosMayhem
 				animator.SetFloat("Speed", 1f);
 				base.transform.position = origin;
 				startedSpawn = true;
-				SpawnFromNearestPipe(disableCollisions: true);
+				SpawnFromNearestPipe(true);
 			}
 		}
 
@@ -116,7 +116,7 @@ namespace MarioBrosMayhem
 
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
-			if ((bool)collision && !respawning && spawned)
+			if (!respawning && spawned)
 			{
 				if ((bool)collision.GetComponent<Player>() && collision.GetComponent<Player>().CanInteract() && !collision.GetComponent<Player>().IsInvincible())
 				{
@@ -128,7 +128,7 @@ namespace MarioBrosMayhem
 				}
 				if (!respawning && (bool)collision.GetComponent<EnterPipe>() && ((base.transform.position.x > 0f && movingRight) || (base.transform.position.x < 0f && !movingRight)))
 				{
-					EnterPipe(serverCall: true);
+					EnterPipe(true);
 				}
 			}
 		}
@@ -186,7 +186,7 @@ namespace MarioBrosMayhem
 				if (!vanish)
 				{
 					PlaySFX("sounds/snd_freezie_die");
-					Util.FindObjectOfType<MarioBrosNetworkManager>().KillFreezie(Util.FindObjectOfType<Player>(), base.transform.position);
+					Object.FindObjectOfType<MarioBrosNetworkManager>().KillFreezie(Object.FindObjectOfType<Player>(), base.transform.position);
 				}
 			}
 		}
@@ -208,7 +208,7 @@ namespace MarioBrosMayhem
 		public void FinishFreeze(int freezeSpot)
 		{
 			Die(-1);
-			FreezeSpot[] array = Util.FindObjectsOfType<FreezeSpot>();
+			FreezeSpot[] array = Object.FindObjectsOfType<FreezeSpot>();
 			foreach (FreezeSpot freezeSpot2 in array)
 			{
 				if (freezeSpot2.GetSpotID() == freezeSpot)
@@ -233,7 +233,7 @@ namespace MarioBrosMayhem
 				BitePlayer(playerId, extraArg == 1);
 				break;
 			case 1:
-				EnterPipe(serverCall: false);
+				EnterPipe(false);
 				break;
 			case 2:
 				Die(playerId);

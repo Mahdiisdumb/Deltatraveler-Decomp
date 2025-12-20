@@ -60,19 +60,19 @@ public class DoctorCutscene : CutsceneBase
 				frames++;
 				if (frames == 1)
 				{
-					doctor.SetBool("isMoving", value: true);
+					doctor.SetBool("isMoving", true);
 				}
 				doctor.transform.position = Vector3.Lerp(new Vector3(0f, 1.2f), new Vector3(-2.583f, 0.28f), (float)frames / 45f);
 				if (frames == 30)
 				{
 					susie.ChangeDirection(Vector2.down);
-					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+					susie.GetComponent<Animator>().SetBool("isMoving", true);
 				}
 				susie.transform.position = Vector3.Lerp(new Vector3(-2.573f, 0.25f), new Vector3(-2.573f, 1.3f), (float)(frames - 30) / 15f);
 				if (frames == 45)
 				{
-					doctor.SetBool("isMoving", value: false);
-					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+					doctor.SetBool("isMoving", false);
+					susie.GetComponent<Animator>().SetBool("isMoving", false);
 					noelle.ChangeDirection(Vector2.up);
 				}
 				if (frames == 60)
@@ -88,7 +88,7 @@ public class DoctorCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				doctor.SetBool("isMoving", value: true);
+				doctor.SetBool("isMoving", true);
 				doctor.SetFloat("dirX", 1f);
 			}
 			doctor.transform.position = Vector3.Lerp(new Vector3(-2.583f, 0.28f), new Vector3(1.26f, -0.55f), (float)frames / 45f);
@@ -101,7 +101,7 @@ public class DoctorCutscene : CutsceneBase
 			kris.transform.position = Vector3.Lerp(new Vector3(-4.108f, 0.5f), new Vector3(-2.62f, -0.23f), (float)(frames - 20) / 30f);
 			if (frames == 45)
 			{
-				doctor.SetBool("isMoving", value: false);
+				doctor.SetBool("isMoving", false);
 				doctor.SetFloat("dirX", 0f);
 				doctor.SetFloat("dirY", -1f);
 			}
@@ -132,9 +132,9 @@ public class DoctorCutscene : CutsceneBase
 		}
 		else
 		{
-			kris.SetSelfAnimControl(setAnimControl: true);
-			susie.SetSelfAnimControl(setAnimControl: true);
-			noelle.SetSelfAnimControl(setAnimControl: true);
+			kris.SetSelfAnimControl(true);
+			susie.SetSelfAnimControl(true);
+			noelle.SetSelfAnimControl(true);
 			kris.ChangeDirection(Vector2.down);
 			gm.SetCheckpoint(56, new Vector3(48.76f, -34.36f));
 			EndCutscene();
@@ -153,9 +153,9 @@ public class DoctorCutscene : CutsceneBase
 			gm.SetFlag(99, 1);
 			GameObject.Find("Dark").GetComponent<SpriteRenderer>().enabled = true;
 			gm.StopMusic();
-			kris.SetSelfAnimControl(setAnimControl: false);
-			susie.SetSelfAnimControl(setAnimControl: false);
-			noelle.SetSelfAnimControl(setAnimControl: false);
+			kris.SetSelfAnimControl(false);
+			susie.SetSelfAnimControl(false);
+			noelle.SetSelfAnimControl(false);
 			kris.DisableAnimator();
 			susie.DisableAnimator();
 			susie.UseUnhappySprites();

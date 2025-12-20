@@ -74,13 +74,13 @@ namespace MarioBrosMayhem
 
 		private void Awake()
 		{
-			music = Util.FindObjectOfType<MusicPlayer>();
+			music = Object.FindObjectOfType<MusicPlayer>();
 			phaseText = GameObject.Find("PhaseText").GetComponent<SpriteText>();
 			clearText = GameObject.Find("ClearText").GetComponent<SpriteText>();
 			bonusTimer = GameObject.Find("BonusTimer").GetComponent<BonusTimer>();
 			bonusSign = GameObject.Find("BonusSign").GetComponent<Image>();
 			backgroundParent = GameObject.Find("Background").transform;
-			continueScreen = Util.FindObjectOfType<GameOverContinue>();
+			continueScreen = Object.FindObjectOfType<GameOverContinue>();
 			fade = GameObject.Find("MBFade").GetComponent<Image>();
 			pressStart = GameObject.Find("PressStart").GetComponent<Image>();
 		}
@@ -94,7 +94,15 @@ namespace MarioBrosMayhem
 				phaseText.enabled = true;
 				pressStart.enabled = true;
 				showingPressStart = true;
-				SaveScores();
+				if (Object.FindObjectOfType<Player>().GetPoints() > PlayerPrefs.GetInt("MBScore", 20000))
+				{
+					PlayerPrefs.SetInt("MBScore", Object.FindObjectOfType<Player>().GetPoints());
+				}
+				int num = phase + 1;
+				if (num > PlayerPrefs.GetInt("MBPhase", 3))
+				{
+					PlayerPrefs.SetInt("MBPhase", (num > 99) ? 99 : num);
+				}
 			}
 			if (showingPressStart)
 			{
@@ -123,7 +131,7 @@ namespace MarioBrosMayhem
 				{
 					if ((bool)myPlayer)
 					{
-						myPlayer.SetMovement(canMove: true);
+						myPlayer.SetMovement(true);
 					}
 					music.Play(GlobalVariables.MUSIC_STAGE_NAMES[phaseInfo.GetMusic()]);
 					phaseText.enabled = false;
@@ -133,7 +141,7 @@ namespace MarioBrosMayhem
 						bonusTimer.StartTimer();
 						bonusSign.enabled = false;
 					}
-					Util.FindObjectOfType<MarioBrosNetworkManager>().StartRound(phase);
+					Object.FindObjectOfType<MarioBrosNetworkManager>().StartRound(phase);
 				}
 			}
 			else if (fadingOut)
@@ -155,7 +163,7 @@ namespace MarioBrosMayhem
 					{
 						Object.Destroy(bonusResults.gameObject);
 					}
-					Util.FindObjectOfType<MarioBrosNetworkManager>().StartNewRound();
+					Object.FindObjectOfType<MarioBrosNetworkManager>().StartNewRound();
 				}
 				fadingOut = false;
 			}
@@ -175,9 +183,9 @@ namespace MarioBrosMayhem
 					if (PhaseComplete())
 					{
 						endingRound = true;
-						if (Util.FindObjectOfType<PauseMenu>().Paused())
+						if (Object.FindObjectOfType<PauseMenu>().Paused())
 						{
-							Util.FindObjectOfType<PauseMenu>().Unpause();
+							Object.FindObjectOfType<PauseMenu>().Unpause();
 						}
 						if (phaseInfo.IsSpecialStage())
 						{
@@ -186,29 +194,29 @@ namespace MarioBrosMayhem
 						}
 						else
 						{
-							music.Play("mus_level_clear", loop: false);
+							music.Play("mus_level_clear", false);
 							clearText.enabled = true;
-							Coin[] array = Util.FindObjectsOfType<Coin>();
+							Coin[] array = Object.FindObjectsOfType<Coin>();
 							for (int j = 0; j < array.Length; j++)
 							{
 								array[j].CollectCoin(-1);
 							}
-							Fireball[] array2 = Util.FindObjectsOfType<Fireball>();
+							Fireball[] array2 = Object.FindObjectsOfType<Fireball>();
 							for (int j = 0; j < array2.Length; j++)
 							{
 								array2[j].Die();
 							}
-							Freezie[] array3 = Util.FindObjectsOfType<Freezie>();
+							Freezie[] array3 = Object.FindObjectsOfType<Freezie>();
 							for (int j = 0; j < array3.Length; j++)
 							{
 								array3[j].Die(-1);
 							}
-							Icicle[] array4 = Util.FindObjectsOfType<Icicle>();
+							Icicle[] array4 = Object.FindObjectsOfType<Icicle>();
 							for (int j = 0; j < array4.Length; j++)
 							{
 								array4[j].Die();
 							}
-							Mushroom[] array5 = Util.FindObjectsOfType<Mushroom>();
+							Mushroom[] array5 = Object.FindObjectsOfType<Mushroom>();
 							for (int j = 0; j < array5.Length; j++)
 							{
 								array5[j].Collect(-1);
@@ -246,7 +254,6 @@ namespace MarioBrosMayhem
 
 		public void QuitGame()
 		{
-			SaveScores();
 			quitting = true;
 			StartFadeOut();
 		}
@@ -263,10 +270,10 @@ namespace MarioBrosMayhem
 			fade.color = new Color(0f, 0f, 0f, 0f);
 			if (!gameStarted)
 			{
-				players[0] = Util.FindObjectOfType<Player>();
+				players[0] = Object.FindObjectOfType<Player>();
 				playerHuds[0] = Object.Instantiate(Resources.Load<GameObject>("mariobros/prefabs/ui/PlayerHUD"), GameObject.Find("AllPlayerHud").transform).GetComponent<PlayerHUDClassic>();
 				myPlayer = players[0];
-				playerHuds[0].UpdateContents(isLocalPlayer: true, 0, 0, myPlayer.GetLives(), myPlayer.GetSkin(), myPlayer.GetPalette());
+				playerHuds[0].UpdateContents(true, 0, 0, myPlayer.GetLives(), myPlayer.GetSkin(), myPlayer.GetPalette());
 				ResetVariables();
 				gameStarted = true;
 				if (!myPlayer)
@@ -290,7 +297,7 @@ namespace MarioBrosMayhem
 			}
 			if (phase == 0)
 			{
-				music.Play("mus_game_start", loop: false);
+				music.Play("mus_game_start", false);
 			}
 			else if (phaseInfo.IsSpecialStage())
 			{
@@ -298,11 +305,11 @@ namespace MarioBrosMayhem
 				bonusTime = ((phaseInfo.SpecialStageLevel() > 2) ? 15 : 20);
 				bonusTimer.SetTime(bonusTime);
 				bonusSign.enabled = true;
-				music.Play("mus_bonus_start", loop: false);
+				music.Play("mus_bonus_start", false);
 			}
 			else
 			{
-				music.Play("mus_level_start", loop: false);
+				music.Play("mus_level_start", false);
 			}
 			playingIntro = true;
 		}
@@ -325,7 +332,7 @@ namespace MarioBrosMayhem
 			}
 			else
 			{
-				PowBlock[] array = Util.FindObjectsOfType<PowBlock>();
+				PowBlock[] array = Object.FindObjectsOfType<PowBlock>();
 				for (int j = 0; j < array.Length; j++)
 				{
 					array[j].ResetBlock();
@@ -338,7 +345,7 @@ namespace MarioBrosMayhem
 				{
 					Object.Destroy(backgroundParent.GetChild(0).gameObject);
 				}
-				Object.Instantiate(Resources.Load<GameObject>("mariobros/prefabs/bg/" + GlobalVariables.BACKGROUND_NAMES[backgroundType]), backgroundParent, worldPositionStays: false);
+				Object.Instantiate(Resources.Load<GameObject>("mariobros/prefabs/bg/" + GlobalVariables.BACKGROUND_NAMES[backgroundType]), backgroundParent, false);
 				if (backgroundType == 1)
 				{
 					if (!usingLava)
@@ -355,12 +362,12 @@ namespace MarioBrosMayhem
 			}
 			platformType = phaseInfo.GetPlatformType();
 			spawnIcicles = phaseInfo.SpawnIcicle();
-			Platform[] array2 = Util.FindObjectsOfType<Platform>();
+			Platform[] array2 = Object.FindObjectsOfType<Platform>();
 			foreach (Platform platform in array2)
 			{
 				if (spawnIcicles && platform.gameObject.name.Contains("Top"))
 				{
-					platform.SetPlatformType((Util.FindObjectOfType<ServerSessionManager>().GetRuleValue(0, 4) == 1) ? 5 : 4);
+					platform.SetPlatformType((Object.FindObjectOfType<ServerSessionManager>().GetRuleValue(0, 4) == 1) ? 5 : 4);
 					continue;
 				}
 				platform.SetPlatformType(platformType);
@@ -373,7 +380,7 @@ namespace MarioBrosMayhem
 
 		public void SetUpNewRound()
 		{
-			Player[] array = Util.FindObjectsOfType<Player>();
+			Player[] array = Object.FindObjectsOfType<Player>();
 			for (int i = 0; i < array.Length; i++)
 			{
 				array[i].gameObject.layer = 16;
@@ -385,8 +392,8 @@ namespace MarioBrosMayhem
 
 		public void GameOver()
 		{
-			int credits = Util.FindObjectOfType<MarioBrosNetworkManager>().GetCredits();
-			if (Util.FindObjectOfType<MarioBrosNetworkManager>().GetCredits() > 0)
+			int credits = Object.FindObjectOfType<MarioBrosNetworkManager>().GetCredits();
+			if (Object.FindObjectOfType<MarioBrosNetworkManager>().GetCredits() > 0)
 			{
 				continueScreen.Activate(credits);
 			}
@@ -400,7 +407,7 @@ namespace MarioBrosMayhem
 		{
 			if (!endingRound && !roundEnded)
 			{
-				music.Play("mus_game_over", loop: false);
+				music.Play("mus_game_over", false);
 			}
 			gameover = true;
 			GameObject.Find("GameOver").GetComponent<SpriteRenderer>().enabled = true;
@@ -437,7 +444,7 @@ namespace MarioBrosMayhem
 				{
 					return true;
 				}
-				Coin[] array = Util.FindObjectsOfType<Coin>();
+				Coin[] array = Object.FindObjectsOfType<Coin>();
 				for (int i = 0; i < array.Length; i++)
 				{
 					if (!array[i].IsCollected())
@@ -480,19 +487,6 @@ namespace MarioBrosMayhem
 				return 98;
 			}
 			return phase;
-		}
-
-		private void SaveScores()
-		{
-			if (Util.FindObjectOfType<Player>().GetPoints() > PersistentSAVE.GetInt("mario-score", 20000))
-			{
-				PersistentSAVE.SetInt("mario-score", Util.FindObjectOfType<Player>().GetPoints());
-			}
-			int num = phase + 1;
-			if (num > PersistentSAVE.GetInt("mario-phase", 3))
-			{
-				PersistentSAVE.SetInt("mario-phase", (num > 99) ? 99 : num);
-			}
 		}
 	}
 }

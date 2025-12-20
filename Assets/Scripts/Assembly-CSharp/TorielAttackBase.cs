@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TorielAttackBase : AttackBase
@@ -16,10 +17,19 @@ public class TorielAttackBase : AttackBase
 
 	private int talkState;
 
+	public override Dictionary<string, string[]> GetDefaultStrings()
+	{
+		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
+		dictionary.Add("downed_0", new string[4] { "!!!", "My child, I am so \nsorry!", "Y-^05you can recover...", "Now,^05 back to you." });
+		dictionary.Add("downed_1", new string[4] { "...Finally.", "My child,^05 get out of \nthe way now.", "I can finish her off.", "...What are you doing?" });
+		return dictionary;
+	}
+
 	protected override void Awake()
 	{
 		base.Awake();
-		curHP = (int[])Util.GameManager().GetHPArray().Clone();
+		SetStrings(GetDefaultStrings(), GetType());
+		curHP = (int[])Object.FindObjectOfType<GameManager>().GetHPArray().Clone();
 	}
 
 	protected override void Update()
@@ -35,7 +45,7 @@ public class TorielAttackBase : AttackBase
 				downed = ((!JustGotDowned(0)) ? 1 : 0);
 				if (downed == 0)
 				{
-					friskBeenDownedBefore = Util.FindObjectOfType<Toriel>().FriskHasDowned();
+					friskBeenDownedBefore = Object.FindObjectOfType<Toriel>().FriskHasDowned();
 				}
 				else if (downed == 1)
 				{
@@ -69,23 +79,23 @@ public class TorielAttackBase : AttackBase
 				{
 					flag = false;
 					talkState = 1;
-					Util.FindObjectOfType<Toriel>().Chat(new string[4] { "!!!", "My child, I am so \nsorry!", "Y-^05you can recover...", "Now,^05 back to you." }, "RightWide", "snd_txttor", new Vector2(178f, 141f), canSkip: true, 0);
-					Util.FindObjectOfType<Toriel>().SetFace("gasp");
+					Object.FindObjectOfType<Toriel>().Chat(GetStringArray("downed_" + downed), "RightWide", "snd_txttor", new Vector2(178f, 141f), true, 0);
+					Object.FindObjectOfType<Toriel>().SetFace("gasp");
 				}
 			}
 			else if (downed == 1)
 			{
-				if (!Util.FindObjectOfType<Toriel>().SusieHasDowned())
+				if (!Object.FindObjectOfType<Toriel>().SusieHasDowned())
 				{
 					flag = false;
 					talkState = 2;
-					Util.FindObjectOfType<Toriel>().Chat(new string[4] { "...Finally.", "My child,^05 get out of \nthe way now.", "I can finish her off.", "...What are you doing?" }, "RightWide", "snd_txttor", new Vector2(178f, 141f), canSkip: true, 0);
-					Util.FindObjectOfType<Toriel>().SetFace("contemplating");
+					Object.FindObjectOfType<Toriel>().Chat(GetStringArray("downed_" + downed), "RightWide", "snd_txttor", new Vector2(178f, 141f), true, 0);
+					Object.FindObjectOfType<Toriel>().SetFace("contemplating");
 				}
 				else
 				{
-					Util.GameManager().PlayGlobalSFX("sounds/snd_heal");
-					Util.GameManager().Heal(1, Util.GameManager().GetMaxHP(1) / 4);
+					Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_heal");
+					Object.FindObjectOfType<GameManager>().Heal(1, Object.FindObjectOfType<GameManager>().GetMaxHP(1) / 4);
 				}
 			}
 			if (flag)
@@ -95,27 +105,27 @@ public class TorielAttackBase : AttackBase
 		}
 		else if (talkState == 1)
 		{
-			if (!Util.FindObjectOfType<Toriel>().GetTextBubble())
+			if (!Object.FindObjectOfType<Toriel>().GetTextBubble())
 			{
 				Object.Destroy(base.gameObject);
 			}
-			else if (Util.FindObjectOfType<Toriel>().GetTextBubble().GetCurrentStringNum() == 4)
+			else if (Object.FindObjectOfType<Toriel>().GetTextBubble().GetCurrentStringNum() == 4)
 			{
-				Util.FindObjectOfType<Toriel>().SetFace("main");
+				Object.FindObjectOfType<Toriel>().SetFace("main");
 			}
 		}
 		else if (talkState == 2)
 		{
-			if (!Util.FindObjectOfType<Toriel>().GetTextBubble())
+			if (!Object.FindObjectOfType<Toriel>().GetTextBubble())
 			{
-				Util.FindObjectOfType<Toriel>().SetFace("main");
-				Util.GameManager().PlayGlobalSFX("sounds/snd_heal");
-				Util.GameManager().Heal(1, Util.GameManager().GetMaxHP(1) / 4);
+				Object.FindObjectOfType<Toriel>().SetFace("main");
+				Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_heal");
+				Object.FindObjectOfType<GameManager>().Heal(1, Object.FindObjectOfType<GameManager>().GetMaxHP(1) / 4);
 				Object.Destroy(base.gameObject);
 			}
-			else if (Util.FindObjectOfType<Toriel>().GetTextBubble().GetCurrentStringNum() == 4)
+			else if (Object.FindObjectOfType<Toriel>().GetTextBubble().GetCurrentStringNum() == 4)
 			{
-				Util.FindObjectOfType<Toriel>().SetFace("weird");
+				Object.FindObjectOfType<Toriel>().SetFace("weird");
 			}
 		}
 	}
@@ -131,9 +141,9 @@ public class TorielAttackBase : AttackBase
 
 	private bool JustGotDowned(int i)
 	{
-		if (curHP[i] != Util.GameManager().GetHP(i))
+		if (curHP[i] != Object.FindObjectOfType<GameManager>().GetHP(i))
 		{
-			return Util.GameManager().GetHP(i) <= 0;
+			return Object.FindObjectOfType<GameManager>().GetHP(i) <= 0;
 		}
 		return false;
 	}

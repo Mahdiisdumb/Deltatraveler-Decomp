@@ -12,7 +12,7 @@ public class MustardSeedBullet : BulletBase
 
 	private void Start()
 	{
-		velocity = Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position, 1f / 24f) - base.transform.position;
+		velocity = Vector3.MoveTowards(base.transform.position, Object.FindObjectOfType<SOUL>().transform.position, 1f / 24f) - base.transform.position;
 	}
 
 	private void Update()

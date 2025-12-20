@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1793966956283644
+--- !u!1 &1350308157524020
 GameObject:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -8,11 +8,11 @@ GameObject:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Component:
-  - component: {fileID: 4876056678090111}
-  - component: {fileID: 212505586165954277}
-  - component: {fileID: 60612654485218258}
-  - component: {fileID: 82401878160836498}
-  - component: {fileID: 114383438526590306}
+  - component: {fileID: 4518445001786239}
+  - component: {fileID: 212082155846883069}
+  - component: {fileID: 60421742788761421}
+  - component: {fileID: 82305760360197623}
+  - component: {fileID: 114930089693802885}
   m_Layer: 0
   m_Name: RockinBullet
   m_TagString: Untagged
@@ -20,41 +20,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4876056678090111
+--- !u!4 &4518445001786239
 Transform:
-  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1793966956283644}
+  m_GameObject: {fileID: 1350308157524020}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.29, y: 5.27, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
---- !u!212 &212505586165954277
+--- !u!212 &212082155846883069
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1793966956283644}
+  m_GameObject: {fileID: 1350308157524020}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -66,7 +59,6 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -79,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 200
-  m_Sprite: {fileID: 21300000, guid: 1abbf751a12dc794ab6d3f3a26ed7351, type: 2}
+  m_Sprite: {fileID: 21300000, guid: 894652383d48931468cf6556648b5d7a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -90,40 +82,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &60612654485218258
+--- !u!60 &60421742788761421
 PolygonCollider2D:
-  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1793966956283644}
+  m_GameObject: {fileID: 1350308157524020}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
+  m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,19 +112,17 @@ PolygonCollider2D:
       - {x: 0, y: 0.10424662}
       - {x: 0, y: 0}
       - {x: 0.10985252, y: 0}
-  m_UseDelaunayMesh: 0
---- !u!82 &82401878160836498
+--- !u!82 &82305760360197623
 AudioSource:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1793966956283644}
+  m_GameObject: {fileID: 1350308157524020}
   m_Enabled: 1
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -239,19 +208,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &114383438526590306
+--- !u!114 &114930089693802885
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1793966956283644}
+  m_GameObject: {fileID: 1350308157524020}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df7f86c9dbd552e826a56f99cd20c38b, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   sprites:
-  - {fileID: 21300000, guid: 1abbf751a12dc794ab6d3f3a26ed7351, type: 2}
-  - {fileID: 21300000, guid: c1fa37fd1c06b1a4f9530a9e7a1fa570, type: 2}
-  - {fileID: 21300000, guid: fc551ff9e8588a349a92751bfa3294c6, type: 2}
+  - {fileID: 21300000, guid: 894652383d48931468cf6556648b5d7a, type: 2}
+  - {fileID: 21300000, guid: 8a499070b6b82cd4ca6805e15f8f15e0, type: 2}
+  - {fileID: 21300000, guid: 107402b57419c6f4e93b1f1420b58a41, type: 2}

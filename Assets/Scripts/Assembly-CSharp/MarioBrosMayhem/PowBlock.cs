@@ -32,13 +32,13 @@ namespace MarioBrosMayhem
 
 		public void Hit(int playerId)
 		{
-			PowToLevel(playerId, level - 1, sendToServer: true);
+			PowToLevel(playerId, level - 1, true);
 		}
 
 		public void PowToLevel(int playerId, int level, bool sendToServer = false, bool pickupBlock = false)
 		{
 			aud.Play();
-			Util.FindObjectOfType<CameraController>().PowHit();
+			Object.FindObjectOfType<CameraController>().PowHit();
 			this.level = level;
 			if (level == 0)
 			{
@@ -46,31 +46,31 @@ namespace MarioBrosMayhem
 			}
 			GetComponent<BoxCollider2D>().size = new Vector2(2f / 3f, LEVEL_HEIGHTS[level]);
 			sr.sprite = sprites[level];
-			Enemy[] array = Util.FindObjectsOfType<Enemy>();
+			Enemy[] array = Object.FindObjectsOfType<Enemy>();
 			foreach (Enemy enemy in array)
 			{
 				if (enemy.Grounded())
 				{
-					enemy.Flip(playerId, 0, playAudio: false);
+					enemy.Flip(playerId, 0, false);
 				}
 			}
-			Coin[] array2 = Util.FindObjectsOfType<Coin>();
+			Coin[] array2 = Object.FindObjectsOfType<Coin>();
 			foreach (Coin coin in array2)
 			{
-				if (coin.Grounded() && (bool)Util.FindObjectOfType<MarioBrosManager>())
+				if (coin.Grounded() && (bool)Object.FindObjectOfType<MarioBrosManager>())
 				{
 					coin.CollectCoin(playerId);
 				}
 			}
-			Fireball[] array3 = Util.FindObjectsOfType<Fireball>();
+			Fireball[] array3 = Object.FindObjectsOfType<Fireball>();
 			foreach (Fireball fireball in array3)
 			{
 				if (fireball.CanBeKilled())
 				{
-					fireball.Kill(playerId, playSound: false);
+					fireball.Kill(playerId, false);
 				}
 			}
-			Freezie[] array4 = Util.FindObjectsOfType<Freezie>();
+			Freezie[] array4 = Object.FindObjectsOfType<Freezie>();
 			foreach (Freezie freezie in array4)
 			{
 				if (freezie.Grounded())
@@ -78,15 +78,15 @@ namespace MarioBrosMayhem
 					freezie.Die(playerId);
 				}
 			}
-			Icicle[] array5 = Util.FindObjectsOfType<Icicle>();
+			Icicle[] array5 = Object.FindObjectsOfType<Icicle>();
 			foreach (Icicle icicle in array5)
 			{
 				if (icicle.CanBeKilled())
 				{
-					icicle.Kill(playerId, playSound: false);
+					icicle.Kill(playerId, false);
 				}
 			}
-			Mushroom[] array6 = Util.FindObjectsOfType<Mushroom>();
+			Mushroom[] array6 = Object.FindObjectsOfType<Mushroom>();
 			foreach (Mushroom mushroom in array6)
 			{
 				if (mushroom.Grounded())
@@ -94,7 +94,7 @@ namespace MarioBrosMayhem
 					mushroom.HitFromBelow(playerId);
 				}
 			}
-			Util.FindObjectOfType<MarioBrosNetworkManager>().HitPowBlock(powId);
+			Object.FindObjectOfType<MarioBrosNetworkManager>().HitPowBlock(powId);
 		}
 
 		public void VanishPowBlock()

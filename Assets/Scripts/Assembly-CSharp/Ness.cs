@@ -60,13 +60,13 @@ public class Ness : EnemyBase
 			}
 			if ((stage == 4 && frames == 1) || (stage < 4 && frames == 20))
 			{
-				Util.FindObjectOfType<Paula>().ActivatePhase2();
-				Util.FindObjectOfType<Paula>().CombineParts();
-				Util.FindObjectOfType<Paula>().GetEnemyObject().transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Paula/spr_b_paula_gasp");
+				UnityEngine.Object.FindObjectOfType<Paula>().ActivatePhase2();
+				UnityEngine.Object.FindObjectOfType<Paula>().CombineParts();
+				UnityEngine.Object.FindObjectOfType<Paula>().GetEnemyObject().transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Paula/spr_b_paula_gasp");
 			}
 			else if (stage < 4 && frames == 1)
 			{
-				Util.FindObjectOfType<Paula>().GetPart("body").GetChild(0)
+				UnityEngine.Object.FindObjectOfType<Paula>().GetPart("body").GetChild(0)
 					.GetComponent<SpriteRenderer>()
 					.sprite = Resources.Load<Sprite>("battle/enemies/Paula/spr_b_paula_head_openeye");
 			}
@@ -74,11 +74,11 @@ public class Ness : EnemyBase
 			{
 				if (GameManager.GetOptions().lowGraphics.value == 0)
 				{
-					GameObject.Find("NessBGNameSoICanFindIt").GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f - (float)frames / 60f);
+					UnityEngine.Object.FindObjectOfType<ConfigureBackground>().opacity = 1f - (float)frames / 60f;
 				}
 				else
 				{
-					BattleBGPiece[] array = Util.FindObjectsOfType<BattleBGPiece>();
+					BattleBGPiece[] array = UnityEngine.Object.FindObjectsOfType<BattleBGPiece>();
 					foreach (BattleBGPiece obj in array)
 					{
 						Color color = obj.GetComponent<SpriteRenderer>().color;
@@ -96,13 +96,13 @@ public class Ness : EnemyBase
 		if (!gotHit)
 		{
 			animFrames++;
-			GetPart("body").transform.localPosition = new Vector3(0.646f, 2.561f) + new Vector3(Mathf.Sin((float)(animFrames * 12) * (MathF.PI / 180f)) / 36f, Mathf.Sin((float)(animFrames * 24) * (MathF.PI / 180f)) / 48f);
+			GetPart("body").transform.localPosition = new Vector3(0.646f, 2.561f) + new Vector3(Mathf.Sin((float)(animFrames * 12) * ((float)Math.PI / 180f)) / 36f, Mathf.Sin((float)(animFrames * 24) * ((float)Math.PI / 180f)) / 48f);
 		}
 		if (protectPaula)
 		{
 			base.obj.transform.localPosition = Vector3.Lerp(base.obj.transform.localPosition, mainPos, 0.5f);
 		}
-		if ((bool)Util.FindObjectOfType<AttackBase>() && castingHeal && Util.FindObjectOfType<AttackBase>().HasStarted())
+		if ((bool)UnityEngine.Object.FindObjectOfType<AttackBase>() && castingHeal && UnityEngine.Object.FindObjectOfType<AttackBase>().HasStarted())
 		{
 			castingHeal = false;
 			GetPart("body").GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Ness/spr_b_ness_head" + (ReduceDamage() ? "_regret" : GetHead()));
@@ -131,7 +131,7 @@ public class Ness : EnemyBase
 				satisfied += 25;
 				stage++;
 				GetPart("body").GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Ness/spr_b_ness_head_regret");
-				Util.FindObjectOfType<Paula>().GetPart("body").GetChild(0)
+				UnityEngine.Object.FindObjectOfType<Paula>().GetPart("body").GetChild(0)
 					.GetComponent<SpriteRenderer>()
 					.sprite = Resources.Load<Sprite>("battle/enemies/Paula/spr_b_paula_head_listening");
 				return new string[2] { "* You talked to Ness about\n  your control over the\n  situation,^05 and the sensation.", "* He starts to understand.\n* Ness's ATTACK dropped!" };
@@ -182,10 +182,10 @@ public class Ness : EnemyBase
 
 	public override bool CanSpare()
 	{
-		return Util.FindObjectOfType<Paula>().CanSpare();
+		return UnityEngine.Object.FindObjectOfType<Paula>().CanSpare();
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		return new string[1] { "* But she couldn't think\n  of anything to do." };
 	}
@@ -208,12 +208,12 @@ public class Ness : EnemyBase
 		base.Hit(partyMember, rawDmg, playSound);
 		if (hp <= 0)
 		{
-			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
-			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
-			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
-			Util.FindObjectOfType<BattleManager>().ForceNoFight();
-			Util.FindObjectOfType<BattleManager>().ForceNoSpare();
-			Util.FindObjectOfType<BattleManager>().StopMusic();
+			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
+			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
+			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
+			UnityEngine.Object.FindObjectOfType<BattleManager>().ForceNoFight();
+			UnityEngine.Object.FindObjectOfType<BattleManager>().ForceNoSpare();
+			UnityEngine.Object.FindObjectOfType<BattleManager>().StopMusic();
 			obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Ness/spr_b_ness_kill_0");
 			moveBody = 20;
 		}
@@ -261,7 +261,7 @@ public class Ness : EnemyBase
 			}
 			break;
 		case 1:
-			if (hp - CalculateDamage(partyMember, 40f, forceMagic: true) <= 0)
+			if (hp - CalculateDamage(partyMember, 40f, true) <= 0)
 			{
 				return false;
 			}

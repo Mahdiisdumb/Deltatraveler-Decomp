@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1067865384876071
+--- !u!1 &1522009025118420
 GameObject:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -8,11 +8,11 @@ GameObject:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Component:
-  - component: {fileID: 4300318763897401}
-  - component: {fileID: 212490923587545883}
-  - component: {fileID: 61194551517273203}
-  - component: {fileID: 82557104089400933}
-  - component: {fileID: 114061243240673516}
+  - component: {fileID: 4035479458479231}
+  - component: {fileID: 212718773106635979}
+  - component: {fileID: 61146952893682283}
+  - component: {fileID: 82529174110622036}
+  - component: {fileID: 114933794682816763}
   m_Layer: 0
   m_Name: XOStepSwitch
   m_TagString: Untagged
@@ -20,41 +20,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4300318763897401
+--- !u!4 &4035479458479231
 Transform:
-  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1067865384876071}
+  m_GameObject: {fileID: 1522009025118420}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
---- !u!212 &212490923587545883
+--- !u!212 &212718773106635979
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1067865384876071}
+  m_GameObject: {fileID: 1522009025118420}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -66,7 +59,6 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -79,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -400
-  m_Sprite: {fileID: 21300000, guid: 205fbeff6b257df4993a835f122c39fe, type: 2}
+  m_Sprite: {fileID: 21300000, guid: 8503ee5298adae540a80bcb488d64435, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -90,40 +82,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &61194551517273203
+--- !u!61 &61146952893682283
 BoxCollider2D:
-  serializedVersion: 3
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1067865384876071}
+  m_GameObject: {fileID: 1522009025118420}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
+  m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.12}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -136,18 +108,17 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.2, y: 0.34}
   m_EdgeRadius: 0
---- !u!82 &82557104089400933
+--- !u!82 &82529174110622036
 AudioSource:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1067865384876071}
+  m_GameObject: {fileID: 1522009025118420}
   m_Enabled: 1
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 355983997, guid: 0000000deadbeef15deadf00d0000000, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 9226ce98e30cf254e83659efb2c8d660, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -233,22 +204,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &114061243240673516
+--- !u!114 &114933794682816763
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1067865384876071}
+  m_GameObject: {fileID: 1522009025118420}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc8c0ab617e00980a4c34f3ea07e26e6, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  steppedOnSprite: {fileID: 21300000, guid: 1ba8097f25062d446869620c7bfa1c6d, type: 2}
-  steppedOffSprite: {fileID: 21300000, guid: 205fbeff6b257df4993a835f122c39fe, type: 2}
+  steppedOnSprite: {fileID: 21300000, guid: c086745d21843424ab7ab4b35c518f3c, type: 2}
+  steppedOffSprite: {fileID: 21300000, guid: 8503ee5298adae540a80bcb488d64435, type: 2}
   spikesSprites:
-  - {fileID: 21300000, guid: ce332423f3626fa449e4e20853dcda08, type: 2}
-  - {fileID: 21300000, guid: 3e2bb57cdaad8394bbf28432cda004bf, type: 2}
+  - {fileID: 21300000, guid: 52f094e1d775ae34b8d25bcf6a4ef57b, type: 2}
+  - {fileID: 21300000, guid: 7fa35fb39106f00419710b8aa019f9c4, type: 2}
   flag: -1
   cutscene: -1

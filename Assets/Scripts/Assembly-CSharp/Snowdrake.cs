@@ -122,7 +122,7 @@ public class Snowdrake : EnemyBase
 
 	public override int CalculateDamage(int partyMember, float rawDmg, bool forceMagic = false)
 	{
-		if (partyMember == 2 && (bool)Util.FindObjectOfType<IceShock>())
+		if (partyMember == 2 && (bool)Object.FindObjectOfType<IceShock>())
 		{
 			return base.CalculateDamage(partyMember, rawDmg, forceMagic) / 20;
 		}
@@ -132,7 +132,7 @@ public class Snowdrake : EnemyBase
 	public override void Hit(int partyMember, float rawDmg, bool playSound)
 	{
 		base.Hit(partyMember, rawDmg, playSound);
-		if (partyMember == 2 && (bool)Util.FindObjectOfType<IceShock>())
+		if (partyMember == 2 && (bool)Object.FindObjectOfType<IceShock>())
 		{
 			satisfied += 50;
 			if (satisfied >= 100 && hostile)
@@ -248,7 +248,7 @@ public class Snowdrake : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		switch (i)
 		{
@@ -278,7 +278,7 @@ public class Snowdrake : EnemyBase
 			}
 			return new string[1] { "* Noelle flows snow through\n  the cold air.\n* Nothing happens." };
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 

@@ -11,10 +11,10 @@ public class SusieLDEnd : AttackBase
 		base.Awake();
 		bbPos = new Vector2(0f, -2.37f);
 		bbSize = new Vector2(575f, 140f);
-		Util.FindObjectOfType<PartyPanels>().DeactivateTargets();
-		Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: false, susie: false, noelle: false);
-		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
-		susie = Util.FindObjectOfType<SusieLD>();
+		Object.FindObjectOfType<PartyPanels>().DeactivateTargets();
+		Object.FindObjectOfType<PartyPanels>().RaiseHeads(false, false, false);
+		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
+		susie = Object.FindObjectOfType<SusieLD>();
 	}
 
 	protected override void Update()
@@ -27,8 +27,8 @@ public class SusieLDEnd : AttackBase
 				{
 					quoteOnQuoteAttackStart = true;
 					bb.StartMovement(new Vector2(165f, 140f));
-					Util.FindObjectOfType<PartyPanels>().SetTargets(kris: true, susie: false, noelle: false);
-					Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = true;
+					Object.FindObjectOfType<PartyPanels>().SetTargets(true, false, false);
+					Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = true;
 				}
 				if (susie.GetTextBubble().GetCurrentStringNum() == 1)
 				{
@@ -45,13 +45,13 @@ public class SusieLDEnd : AttackBase
 			if (frames == 1)
 			{
 				susie.GetPart("body").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Susie/spr_b_susie_hurt_lookdown_1");
-				Util.FindObjectOfType<SOUL>().SetControllable(boo: true);
+				Object.FindObjectOfType<SOUL>().SetControllable(true);
 			}
 			if (frames == 45)
 			{
 				state = 1;
 				frames = 0;
-				susie.Chat(new string[6] { "That,^05 umm...", "Happens when someone \nisn't dying...", "...", "So I'm NOT dying.", "...", "OKAY I'M SPARING \nMYSELF" }, "RightWide", "snd_txtsus", Vector2.zero, canSkip: true, 0);
+				susie.Chat(new string[6] { "That,^05 umm...", "Happens when someone \nisn't dying...", "...", "So I'm NOT dying.", "...", "OKAY I'M SPARING \nMYSELF" }, "RightWide", "snd_txtsus", Vector2.zero, true, 0);
 			}
 		}
 		else
@@ -79,10 +79,10 @@ public class SusieLDEnd : AttackBase
 			}
 			if (frames == 30)
 			{
-				PartyMembers.SetHP(1, PartyMembers.GetMaxHP(1) / 5);
-				Util.GameManager().AddEXP(Util.FindObjectOfType<LesserDog>().GetFinalEXP());
-				Util.GameManager().AddGold(Util.FindObjectOfType<LesserDog>().GetGold());
-				Util.FindObjectOfType<BattleManager>().FadeEndBattle(1);
+				Util.GameManager().SetHP(1, Util.GameManager().GetMaxHP(1) / 5);
+				Util.GameManager().AddEXP(Object.FindObjectOfType<LesserDog>().GetFinalEXP());
+				Util.GameManager().AddGold(Object.FindObjectOfType<LesserDog>().GetGold());
+				Object.FindObjectOfType<BattleManager>().FadeEndBattle(1);
 			}
 		}
 	}
@@ -90,8 +90,8 @@ public class SusieLDEnd : AttackBase
 	public override void StartAttack()
 	{
 		base.StartAttack();
-		Util.FindObjectOfType<SOUL>().SetControllable(boo: false);
-		susie.Chat(new string[3] { "WHAT...^10 THE \nHELL...!", "YOU DOUBLE CROSSING,^10 \nBACKSTABBING PIECE \nOF...", "...^10 Uhhh..." }, "RightWide", "snd_txtsus", Vector2.zero, canSkip: true, 1);
+		Object.FindObjectOfType<SOUL>().SetControllable(false);
+		susie.Chat(new string[3] { "WHAT...^10 THE \nHELL...!", "YOU DOUBLE CROSSING,^10 \nBACKSTABBING PIECE \nOF...", "...^10 Uhhh..." }, "RightWide", "snd_txtsus", Vector2.zero, true, 1);
 		susie.GetTextBubble().gameObject.AddComponent<ShakingText>().StartShake(0, "speechbubble");
 	}
 }

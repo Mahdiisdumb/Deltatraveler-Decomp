@@ -91,7 +91,7 @@ public class MobileUI : MonoBehaviour
 		float num = 10f;
 		frames++;
 		float num2 = (float)frames / num;
-		num2 = Mathf.Sin(num2 * MathF.PI * 0.5f);
+		num2 = Mathf.Sin(num2 * (float)Math.PI * 0.5f);
 		for (int i = 0; i < dpad.Length; i++)
 		{
 			if (dpad[i].name == "DPAD")
@@ -267,7 +267,7 @@ public class MobileUI : MonoBehaviour
 				PlayerPrefs.SetInt("DPADStyle", 0);
 				num = 0;
 			}
-			Util.FindObjectOfType<MobileUI>().transform.Find("DPAD").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/spr_dpad_" + array[num]);
+			UnityEngine.Object.FindObjectOfType<MobileUI>().transform.Find("DPAD").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/spr_dpad_" + array[num]);
 		}
 		else
 		{
@@ -289,7 +289,7 @@ public class MobileUI : MonoBehaviour
 			Image[] componentsInChildren;
 			if (array2[num2] == "" || array2[num2].StartsWith("_"))
 			{
-				componentsInChildren = Util.FindObjectOfType<MobileUI>().GetComponentsInChildren<Image>();
+				componentsInChildren = UnityEngine.Object.FindObjectOfType<MobileUI>().GetComponentsInChildren<Image>();
 				foreach (Image image in componentsInChildren)
 				{
 					if (image.gameObject.name.EndsWith("_BUTTON"))
@@ -299,7 +299,7 @@ public class MobileUI : MonoBehaviour
 				}
 				return;
 			}
-			componentsInChildren = Util.FindObjectOfType<MobileUI>().GetComponentsInChildren<Image>();
+			componentsInChildren = UnityEngine.Object.FindObjectOfType<MobileUI>().GetComponentsInChildren<Image>();
 			foreach (Image image2 in componentsInChildren)
 			{
 				if (image2.gameObject.name.EndsWith("_BUTTON"))

@@ -18,7 +18,7 @@ public class FinalFrogAndWhimsalotAttacks : AttackBase
 		maxFrames = 150;
 		bbSize = new Vector2(165f, 140f);
 		bool flag = false;
-		FinalFroggit[] array = Util.FindObjectsOfType<FinalFroggit>();
+		FinalFroggit[] array = Object.FindObjectsOfType<FinalFroggit>();
 		foreach (FinalFroggit finalFroggit in array)
 		{
 			if (!finalFroggit.IsDone())
@@ -32,10 +32,10 @@ public class FinalFrogAndWhimsalotAttacks : AttackBase
 				}
 			}
 		}
-		if ((bool)Util.FindObjectOfType<Whimsalot>() && !Util.FindObjectOfType<Whimsalot>().IsDone())
+		if ((bool)Object.FindObjectOfType<Whimsalot>() && !Object.FindObjectOfType<Whimsalot>().IsDone())
 		{
 			totalCount++;
-			if (Util.FindObjectOfType<Whimsalot>().IsPraying())
+			if (Object.FindObjectOfType<Whimsalot>().IsPraying())
 			{
 				whimsunBulletType = 2;
 			}
@@ -78,8 +78,8 @@ public class FinalFrogAndWhimsalotAttacks : AttackBase
 		}
 		for (int j = 0; j < 3; j++)
 		{
-			ButterflyHardBullet component2 = Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/hardmode/ButterflyHardBullet"), new Vector3(Util.FindObjectOfType<SOUL>().transform.position.x + (1.25f - 1.25f * (float)j), -3.45f), Quaternion.identity, base.transform).GetComponent<ButterflyHardBullet>();
-			int baseDamage = component2.GetBaseDamage() + Util.FindObjectOfType<Whimsalot>().GetAttackOffset();
+			ButterflyHardBullet component2 = Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/hardmode/ButterflyHardBullet"), new Vector3(Object.FindObjectOfType<SOUL>().transform.position.x + (1.25f - 1.25f * (float)j), -3.45f), Quaternion.identity, base.transform).GetComponent<ButterflyHardBullet>();
+			int baseDamage = component2.GetBaseDamage() + Object.FindObjectOfType<Whimsalot>().GetAttackOffset();
 			component2.SetBaseDamage(baseDamage);
 			if (totalCount > 1)
 			{

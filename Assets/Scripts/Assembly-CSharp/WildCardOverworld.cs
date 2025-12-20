@@ -2,21 +2,9 @@ using UnityEngine;
 
 public class WildCardOverworld : InteractSelectionBase
 {
-	private bool doBit;
-
 	private void Awake()
 	{
 		DoInteract();
-	}
-
-	protected override void Update()
-	{
-		base.Update();
-		if (!txt && doBit)
-		{
-			Object.Instantiate(Resources.Load<GameObject>("ui/PunchCardBit"), GameObject.Find("Canvas").transform, worldPositionStays: false);
-			Object.Destroy(base.gameObject);
-		}
 	}
 
 	public override void MakeDecision(Vector2 index, int id)
@@ -47,17 +35,9 @@ public class WildCardOverworld : InteractSelectionBase
 			Util.GameManager().SetFlag(312, 0);
 			text2 = "red";
 		}
-		string text3 = $"* (The card emanates with a\n  {text2} glow.)";
-		doBit = Util.GameManager().GetFlagInt(301) == 0 && Util.GameManager().GetPlayerName() == "SHAYY";
+		string text3 = string.Format("* (The card emanates with a\n  {0} glow.)", text2);
 		txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-		if (doBit)
-		{
-			txt.CreateBox(new string[4] { text3, text, "* (...)", "* (Something is appearing on\n  the card...!)" });
-		}
-		else
-		{
-			txt.CreateBox(new string[2] { text3, text });
-			Object.Destroy(base.gameObject);
-		}
+		txt.CreateBox(new string[2] { text3, text });
+		Object.Destroy(base.gameObject);
 	}
 }

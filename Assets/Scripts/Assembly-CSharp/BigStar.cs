@@ -23,7 +23,7 @@ public class BigStar : MonoBehaviour
 		color[(focus + 1) % 3] = Random.Range(0f, 1f);
 		startBlowupSequenceAtFrames = Random.Range(15, 60);
 		base.transform.position = new Vector3(Random.Range(-0.59f, 9.24f), 6.49f);
-		if ((bool)Util.FindObjectOfType<PaulaRandomPatternsAttack>() && Util.FindObjectOfType<PaulaRandomPatternsAttack>().UsingIce())
+		if ((bool)Object.FindObjectOfType<PaulaRandomPatternsAttack>() && Object.FindObjectOfType<PaulaRandomPatternsAttack>().UsingIce())
 		{
 			posLimit = new Vector3(-2.49f, 2.59f);
 		}
@@ -93,7 +93,7 @@ public class BigStar : MonoBehaviour
 		}
 		if (frames == 8)
 		{
-			Util.FindObjectOfType<BattleCamera>().BlastShake();
+			Object.FindObjectOfType<BattleCamera>().BlastShake();
 			GetComponent<SpriteRenderer>().color = Color.white;
 			Object.Destroy(base.transform.GetChild(0).gameObject);
 			GetComponents<AudioSource>()[1].Play();

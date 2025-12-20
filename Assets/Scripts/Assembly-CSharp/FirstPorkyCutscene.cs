@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FirstPorkyCutscene : CutsceneBase
@@ -9,6 +10,15 @@ public class FirstPorkyCutscene : CutsceneBase
 	private Animator porky;
 
 	private bool geno;
+
+	public override Dictionary<string, string[]> GetDefaultStrings()
+	{
+		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
+		dictionary.Add("part_0", new string[6] { "* Uhh,^05 what's going on\n  out here??", "* Hey,^05 what do you\n  losers think you're\n  doing?", "* You're just here\n  to cause me trouble,^05\n  aren't you?", "* Wow,^05 look at this\n  brat.", "* H-^05hey,^05 that's one\n  of the people that\n  kidnapped me!", "* Wait,^05 WHAT???" });
+		dictionary.Add("part_1", new string[5] { "* Heheh,^05 I did!", "* You guys can call\n  me Master Porky.", "* And my guys here\n  will-", "* I'M ABOUT TO KICK\n  YOUR ASS,^05 TWERP!!!", "* O-^05oh,^05 uhh quick guys\n  thrash them!!!!!!!" });
+		dictionary.Add("part_2", new string[2] { "* ...", "* I guess this is the part\n  where we fight." });
+		return dictionary;
+	}
 
 	private void Update()
 	{
@@ -31,21 +41,21 @@ public class FirstPorkyCutscene : CutsceneBase
 			{
 				if (susie.transform.position != new Vector3(85.15f, 33.35f))
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+					susie.GetComponent<Animator>().SetBool("isMoving", true);
 					susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(85.15f, 33.35f), 1f / 12f);
 				}
 				else
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+					susie.GetComponent<Animator>().SetBool("isMoving", false);
 				}
 				if (noelle.transform.position != new Vector3(87.42f, 33.35f))
 				{
-					noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+					noelle.GetComponent<Animator>().SetBool("isMoving", true);
 					noelle.transform.position = Vector3.MoveTowards(noelle.transform.position, new Vector3(87.42f, 33.35f), 1f / 12f);
 				}
 				else
 				{
-					noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+					noelle.GetComponent<Animator>().SetBool("isMoving", false);
 				}
 			}
 			if (frames == 60)
@@ -56,7 +66,7 @@ public class FirstPorkyCutscene : CutsceneBase
 				}
 				else
 				{
-					StartText(new string[6] { "* Uhh,^05 what's going on\n  out here??", "* Hey,^05 what do you\n  losers think you're\n  doing?", "* You're just here\n  to cause me trouble,^05\n  aren't you?", "* Wow,^05 look at this\n  brat.", "* H-^05hey,^05 that's one\n  of the people that\n  kidnapped me!", "* Wait,^05 WHAT???" }, new string[6] { "snd_txtnoe", "snd_txtpor", "snd_txtpor", "snd_txtsus", "snd_txtpau", "snd_txtsus" }, new int[18], new string[6] { "no_scared", "por_neutral", "por_neutral", "su_annoyed", "pau_mad_sweat", "su_wideeye" }, 0);
+					StartText(GetStringArray("part_0"), new string[6] { "snd_txtnoe", "snd_txtpor", "snd_txtpor", "snd_txtsus", "snd_txtpau", "snd_txtsus" }, new int[18], new string[6] { "no_scared", "por_neutral", "por_neutral", "su_annoyed", "pau_mad_sweat", "su_wideeye" }, 0);
 				}
 				state = 1;
 				frames = 0;
@@ -108,7 +118,7 @@ public class FirstPorkyCutscene : CutsceneBase
 					}
 					else
 					{
-						StartText(new string[5] { "* Heheh,^05 I did!", "* You guys can call\n  me Master Porky.", "* And my guys here\n  will-", "* I'M ABOUT TO KICK\n  YOUR ASS,^05 TWERP!!!", "* O-^05oh,^05 uhh quick guys\n  thrash them!!!!!!!" }, new string[5] { "snd_txtpor", "snd_txtpor", "snd_txtpor", "snd_txtsus", "snd_txtpor" }, new int[18], new string[5] { "por_smile", "por_smile", "por_smile", "su_wtf", "por_sweat" }, 0);
+						StartText(GetStringArray("part_1"), new string[5] { "snd_txtpor", "snd_txtpor", "snd_txtpor", "snd_txtsus", "snd_txtpor" }, new int[18], new string[5] { "por_smile", "por_smile", "por_smile", "su_wtf", "por_sweat" }, 0);
 					}
 					state = 2;
 					frames = 0;
@@ -152,10 +162,10 @@ public class FirstPorkyCutscene : CutsceneBase
 				frames++;
 				if (frames == 1)
 				{
-					porky.SetBool("isMoving", value: true);
+					porky.SetBool("isMoving", true);
 					porky.SetFloat("speed", 3f);
 					susie.EnableAnimator();
-					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+					susie.GetComponent<Animator>().SetBool("isMoving", true);
 					susie.GetComponent<Animator>().SetFloat("speed", 2f);
 				}
 				if (porky.transform.position.x != 93.83f)
@@ -190,7 +200,7 @@ public class FirstPorkyCutscene : CutsceneBase
 					{
 						gm.StopMusic(30f);
 						susie.ChangeDirection(Vector2.right);
-						SetMoveAnim(susie, isMoving: true);
+						SetMoveAnim(susie, true);
 						PlayAnimation(susie, "run", 2f);
 					}
 					if (susie.transform.position.x != 93.83f)
@@ -214,7 +224,7 @@ public class FirstPorkyCutscene : CutsceneBase
 						rightCultist.SetFloat("dirY", 1f);
 						leftCultist.SetFloat("dirX", 0f);
 						rightCultist.SetFloat("dirX", 0f);
-						StartText(new string[2] { "* ...", "* I guess this is the part\n  where we fight." }, new string[2] { "snd_text", "snd_text" }, new int[18], new string[2] { "", "" }, 0);
+						StartText(GetStringArray("part_2"), new string[2] { "snd_text", "snd_text" }, new int[18], new string[2] { "", "" }, 0);
 						state = 3;
 					}
 				}
@@ -222,14 +232,14 @@ public class FirstPorkyCutscene : CutsceneBase
 		}
 		if (state == 3 && !txt)
 		{
-			OverworldEnemyBase[] array = Util.FindObjectsOfType<OverworldEnemyBase>();
+			OverworldEnemyBase[] array = Object.FindObjectsOfType<OverworldEnemyBase>();
 			for (int i = 0; i < array.Length; i++)
 			{
 				array[i].StopRunning();
 			}
-			gm.SetPartyMembers(susie: false, noelle: true);
+			gm.SetPartyMembers(false, true);
 			kris.InitiateBattle(26);
-			EndCutscene(enablePlayerMovement: false);
+			EndCutscene(false);
 		}
 	}
 
@@ -250,9 +260,9 @@ public class FirstPorkyCutscene : CutsceneBase
 			leftCultist.SetFloat("dirY", 1f);
 			rightCultist.SetFloat("dirY", 1f);
 			porky.SetFloat("dirY", 1f);
-			kris.SetSelfAnimControl(setAnimControl: false);
-			susie.SetSelfAnimControl(setAnimControl: false);
-			noelle.SetSelfAnimControl(setAnimControl: false);
+			kris.SetSelfAnimControl(false);
+			susie.SetSelfAnimControl(false);
+			noelle.SetSelfAnimControl(false);
 			susie.UseUnhappySprites();
 			noelle.UseUnhappySprites();
 			susie.transform.position += new Vector3(0f, 1f / 3f);

@@ -116,31 +116,31 @@ public class GauntletFallScenario : MonoBehaviour
 		}
 		if (frames == 970)
 		{
-			Util.FindObjectOfType<ActionBulletHandler>().transform.position = Vector3.zero;
-			Util.FindObjectOfType<ActionPartyPanels>().Lower();
+			Object.FindObjectOfType<ActionBulletHandler>().transform.position = Vector3.zero;
+			Object.FindObjectOfType<ActionPartyPanels>().Lower();
 		}
 		if (frames == 982)
 		{
 			Util.GameManager().StopMusic(30f);
-			Util.FindObjectOfType<Fade>().FadeOut(60, Color.white);
+			Object.FindObjectOfType<Fade>().FadeOut(60, Color.white);
 		}
 		if (frames == 1070)
 		{
 			Util.GameManager().PlayGlobalSFX("sounds/snd_splash");
-			Util.FindObjectOfType<Fade>().FadeOut(0, Color.black);
+			Object.FindObjectOfType<Fade>().FadeOut(0, Color.black);
 		}
 		if (frames == 1100)
 		{
-			Util.GameManager().SetPartyMembers(susie: true, noelle: true);
-			Util.GameManager().LoadArea(107, fadeIn: true, new Vector3(1.2f, -1.965f), Vector2.down);
+			Util.GameManager().SetPartyMembers(true, true);
+			Util.GameManager().LoadArea(107, true, new Vector3(1.2f, -1.965f), Vector2.down);
 		}
 	}
 
 	public void Activate()
 	{
-		kris = Util.OverworldPlayer();
+		kris = Object.FindObjectOfType<OverworldPlayer>();
 		base.transform.position = kris.transform.position;
-		kris.SetCollision(onoff: true);
+		kris.SetCollision(true);
 		bg = GameObject.Find("Paralax").transform;
 		bgYMulti = bg.GetComponent<ParallaxEffect>().GetYMultiplier();
 		Object.Destroy(bg.GetComponent<ParallaxEffect>());
@@ -150,8 +150,8 @@ public class GauntletFallScenario : MonoBehaviour
 		bg.parent = transform;
 		activated = true;
 		Vector3 vector = new Vector3(320f, 240f) / 48f;
-		Util.FindObjectOfType<CameraController>().SetClamps(base.transform.position + vector, base.transform.position - vector);
-		Util.FindObjectOfType<CameraController>().SetFollowPlayer(follow: true);
-		Util.FindObjectOfType<ActionPartyPanels>().Reinitialize();
+		Object.FindObjectOfType<CameraController>().SetClamps(base.transform.position + vector, base.transform.position - vector);
+		Object.FindObjectOfType<CameraController>().SetFollowPlayer(true);
+		Object.FindObjectOfType<ActionPartyPanels>().UpdatePanels();
 	}
 }

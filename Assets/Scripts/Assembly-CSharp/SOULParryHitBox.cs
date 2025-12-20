@@ -21,7 +21,7 @@ public class SOULParryHitBox : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision && collision.gameObject.tag.Contains("Bullet") && collision.gameObject.layer != 2)
+		if (collision.gameObject.tag.Contains("Bullet") && collision.gameObject.layer != 2)
 		{
 			soul.HandleParry();
 			soul.HandleParryCollision(collision.GetComponent<BulletBase>());
@@ -30,7 +30,7 @@ public class SOULParryHitBox : MonoBehaviour
 
 	private void OnTriggerStay2D(Collider2D collision)
 	{
-		if ((bool)collision && collision.gameObject.tag.Contains("Bullet") && collision.gameObject.layer != 2)
+		if (collision.gameObject.tag.Contains("Bullet") && collision.gameObject.layer != 2)
 		{
 			soul.HandleParry();
 			soul.HandleParryCollision(collision.GetComponent<BulletBase>());

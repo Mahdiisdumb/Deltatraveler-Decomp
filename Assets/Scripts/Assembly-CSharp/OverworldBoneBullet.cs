@@ -26,7 +26,7 @@ public class OverworldBoneBullet : ActionBulletBase
 	protected override void Awake()
 	{
 		base.Awake();
-		turnLeft = Util.OverworldPlayer().transform.position.x < base.transform.position.x;
+		turnLeft = UnityEngine.Object.FindObjectOfType<OverworldPlayer>().transform.position.x < base.transform.position.x;
 		baseDmg = 6;
 	}
 
@@ -58,9 +58,9 @@ public class OverworldBoneBullet : ActionBulletBase
 		if (spinning)
 		{
 			spinFrames++;
-			OverworldPlayer overworldPlayer = Util.OverworldPlayer();
+			OverworldPlayer overworldPlayer = UnityEngine.Object.FindObjectOfType<OverworldPlayer>();
 			float num = (float)spinFrames / 24f;
-			num = Mathf.Sin(num * MathF.PI * 0.5f);
+			num = Mathf.Sin(num * (float)Math.PI * 0.5f);
 			if (tracking)
 			{
 				base.transform.position = overworldPlayer.transform.position + relativePosition;
@@ -75,7 +75,7 @@ public class OverworldBoneBullet : ActionBulletBase
 			if (spinFrames == 24)
 			{
 				spinning = false;
-				direction = new Vector3(Mathf.Sin(base.transform.rotation.eulerAngles.z * (MathF.PI / 180f)), 0f - Mathf.Cos(base.transform.rotation.eulerAngles.z * (MathF.PI / 180f)));
+				direction = new Vector3(Mathf.Sin(base.transform.rotation.eulerAngles.z * ((float)Math.PI / 180f)), 0f - Mathf.Cos(base.transform.rotation.eulerAngles.z * ((float)Math.PI / 180f)));
 			}
 		}
 	}

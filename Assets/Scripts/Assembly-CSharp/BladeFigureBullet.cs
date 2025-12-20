@@ -44,7 +44,7 @@ public class BladeFigureBullet : BulletBase
 		{
 			float num = (float)(frames - 125) / 60f;
 			num = num * num * num * (num * (6f * num - 15f) + 10f);
-			bulletX = Mathf.Lerp(base.transform.position.x, Util.FindObjectOfType<SOUL>().transform.position.x - 0.32f, num);
+			bulletX = Mathf.Lerp(base.transform.position.x, Object.FindObjectOfType<SOUL>().transform.position.x - 0.32f, num);
 			base.transform.position = new Vector3(bulletX, Mathf.Lerp(1.715f, 2.47f, num));
 			arm.transform.position = new Vector3(-0.16f, Mathf.Lerp(2.21f, 2.64f, num));
 			if (frames == 185)
@@ -55,7 +55,7 @@ public class BladeFigureBullet : BulletBase
 		}
 		if (frames >= 185 && frames < 200)
 		{
-			bulletX = Util.FindObjectOfType<SOUL>().transform.position.x - 0.32f;
+			bulletX = Object.FindObjectOfType<SOUL>().transform.position.x - 0.32f;
 			base.transform.position = new Vector3(bulletX, 2.47f);
 		}
 		if (frames >= 200)
@@ -76,11 +76,11 @@ public class BladeFigureBullet : BulletBase
 			if (frames == 215)
 			{
 				GetComponent<AudioSource>().Play();
-				Util.FindObjectOfType<BattleCamera>().GiantBlastShake();
+				Object.FindObjectOfType<BattleCamera>().GiantBlastShake();
 			}
 			if (frames == 235)
 			{
-				Util.FindObjectOfType<BladeKnightBlasters>().FadeIn();
+				Object.FindObjectOfType<BladeKnightBlasters>().FadeIn();
 			}
 			sr.color = new Color(1f, 1f, 1f, 1f - (float)(frames - 235) / 15f);
 			if (frames == 250)

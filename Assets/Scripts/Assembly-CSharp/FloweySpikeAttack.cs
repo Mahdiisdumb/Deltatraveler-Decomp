@@ -86,12 +86,12 @@ public class FloweySpikeAttack : AttackBase
 		{
 			float num5 = Mathf.Lerp(0f, 2f, (float)(frames - 25) / 120f);
 			degrees += num5;
-			float f = degrees * (MathF.PI / 180f);
-			float f2 = degrees * 3f * (MathF.PI / 180f);
+			float f = degrees * ((float)Math.PI / 180f);
+			float f2 = degrees * 3f * ((float)Math.PI / 180f);
 			bb.transform.position = new Vector3(Mathf.Sin(f) * 2f, Mathf.Sin(f2) / 2f - 1.66f);
 			if (frames % 7 == 1)
 			{
-				f = (float)UnityEngine.Random.Range(-90, 90) * (MathF.PI / 180f);
+				f = (float)UnityEngine.Random.Range(-90, 90) * ((float)Math.PI / 180f);
 				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/flowey/FloweyPelletStandard"), new Vector3(Mathf.Sin(f) * 2f, Mathf.Cos(f) + 3f), Quaternion.identity, base.transform);
 			}
 		}

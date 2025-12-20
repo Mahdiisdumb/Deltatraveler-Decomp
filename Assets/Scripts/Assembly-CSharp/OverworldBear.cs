@@ -9,9 +9,9 @@ public class OverworldBear : OverworldBloodEnemyBase
 
 	protected override void Awake()
 	{
-		if ((int)Util.GameManager().GetFlag(defeatFlagID) == 1 && (int)Util.GameManager().GetFlag(13) >= 5)
+		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(defeatFlagID) == 1 && (int)Object.FindObjectOfType<GameManager>().GetFlag(13) >= 5)
 		{
-			CreateDeadEnemy(age: true);
+			CreateDeadEnemy(true);
 		}
 		base.Awake();
 		anim.SetFloat("dirX", startLook.x);
@@ -41,19 +41,19 @@ public class OverworldBear : OverworldBloodEnemyBase
 	{
 		base.DetectPlayer();
 		dif = CalculateDifference(6f);
-		SetFaceDirection(reverse: false);
+		SetFaceDirection(false);
 	}
 
 	public override void StopRunning()
 	{
 		base.StopRunning();
-		anim.SetBool("isMoving", value: false);
+		anim.SetBool("isMoving", false);
 	}
 
 	protected override void RunAlgorithm()
 	{
 		base.RunAlgorithm();
-		anim.SetBool("isMoving", value: true);
+		anim.SetBool("isMoving", true);
 		SetFaceDirection(runFromPlayer);
 	}
 

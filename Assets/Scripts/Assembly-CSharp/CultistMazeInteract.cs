@@ -25,7 +25,7 @@ public class CultistMazeInteract : InteractTextBox
 	protected override void Awake()
 	{
 		cultistFlag = 109 + cultistID;
-		if (cultistID == 0 && (int)Util.GameManager().GetFlag(cultistFlag) > 0)
+		if (cultistID == 0 && (int)Object.FindObjectOfType<GameManager>().GetFlag(cultistFlag) > 0)
 		{
 			Object.Destroy(base.gameObject);
 		}
@@ -45,7 +45,7 @@ public class CultistMazeInteract : InteractTextBox
 				break;
 			}
 			newPosition = new Vector3(initPosition.x + direction.x * 5f / 6f, initPosition.y + direction.y * 5f / 6f);
-			if ((int)Util.GameManager().GetFlag(cultistFlag) == 1)
+			if ((int)Object.FindObjectOfType<GameManager>().GetFlag(cultistFlag) == 1)
 			{
 				base.transform.position = newPosition;
 				moved = true;
@@ -57,8 +57,8 @@ public class CultistMazeInteract : InteractTextBox
 	public override void DoInteract()
 	{
 		base.DoInteract();
-		anim.SetFloat("dirX", Util.OverworldPlayer().transform.position.x - base.transform.position.x);
-		anim.SetFloat("dirY", Util.OverworldPlayer().transform.position.y - base.transform.position.y);
+		anim.SetFloat("dirX", Object.FindObjectOfType<OverworldPlayer>().transform.position.x - base.transform.position.x);
+		anim.SetFloat("dirY", Object.FindObjectOfType<OverworldPlayer>().transform.position.y - base.transform.position.y);
 	}
 
 	protected override void Update()
@@ -67,15 +67,15 @@ public class CultistMazeInteract : InteractTextBox
 		{
 			if (cultistID == 0)
 			{
-				Util.OverworldPlayer().InitiateBattle(27);
+				Object.FindObjectOfType<OverworldPlayer>().InitiateBattle(27);
 				Object.Destroy(base.gameObject);
 			}
 			else
 			{
 				anim.SetFloat("dirX", direction.x);
-				anim.SetBool("isMoving", value: true);
+				anim.SetBool("isMoving", true);
 				moving = true;
-				Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
+				Object.FindObjectOfType<GameManager>().DisablePlayerMovement(true);
 			}
 		}
 		else if (!txt && moved)
@@ -92,9 +92,9 @@ public class CultistMazeInteract : InteractTextBox
 				moving = false;
 				moved = true;
 				anim.SetFloat("dirX", 0f);
-				anim.SetBool("isMoving", value: false);
-				Util.GameManager().EnablePlayerMovement();
-				Util.GameManager().SetFlag(cultistFlag, 1);
+				anim.SetBool("isMoving", false);
+				Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
+				Object.FindObjectOfType<GameManager>().SetFlag(cultistFlag, 1);
 			}
 		}
 	}

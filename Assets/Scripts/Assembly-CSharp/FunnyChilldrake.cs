@@ -1,10 +1,12 @@
+using UnityEngine;
+
 public class FunnyChilldrake : InteractTextBox
 {
 	public override void DoInteract()
 	{
 		if (!talkedToBefore)
 		{
-			FunnyChilldrake[] array = Util.FindObjectsOfType<FunnyChilldrake>();
+			FunnyChilldrake[] array = Object.FindObjectsOfType<FunnyChilldrake>();
 			foreach (FunnyChilldrake funnyChilldrake in array)
 			{
 				if (funnyChilldrake != this)

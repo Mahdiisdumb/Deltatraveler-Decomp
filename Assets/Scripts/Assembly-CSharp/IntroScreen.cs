@@ -24,10 +24,10 @@ public class IntroScreen : SelectableBehaviour
 
 	private void Start()
 	{
-		dev = Util.GameManager().IsTestMode();
+		dev = Object.FindObjectOfType<GameManager>().IsTestMode();
 		if (dev)
 		{
-			GameObject.Find("VERSION").GetComponent<Text>().text = GameObject.Find("VERSION").GetComponent<Text>().text.Replace("ver", Util.GameManager().GetVersionBuild());
+			GameObject.Find("VERSION").GetComponent<Text>().text = GameObject.Find("VERSION").GetComponent<Text>().text.Replace("ver", Object.FindObjectOfType<GameManager>().GetVersionBuild());
 			GameObject.Find("VERSION").GetComponent<Text>().enabled = true;
 			GameObject.Find("TESTMODE").GetComponent<Text>().enabled = true;
 			GameObject.Find("MERCYENGINE").GetComponent<Text>().enabled = true;
@@ -37,7 +37,7 @@ public class IntroScreen : SelectableBehaviour
 
 	private void Update()
 	{
-		if ((bool)Util.FindObjectOfType<VyletLogoAnimation>())
+		if ((bool)Object.FindObjectOfType<VyletLogoAnimation>())
 		{
 			return;
 		}
@@ -45,9 +45,16 @@ public class IntroScreen : SelectableBehaviour
 		{
 			if (logoSeqFrames >= 75)
 			{
-				if (PersistentSAVE.GetInt("content-warning", 0) == 1)
+				if (PlayerPrefs.GetInt("ContentWarningV2", 0) == 1)
 				{
-					SceneManager.LoadScene(6);
+					if (PlayerPrefs.GetInt("AutoLowGraphicsWarning") == 0 && GameManager.autoLowGraphics)
+					{
+						ShowAutoLowGraphicsWarning();
+					}
+					else
+					{
+						SceneManager.LoadScene(6);
+					}
 				}
 				else
 				{
@@ -94,13 +101,13 @@ public class IntroScreen : SelectableBehaviour
 			}
 			if (readFrames == 61 && UTInput.GetButtonDown("Z"))
 			{
-				PersistentSAVE.SetInt("content-warning", 1);
+				PlayerPrefs.SetInt("ContentWarningV2", 1);
 				base.transform.Find("Understood").GetComponent<Text>().enabled = false;
 				base.transform.Find("Unresponsive").GetComponent<Text>().enabled = false;
 				base.transform.Find("SOUL").GetComponent<Image>().enabled = false;
 				base.transform.Find("ContentWarning").GetComponent<Text>().text = "You have been warned.";
 				base.transform.Find("ContentWarning").localPosition = Vector3.zero;
-				Util.GameManager().PlayGlobalSFX("sounds/snd_select");
+				Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_select");
 				readFrames = 0;
 				state = 2;
 			}
@@ -111,8 +118,38 @@ public class IntroScreen : SelectableBehaviour
 			base.transform.Find("ContentWarning").GetComponent<Text>().color = Color.Lerp(Color.white, new Color(1f, 1f, 1f, 0f), (float)(readFrames - 45) / 15f);
 			if (readFrames == 60)
 			{
-				SceneManager.LoadScene(6);
+				if (PlayerPrefs.GetInt("AutoLowGraphicsWarning") == 0 && GameManager.autoLowGraphics)
+				{
+					ShowAutoLowGraphicsWarning();
+				}
+				else
+				{
+					SceneManager.LoadScene(6);
+				}
 			}
 		}
+		if (state == 3)
+		{
+			readFrames++;
+			if (readFrames == 30)
+			{
+				base.transform.Find("Unresponsive").GetComponent<Text>().enabled = true;
+				base.transform.Find("Understood").GetComponent<Text>().enabled = true;
+				base.transform.Find("SOUL").GetComponent<Image>().enabled = true;
+			}
+			if (readFrames >= 30 && UTInput.GetButtonDown("Z"))
+			{
+				PlayerPrefs.SetInt("AutoLowGraphicsWarning", 1);
+				SceneManager.LoadScene(6);
+				Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_select");
+			}
+		}
+	}
+
+	public void ShowAutoLowGraphicsWarning()
+	{
+		readFrames = 0;
+		state = 3;
+		base.transform.Find("AutoLowGraphicsNotif").GetComponent<Text>().enabled = true;
 	}
 }

@@ -44,13 +44,17 @@ public class NeonPlayers : MonoBehaviour
 			if (spriteRenderer.sprite.name != null && spriteRenderer.sprite.name != component.sprite.name + "_n")
 			{
 				string text = "";
-				if ((bool)component.gameObject.GetComponent<OverworldMemberBase>())
+				if (component.gameObject.name == "Player")
 				{
-					text = $"{component.gameObject.GetComponent<OverworldMemberBase>().GetSpritePath()}neon/{component.sprite.name}_n";
-					if ((bool)component.gameObject.GetComponent<OverworldPlayer>() && (int)Util.GameManager().GetFlag(108) == 1)
+					text = string.Format("player/{0}/neon/{1}_n", ((int)Util.GameManager().GetFlag(107) == 1) ? "Frisk" : "Kris", component.sprite.name);
+					if ((int)Util.GameManager().GetFlag(108) == 1)
 					{
 						text = text.Replace("neon", "neonhard") + "h";
 					}
+				}
+				else if ((bool)component.gameObject.GetComponent<OverworldPartyMember>())
+				{
+					text = ((!component.gameObject.GetComponent<OverworldPartyMember>().IsPlayer()) ? string.Format("overworld/npc/{0}_n", component.sprite.name) : string.Format("player/{0}/neon/{1}_n", component.gameObject.name, component.sprite.name));
 				}
 				Sprite sprite = Resources.Load<Sprite>(text);
 				if (sprite != null)

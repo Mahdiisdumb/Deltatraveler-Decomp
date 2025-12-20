@@ -24,7 +24,7 @@ public class FeraldrakeEndAttack : AttackBase
 		{
 			maxFrames = 180;
 		}
-		chilldrake = Util.FindObjectOfType<Feraldrake>();
+		chilldrake = Object.FindObjectOfType<Feraldrake>();
 		snowy = new GameObject("Snowy", typeof(Snowdrake)).GetComponent<Snowdrake>();
 		snowy.transform.position = new Vector3(-8.24f, 0f);
 		if (Util.GameManager().IsTestMode() && Input.GetKey(KeyCode.E))
@@ -86,11 +86,11 @@ public class FeraldrakeEndAttack : AttackBase
 						}
 						if (diagonal)
 						{
-							_ = Mathf.Sqrt(2f) / 2f;
+							float num2 = Mathf.Sqrt(2f) / 2f;
 						}
 						for (int i = 0; i < 4; i++)
 						{
-							Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/snowdin/FeraldrakeCrossBullet"), base.transform).GetComponent<FeraldrakeCrossBullet>().Activate(Util.FindObjectOfType<SOUL>().transform.position, array[i], i == 0);
+							Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/snowdin/FeraldrakeCrossBullet"), base.transform).GetComponent<FeraldrakeCrossBullet>().Activate(Object.FindObjectOfType<SOUL>().transform.position, array[i], i == 0);
 						}
 						diagonal = !diagonal;
 					}
@@ -103,7 +103,7 @@ public class FeraldrakeEndAttack : AttackBase
 				{
 					return;
 				}
-				Util.FindObjectOfType<BattleManager>().StopMusic();
+				Object.FindObjectOfType<BattleManager>().StopMusic();
 				SpriteRenderer[] componentsInChildren = snowy.GetComponentsInChildren<SpriteRenderer>();
 				foreach (SpriteRenderer spriteRenderer in componentsInChildren)
 				{
@@ -116,11 +116,11 @@ public class FeraldrakeEndAttack : AttackBase
 						spriteRenderer.color = Color.white;
 					}
 				}
-				snowy.Chat(new string[1] { "Hey,^05\nstop!!!" }, "RightSmall", "snd_text", new Vector2(-241f, 93f), canSkip: false, 0);
+				snowy.Chat(new string[1] { "Hey,^05\nstop!!!" }, "RightSmall", "snd_text", new Vector2(-241f, 93f), false, 0);
 				state = 1;
 				frames = 0;
 			}
-			else if (!Util.FindObjectOfType<Feraldrake>().Roaring() && !Util.FindObjectOfType<TextBubble>())
+			else if (!Object.FindObjectOfType<Feraldrake>().Roaring() && !Object.FindObjectOfType<TextBubble>())
 			{
 				StartAttack();
 			}
@@ -131,7 +131,7 @@ public class FeraldrakeEndAttack : AttackBase
 			if (frames == 1)
 			{
 				bb.StartMovement(new Vector2(185f, 140f));
-				SOUL sOUL = Util.FindObjectOfType<SOUL>();
+				SOUL sOUL = Object.FindObjectOfType<SOUL>();
 				if (sOUL.transform.position.y >= -0.3f)
 				{
 					sOUL.transform.position = new Vector3(sOUL.transform.position.x, -1.63f);
@@ -141,8 +141,8 @@ public class FeraldrakeEndAttack : AttackBase
 			snowy.transform.position = new Vector3(Mathf.Lerp(-8.24f, -3f, (float)frames / 60f), 0f);
 			if (frames == 75)
 			{
-				Util.FindObjectOfType<BattleManager>().PlayMusic("music/mus_confession", 0.9f);
-				snowy.Chat(new string[2] { "Chilldrake,^05 what's \nhappening over here???\n^05I heard roaring from \nreally far away.", "What's wrong with you?" }, "RightWide", "snd_text", new Vector2(43f, 101f), canSkip: true, 0);
+				Object.FindObjectOfType<BattleManager>().PlayMusic("music/mus_confession", 0.9f);
+				snowy.Chat(new string[2] { "Chilldrake,^05 what's \nhappening over here???\n^05I heard roaring from \nreally far away.", "What's wrong with you?" }, "RightWide", "snd_text", new Vector2(43f, 101f), true, 0);
 				state = 2;
 				frames = 0;
 			}
@@ -156,7 +156,7 @@ public class FeraldrakeEndAttack : AttackBase
 			}
 			if (frames == 45)
 			{
-				snowy.Chat(new string[4] { "Chilly,^05 calm down...^05\nI heard everything.", "I'm okay!", "...^05 C'mon,^05 dude!^05\nIt's me,^05 Snowy!", "Don't you remember \nme???" }, "RightWide", "snd_text", new Vector2(43f, 101f), canSkip: true, 0);
+				snowy.Chat(new string[4] { "Chilly,^05 calm down...^05\nI heard everything.", "I'm okay!", "...^05 C'mon,^05 dude!^05\nIt's me,^05 Snowy!", "Don't you remember \nme???" }, "RightWide", "snd_text", new Vector2(43f, 101f), true, 0);
 				state = 3;
 				frames = 0;
 			}
@@ -182,19 +182,19 @@ public class FeraldrakeEndAttack : AttackBase
 			}
 			if (frames == 150)
 			{
-				chilldrake.Chat(new string[2] { "God,^05 what the hell \nhave I been DOING \nfor this long???", "That haze just like...^10\ndrove me crazy." }, "LeftWide", "snd_text", new Vector2(-110f, 101f), canSkip: true, 0);
+				chilldrake.Chat(new string[2] { "God,^05 what the hell \nhave I been DOING \nfor this long???", "That haze just like...^10\ndrove me crazy." }, "LeftWide", "snd_text", new Vector2(-110f, 101f), true, 0);
 				state = 4;
 				frames = 0;
 			}
 		}
 		else if (state == 4 && !chilldrake.GetTextBubble())
 		{
-			snowy.Chat(new string[1] { "But you're fine now,^05\nright?" }, "RightWide", "snd_text", new Vector2(43f, 101f), canSkip: true, 0);
+			snowy.Chat(new string[1] { "But you're fine now,^05\nright?" }, "RightWide", "snd_text", new Vector2(43f, 101f), true, 0);
 			state = 5;
 		}
 		else if (state == 5 && !snowy.GetTextBubble())
 		{
-			chilldrake.Chat(new string[2] { "Hell yeah,^05 Snowy!", "Let's ditch this \nforest already!" }, "LeftWide", "snd_text", new Vector2(-110f, 101f), canSkip: true, 0);
+			chilldrake.Chat(new string[2] { "Hell yeah,^05 Snowy!", "Let's ditch this \nforest already!" }, "LeftWide", "snd_text", new Vector2(-110f, 101f), true, 0);
 			state = 6;
 		}
 		else if (state == 6 && !chilldrake.GetTextBubble())
@@ -215,7 +215,7 @@ public class FeraldrakeEndAttack : AttackBase
 
 	public override void StartAttack()
 	{
-		if (!Util.FindObjectOfType<Feraldrake>().Roaring() && !Util.FindObjectOfType<TextBubble>())
+		if (!Object.FindObjectOfType<Feraldrake>().Roaring() && !Object.FindObjectOfType<TextBubble>())
 		{
 			base.StartAttack();
 			bb.StartMovement(new Vector2(185f, 190f));

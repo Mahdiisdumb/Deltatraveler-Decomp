@@ -32,17 +32,17 @@ public class LetterPickUpCutscene : CutsceneBase
 			if (!num)
 			{
 				ChangeDirection(kris, Vector2.down);
-				SetMoveAnim(kris, isMoving: false);
+				SetMoveAnim(kris, false);
 			}
 			if (!flag)
 			{
 				ChangeDirection(susie, Vector2.down);
-				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(susie, false);
 			}
 			if (!flag2)
 			{
 				ChangeDirection(noelle, Vector2.right);
-				SetMoveAnim(noelle, isMoving: false);
+				SetMoveAnim(noelle, false);
 			}
 			if (!num && !flag && !flag2)
 			{
@@ -85,7 +85,7 @@ public class LetterPickUpCutscene : CutsceneBase
 				float num2 = (float)(frames - 52) / 20f;
 				if (num2 < 1f)
 				{
-					num2 = Mathf.Sin(num2 * MathF.PI * 0.5f);
+					num2 = Mathf.Sin(num2 * (float)Math.PI * 0.5f);
 				}
 				kris.transform.position = new Vector3(Mathf.Lerp(0f, 2f, num2), kris.transform.position.y);
 				if (frames < 62)
@@ -103,7 +103,7 @@ public class LetterPickUpCutscene : CutsceneBase
 						letter.GetComponent<UFLetter>().StartGeneratingBones();
 						PlayAnimation(susie, "walk");
 						ChangeDirection(susie, Vector2.left);
-						SetMoveAnim(susie, isMoving: true, 3f);
+						SetMoveAnim(susie, true, 3f);
 						if (!oblit)
 						{
 							SetSprite(noelle, "spr_no_surprise");
@@ -119,13 +119,13 @@ public class LetterPickUpCutscene : CutsceneBase
 				if (!MoveTo(susie, new Vector3(-3f, susie.transform.position.y), 10f))
 				{
 					ChangeDirection(susie, Vector2.right);
-					SetMoveAnim(susie, isMoving: false);
+					SetMoveAnim(susie, false);
 					SetSprite(susie, "spr_su_surprise_right");
 				}
 			}
 			if (frames == 92)
 			{
-				SetSprite(kris, "spr_kr_sit_injured", flipX: true);
+				SetSprite(kris, "spr_kr_sit_injured", true);
 			}
 			if (frames == 112)
 			{
@@ -137,8 +137,8 @@ public class LetterPickUpCutscene : CutsceneBase
 				SetSprite(susie, "spr_su_wtf");
 				StartText(new string[12]
 				{
-					"* WHAT THE HELL WAS\n  THAT???", "* \"Letter\" head-ass.^05\n* THAT WAS BASICALLY A\n  BOMB!!!", "UHMMM,^10 SANS...", "I WAS EXPECTING A \nBIT MORE THAN,^05 WELL,^10\nAN ASSAULT.", "I FIGURED THAT IT \nWOULD'VE BEEN A \nTRICK!", "LIKE MAYBE YOU \nWRITE A VERY NICE, \nFLATTERING LETTER.", "THEN BACKSTAB THEM \nWHILE THEY'RE \nDISTRACTED!!", "* oh, ^05papyrus.", "* do you think i'd just\n  let them by after\n  what i've been through?", "* after what they've done\n  to me?",
-					"WHAT THE HELL IS \nTHAT SUPPOSED TO \nMEAN???", "* oh,^05 you wouldn't know."
+					"* WHAT THE HELL WAS\n  THAT???", "* \"Letter\" head-ass.^05\n* THAT WAS BASICALLY A\n  BOMB!!!", "UHMMM,^10 SANS...", "I WAS EXPECTING A \nBIT MORE THAN,^05 WELL,^10\nAN ASSAULT.", "I FIGURED THAT IT \nWOULD'VE BEEN A \nTRICK!", "LIKE MAYBE YOU \nWRITE A VERY NICE, \nFLATTERING LETTER.", "THEN BACKSTAB THEM \nWHILE THEY'RE \nDISTRACTED!!", "*\toh, ^05papyrus.", "*\tdo you think i'd just\n\tlet them by after\n\twhat i've been through?", "*\tafter what they've done\n\tto me?",
+					"WHAT THE HELL IS \nTHAT SUPPOSED TO \nMEAN???", "*\toh,^05 you wouldn't know."
 				}, new string[12]
 				{
 					"snd_txtsus", "snd_txtsus", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtsans", "snd_txtsans", "snd_txtsans",
@@ -166,11 +166,11 @@ public class LetterPickUpCutscene : CutsceneBase
 				{
 					if (!MoveTo(kris, new Vector3(-1.78f, kris.transform.position.y), txt ? 2 : 4))
 					{
-						SetMoveAnim(kris, isMoving: false);
+						SetMoveAnim(kris, false);
 					}
 					else
 					{
-						SetMoveAnim(kris, isMoving: true, txt ? 0.5f : 1f);
+						SetMoveAnim(kris, true, txt ? 0.5f : 1f);
 					}
 				}
 			}
@@ -208,7 +208,7 @@ public class LetterPickUpCutscene : CutsceneBase
 			if (sans.transform.position.y > -0.32f)
 			{
 				PlayAnimation(papyrus, "idle");
-				SetMoveAnim(sans, isMoving: true);
+				SetMoveAnim(sans, true);
 				MoveTo(sans, new Vector3(sans.transform.position.x, -0.32f), 4f);
 				return;
 			}
@@ -227,7 +227,7 @@ public class LetterPickUpCutscene : CutsceneBase
 			{
 				ChangeDirection(kris, Vector2.right);
 				PlayAnimation(kris, "idle");
-				SetMoveAnim(kris, isMoving: false);
+				SetMoveAnim(kris, false);
 			}
 			if (frames == 30)
 			{
@@ -272,7 +272,7 @@ public class LetterPickUpCutscene : CutsceneBase
 			{
 				papyrus.enabled = true;
 				ChangeDirection(papyrus, Vector2.right);
-				SetMoveAnim(papyrus, isMoving: true);
+				SetMoveAnim(papyrus, true);
 				return;
 			}
 			frames++;
@@ -326,19 +326,19 @@ public class LetterPickUpCutscene : CutsceneBase
 				}
 				if (frames == 0)
 				{
-					UnityEngine.Object.Destroy(Util.FindObjectOfType<LetterScenarioHandler>().gameObject);
-					SetMoveAnim(susie, isMoving: true, 1.5f);
+					UnityEngine.Object.Destroy(UnityEngine.Object.FindObjectOfType<LetterScenarioHandler>().gameObject);
+					SetMoveAnim(susie, true, 1.5f);
 					ChangeDirection(kris, Vector2.down);
 					gm.PlayMusic("zoneMusic");
-					kris.SetCollision(onoff: true);
-					kris.SetSelfAnimControl(setAnimControl: true);
+					kris.SetCollision(true);
+					kris.SetSelfAnimControl(true);
 					gm.EnablePlayerMovement();
 					frames++;
 				}
 			}
 			else
 			{
-				UnityEngine.Object.Destroy(Util.FindObjectOfType<LetterScenarioHandler>().gameObject);
+				UnityEngine.Object.Destroy(UnityEngine.Object.FindObjectOfType<LetterScenarioHandler>().gameObject);
 				RestorePlayerControl();
 				ChangeDirection(kris, Vector2.down);
 				gm.PlayMusic("zoneMusic");
@@ -350,7 +350,7 @@ public class LetterPickUpCutscene : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(forceActivationTrigger: false);
+		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(false);
 		papyrus = GameObject.Find("Papyrus").GetComponent<Animator>();
 		sans = GameObject.Find("Sans").GetComponent<Animator>();
 		oblit = (int)Util.GameManager().GetFlag(172) == 1;
@@ -362,10 +362,10 @@ public class LetterPickUpCutscene : CutsceneBase
 		ChangeDirection(kris, new Vector3(0f, 0.62f) - kris.transform.position);
 		ChangeDirection(susie, new Vector3(-0.7f, 1.01f) - susie.transform.position);
 		ChangeDirection(noelle, Vector2.left);
-		SetMoveAnim(kris, isMoving: true);
-		SetMoveAnim(susie, isMoving: true);
-		SetMoveAnim(noelle, isMoving: true);
+		SetMoveAnim(kris, true);
+		SetMoveAnim(susie, true);
+		SetMoveAnim(noelle, true);
 		susRun = GameManager.GetOptions().runAnimations.value == 1;
-		letter = Util.FindObjectOfType<UFLetter>().transform;
+		letter = UnityEngine.Object.FindObjectOfType<UFLetter>().transform;
 	}
 }

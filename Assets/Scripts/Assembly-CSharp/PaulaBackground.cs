@@ -20,14 +20,14 @@ public class PaulaBackground : MonoBehaviour
 		fadeFrames++;
 		if (GameManager.GetOptions().lowGraphics.value != 1)
 		{
-			base.transform.Find("BG").GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, (float)fadeFrames / 60f);
+			GetComponentInChildren<ConfigureBackground>().opacity = (float)fadeFrames / 60f;
 			return;
 		}
 		Color color = new Color(1f, 0f, 0f);
-		BattleBGPiece[] array = Util.FindObjectsOfType<BattleBGPiece>();
+		BattleBGPiece[] array = Object.FindObjectsOfType<BattleBGPiece>();
 		foreach (BattleBGPiece obj in array)
 		{
-			_ = obj.GetComponent<SpriteRenderer>().color;
+			Color color2 = obj.GetComponent<SpriteRenderer>().color;
 			obj.GetComponent<SpriteRenderer>().color = new Color(color.r, color.g, color.b, (float)fadeFrames / 60f);
 		}
 	}

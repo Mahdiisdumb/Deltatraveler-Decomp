@@ -19,7 +19,7 @@ public class StepSwitch : MonoBehaviour
 
 	protected virtual void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision && (bool)collision.GetComponent<OverworldPlayer>() && !stepped)
+		if ((bool)collision.GetComponent<OverworldPlayer>() && !stepped)
 		{
 			StepOn();
 		}

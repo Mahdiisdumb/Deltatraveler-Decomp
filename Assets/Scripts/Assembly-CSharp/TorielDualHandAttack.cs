@@ -25,7 +25,7 @@ public class TorielDualHandAttack : TorielAttackBase
 		}
 		if (frames >= 8 && frames <= 56 && frames % 4 == 0)
 		{
-			Util.GameManager().PlayGlobalSFX("sounds/snd_noise");
+			Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_noise");
 			if (frames < 52)
 			{
 				flames.Add(Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/hardmode/BouncingFlameBullet"), hand.transform.position, Quaternion.identity, base.transform).GetComponent<BouncingFlameBullet>());
@@ -41,7 +41,7 @@ public class TorielDualHandAttack : TorielAttackBase
 			if (flames[i] != null)
 			{
 				flames[i].BonBonGoGetEm();
-				flames[i].SetBaseDamage(Util.FindObjectOfType<PartyPanels>().GetTargettedMembers()[0] ? 2 : 5);
+				flames[i].SetBaseDamage(Object.FindObjectOfType<PartyPanels>().GetTargettedMembers()[0] ? 2 : 5);
 			}
 		}
 	}

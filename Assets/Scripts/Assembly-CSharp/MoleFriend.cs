@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MoleFriend : OverworldPartyMember
 {
-	private new void Start()
+	private void Start()
 	{
 		if ((int)Util.GameManager().GetFlag(151) == 0)
 		{
@@ -10,7 +10,7 @@ public class MoleFriend : OverworldPartyMember
 		}
 		else
 		{
-			Awake();
+			base.Awake();
 		}
 	}
 }

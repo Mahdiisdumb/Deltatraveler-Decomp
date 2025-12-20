@@ -61,8 +61,6 @@ public class TextUT : MonoBehaviour
 
 	private ButtonPrompts prompts;
 
-	private Portrait miniPortrait;
-
 	private int column;
 
 	private int row;
@@ -73,14 +71,19 @@ public class TextUT : MonoBehaviour
 
 	private bool voiceSequenceRunning;
 
-	private static string[] COMMANDS = new string[2] { "P", "MP" };
-
 	private void Awake()
 	{
 		as1 = base.gameObject.AddComponent<AudioSource>();
 		as2 = base.gameObject.AddComponent<AudioSource>();
 		text = "Sample Text";
-		font = Resources.Load<Font>("fonts/DTM-Mono");
+		try
+		{
+			font = Util.PackManager().GetFont(Resources.Load<Font>("fonts/DTM-Mono"), "DTM-Mono");
+		}
+		catch
+		{
+			font = Resources.Load<Font>("fonts/DTM-Mono");
+		}
 		sound = Resources.Load<AudioClip>("sounds/snd_text");
 		soundRandom = 0;
 		playing = false;
@@ -127,16 +130,9 @@ public class TextUT : MonoBehaviour
 			{
 				num = 3;
 			}
-			if (text != " " && text != "\t")
+			if (text != " " && text != "\t" && !muted)
 			{
-				if ((bool)miniPortrait)
-				{
-					miniPortrait.Update();
-				}
-				if (!muted)
-				{
-					PlayPitchedBlip();
-				}
+				PlayPitchedBlip();
 			}
 			for (int j = 0; j < num; j++)
 			{
@@ -218,57 +214,19 @@ public class TextUT : MonoBehaviour
 	private void TextRoutine(string charc)
 	{
 		bool flag = false;
-		int num = 0;
 		if ((bool)prompts)
 		{
 			for (int i = 0; i < ButtonPrompts.validButtons.Length; i++)
 			{
 				if (charc == ButtonPrompts.GetButtonChar(ButtonPrompts.validButtons[i]))
 				{
-					ButtonPrompts.ButtonType buttonType = ButtonPrompts.ButtonType.Normal;
-					int num2 = ((txtObj.fontSize <= 20) ? 1 : 2);
-					if (font.name == "speechbubble" || (font.name == "papyrus" && num2 == 1))
-					{
-						buttonType = ButtonPrompts.ButtonType.BigSpeech;
-					}
-					else if (font.name == "papyrus")
-					{
-						buttonType = ButtonPrompts.ButtonType.Big;
-					}
-					float num3 = (-31f - (txtObj.lineSpacing - 1f) / 0.15f * 5f) / 2f * (float)num2;
-					int num4 = row * 8 * num2;
-					int num5 = Mathf.RoundToInt((float)column * num3);
-					if (buttonType == ButtonPrompts.ButtonType.BigSpeech)
-					{
-						num4 -= 6;
-					}
-					if (font.name == "papyrus")
-					{
-						num5 -= 3 * num2;
-					}
-					prompts.AddPrompt(txtObj.rectTransform, num4, num5, ButtonPrompts.validButtons[i], num2, buttonType);
+					int num = ((txtObj.fontSize <= 20) ? 1 : 2);
+					float num2 = (-31f - (txtObj.lineSpacing - 1f) / 0.15f * 5f) / 2f * (float)num;
+					prompts.AddPrompt(txtObj.rectTransform, row * 8 * num, Mathf.RoundToInt((float)column * num2), ButtonPrompts.validButtons[i], num);
 					charc = " ";
 					flag = true;
 					break;
 				}
-			}
-		}
-		string[] cOMMANDS = COMMANDS;
-		foreach (string text in cOMMANDS)
-		{
-			if (finalPos - currentPos > text.Length && this.text.Substring(currentPos, text.Length + 1) == ";" + text)
-			{
-				currentPos += text.Length + 1;
-				string text2 = "";
-				while (this.text.Substring(currentPos, 1) != ";")
-				{
-					text2 += this.text.Substring(currentPos, 1);
-					currentPos++;
-				}
-				charc = "";
-				HandleCommand(text, text2);
-				currentPos++;
-				return;
 			}
 		}
 		if (charc != "\b")
@@ -287,7 +245,7 @@ public class TextUT : MonoBehaviour
 		}
 		if (finalPos - currentPos > 1)
 		{
-			if (charc == "\n" && this.text.Substring(currentPos + 1, 1) == " ")
+			if (charc == "\n" && text.Substring(currentPos + 1, 1) == " ")
 			{
 				currentText += " ";
 				row++;
@@ -295,7 +253,7 @@ public class TextUT : MonoBehaviour
 			}
 			if (charc == "\b")
 			{
-				while (this.text.Substring(currentPos + 1, 1) == " ")
+				while (text.Substring(currentPos + 1, 1) == " ")
 				{
 					currentText += " ";
 					row++;
@@ -313,66 +271,34 @@ public class TextUT : MonoBehaviour
 		{
 			txtObj.text = currentText;
 		}
-		currentPos += charc.Length + num;
-		if (charc.Length > 0)
-		{
-			wait = textSpeed + (charc.Length - 1);
-		}
+		currentPos += charc.Length;
+		wait = textSpeed + (charc.Length - 1);
 		if (finalPos - currentPos > 6)
 		{
-			if (this.text.Substring(currentPos, 8) == "<color=#")
+			if (text.Substring(currentPos, 8) == "<color=#")
 			{
-				currentText += this.text.Substring(currentPos, 17);
+				currentText += text.Substring(currentPos, 17);
 				currentPos += 17;
 				isColoring = true;
 				colorPos = currentText.Length;
 				currentText += "</color>";
 			}
-			else if (this.text.Substring(currentPos, 8) == "</color>")
+			else if (text.Substring(currentPos, 8) == "</color>")
 			{
 				currentPos += 8;
 				isColoring = false;
 			}
 		}
-		if (finalPos - currentPos > 2 && this.text.Substring(currentPos, 1) == "^")
+		if (finalPos - currentPos > 2 && text.Substring(currentPos, 1) == "^")
 		{
 			currentPos++;
-			wait = int.Parse(this.text.Substring(currentPos, 2));
+			wait = int.Parse(text.Substring(currentPos, 2));
 			currentPos += 2;
 		}
 		if (currentPos > finalPos)
 		{
 			playing = false;
 			wait = 0;
-		}
-	}
-
-	private void HandleCommand(string commandType, string commandArg)
-	{
-		if (!(commandType == "P"))
-		{
-			if (commandType == "MP")
-			{
-				float num = 0f - 31f * txtObj.lineSpacing;
-				int num2 = row * 16;
-				int num3 = Mathf.RoundToInt((float)column * num);
-				miniPortrait = Portrait.CreatePortrait("mini;" + commandArg);
-				miniPortrait.transform.SetParent(txtObj.transform);
-				float num4 = Mathf.Round(txtObj.rectTransform.rect.width / -2f) + 8f;
-				float num5 = Mathf.Round(txtObj.rectTransform.rect.height / 2f) - 16f;
-				miniPortrait.transform.localPosition = new Vector3(num4 + (float)num2, num5 + (float)num3);
-				miniPortrait.transform.localScale = Vector3.one;
-				miniPortrait.enabled = false;
-				currentText += " ";
-			}
-		}
-		else
-		{
-			Portrait componentInChildren = base.transform.parent.GetComponentInChildren<Portrait>();
-			if ((bool)componentInChildren)
-			{
-				componentInChildren.SetImage(commandArg);
-			}
 		}
 	}
 
@@ -488,9 +414,12 @@ public class TextUT : MonoBehaviour
 			theText = theText.Replace("/WD", "");
 		}
 		StartText(theText, thePos, theSound, speed);
-		txtObj.font = Resources.Load<Font>("fonts/" + theFont);
-		if (theFont == "papyrus" || theFont == "wingdings")
+		txtObj.font = Util.PackManager().GetFont(Resources.Load<Font>("fonts/" + theFont), theFont);
+		switch (theFont)
 		{
+		case "sans":
+		case "papyrus":
+		case "wingdings":
 			if (txtObj.fontSize > 20)
 			{
 				txtObj.fontSize = 32;
@@ -499,39 +428,29 @@ public class TextUT : MonoBehaviour
 			{
 				txtObj.fontSize = 16;
 			}
-		}
-		else if (theFont.StartsWith("sans"))
-		{
+			break;
+		default:
 			if (txtObj.fontSize > 20)
 			{
-				txtObj.fontSize = 30;
+				txtObj.fontSize = 26;
 			}
 			else
 			{
-				txtObj.fontSize = 15;
+				txtObj.fontSize = 13;
 			}
-		}
-		else if (txtObj.fontSize > 20)
-		{
-			txtObj.fontSize = 26;
-		}
-		else
-		{
-			txtObj.fontSize = 13;
+			break;
 		}
 		if ((theFont == "DTM-Mono" || theFont == "speechbubble") && soundName.Contains("txtsans"))
 		{
-			bool flag = GetComponent<TextBubble>();
-			txtObj.font = Resources.Load<Font>(flag ? "fonts/sansb" : "fonts/sans");
+			txtObj.font = Resources.Load<Font>("fonts/sans");
 			if (txtObj.fontSize > 20)
 			{
-				txtObj.fontSize = 30;
+				txtObj.fontSize = 32;
 			}
 			else
 			{
-				txtObj.fontSize = 15;
+				txtObj.fontSize = 16;
 			}
-			txtObj.lineSpacing = (flag ? 1f : 0.9f);
 		}
 		if ((theFont == "DTM-Mono" || theFont == "speechbubble") && soundName.Contains("txtpap"))
 		{
@@ -569,7 +488,6 @@ public class TextUT : MonoBehaviour
 				txtObj.fontSize = 16;
 			}
 		}
-		font = txtObj.font;
 	}
 
 	public void DoText()
@@ -601,7 +519,7 @@ public class TextUT : MonoBehaviour
 
 	public void DestroyOldText()
 	{
-		SkipText(sound: false);
+		SkipText(false);
 		Object.Destroy(prefabObj);
 		doesExist = false;
 		muted = false;

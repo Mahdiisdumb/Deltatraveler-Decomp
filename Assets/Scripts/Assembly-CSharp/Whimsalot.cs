@@ -81,8 +81,8 @@ public class Whimsalot : EnemyBase
 		if (!gotHit)
 		{
 			bodyFrames++;
-			float t = (0f - Mathf.Cos((float)(bodyFrames * 12) * (MathF.PI / 180f)) + 1f) / 2f;
-			float t2 = (0f - Mathf.Cos((float)(bodyFrames * 24) * (MathF.PI / 180f)) + 1f) / 2f;
+			float t = (0f - Mathf.Cos((float)(bodyFrames * 12) * ((float)Math.PI / 180f)) + 1f) / 2f;
+			float t2 = (0f - Mathf.Cos((float)(bodyFrames * 24) * ((float)Math.PI / 180f)) + 1f) / 2f;
 			GetPart("body").transform.localPosition = new Vector3(0.186f, Mathf.Lerp(0.439f, 0.646f, t));
 			GetPart("head").transform.localPosition = new Vector3(0f, Mathf.Lerp(1.398f, 1.691f, t));
 			GetPart("wings").transform.localPosition = new Vector3(0f, Mathf.Lerp(0f, -0.104f, t));
@@ -98,7 +98,7 @@ public class Whimsalot : EnemyBase
 	public override string[] PerformAct(int i)
 	{
 		lastAct = i;
-		if (GetActNames()[i] == EnemyBase.CHECK_NAME)
+		if (GetActNames()[i] == "Check")
 		{
 			return new string[1] { "* WHIMSALOT - " + (34 + attackOffset * 2) + " ATK 12 DEF\n" + checkDesc };
 		}
@@ -122,11 +122,11 @@ public class Whimsalot : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 		if (i == 1)
 		{
@@ -134,7 +134,7 @@ public class Whimsalot : EnemyBase
 			attackOffset += 2;
 			return new string[2] { "* Susie made a horrifying\n  face at Whimsalot.", "* Whimsalot was not deterred.\n* Its ATTACK went up." };
 		}
-		return base.PerformAssistAct_Old(i);
+		return base.PerformAssistAct(i);
 	}
 
 	public override void Chat(string[] text, string type, string sound, Vector2 pos, bool canSkip, int speed)

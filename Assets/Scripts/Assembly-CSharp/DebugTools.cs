@@ -38,17 +38,17 @@ public class DebugTools : UnityEngine.Object
 
 	public static void UseTool(KeyCode key)
 	{
-		if (key == KeyCode.F4 && !Util.FindObjectOfType<BattleManager>())
+		if (key == KeyCode.F4 && !UnityEngine.Object.FindObjectOfType<BattleManager>())
 		{
-			Util.OverworldPlayer().ToggleNoclip();
+			UnityEngine.Object.FindObjectOfType<OverworldPlayer>().ToggleNoclip();
 			return;
 		}
 		switch (key)
 		{
 		case KeyCode.F6:
-			if ((bool)Util.FindObjectOfType<TestHUD>())
+			if ((bool)UnityEngine.Object.FindObjectOfType<TestHUD>())
 			{
-				UnityEngine.Object.Destroy(Util.FindObjectOfType<TestHUD>().gameObject);
+				UnityEngine.Object.Destroy(UnityEngine.Object.FindObjectOfType<TestHUD>().gameObject);
 			}
 			else
 			{
@@ -56,17 +56,17 @@ public class DebugTools : UnityEngine.Object
 			}
 			return;
 		case KeyCode.F8:
-			if (!Util.FindObjectOfType<BattleManager>())
+			if (!UnityEngine.Object.FindObjectOfType<BattleManager>())
 			{
-				Util.GameManager().SpawnFromLastSave(respawn: true);
+				Util.GameManager().SpawnFromLastSave(true);
 				return;
 			}
 			break;
 		}
-		if ((bool)Util.FindObjectOfType<BattleManager>())
+		if ((bool)UnityEngine.Object.FindObjectOfType<BattleManager>())
 		{
 			SOUL sOUL = null;
-			SOUL[] array = Util.FindObjectsOfType<SOUL>();
+			SOUL[] array = UnityEngine.Object.FindObjectsOfType<SOUL>();
 			foreach (SOUL sOUL2 in array)
 			{
 				if (sOUL2.IsPlayer())
@@ -97,41 +97,41 @@ public class DebugTools : UnityEngine.Object
 			{
 			case KeyCode.F5:
 			{
-				EnemyBase[] array2 = Util.FindObjectsOfType<EnemyBase>();
+				EnemyBase[] array2 = UnityEngine.Object.FindObjectsOfType<EnemyBase>();
 				foreach (EnemyBase enemyBase2 in array2)
 				{
 					if (enemyBase2.GetHP() > 0)
 					{
-						enemyBase2.Hit(0, 25f, playSound: true);
+						enemyBase2.Hit(0, 25f, true);
 					}
 				}
 				break;
 			}
 			case KeyCode.F7:
 			{
-				EnemyBase[] array2 = Util.FindObjectsOfType<EnemyBase>();
+				EnemyBase[] array2 = UnityEngine.Object.FindObjectsOfType<EnemyBase>();
 				foreach (EnemyBase enemyBase in array2)
 				{
 					if (enemyBase.GetHP() > 0)
 					{
-						enemyBase.Hit(0, -25f, playSound: true);
+						enemyBase.Hit(0, -25f, true);
 					}
 				}
 				break;
 			}
 			case KeyCode.F8:
-				Util.FindObjectOfType<TPBar>().AddTP(100);
+				UnityEngine.Object.FindObjectOfType<TPBar>().AddTP(100);
 				break;
 			}
 		}
 		else if (!GameObject.Find("DebugTool"))
 		{
-			Selection[] array3 = Util.FindObjectsOfType<Selection>();
+			Selection[] array3 = UnityEngine.Object.FindObjectsOfType<Selection>();
 			for (int i = 0; i < array3.Length; i++)
 			{
 				array3[i].Disable();
 			}
-			TextBox[] array4 = Util.FindObjectsOfType<TextBox>();
+			TextBox[] array4 = UnityEngine.Object.FindObjectsOfType<TextBox>();
 			for (int i = 0; i < array4.Length; i++)
 			{
 				array4[i].Disable();

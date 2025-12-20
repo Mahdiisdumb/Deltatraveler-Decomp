@@ -36,13 +36,13 @@ public class Section3DreamSequencePt2 : CutsceneBase
 				if (!MoveTo(kris, new Vector3(-3.32f, -5.13f), 3f) && !doorClosed)
 				{
 					doorClosed = true;
-					SetMoveAnim(kris, isMoving: false);
+					SetMoveAnim(kris, false);
 					PlaySFX("sounds/snd_doorclose");
 					SetSprite(GameObject.Find("Doors").transform, "overworld/snow_objects/spr_bnuy_doors_0");
 				}
 				else if (!doorClosed)
 				{
-					SetMoveAnim(kris, isMoving: true, 0.75f);
+					SetMoveAnim(kris, true, 0.75f);
 				}
 				MoveTo(cam, new Vector3(0f, -5f, -10f), 4f);
 			}
@@ -59,19 +59,19 @@ public class Section3DreamSequencePt2 : CutsceneBase
 			{
 				if (!MoveTo(susie, new Vector3(-4.61f, -4.93f), 4f))
 				{
-					SetMoveAnim(susie, isMoving: false);
+					SetMoveAnim(susie, false);
 				}
 				else
 				{
-					SetMoveAnim(susie, isMoving: true);
+					SetMoveAnim(susie, true);
 				}
 				if (!MoveTo(noelle, new Vector3(-2.12f, -4.93f), 4f))
 				{
-					SetMoveAnim(noelle, isMoving: false);
+					SetMoveAnim(noelle, false);
 				}
 				else
 				{
-					SetMoveAnim(noelle, isMoving: true);
+					SetMoveAnim(noelle, true);
 				}
 			}
 			if (frames != 135)
@@ -212,7 +212,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 				if (frames == 90)
 				{
 					ChangeDirection(kris, Vector2.left);
-					SetMoveAnim(kris, isMoving: true, 2f);
+					SetMoveAnim(kris, true, 2f);
 				}
 				kris.transform.position = new Vector3(Mathf.Lerp(-3.32f, -4.166f, (float)(frames - 90) / 10f), -5.13f);
 			}
@@ -226,7 +226,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 					susie.GetComponent<SpriteRenderer>().enabled = false;
 				}
 				float num = (float)(frames - 100) / 20f;
-				kris.transform.position = new Vector3(Mathf.Lerp(-4.166f, -4.625f, Mathf.Sin(num * MathF.PI * 0.5f)), -5.13f);
+				kris.transform.position = new Vector3(Mathf.Lerp(-4.166f, -4.625f, Mathf.Sin(num * (float)Math.PI * 0.5f)), -5.13f);
 				if (frames == 120)
 				{
 					SetSprite(kris, "spr_kr_hugsusie_1");
@@ -310,7 +310,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 					susie.transform.position = new Vector3(-4.916f, -4.795f);
 					susie.GetComponent<SpriteRenderer>().enabled = true;
 					susie.EnableAnimator();
-					SetMoveAnim(kris, isMoving: false);
+					SetMoveAnim(kris, false);
 					gm.SetSessionFlag(6, 0);
 					kris.EnableAnimator();
 					ChangeDirection(kris, Vector2.right);
@@ -337,13 +337,13 @@ public class Section3DreamSequencePt2 : CutsceneBase
 			if (MoveTo(susie, new Vector3(-9.53f, -4.93f), 4f))
 			{
 				ChangeDirection(susie, Vector2.left);
-				SetMoveAnim(susie, isMoving: true);
+				SetMoveAnim(susie, true);
 			}
 			if (noelle.transform.position.y > -5.84f)
 			{
 				MoveTo(noelle, new Vector3(noelle.transform.position.x, -5.84f), 4f);
 				ChangeDirection(noelle, Vector2.down);
-				SetMoveAnim(noelle, isMoving: true);
+				SetMoveAnim(noelle, true);
 			}
 			else if (MoveTo(noelle, new Vector3(-7.57f, -5.84f), 5f))
 			{
@@ -353,7 +353,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 			{
 				MoveTo(kris, new Vector3(-3.32f, kris.transform.position.y), 4f);
 				ChangeDirection(kris, Vector2.right);
-				SetMoveAnim(kris, isMoving: true);
+				SetMoveAnim(kris, true);
 				return;
 			}
 			if (MoveTo(kris, new Vector3(-3.32f, -4.73f), 4f))
@@ -364,7 +364,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				SetMoveAnim(kris, isMoving: false);
+				SetMoveAnim(kris, false);
 				gm.StopMusic(60f);
 			}
 			if (frames == 30)
@@ -377,7 +377,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 			{
 				state = 6;
 				frames = 0;
-				SetMoveAnim(kris, isMoving: true);
+				SetMoveAnim(kris, true);
 			}
 		}
 		else if (state == 6)
@@ -392,7 +392,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 				}
 				else if (!MoveTo(kris, new Vector3(-3.32f, -2.46f), 4f))
 				{
-					SetMoveAnim(kris, isMoving: false);
+					SetMoveAnim(kris, false);
 				}
 				return;
 			}
@@ -486,7 +486,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 					SetSprite(kris, "spr_kr_removesoul_collapse_25");
 					PlaySFX("sounds/snd_jump");
 				}
-				kris.transform.position = Vector3.Lerp(new Vector3(-3.74f, 0.3f), new Vector3(-3.89f, 2.2f), (float)(frames - 215) / 15f) + new Vector3(0f, Mathf.Sin((float)((frames - 215) * 12) * (MathF.PI / 180f)));
+				kris.transform.position = Vector3.Lerp(new Vector3(-3.74f, 0.3f), new Vector3(-3.89f, 2.2f), (float)(frames - 215) / 15f) + new Vector3(0f, Mathf.Sin((float)((frames - 215) * 12) * ((float)Math.PI / 180f)));
 				if (frames == 230)
 				{
 					kris.GetComponent<SpriteRenderer>().enabled = false;
@@ -521,13 +521,13 @@ public class Section3DreamSequencePt2 : CutsceneBase
 				if (frames == 368)
 				{
 					gm.PlayGlobalSFX("sounds/snd_noise");
-					SetSprite(kris, "spr_kr_removesoul_collapse_3", flipX: true);
+					SetSprite(kris, "spr_kr_removesoul_collapse_3", true);
 				}
 			}
 			if (frames == 420)
 			{
 				PlaySFX("sounds/snd_step1");
-				SetSprite(kris, "spr_kr_stumblewalk_down_0", flipX: true);
+				SetSprite(kris, "spr_kr_stumblewalk_down_0", true);
 			}
 			if (frames >= 480 && frames <= 660)
 			{
@@ -563,6 +563,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 			{
 				gm.SetFlag(0, "eye");
 				gm.SetFlag(204, 1);
+				PlayerPrefs.SetInt("KrisEye", 1);
 				SpriteRenderer component = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/lostcore/EyeFlash"), new Vector3(-3.4032f, -2.1054f), Quaternion.identity, base.transform).GetComponent<SpriteRenderer>();
 				component.color = Color.red;
 				component.sortingOrder = 460;
@@ -579,7 +580,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 				doorClosed = false;
 				ChangeDirection(kris, Vector2.down);
 				PlayAnimation(kris, "walk");
-				SetMoveAnim(kris, isMoving: true, 0.75f);
+				SetMoveAnim(kris, true, 0.75f);
 			}
 		}
 		else if (state == 9)
@@ -597,7 +598,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 				if (frames == 90)
 				{
 					CutsceneHandler.GetCutscene(75).StartCutscene();
-					EndCutscene(enablePlayerMovement: false);
+					EndCutscene(false);
 				}
 			}
 		}
@@ -698,7 +699,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 					if (frames == 41)
 					{
 						ChangeDirection(kris, Vector2.left);
-						SetMoveAnim(kris, isMoving: true, 2f);
+						SetMoveAnim(kris, true, 2f);
 					}
 					kris.transform.position = new Vector3(Mathf.Lerp(-3.32f, -4.166f, (float)(frames - 40) / 10f), -5.13f);
 				}
@@ -712,7 +713,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 						susie.GetComponent<SpriteRenderer>().enabled = false;
 					}
 					float num6 = (float)(frames - 50) / 20f;
-					kris.transform.position = new Vector3(Mathf.Lerp(-4.166f, -4.625f, Mathf.Sin(num6 * MathF.PI * 0.5f)), -5.13f);
+					kris.transform.position = new Vector3(Mathf.Lerp(-4.166f, -4.625f, Mathf.Sin(num6 * (float)Math.PI * 0.5f)), -5.13f);
 					if (frames == 70)
 					{
 						SetSprite(kris, "spr_kr_hugsusie_1");
@@ -835,15 +836,15 @@ public class Section3DreamSequencePt2 : CutsceneBase
 				}
 				else if (AtLine(6))
 				{
-					SetSprite(noelle, "pissed/spr_no_right_0_pissed", flipX: true);
+					SetSprite(noelle, "pissed/spr_no_right_0_pissed", true);
 					SetSprite(susie, "spr_su_surprise_right");
 				}
 				else if (AtLine(7))
 				{
 					SetSprite(susie, "spr_su_wtf");
 				}
-				int maxExclusive = ((txt.GetCurrentStringNum() >= 5) ? 6 : 10);
-				Vector3 vector3 = ((UnityEngine.Random.Range(0, maxExclusive) == 0) ? new Vector3((UnityEngine.Random.Range(0, 2) != 0) ? 1 : (-1), 0f) : Vector3.zero);
+				int max = ((txt.GetCurrentStringNum() >= 5) ? 6 : 10);
+				Vector3 vector3 = ((UnityEngine.Random.Range(0, max) == 0) ? new Vector3((UnityEngine.Random.Range(0, 2) != 0) ? 1 : (-1), 0f) : Vector3.zero);
 				kris.transform.position = new Vector3(-3.32f, -5.13f) + vector3 / 24f;
 				return;
 			}
@@ -863,7 +864,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 			}
 			if (frames == 70)
 			{
-				SetSprite(susie, "spr_su_left_worried_0", flipX: true);
+				SetSprite(susie, "spr_su_left_worried_0", true);
 				StartText(new string[3] { "* ...", "* Kris...^10 I...", "* ..." }, new string[3] { "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[1], new string[3] { "su_concerned", "su_sad", "su_sad_tears" });
 				frames = 0;
 				state = 13;
@@ -882,8 +883,8 @@ public class Section3DreamSequencePt2 : CutsceneBase
 				return;
 			}
 			frames++;
-			int maxExclusive2 = ((frames >= 90) ? 10 : 20);
-			vector5 = ((UnityEngine.Random.Range(0, maxExclusive2) == 0) ? new Vector3((UnityEngine.Random.Range(0, 2) != 0) ? 1 : (-1), 0f) : Vector3.zero);
+			int max2 = ((frames >= 90) ? 10 : 20);
+			vector5 = ((UnityEngine.Random.Range(0, max2) == 0) ? new Vector3((UnityEngine.Random.Range(0, 2) != 0) ? 1 : (-1), 0f) : Vector3.zero);
 			susie.transform.position = new Vector3(-4.61f, -4.93f) + vector5 / 24f;
 			if (frames == 90)
 			{
@@ -902,7 +903,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 		{
 			if ((bool)txt)
 			{
-				int maxExclusive3 = ((txt.GetCurrentStringNum() >= 5) ? 10 : 6);
+				int max3 = ((txt.GetCurrentStringNum() >= 5) ? 10 : 6);
 				int num7 = 0;
 				if (txt.GetCurrentStringNum() < 5)
 				{
@@ -918,7 +919,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 					vector6 = ((UnityEngine.Random.Range(0, num7) == 0) ? new Vector3((UnityEngine.Random.Range(0, 2) != 0) ? 1 : (-1), 0f) : Vector3.zero);
 				}
 				susie.transform.position = new Vector3(-4.61f, -4.93f) + vector6 / 24f;
-				vector6 = ((UnityEngine.Random.Range(0, maxExclusive3) == 0) ? new Vector3((UnityEngine.Random.Range(0, 2) != 0) ? 1 : (-1), 0f) : Vector3.zero);
+				vector6 = ((UnityEngine.Random.Range(0, max3) == 0) ? new Vector3((UnityEngine.Random.Range(0, 2) != 0) ? 1 : (-1), 0f) : Vector3.zero);
 				kris.transform.position = new Vector3(-3.32f, -5.13f) + vector6 / 24f;
 				if (AtLine(4))
 				{
@@ -931,7 +932,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 				else if (AtLine(9))
 				{
 					PlaySFX("sounds/snd_wing");
-					SetSprite(susie, "spr_su_left_worried_0", flipX: true);
+					SetSprite(susie, "spr_su_left_worried_0", true);
 				}
 				return;
 			}
@@ -1084,7 +1085,7 @@ public class Section3DreamSequencePt2 : CutsceneBase
 				susieKnowsOfAbort = true;
 			}
 		}
-		SetMoveAnim(kris, isMoving: false);
+		SetMoveAnim(kris, false);
 		ChangeDirection(kris, Vector2.down);
 		PlaySFX("sounds/snd_dooropen");
 		SetSprite(GameObject.Find("Doors").transform, "overworld/snow_objects/spr_bnuy_doors_1");

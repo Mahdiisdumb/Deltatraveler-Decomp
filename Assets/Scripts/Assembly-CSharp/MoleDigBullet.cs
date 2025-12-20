@@ -17,7 +17,7 @@ public class MoleDigBullet : BulletBase
 	{
 		base.Awake();
 		baseDmg = 9;
-		if ((bool)Util.FindObjectOfType<MondoMole>() && !Util.FindObjectOfType<MondoMole>().IsLectured())
+		if ((bool)Object.FindObjectOfType<MondoMole>() && !Object.FindObjectOfType<MondoMole>().IsLectured())
 		{
 			baseDmg = 9;
 		}
@@ -83,7 +83,7 @@ public class MoleDigBullet : BulletBase
 
 	public override void PreSOULHit()
 	{
-		if ((bool)Util.FindObjectOfType<RoughMole>() && !SOUL.FindPlayerSOUL().IsInvincible())
+		if ((bool)Object.FindObjectOfType<RoughMole>())
 		{
 			baseDmg = ((Random.Range(0, 8) == 0) ? 14 : 9);
 			if (baseDmg > 9)

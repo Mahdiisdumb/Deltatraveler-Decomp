@@ -21,9 +21,9 @@ public class TallBlasterPlatforms : AttackBase
 		maxFrames = 285;
 		bbSize = new Vector2(185f, 140f);
 		soulPos = new Vector2(-0.055f, -2.83f);
-		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 		blasterPrefab = Resources.Load<GameObject>("battle/attacks/bullets/GasterBlaster");
-		spawnRate = (Util.FindObjectOfType<KarmaHandler>() ? 30 : 35);
+		spawnRate = (Object.FindObjectOfType<KarmaHandler>() ? 30 : 35);
 	}
 
 	protected override void Update()
@@ -46,7 +46,7 @@ public class TallBlasterPlatforms : AttackBase
 			int num = ((frames % (spawnRate * 2) / 2 != 0) ? 1 : (-1));
 			int heightIndex = GetHeightIndex();
 			float[] array = new float[3] { -2.06f, 0.6f, 2.82f };
-			Object.Instantiate(blasterPrefab, new Vector3(9.1f * (float)num, array[heightIndex]), Quaternion.Euler(0f, 0f, 90 * num)).GetComponent<GasterBlaster>().Activate(3, 3, -90 * num, new Vector2(4.47f * (float)num, array[heightIndex]), 15, inSpearAttack: false, 6);
+			Object.Instantiate(blasterPrefab, new Vector3(9.1f * (float)num, array[heightIndex]), Quaternion.Euler(0f, 0f, 90 * num)).GetComponent<GasterBlaster>().Activate(3, 3, -90 * num, new Vector2(4.47f * (float)num, array[heightIndex]), 15, false, 6);
 		}
 	}
 

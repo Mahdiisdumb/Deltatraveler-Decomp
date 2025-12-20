@@ -16,18 +16,18 @@ public class ThrowRockCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				cam.SetFollowPlayer(follow: false);
+				cam.SetFollowPlayer(false);
 				camPos = cam.transform.position;
-				kris.SetSelfAnimControl(setAnimControl: false);
+				kris.SetSelfAnimControl(false);
 				kris.ChangeDirection(Vector2.left);
-				kris.GetComponent<Animator>().SetBool("isMoving", value: true);
-				susie.SetSelfAnimControl(setAnimControl: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", true);
+				susie.SetSelfAnimControl(false);
 				susie.ChangeDirection(Vector2.left);
 				if (susie.transform.position.x < 1.75f)
 				{
 					susie.ChangeDirection(Vector2.right);
 				}
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
 			}
 			float num = (((int)gm.GetFlag(108) == 1) ? 0.15f : 0f);
 			if (kris.transform.position != new Vector3(0.5f, -2.33f - num))
@@ -37,7 +37,7 @@ public class ThrowRockCutscene : CutsceneBase
 			else
 			{
 				kris.ChangeDirection(Vector2.right);
-				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (susie.transform.position != new Vector3(1.75f, -2.166f))
 			{
@@ -46,7 +46,7 @@ public class ThrowRockCutscene : CutsceneBase
 			else
 			{
 				susie.ChangeDirection(Vector2.right);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			cam.transform.position = Vector3.Lerp(camPos, new Vector3(4.44f, 0f), (float)frames / 30f);
 			if (frames == 60)
@@ -79,14 +79,14 @@ public class ThrowRockCutscene : CutsceneBase
 			frames++;
 			if (frames == 1)
 			{
-				rockThatDies = rock.ThrowObject(playAnim: true);
+				rockThatDies = rock.ThrowObject(true);
 				susie.EnableAnimator();
 				susie.GetComponent<Animator>().Play("Throw");
 				PlaySFX("sounds/snd_heavyswing");
 				camPos = cam.transform.position;
 			}
 			float num2 = (float)frames / 20f;
-			num2 = Mathf.Sin(num2 * MathF.PI * 0.5f);
+			num2 = Mathf.Sin(num2 * (float)Math.PI * 0.5f);
 			if (frames <= 20)
 			{
 				rockThatDies.position = Vector3.Lerp(new Vector3(5.565f, -3.153f), new Vector3(6.209f, -3.153f), num2);
@@ -110,9 +110,9 @@ public class ThrowRockCutscene : CutsceneBase
 			if (frames == 60)
 			{
 				susie.GetComponent<Animator>().Play("walk");
-				susie.SetSelfAnimControl(setAnimControl: true);
+				susie.SetSelfAnimControl(true);
 				susie.ChangeDirection(Vector2.left);
-				kris.SetSelfAnimControl(setAnimControl: true);
+				kris.SetSelfAnimControl(true);
 				StartText(new string[1] { "* Nice." }, new string[1] { "snd_txtsus" }, new int[18], new string[1] { "su_smile" });
 				state = 3;
 				frames = 0;
@@ -120,7 +120,7 @@ public class ThrowRockCutscene : CutsceneBase
 		}
 		if (state == 3 && !txt)
 		{
-			cam.SetFollowPlayer(follow: true);
+			cam.SetFollowPlayer(true);
 			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("overworld/npcs/StalkerFlowey"), new Vector3(-6.64f, -0.6f), Quaternion.identity);
 			EndCutscene();
 		}

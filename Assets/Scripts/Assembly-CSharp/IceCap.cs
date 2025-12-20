@@ -52,7 +52,7 @@ public class IceCap : EnemyBase
 	{
 		base.Start();
 		defaultChatPos = new Vector2(Mathf.RoundToInt(GetEnemyObject().transform.position.x * 48f) + 111, 73f);
-		if (Util.FindObjectOfType<BattleManager>().GetBattleID() == 71)
+		if (Object.FindObjectOfType<BattleManager>().GetBattleID() == 71)
 		{
 			defaultChatPos.x -= 24f;
 		}
@@ -77,7 +77,7 @@ public class IceCap : EnemyBase
 
 	public override int CalculateDamage(int partyMember, float rawDmg, bool forceMagic = false)
 	{
-		if (partyMember == 2 && (bool)Util.FindObjectOfType<IceShock>())
+		if (partyMember == 2 && (bool)Object.FindObjectOfType<IceShock>())
 		{
 			return base.CalculateDamage(partyMember, rawDmg, forceMagic) / 20;
 		}
@@ -86,7 +86,7 @@ public class IceCap : EnemyBase
 
 	public override string[] PerformAct(int i)
 	{
-		if (ice && GetActNames()[i] == EnemyBase.CHECK_NAME)
+		if (ice && GetActNames()[i] == "Check")
 		{
 			return new string[1] { "* ICE - ATK 1 DEF 0\n* Without its cap..." };
 		}
@@ -159,11 +159,7 @@ public class IceCap : EnemyBase
 				satisfyTxt = new string[1] { "* Ice doesn't mind its identity." };
 				dyingTxt = new string[1] { "* It's melting." };
 				chatter = new string[4] { "I... \nI...", "What can \nI say...", "What's \nthe \npoint...", "So... \nCold..." };
-				actNames = new string[2]
-				{
-					EnemyBase.CHECK_NAME,
-					"Compliment"
-				};
+				actNames = new string[2] { "Check", "Compliment" };
 				return new string[2] { "* You tried to steal Ice Cap's\n  hat...", "* And succeeded!\n* (It melts in your hands...)" };
 			}
 			response = 2;
@@ -172,7 +168,7 @@ public class IceCap : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		switch (i)
 		{
@@ -212,7 +208,7 @@ public class IceCap : EnemyBase
 			}
 			return new string[2] { "* Noelle complimented Ice on\n  its new look.", "no_happy`snd_txtnoe`* Hey,^05 you don't need\n  to be defined by\n  a hat!" };
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class KidnapGuy : InteractWanderingNPC
 {
 	private bool playTone;
@@ -5,7 +7,7 @@ public class KidnapGuy : InteractWanderingNPC
 	protected override void Awake()
 	{
 		base.Awake();
-		if ((int)Util.GameManager().GetFlag(96) == 1 || Util.GameManager().GetPartyMember(3) == 3)
+		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(96) == 1 || Object.FindObjectOfType<GameManager>().GetMiniPartyMember() == 1)
 		{
 			talkedToBefore = true;
 		}
@@ -16,8 +18,8 @@ public class KidnapGuy : InteractWanderingNPC
 		base.Update();
 		if (!txt && playTone)
 		{
-			Util.GameManager().SetFlag(96, 1);
-			Util.GameManager().PlayGlobalSFX("sounds/snd_creepyjingle");
+			Object.FindObjectOfType<GameManager>().SetFlag(96, 1);
+			Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_creepyjingle");
 			playTone = false;
 		}
 	}
@@ -25,7 +27,7 @@ public class KidnapGuy : InteractWanderingNPC
 	public override void DoInteract()
 	{
 		base.DoInteract();
-		if (!Util.GameManager().PartySlotFilled(3) && (bool)txt)
+		if (Object.FindObjectOfType<GameManager>().GetMiniPartyMember() == 0 && (bool)txt)
 		{
 			playTone = true;
 		}

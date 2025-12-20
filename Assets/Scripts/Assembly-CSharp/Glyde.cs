@@ -54,7 +54,7 @@ public class Glyde : EnemyBase
 	public void ForceKill()
 	{
 		forceKill = true;
-		Hit(3, 666f, playSound: true);
+		Hit(3, 666f, true);
 	}
 
 	public override string[] PerformAct(int i)
@@ -83,7 +83,7 @@ public class Glyde : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		switch (i)
 		{
@@ -94,13 +94,13 @@ public class Glyde : EnemyBase
 		case 2:
 		{
 			GameManager gameManager = Util.GameManager();
-			gameManager.SetHP(0, gameManager.GetHP(0) + 5, forceOverheal: true);
-			gameManager.SetHP(1, gameManager.GetHP(1) + 5, forceOverheal: true);
-			gameManager.SetHP(2, gameManager.GetHP(2) + 5, forceOverheal: true);
+			gameManager.SetHP(0, gameManager.GetHP(0) + 5, true);
+			gameManager.SetHP(1, gameManager.GetHP(1) + 5, true);
+			gameManager.SetHP(2, gameManager.GetHP(2) + 5, true);
 			return new string[2] { "* Noelle creates frost rings\n  for Glyde to flip through.", "* Glyde does a flip so\n  incredible that it overheals\n  everyone!" };
 		}
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 

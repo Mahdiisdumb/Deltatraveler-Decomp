@@ -14,18 +14,18 @@ public class BeeController : MonoBehaviour
 	private void Start()
 	{
 		bees = new List<BeeBullet>();
-		BeeBullet[] array = Util.FindObjectsOfType<BeeBullet>();
+		BeeBullet[] array = Object.FindObjectsOfType<BeeBullet>();
 		foreach (BeeBullet item in array)
 		{
 			bees.Add(item);
 		}
-		if ((bool)Util.FindObjectOfType<MightyBear>())
+		if ((bool)Object.FindObjectOfType<MightyBear>())
 		{
-			if (Util.FindObjectOfType<MightyBear>().IsLectured())
+			if (Object.FindObjectOfType<MightyBear>().IsLectured())
 			{
 				fireRate = 12;
 			}
-			if (Util.FindObjectOfType<MightyBear>().AreBeesPissed())
+			if (Object.FindObjectOfType<MightyBear>().AreBeesPissed())
 			{
 				StartFiringBees();
 			}

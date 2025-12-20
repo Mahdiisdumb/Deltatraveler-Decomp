@@ -83,11 +83,11 @@ public class PorkyDefeatCutscene : CutsceneBase
 			{
 				if (frames == 1)
 				{
-					ness.SetBool("isMoving", value: true);
+					ness.SetBool("isMoving", true);
 				}
 				else if (frames == 45)
 				{
-					ness.SetBool("isMoving", value: false);
+					ness.SetBool("isMoving", false);
 				}
 				ness.transform.position = new Vector3(Mathf.Lerp(3.26f, 5.33f, (float)frames / 45f), -5.88f);
 				cam.transform.position = new Vector3(Mathf.Lerp(10.32f, 8.3f, (float)frames / 45f), -6.75f, -10f);
@@ -100,7 +100,7 @@ public class PorkyDefeatCutscene : CutsceneBase
 					{
 						paula.SetFloat("dirX", 1f);
 						paula.SetFloat("dirY", 0f);
-						paula.SetBool("isMoving", value: true);
+						paula.SetBool("isMoving", true);
 					}
 					paula.GetComponent<SpriteRenderer>().sortingOrder = 29;
 					if (paula.transform.position.x != 10.83f)
@@ -117,7 +117,7 @@ public class PorkyDefeatCutscene : CutsceneBase
 						paula.SetFloat("dirY", 0f);
 						ness.SetFloat("dirX", 1f);
 						ness.SetFloat("dirY", 0f);
-						paula.SetBool("isMoving", value: false);
+						paula.SetBool("isMoving", false);
 						paula.enabled = false;
 						paula.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("overworld/npcs/spr_paula_happy");
 						paula.GetComponent<SpriteRenderer>().sortingOrder = 25;
@@ -219,7 +219,7 @@ public class PorkyDefeatCutscene : CutsceneBase
 							paula.enabled = true;
 							paula.SetFloat("dirX", -1f);
 							paula.SetFloat("dirY", 0f);
-							paula.SetBool("isMoving", value: true);
+							paula.SetBool("isMoving", true);
 						}
 						if (paula.transform.position.x != 5.31f)
 						{
@@ -229,7 +229,7 @@ public class PorkyDefeatCutscene : CutsceneBase
 						{
 							paula.SetFloat("dirX", 0f);
 							paula.SetFloat("dirY", -1f);
-							paula.SetBool("isMoving", value: false);
+							paula.SetBool("isMoving", false);
 						}
 					}
 					if (txt.GetCurrentStringNum() == 3 || txt.GetCurrentStringNum() == 6)
@@ -291,8 +291,8 @@ public class PorkyDefeatCutscene : CutsceneBase
 						susie.ChangeDirection(Vector2.up);
 						noelle.ChangeDirection(Vector2.up);
 					}
-					ness.SetBool("isMoving", value: true);
-					paula.SetBool("isMoving", value: false);
+					ness.SetBool("isMoving", true);
+					paula.SetBool("isMoving", false);
 				}
 				ness.transform.position = Vector3.Lerp(kill ? new Vector3(5.33f, -5.88f) : new Vector3(9.75f, -4.87f), new Vector3(10.97f, -5.88f), (float)frames / (kill ? 60f : 30f));
 				cam.transform.position = new Vector3(Mathf.Lerp(8.3f, 10.32f, (float)(kill ? frames : 60) / 60f), -6.75f, -10f);
@@ -300,7 +300,7 @@ public class PorkyDefeatCutscene : CutsceneBase
 				{
 					ness.SetFloat("dirX", -1f);
 					ness.SetFloat("dirY", 0f);
-					ness.SetBool("isMoving", value: false);
+					ness.SetBool("isMoving", false);
 				}
 				if (frames == (kill ? 75 : 45))
 				{
@@ -418,37 +418,23 @@ public class PorkyDefeatCutscene : CutsceneBase
 				frames++;
 				if (frames == 1)
 				{
-					ness.SetBool("isMoving", value: true);
+					ness.SetBool("isMoving", true);
 					if (!abortedOblit)
 					{
 						paula.enabled = true;
 						paula.SetFloat("dirX", -1f);
 						paula.SetFloat("dirY", 0f);
-						paula.SetBool("isMoving", value: true);
+						paula.SetBool("isMoving", true);
 					}
 				}
 				if (frames == 30)
 				{
-					if (gm.GetFlagInt(332) == 1)
-					{
-						ness.SetBool("isMoving", value: false);
-						kris.ChangeDirection(Vector2.down);
-						susie.ChangeDirection(Vector2.up);
-						noelle.ChangeDirection(Vector2.up);
-						ChangeDirection(ness, Vector2.up);
-						StartText(new string[6] { "* ... Huh?", "* My dad told you to\n  tell me that he sent\n  me $347?", "* How did you even\n  call my dad...?", "* ...", "* Look,^05 I don't know!^10\n* I'm not him!", "* But...^10 thanks?" }, new string[1] { "snd_txtness" }, new int[5], new string[6] { "ness_surprised", "ness_neutral", "ness_confused", "ness_confused", "ness_mad", "ness_confused" });
-						state = 8;
-						frames = 0;
-					}
-					else
-					{
-						kris.ChangeDirection(Vector2.down);
-						susie.ChangeDirection(Vector2.up);
-						noelle.ChangeDirection(Vector2.up);
-						StartText(new string[2] { "* Kris,^05 Noelle.", "* Let's get outta here." }, new string[2] { "snd_txtsus", "snd_txtsus" }, new int[5], new string[2] { "su_confident", "su_smile" });
-						state = 4;
-						frames = 0;
-					}
+					kris.ChangeDirection(Vector2.down);
+					susie.ChangeDirection(Vector2.up);
+					noelle.ChangeDirection(Vector2.up);
+					StartText(new string[2] { "* Kris,^05 Noelle.", "* Let's get outta here." }, new string[2] { "snd_txtsus", "snd_txtsus" }, new int[5], new string[2] { "su_confident", "su_smile" });
+					state = 4;
+					frames = 0;
 				}
 			}
 		}
@@ -458,9 +444,9 @@ public class PorkyDefeatCutscene : CutsceneBase
 			if (frames == 1)
 			{
 				gm.StopMusic(45f);
-				kris.GetComponent<Animator>().SetBool("isMoving", value: true);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+				kris.GetComponent<Animator>().SetBool("isMoving", true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
+				noelle.GetComponent<Animator>().SetBool("isMoving", true);
 				kris.ChangeDirection(Vector2.right);
 				susie.ChangeDirection(Vector2.right);
 				noelle.ChangeDirection(Vector2.right);
@@ -473,7 +459,7 @@ public class PorkyDefeatCutscene : CutsceneBase
 			}
 			else
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", false);
 				kris.ChangeDirection(Vector2.up);
 			}
 			if (susie.transform.position != new Vector3(14.07f, -4.02f))
@@ -483,7 +469,7 @@ public class PorkyDefeatCutscene : CutsceneBase
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 				susie.ChangeDirection(Vector2.up);
 			}
 			if (noelle.transform.position != new Vector3(12.67f, -4.21f))
@@ -493,7 +479,7 @@ public class PorkyDefeatCutscene : CutsceneBase
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", false);
 				noelle.ChangeDirection(Vector2.up);
 			}
 			if (cam.transform.position != new Vector3(12.62f, -3.08f, -10f))
@@ -522,9 +508,9 @@ public class PorkyDefeatCutscene : CutsceneBase
 				kris.GetComponent<Animator>().Play("RunUp", 0, 0f);
 				susie.GetComponent<Animator>().SetFloat("speed", 0f);
 				susie.GetComponent<Animator>().Play("RunUp", 0, 0f);
-				kris.transform.position = Vector3.Lerp(new Vector3(11.34f, -4.22f), new Vector3(11.34f, -5.08f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
-				susie.transform.position = Vector3.Lerp(new Vector3(14.07f, -4.02f), new Vector3(14.07f, -4.88f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
-				noelle.transform.position = Vector3.Lerp(new Vector3(12.67f, -4.21f), new Vector3(12.67f, -5.07f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
+				kris.transform.position = Vector3.Lerp(new Vector3(11.34f, -4.22f), new Vector3(11.34f, -5.08f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
+				susie.transform.position = Vector3.Lerp(new Vector3(14.07f, -4.02f), new Vector3(14.07f, -4.88f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
+				noelle.transform.position = Vector3.Lerp(new Vector3(12.67f, -4.21f), new Vector3(12.67f, -5.07f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
 			}
 			else if (frames >= 65 && frames <= 75)
 			{
@@ -553,7 +539,7 @@ public class PorkyDefeatCutscene : CutsceneBase
 			if (frames <= 15)
 			{
 				float num3 = (float)frames / 15f;
-				num3 = Mathf.Sin(num3 * MathF.PI * 0.5f);
+				num3 = Mathf.Sin(num3 * (float)Math.PI * 0.5f);
 				kris.transform.position = Vector3.Lerp(new Vector3(11.92f, -2.82f), new Vector3(10.92f, -2.1499999f), num3);
 				susie.transform.position = Vector3.Lerp(new Vector3(13.35f, -2.6f), new Vector3(14.35f, -1.9299998f), num3);
 				noelle.transform.position = Vector3.Lerp(new Vector3(12.64f, -2.9f), new Vector3(12.64f, -2.23f), num3);
@@ -617,56 +603,15 @@ public class PorkyDefeatCutscene : CutsceneBase
 			}
 			if (frames == 120)
 			{
-				Util.GameManager().ForceLoadArea(74);
+				UnityEngine.Object.FindObjectOfType<GameManager>().ForceLoadArea(74);
 			}
 		}
-		if (((state == 3 && !txt) || state >= 4) && state != 8)
+		if ((state == 3 && !txt) || state >= 4)
 		{
 			ness.transform.position -= new Vector3(1f / 12f, 0f);
 			if (!abortedOblit)
 			{
 				paula.transform.position -= new Vector3(1f / 12f, 0f);
-			}
-		}
-		if (state == 8)
-		{
-			frames++;
-			if (!abortedOblit)
-			{
-				if (frames < 30)
-				{
-					paula.transform.position -= new Vector3(1f / 12f, 0f);
-				}
-				else if (frames == 30)
-				{
-					SetMoveAnim(paula, isMoving: false);
-					ChangeDirection(paula, Vector2.right);
-				}
-			}
-			if (!txt)
-			{
-				SetMoveAnim(ness, isMoving: true);
-				ChangeDirection(ness, Vector2.left);
-				if (!abortedOblit)
-				{
-					SetMoveAnim(paula, isMoving: true);
-					ChangeDirection(paula, Vector2.left);
-				}
-				state = 9;
-				frames = 0;
-			}
-		}
-		if (state == 9)
-		{
-			frames++;
-			if (frames == 30)
-			{
-				kris.ChangeDirection(Vector2.down);
-				susie.ChangeDirection(Vector2.up);
-				noelle.ChangeDirection(Vector2.up);
-				StartText(new string[3] { "* ...", "* Rich kids,^10 amirite?", "* ...^10 Well,^05 we should\n  get going." }, new string[1] { "snd_txtsus" }, new int[5], new string[3] { "su_side", "su_smirk", "su_smile_sweat" });
-				state = 4;
-				frames = 0;
 			}
 		}
 	}
@@ -719,44 +664,44 @@ public class PorkyDefeatCutscene : CutsceneBase
 			kill = false;
 			abortedOblit = false;
 		}
-		gm.SetPartyMember(3, -1);
+		gm.SetMiniPartyMember(0);
 		gm.StopMusic();
 		paula = GameObject.Find("Paula").GetComponent<Animator>();
 		ness = GameObject.Find("Ness").GetComponent<Animator>();
 		ness.enabled = true;
 		ness.SetFloat("dirX", 1f);
 		UnityEngine.Object.Destroy(GameObject.Find("Porky"));
-		if ((bool)Util.FindObjectOfType<MoleFriend>())
+		if ((bool)UnityEngine.Object.FindObjectOfType<MoleFriend>())
 		{
-			Util.FindObjectOfType<MoleFriend>().GetComponent<SpriteRenderer>().enabled = true;
+			UnityEngine.Object.FindObjectOfType<MoleFriend>().GetComponent<SpriteRenderer>().enabled = true;
 		}
 		GameObject.Find("NatureSounds").GetComponent<AudioSource>().Play();
 		kris.transform.position = new Vector3(8.31f, -5.11f);
-		kris.SetSelfAnimControl(setAnimControl: false);
-		kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+		kris.SetSelfAnimControl(false);
+		kris.GetComponent<Animator>().SetBool("isMoving", false);
 		kris.GetComponent<Animator>().Play("idle");
 		kris.ChangeDirection(Vector2.right);
 		susie.UseUnhappySprites();
 		susie.EnableAnimator();
 		susie.transform.position = new Vector3(7.54f, -6.73f);
-		susie.SetSelfAnimControl(setAnimControl: false);
-		susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+		susie.SetSelfAnimControl(false);
+		susie.GetComponent<Animator>().SetBool("isMoving", false);
 		susie.GetComponent<Animator>().Play("idle");
 		susie.ChangeDirection(Vector2.right);
 		noelle.transform.position = new Vector3(8.31f, -8.17f);
 		noelle.EnableAnimator();
 		noelle.UseUnhappySprites();
-		noelle.SetSelfAnimControl(setAnimControl: false);
-		noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+		noelle.SetSelfAnimControl(false);
+		noelle.GetComponent<Animator>().SetBool("isMoving", false);
 		noelle.GetComponent<Animator>().Play("idle");
 		noelle.ChangeDirection(Vector2.right);
-		cam.SetFollowPlayer(follow: false);
+		cam.SetFollowPlayer(false);
 		cam.transform.position = new Vector3(10.32f, -6.75f, -10f);
 		if (!abortedOblit)
 		{
 			paula.transform.position = new Vector3(6.83f, -5.25f);
 			paula.SetFloat("speed", 1f);
-			paula.SetBool("isMoving", value: false);
+			paula.SetBool("isMoving", false);
 			paula.Play("idle");
 			paula.SetFloat("dirX", 1f);
 			paula.SetFloat("dirY", 0f);

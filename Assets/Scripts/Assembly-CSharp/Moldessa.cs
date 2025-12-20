@@ -60,7 +60,7 @@ public class Moldessa : EnemyBase
 	{
 		base.Start();
 		defaultChatPos = new Vector2(Mathf.RoundToInt(GetEnemyObject().transform.position.x * 48f) + 100, 51f);
-		SwitchAct(owo: false);
+		SwitchAct(false);
 	}
 
 	protected override void Update()
@@ -85,7 +85,7 @@ public class Moldessa : EnemyBase
 			GetPart("hair").transform.Find("face").GetChild(0).localScale = Vector3.Lerp(Vector3.zero, new Vector3(1f, 1f), (float)(pieceFrames - 45) / 600f);
 		}
 		bounceFrames++;
-		float t = (0f - Mathf.Cos((float)(bounceFrames * 8) * (MathF.PI / 180f)) + 1f) / 2f;
+		float t = (0f - Mathf.Cos((float)(bounceFrames * 8) * ((float)Math.PI / 180f)) + 1f) / 2f;
 		GetPart("hair").transform.localPosition = new Vector3(0f, Mathf.Lerp(2.042f, 2.121f, t));
 		GetPart("body").transform.localScale = Vector3.Lerp(new Vector3(1f, 1f), new Vector3(0.9375f, 1.0625f), t);
 		GetPart("left").transform.eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(0f, -15f, t));
@@ -128,7 +128,7 @@ public class Moldessa : EnemyBase
 
 	public override string[] PerformAct(int i)
 	{
-		if (GetActNames()[i] == EnemyBase.CHECK_NAME)
+		if (GetActNames()[i] == "Check")
 		{
 			return new string[1] { "* MOLDESSA - 27 ATK 23 DEF\n" + checkDesc };
 		}
@@ -162,7 +162,7 @@ public class Moldessa : EnemyBase
 			{
 				Util.GameManager().Heal(0, 2);
 				sleptOnce = true;
-				EnemyBase[] array = Util.FindObjectsOfType<EnemyBase>();
+				EnemyBase[] array = UnityEngine.Object.FindObjectsOfType<EnemyBase>();
 				foreach (EnemyBase enemyBase in array)
 				{
 					if (enemyBase != this && enemyBase.GetSatisfactionLevel() < 100)
@@ -177,27 +177,27 @@ public class Moldessa : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 		if (i == 1)
 		{
 			if (!susieBiteAttempt)
 			{
 				susieBiteAttempt = true;
-				Util.GameManager().Heal(1, 2);
-				Util.GameManager().PlayGlobalSFX("sounds/snd_swallow");
-				Util.GameManager().PlayTimedHealSound();
+				UnityEngine.Object.FindObjectOfType<GameManager>().Heal(1, 2);
+				UnityEngine.Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_swallow");
+				UnityEngine.Object.FindObjectOfType<GameManager>().PlayTimedHealSound();
 				pieceRegrow = true;
 				GetPart("hair").transform.Find("face").GetChild(0).localScale = Vector3.zero;
 				return new string[1] { "* Susie managed to get a\n  bite out of Moldessa.\n* She recovered 2 HP!" };
 			}
 			return new string[1] { "* Moldessa only allows one bite." };
 		}
-		return base.PerformAssistAct_Old(i);
+		return base.PerformAssistAct(i);
 	}
 
 	public override bool IsTired()

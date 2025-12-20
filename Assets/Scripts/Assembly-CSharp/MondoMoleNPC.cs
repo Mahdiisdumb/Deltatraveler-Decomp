@@ -25,7 +25,7 @@ public class MondoMoleNPC : InteractSelectionBase
 	{
 		if ((int)Util.GameManager().GetFlag(150) == 1 && (int)Util.GameManager().GetFlag(13) >= 6)
 		{
-			CreateDeadEnemy(age: true);
+			CreateDeadEnemy(true);
 		}
 		if ((int)Util.GameManager().GetFlag(150) != 0)
 		{
@@ -33,7 +33,7 @@ public class MondoMoleNPC : InteractSelectionBase
 			return;
 		}
 		GetComponent<BoxCollider2D>().enabled = true;
-		Util.FindObjectOfType<SAVEPoint>().transform.position = new Vector3(100f, 0.368f);
+		Object.FindObjectOfType<SAVEPoint>().transform.position = new Vector3(100f, 0.368f);
 	}
 
 	public void CreateDeadEnemy(bool age)
@@ -59,7 +59,7 @@ public class MondoMoleNPC : InteractSelectionBase
 		{
 			return;
 		}
-		kris.SetCollision(onoff: false);
+		kris.SetCollision(false);
 		if (state == 0)
 		{
 			bool flag = true;
@@ -70,7 +70,7 @@ public class MondoMoleNPC : InteractSelectionBase
 			}
 			else
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (susie.transform.position != new Vector3(53.739f, 1.29f))
 			{
@@ -79,7 +79,7 @@ public class MondoMoleNPC : InteractSelectionBase
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+				susie.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (noelle.transform.position != new Vector3(55.14f, 1.51f))
 			{
@@ -88,7 +88,7 @@ public class MondoMoleNPC : InteractSelectionBase
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (cam.transform.position != new Vector3(53.739f, 0f, -10f))
 			{
@@ -103,7 +103,7 @@ public class MondoMoleNPC : InteractSelectionBase
 					List<string> list = new List<string> { "* Okay,^05 and?", "* We need to get\n  to the grey door.", "* They just want to\n  get home.", "* So you're gonna\n  let us through,^05 or\n  else.", "* ... Very well then.", "* I am the guardian of this\n  \"Your Sanctuary\" location.^05\n* It is my power.", "* Take it from me,^05 if you\n  dare..." };
 					List<string> list2 = new List<string> { "snd_txtsus", "snd_txtnoe", "snd_txtpau", "snd_txtsus", "snd_text", "snd_text", "snd_text" };
 					List<string> list3 = new List<string> { "su_neutral", "no_happy", "pau_dejected", "su_teeth_eyes", "", "", "" };
-					if (Util.GameManager().GetPartyMember(3) != 3)
+					if (Util.GameManager().GetMiniPartyMember() != 1)
 					{
 						list.RemoveAt(2);
 						list2.RemoveAt(2);
@@ -111,7 +111,7 @@ public class MondoMoleNPC : InteractSelectionBase
 						musicPlayAt--;
 					}
 					txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-					txt.CreateBox(list.ToArray(), list2.ToArray(), new int[7], giveBackControl: false, list3.ToArray());
+					txt.CreateBox(list.ToArray(), list2.ToArray(), new int[7], false, list3.ToArray());
 					state = 1;
 					frames = 0;
 				}
@@ -155,29 +155,29 @@ public class MondoMoleNPC : InteractSelectionBase
 		if (index == Vector2.left)
 		{
 			Util.GameManager().SetCheckpoint(56, new Vector3(50f, -12.83f));
-			OverworldEnemyBase[] array = Util.FindObjectsOfType<OverworldEnemyBase>();
+			OverworldEnemyBase[] array = Object.FindObjectsOfType<OverworldEnemyBase>();
 			for (int i = 0; i < array.Length; i++)
 			{
 				array[i].StopRunning();
 			}
-			kris = Util.OverworldPlayer();
-			susie = kris.GetPartyMemberByID(1);
-			noelle = kris.GetPartyMemberByID(2);
-			cam = Util.FindObjectOfType<CameraController>();
+			kris = Object.FindObjectOfType<OverworldPlayer>();
+			susie = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
+			noelle = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
+			cam = Object.FindObjectOfType<CameraController>();
 			susie.Deactivate();
 			noelle.Deactivate();
-			kris.SetSelfAnimControl(setAnimControl: false);
+			kris.SetSelfAnimControl(false);
 			kris.ChangeDirection(Vector2.up);
-			susie.SetSelfAnimControl(setAnimControl: false);
+			susie.SetSelfAnimControl(false);
 			susie.ChangeDirection(Vector2.up);
-			noelle.SetSelfAnimControl(setAnimControl: false);
+			noelle.SetSelfAnimControl(false);
 			noelle.ChangeDirection(Vector2.up);
-			cam.SetFollowPlayer(follow: false);
-			kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+			cam.SetFollowPlayer(false);
+			kris.GetComponent<Animator>().SetBool("isMoving", true);
 			kris.GetComponent<Animator>().SetFloat("speed", 1f);
-			susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+			susie.GetComponent<Animator>().SetBool("isMoving", true);
 			susie.GetComponent<Animator>().SetFloat("speed", 1f);
-			noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
+			noelle.GetComponent<Animator>().SetBool("isMoving", true);
 			noelle.GetComponent<Animator>().SetFloat("speed", 1f);
 			playingCutscene = true;
 		}

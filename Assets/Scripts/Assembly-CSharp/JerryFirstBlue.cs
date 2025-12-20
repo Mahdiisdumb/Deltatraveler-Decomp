@@ -46,7 +46,7 @@ public class JerryFirstBlue : AttackBase
 		candyPlatform = course.Find("CandyPlatform");
 		sword = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/jerry/JerrySword"), new Vector3(10f, 10f), Quaternion.identity, base.transform).transform;
 		sword.GetComponent<SpriteRenderer>().color = new Color32(0, 60, byte.MaxValue, byte.MaxValue);
-		jerry = Util.FindObjectOfType<Jerry>();
+		jerry = UnityEngine.Object.FindObjectOfType<Jerry>();
 		attackAllTargets = false;
 	}
 
@@ -62,7 +62,7 @@ public class JerryFirstBlue : AttackBase
 			if (frames >= 5 && frames <= 20)
 			{
 				float num = (float)(frames - 5) / 15f;
-				num = Mathf.Sin(num * MathF.PI * 0.5f);
+				num = Mathf.Sin(num * (float)Math.PI * 0.5f);
 				sword.position = Vector3.Lerp(new Vector3(-1.09f, 2.84f), new Vector3(-1.03f, 4.76f), num);
 				sword.eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(-76f, -112f, num));
 			}
@@ -84,7 +84,7 @@ public class JerryFirstBlue : AttackBase
 				jerry.GetPart("sword").GetComponent<SpriteRenderer>().enabled = false;
 				jerry.GetPart("body").Find("headband").localPosition += new Vector3(0f, 0.125f);
 				bb.StartMovement(new Vector2(355f, 140f));
-				Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+				UnityEngine.Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 				Util.GameManager().PlayGlobalSFX("sounds/snd_spearappear_choppy");
 			}
 			else if (frames == 8)
@@ -143,7 +143,7 @@ public class JerryFirstBlue : AttackBase
 			if (frames >= 120 && frames <= 180)
 			{
 				float num3 = (float)(frames - 120) / 60f;
-				num3 = Mathf.Sin(num3 * MathF.PI * 0.5f);
+				num3 = Mathf.Sin(num3 * (float)Math.PI * 0.5f);
 				sword.position = new Vector3(Mathf.Lerp(10.28f, 1.82f, num3), -2.75f);
 				sword.localScale = new Vector3(-1f, Mathf.Lerp(1f, 1.5f, num3), 1f);
 			}

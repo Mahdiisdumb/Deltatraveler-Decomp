@@ -102,7 +102,7 @@ public class XOStepSwitch : StepSwitch
 
 	protected override void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (((bool)collision && (bool)collision.GetComponent<OverworldPlayer>()) || (bool)collision.GetComponent<OverworldPartyMember>())
+		if ((bool)collision.GetComponent<OverworldPlayer>() || (bool)collision.GetComponent<OverworldPartyMember>())
 		{
 			stepCount++;
 			if (stepCount > 0 && !stepped)
@@ -114,7 +114,7 @@ public class XOStepSwitch : StepSwitch
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if (((bool)collision && (bool)collision.GetComponent<OverworldPlayer>()) || (bool)collision.GetComponent<OverworldPartyMember>())
+		if ((bool)collision.GetComponent<OverworldPlayer>() || (bool)collision.GetComponent<OverworldPartyMember>())
 		{
 			stepCount--;
 			if (stepCount < 1 && stepped)

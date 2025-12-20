@@ -193,7 +193,7 @@ public class FirstFeralPostCutscene : CutsceneBase
 			if (frames == 0)
 			{
 				frames++;
-				SetMoveAnim(susie, isMoving: true);
+				SetMoveAnim(susie, true);
 				ChangeDirection(noelle, Vector2.down);
 				ChangeDirection(kris, Vector2.down);
 			}
@@ -204,7 +204,7 @@ public class FirstFeralPostCutscene : CutsceneBase
 			frames++;
 			if (frames == 2)
 			{
-				SetMoveAnim(susie, isMoving: false);
+				SetMoveAnim(susie, false);
 			}
 			if (frames == 10)
 			{

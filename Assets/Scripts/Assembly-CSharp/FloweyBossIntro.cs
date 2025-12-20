@@ -48,7 +48,7 @@ public class FloweyBossIntro : CutsceneBase
 			{
 				float num2 = frames - grabbedKrisFrame;
 				float num3 = num2 - 65f;
-				y = Mathf.Lerp(grabbingKrisY, 1.26f, num2 / 15f) + Mathf.Sin(num2 * 2f * (MathF.PI / 180f)) / 2f;
+				y = Mathf.Lerp(grabbingKrisY, 1.26f, num2 / 15f) + Mathf.Sin(num2 * 2f * ((float)Math.PI / 180f)) / 2f;
 				if (num2 < 5f)
 				{
 					susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(susie.transform.position.x, -100f), 1f / 12f);
@@ -333,14 +333,14 @@ public class FloweyBossIntro : CutsceneBase
 					string text = ((gm.GetWeapon(0) == 3) ? "Pencil" : "Knife");
 					kris.GetComponent<Animator>().Play("Brandish" + text);
 					susie.EnableAnimator();
-					susie.SetSelfAnimControl(setAnimControl: false);
+					susie.SetSelfAnimControl(false);
 					susie.GetComponent<Animator>().Play("PreparePencil");
 					PlaySFX("sounds/snd_weaponpull");
 				}
 				if (frames == 25 && quickStart)
 				{
 					kris.InitiateBattle(14);
-					EndCutscene(enablePlayerMovement: false);
+					EndCutscene(false);
 				}
 				if (frames == 30)
 				{
@@ -425,7 +425,7 @@ public class FloweyBossIntro : CutsceneBase
 				if (frames == 140)
 				{
 					kris.InitiateBattle(hardmode ? 40 : 14);
-					EndCutscene(enablePlayerMovement: false);
+					EndCutscene(false);
 				}
 			}
 		}
@@ -509,7 +509,7 @@ public class FloweyBossIntro : CutsceneBase
 					flowey.Play("Laugh");
 				}
 				float num17 = (float)frames / 15f;
-				num17 = ((!(num17 > 1f)) ? Mathf.Sin(num17 * MathF.PI * 0.5f) : 1f);
+				num17 = ((!(num17 > 1f)) ? Mathf.Sin(num17 * (float)Math.PI * 0.5f) : 1f);
 				vinePos = new Vector3(Mathf.Lerp(4.24f, -3.51f, num17), 1.84f);
 				if (frames == 45)
 				{
@@ -522,7 +522,7 @@ public class FloweyBossIntro : CutsceneBase
 					else
 					{
 						kris.InitiateBattle(hardmode ? 40 : 14);
-						EndCutscene(enablePlayerMovement: false);
+						EndCutscene(false);
 					}
 				}
 			}
@@ -533,13 +533,13 @@ public class FloweyBossIntro : CutsceneBase
 			if (frames == 1)
 			{
 				susie.EnableAnimator();
-				susie.SetSelfAnimControl(setAnimControl: false);
+				susie.SetSelfAnimControl(false);
 				susie.ChangeDirection(Vector2.up);
-				susie.GetComponent<Animator>().SetBool("isMoving", value: true);
+				susie.GetComponent<Animator>().SetBool("isMoving", true);
 				susie.GetComponent<Animator>().SetFloat("speed", 2f);
 				kris.ChangeDirection(Vector2.right);
-				kris.SetSelfAnimControl(setAnimControl: false);
-				kris.GetComponent<Animator>().SetBool("isMoving", value: true);
+				kris.SetSelfAnimControl(false);
+				kris.GetComponent<Animator>().SetBool("isMoving", true);
 			}
 			bool flag = false;
 			if (kris.transform.position != new Vector3(-0.875f, -1.315f))
@@ -549,7 +549,7 @@ public class FloweyBossIntro : CutsceneBase
 			else if (!flag)
 			{
 				flag = true;
-				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+				kris.GetComponent<Animator>().SetBool("isMoving", false);
 			}
 			if (frames <= 7)
 			{
@@ -565,7 +565,7 @@ public class FloweyBossIntro : CutsceneBase
 				flowey.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("overworld/flowey_scene/spr_bigflowey_sassy");
 			}
 			float num18 = (float)(frames - 7) / 10f;
-			num18 = ((num18 > 1f) ? 1f : ((!(num18 < 0f)) ? Mathf.Sin(num18 * MathF.PI * 0.5f) : 0f));
+			num18 = ((num18 > 1f) ? 1f : ((!(num18 < 0f)) ? Mathf.Sin(num18 * (float)Math.PI * 0.5f) : 0f));
 			vinePos = new Vector3(-3.51f, Mathf.Lerp(1.84f, 4f, num18));
 			if (frames == 40)
 			{
@@ -626,14 +626,14 @@ public class FloweyBossIntro : CutsceneBase
 		if (animatingVineHardmode)
 		{
 			vineFrames++;
-			floweyVine.transform.position = vinePos + new Vector3(0f, Mathf.Sin((float)(vineFrames * 2) * (MathF.PI / 180f)) / 2f);
+			floweyVine.transform.position = vinePos + new Vector3(0f, Mathf.Sin((float)(vineFrames * 2) * ((float)Math.PI / 180f)) / 2f);
 		}
 	}
 
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		cam.SetFollowPlayer(follow: false);
+		cam.SetFollowPlayer(false);
 		hardmode = (int)gm.GetFlag(108) == 1;
 		gm.SetCheckpoint(45);
 		gm.SetFlag(57, 1);
@@ -689,7 +689,7 @@ public class FloweyBossIntro : CutsceneBase
 		}
 		if (gm.IsTestMode())
 		{
-			EndCutscene(enablePlayerMovement: false);
+			EndCutscene(false);
 			kris.InitiateBattle(hardmode ? 40 : 14);
 		}
 	}

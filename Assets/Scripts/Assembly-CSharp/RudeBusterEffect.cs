@@ -67,7 +67,7 @@ public class RudeBusterEffect : SpecialAttackEffect
 	{
 		devious = true;
 		this.attackKris = attackKris;
-		base.transform.position = new Vector3(Util.FindObjectOfType<PartyPanels>().transform.Find(attackKris ? "Party0Sprite" : "Party1Sprite").localPosition.x / 48f, -0.2f);
+		base.transform.position = new Vector3(Object.FindObjectOfType<PartyPanels>().transform.Find(attackKris ? "KrisSprite" : "SusieSprite").localPosition.x / 48f, -0.2f);
 	}
 
 	public void DamageEnemy()
@@ -79,7 +79,7 @@ public class RudeBusterEffect : SpecialAttackEffect
 			Util.GameManager().Damage(num, dmg);
 			if (num == 1 && Util.GameManager().GetHP(1) <= 0)
 			{
-				Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: false, susie: false, noelle: false);
+				Object.FindObjectOfType<PartyPanels>().RaiseHeads(false, false, false);
 			}
 		}
 		else if ((bool)enemy)
@@ -88,7 +88,7 @@ public class RudeBusterEffect : SpecialAttackEffect
 			{
 				aud[2].Play();
 			}
-			enemy.Hit(1, 35 + bonusDamage, playSound: false);
+			enemy.Hit(1, 35 + bonusDamage, false);
 		}
 	}
 }

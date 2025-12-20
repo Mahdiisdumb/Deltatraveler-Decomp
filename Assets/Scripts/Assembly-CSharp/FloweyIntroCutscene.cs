@@ -69,11 +69,11 @@ public class FloweyIntroCutscene : CutsceneBase
 					{
 						kris.transform.position = new Vector3(-4.221f, 2.044f);
 						kris.EnableAnimator();
-						kris.SetSelfAnimControl(setAnimControl: false);
+						kris.SetSelfAnimControl(false);
 						kris.GetComponent<Animator>().Play("DR Attack", 0, 0f);
 					}
 					susie.EnableAnimator();
-					susie.SetSelfAnimControl(setAnimControl: false);
+					susie.SetSelfAnimControl(false);
 					susie.GetComponent<Animator>().Play("DR Attack", 0, 0f);
 				}
 				if (frames == 24)
@@ -129,7 +129,7 @@ public class FloweyIntroCutscene : CutsceneBase
 				Object.Destroy(fakeBattleUI.gameObject);
 				Object.Destroy(fakeTPBar.gameObject);
 				kris.InitiateBattle(1, new Vector3(-0.055f, -1.63f), 18);
-				EndCutscene(enablePlayerMovement: false);
+				EndCutscene(false);
 				state = 3;
 			}
 		}
@@ -137,9 +137,9 @@ public class FloweyIntroCutscene : CutsceneBase
 
 	private void LateUpdate()
 	{
-		if (state == 0 && (bool)txt && (bool)txt.GetPortrait() && txt.GetPortrait().GetCurrentPortrait().StartsWith("flowey"))
+		if (state == 0 && (bool)txt && (bool)txt.GetPortrait() && txt.GetPortrait().sprite.name.Contains("flowey"))
 		{
-			flowey.sprite = floweySprites[txt.GetPortrait().GetCurrentSprite() % floweySprites.Length];
+			flowey.sprite = floweySprites[int.Parse(txt.GetPortrait().sprite.name.Substring(txt.GetPortrait().sprite.name.Length - 1))];
 		}
 		if (state == 1 && (bool)txt)
 		{
@@ -159,7 +159,7 @@ public class FloweyIntroCutscene : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		cam.SetFollowPlayer(follow: false);
+		cam.SetFollowPlayer(false);
 		krisOrigPos = kris.transform.position;
 		susieOrigPos = susie.transform.position;
 		if ((int)gm.GetFlag(108) == 1)

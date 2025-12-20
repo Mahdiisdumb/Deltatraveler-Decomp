@@ -32,7 +32,7 @@ public class WaterfallGlowParticle : Interactable
 	{
 		startPos = base.transform.position;
 		rigid = GetComponent<Rigidbody>();
-		direction = new Vector3(Mathf.Sin(UnityEngine.Random.Range(0f, MathF.PI * 2f)), Mathf.Cos(UnityEngine.Random.Range(0f, MathF.PI * 2f)));
+		direction = new Vector3(Mathf.Sin(UnityEngine.Random.Range(0f, (float)Math.PI * 2f)), Mathf.Cos(UnityEngine.Random.Range(0f, (float)Math.PI * 2f)));
 		base.transform.GetChild(0).GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("sounds/snd_oddtalk" + UnityEngine.Random.Range(1, 3));
 	}
 
@@ -62,7 +62,7 @@ public class WaterfallGlowParticle : Interactable
 			{
 				speedingUp = false;
 			}
-			gravDirection = new Vector3(Mathf.Sin(UnityEngine.Random.Range(0f, MathF.PI * 2f)), Mathf.Cos(UnityEngine.Random.Range(0f, MathF.PI * 2f)));
+			gravDirection = new Vector3(Mathf.Sin(UnityEngine.Random.Range(0f, (float)Math.PI * 2f)), Mathf.Cos(UnityEngine.Random.Range(0f, (float)Math.PI * 2f)));
 			gravEnactment = true;
 			delay = 30 + UnityEngine.Random.Range(0, 21);
 		}

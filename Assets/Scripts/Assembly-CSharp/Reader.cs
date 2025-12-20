@@ -99,16 +99,13 @@ public class Reader : IDisposable
 				finished = true;
 				break;
 			default:
-			{
-				RecordType? recordType2 = recordType;
-				throw new NotSupportedException("Cannot deserialize record of type " + recordType2.ToString());
-			}
+				throw new NotSupportedException("Cannot deserialize record of type " + recordType);
 			}
 		}
 		catch (Exception cause)
 		{
 			long position = stream.Position;
-			throw new Deserializer.DeserializationException(string.Format("\nException while processing {0} at position 0x{1:X8} (error occured around 0x{2:X8})", recordType?.ToString() ?? "<unknown type>", num, position), cause);
+			throw new Deserializer.DeserializationException(string.Format("\nException while processing {0} at position 0x{1:X8} (error occured around 0x{2:X8})", (recordType.HasValue ? recordType.GetValueOrDefault().ToString() : null) ?? "<unknown type>", num, position), cause);
 		}
 		return null;
 	}
@@ -120,20 +117,31 @@ public class Reader : IDisposable
 
 	public object ReadPrimitive(PrimitiveType type)
 	{
-		return type switch
+		switch (type)
 		{
-			PrimitiveType.Boolean => buff.ReadByte() == 1, 
-			PrimitiveType.Byte => buff.ReadByte(), 
-			PrimitiveType.Char => buff.ReadChar(), 
-			PrimitiveType.Int16 => buff.ReadInt16(), 
-			PrimitiveType.Int32 => buff.ReadInt32(), 
-			PrimitiveType.Int64 => buff.ReadInt64(), 
-			PrimitiveType.UInt16 => buff.ReadUInt16(), 
-			PrimitiveType.UInt32 => buff.ReadUInt32(), 
-			PrimitiveType.Single => buff.ReadSingle(), 
-			PrimitiveType.Double => buff.ReadDouble(), 
-			_ => throw new NotSupportedException("Unsupported PrimitiveType " + type), 
-		};
+		case PrimitiveType.Boolean:
+			return buff.ReadByte() == 1;
+		case PrimitiveType.Byte:
+			return buff.ReadByte();
+		case PrimitiveType.Char:
+			return buff.ReadChar();
+		case PrimitiveType.Int16:
+			return buff.ReadInt16();
+		case PrimitiveType.Int32:
+			return buff.ReadInt32();
+		case PrimitiveType.Int64:
+			return buff.ReadInt64();
+		case PrimitiveType.UInt16:
+			return buff.ReadUInt16();
+		case PrimitiveType.UInt32:
+			return buff.ReadUInt32();
+		case PrimitiveType.Single:
+			return buff.ReadSingle();
+		case PrimitiveType.Double:
+			return buff.ReadDouble();
+		default:
+			throw new NotSupportedException("Unsupported PrimitiveType " + type);
+		}
 	}
 
 	public string ReadString()

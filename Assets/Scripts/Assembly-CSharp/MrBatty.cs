@@ -45,7 +45,7 @@ public class MrBatty : EnemyBase
 		defaultChatSize = "RightSmall";
 		exp = 1;
 		gold = 10;
-		geno = (int)Util.GameManager().GetFlag(13) >= 5;
+		geno = (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(13) >= 5;
 		attacks = new int[1] { 53 };
 	}
 
@@ -62,7 +62,7 @@ public class MrBatty : EnemyBase
 		{
 			if (satisfied < 100)
 			{
-				bool flag = Util.GameManager().GetPartyMember(3) == 3;
+				bool flag = Util.GameManager().GetMiniPartyMember() == 1;
 				AddActPoints(flag ? 50 : 25);
 				if (!assured)
 				{
@@ -88,7 +88,7 @@ public class MrBatty : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct_Old(int i)
+	public override string[] PerformAssistAct(int i)
 	{
 		switch (i)
 		{
@@ -111,7 +111,7 @@ public class MrBatty : EnemyBase
 			noelleAct = true;
 			return new string[3] { "* Noelle reached her hand out\n  for Mr. Batty to land on.", "* Mr. Batty landed on Noelle's\n  hand.", "* Noelle proceeded to comfort\n  and pet Mr. Batty." };
 		default:
-			return base.PerformAssistAct_Old(i);
+			return base.PerformAssistAct(i);
 		}
 	}
 
@@ -153,7 +153,7 @@ public class MrBatty : EnemyBase
 				defeatFrames++;
 				if (defeatFrames <= 40)
 				{
-					float x = basePos.x + Mathf.Sin((float)(defeatFrames * 18) * (MathF.PI / 180f)) / 8f;
+					float x = basePos.x + Mathf.Sin((float)(defeatFrames * 18) * ((float)Math.PI / 180f)) / 8f;
 					float num = (float)defeatFrames / 40f;
 					float y = Mathf.Lerp(basePos.y, -0.37f, num * num);
 					GetEnemyObject().transform.position = new Vector3(x, y);
@@ -170,9 +170,9 @@ public class MrBatty : EnemyBase
 		else if (!gotHit && (bool)base.obj && !disabled)
 		{
 			animFrames++;
-			float t = (0f - (Mathf.Cos((float)(animFrames * 10) * (MathF.PI / 180f)) - 1f)) / 2f;
+			float t = (0f - (Mathf.Cos((float)(animFrames * 10) * ((float)Math.PI / 180f)) - 1f)) / 2f;
 			Vector3 localScale = Vector3.Lerp(new Vector3(1f, 1f), new Vector3(0.4125f, 1.3625f), t);
-			float y2 = Mathf.Sin((float)(animFrames * 5) * (MathF.PI / 180f)) * 0.5f;
+			float y2 = Mathf.Sin((float)(animFrames * 5) * ((float)Math.PI / 180f)) * 0.5f;
 			GetPart("fullbody").localPosition = new Vector3(0f, y2);
 			GetPart("fullbody").Find("left").localScale = localScale;
 			GetPart("fullbody").Find("right").localScale = localScale;

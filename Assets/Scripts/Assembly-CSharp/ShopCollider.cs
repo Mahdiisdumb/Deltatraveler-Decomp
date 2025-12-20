@@ -20,7 +20,7 @@ public class ShopCollider : OverworldManipulator
 
 	private void Start()
 	{
-		fade = Util.FindObjectOfType<Fade>();
+		fade = Object.FindObjectOfType<Fade>();
 	}
 
 	private void Update()
@@ -29,20 +29,20 @@ public class ShopCollider : OverworldManipulator
 		{
 			return;
 		}
-		Vector2 faceDir = (vertical ? Vector2.up : Vector2.right);
+		Vector2 vector = (vertical ? Vector2.up : Vector2.right);
 		if (downOrLeft)
 		{
-			faceDir *= -1f;
+			vector *= -1f;
 		}
-		Util.OverworldPlayer().transform.position = newPos;
-		Util.OverworldPlayer().ChangeDirection(faceDir);
-		OverworldPartyMember[] array = Util.FindObjectsOfType<OverworldPartyMember>();
+		Object.FindObjectOfType<OverworldPlayer>().transform.position = newPos;
+		Object.FindObjectOfType<OverworldPlayer>().ChangeDirection(vector);
+		OverworldPartyMember[] array = Object.FindObjectsOfType<OverworldPartyMember>();
 		foreach (OverworldPartyMember overworldPartyMember in array)
 		{
-			if ((overworldPartyMember.GetMemberID() == 1 && Util.GameManager().SusieInParty()) || (overworldPartyMember.GetMemberID() == 2 && Util.GameManager().NoelleInParty()))
+			if ((overworldPartyMember.gameObject.name == "Susie" && Util.GameManager().SusieInParty()) || (overworldPartyMember.gameObject.name == "Noelle" && Util.GameManager().NoelleInParty()))
 			{
 				overworldPartyMember.transform.position = newPos + overworldPartyMember.GetPositionOffset();
-				overworldPartyMember.ChangeDirection(faceDir);
+				overworldPartyMember.ChangeDirection(vector);
 			}
 		}
 		Object.Instantiate(shop, GameObject.Find("Canvas").transform);
@@ -53,16 +53,16 @@ public class ShopCollider : OverworldManipulator
 	{
 		if (collision.transform.tag == "Player" && !activated)
 		{
-			if ((bool)Util.FindObjectOfType<OverworldMenu>())
+			if ((bool)Object.FindObjectOfType<MainMenu>())
 			{
-				Util.FindObjectOfType<OverworldMenu>().CancelControlReturn();
-				Object.Destroy(Util.FindObjectOfType<OverworldMenu>().gameObject);
+				Object.FindObjectOfType<MainMenu>().CancelControlReturn();
+				Object.Destroy(Object.FindObjectOfType<MainMenu>().gameObject);
 			}
-			if ((bool)Util.FindObjectOfType<PunchCard>())
+			if ((bool)Object.FindObjectOfType<PunchCard>())
 			{
-				Object.Destroy(Util.FindObjectOfType<PunchCard>().gameObject);
+				Object.Destroy(Object.FindObjectOfType<PunchCard>().gameObject);
 			}
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
+			Util.GameManager().DisablePlayerMovement(true);
 			fade.FadeOut(7);
 			Util.GameManager().StopMusic(7f);
 			activated = true;

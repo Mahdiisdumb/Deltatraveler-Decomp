@@ -11,15 +11,15 @@ public class PaulaMeleeAttack : AttackBase
 
 	private void OnDestroy()
 	{
-		if ((bool)Util.FindObjectOfType<PaulaMeleeTarget>())
+		if ((bool)Object.FindObjectOfType<PaulaMeleeTarget>())
 		{
-			Util.FindObjectOfType<PaulaMeleeTarget>().SetToDestroy();
+			Object.FindObjectOfType<PaulaMeleeTarget>().SetToDestroy();
 		}
 	}
 
 	public override void StartAttack()
 	{
 		base.StartAttack();
-		Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/nesspaula/PaulaTarget")).GetComponent<PaulaMeleeTarget>().Activate(4, hard: true);
+		Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/nesspaula/PaulaTarget")).GetComponent<PaulaMeleeTarget>().Activate(4, true);
 	}
 }

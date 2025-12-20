@@ -19,14 +19,14 @@ public class FloweyCutscene : EnemyBase
 		if (gotHit)
 		{
 			frames++;
-			float num = Mathf.Sin(MathF.PI / 180f * Mathf.Lerp(0f, 135f, (float)frames / 20f)) * 2f;
+			float num = Mathf.Sin((float)Math.PI / 180f * Mathf.Lerp(0f, 135f, (float)frames / 20f)) * 2f;
 			Vector3 localScale = Vector3.Lerp(new Vector3(1f, 1f, 1f), Vector3.zero, (float)frames / 20f);
 			GetEnemyObject().transform.position = new Vector3(0.063f, 1.294f + num);
 			GetEnemyObject().transform.localScale = localScale;
 			GetEnemyObject().transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(0f, 90f, (float)frames / 20f));
 			if (frames == 10)
 			{
-				Util.GameManager().PlayGlobalSFX("sounds/snd_ehurt1");
+				UnityEngine.Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_ehurt1");
 			}
 		}
 	}

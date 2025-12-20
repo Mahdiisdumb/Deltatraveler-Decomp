@@ -12,9 +12,9 @@ public class RockThatDoesNotMove : MonoBehaviour
 
 	private void Awake()
 	{
-		if ((int)Util.GameManager().GetFlag(21) == 1)
+		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(21) == 1)
 		{
-			ThrowObject(playAnim: false);
+			ThrowObject(false);
 		}
 	}
 
@@ -32,7 +32,7 @@ public class RockThatDoesNotMove : MonoBehaviour
 		}
 		GameObject.Find("Spikes").GetComponent<SpriteRenderer>().sprite = sprite;
 		GameObject.Find("Spikes").GetComponent<BoxCollider2D>().isTrigger = true;
-		if ((int)Util.GameManager().GetFlag(28) == 1 && (int)Util.GameManager().GetFlag(29) == 3)
+		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(28) == 1 && (int)Object.FindObjectOfType<GameManager>().GetFlag(29) == 3)
 		{
 			component.GetComponent<InteractTextBox>().ModifyContents(new string[3] { "* ...", "* You two are twisted,^10\n  y'know that?", "* (What...?)" }, new string[3] { "snd_text", "snd_text", "snd_txtsus" }, new int[3], new string[3] { "", "", "su_side_sweat" });
 		}
@@ -42,7 +42,7 @@ public class RockThatDoesNotMove : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision && (bool)collision.GetComponent<OverworldPlayer>() && !initiated)
+		if ((bool)collision.GetComponent<OverworldPlayer>() && !initiated)
 		{
 			initiated = true;
 			CutsceneHandler.GetCutscene(10).StartCutscene();

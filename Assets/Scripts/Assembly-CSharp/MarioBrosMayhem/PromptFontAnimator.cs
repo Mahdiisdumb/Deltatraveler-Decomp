@@ -90,22 +90,22 @@ namespace MarioBrosMayhem
 
 		public void AnimateIn(float speed)
 		{
-			Animate(isOut: false, speed);
+			Animate(false, speed);
 		}
 
 		public void AnimateOut(float speed)
 		{
-			Animate(isOut: true, speed);
+			Animate(true, speed);
 		}
 
 		public void AnimateCharIn(int chr, float speed)
 		{
-			Animate(isOut: false, speed, chr);
+			Animate(false, speed, chr);
 		}
 
 		public void AnimateCharOut(int chr, float speed)
 		{
-			Animate(isOut: true, speed, chr);
+			Animate(true, speed, chr);
 		}
 	}
 }

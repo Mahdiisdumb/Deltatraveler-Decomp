@@ -24,7 +24,7 @@ public class TileMazeEndCutscene : CutsceneBase
 			frames++;
 			if (frames == 45)
 			{
-				int time = Util.FindObjectOfType<TileMaze>().GetTime();
+				int time = Object.FindObjectOfType<TileMaze>().GetTime();
 				bool flag = (int)gm.GetFlag(239) == 1;
 				gm.SetFlag(240, time);
 				List<string> list = new List<string>();
@@ -96,7 +96,7 @@ public class TileMazeEndCutscene : CutsceneBase
 					list3.AddRange(new string[2] { "ufpap_side", "ufpap_laugh" });
 				}
 				papyEnd = list.Count;
-				list.AddRange(new string[8] { "* Alright,^05 whatever!!!", "* Your puzzles aren't\n  any match for us,^05\n  bonehead!", "* Just give up already!", "* boss,^05 i think it's about\n  time to stop playing\n  this game with them.", "NO,^05 NOT YET!!!", "I HAVE ONE MORE \nACE UP MY \nSPIKEY SLEEVE!", "PERHAPS IT MAY BE \nTOO DEADLY FOR \nYOU!", "IT ISN'T OVER YET!" });
+				list.AddRange(new string[8] { "* Alright,^05 whatever!!!", "* Your puzzles aren't\n  any match for us,^05\n  bonehead!", "* Just give up already!", "*\tboss,^05 i think it's about\n\ttime to stop playing\n\tthis game with them.", "NO,^05 NOT YET!!!", "I HAVE ONE MORE \nACE UP MY \nSPIKEY SLEEVE!", "PERHAPS IT MAY BE \nTOO DEADLY FOR \nYOU!", "IT ISN'T OVER YET!" });
 				list2.AddRange(new string[8] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap" });
 				list3.AddRange(new string[8] { "su_pissed", "su_annoyed", "su_angry", "ufsans_closed", "ufpap_mad", "ufpap_mad", "ufpap_evil", "ufpap_evil" });
 				StartText(list.ToArray(), list2.ToArray(), new int[1], list3.ToArray());
@@ -120,7 +120,7 @@ public class TileMazeEndCutscene : CutsceneBase
 				else if (AtLine(5 + papyEnd))
 				{
 					kris.EnableAnimator();
-					SetMoveAnim(kris, isMoving: false);
+					SetMoveAnim(kris, false);
 					ChangeDirection(kris, Vector2.right);
 					PlayAnimation(papyrus, "Pissed");
 					susie.EnableAnimator();
@@ -139,7 +139,7 @@ public class TileMazeEndCutscene : CutsceneBase
 			if (frames == 1)
 			{
 				ChangeDirection(sans, Vector2.left);
-				SetMoveAnim(papyrus, isMoving: true, 1.5f);
+				SetMoveAnim(papyrus, true, 1.5f);
 				ChangeDirection(papyrus, Vector2.right);
 			}
 			if (frames <= 15)
@@ -148,7 +148,7 @@ public class TileMazeEndCutscene : CutsceneBase
 				if (frames == 15)
 				{
 					ChangeDirection(papyrus, Vector2.left);
-					SetMoveAnim(papyrus, isMoving: true, 0.5f);
+					SetMoveAnim(papyrus, true, 0.5f);
 				}
 			}
 			else if (frames <= 90)
@@ -156,7 +156,7 @@ public class TileMazeEndCutscene : CutsceneBase
 				papyrus.transform.position = Vector3.Lerp(new Vector3(7.17f, -0.08f), new Vector3(6.55f, -0.08f), (float)(frames - 60) / 30f);
 				if (frames == 90)
 				{
-					SetMoveAnim(papyrus, isMoving: false);
+					SetMoveAnim(papyrus, false);
 				}
 			}
 			if (frames == 120)
@@ -171,8 +171,8 @@ public class TileMazeEndCutscene : CutsceneBase
 			if (MoveTo(sans, new Vector2(7.34f, -0.67f), 4f))
 			{
 				MoveTo(papyrus, new Vector2(7.34f, -0.08f), 4f);
-				SetMoveAnim(papyrus, isMoving: true);
-				SetMoveAnim(sans, isMoving: true);
+				SetMoveAnim(papyrus, true);
+				SetMoveAnim(sans, true);
 				ChangeDirection(papyrus, Vector2.right);
 				ChangeDirection(sans, Vector2.right);
 				return;
@@ -183,8 +183,8 @@ public class TileMazeEndCutscene : CutsceneBase
 				noelle.transform.position -= new Vector3(0f, 1f / 12f);
 				ChangeDirection(susie, Vector2.down);
 				ChangeDirection(noelle, Vector2.down);
-				SetMoveAnim(susie, isMoving: true);
-				SetMoveAnim(noelle, isMoving: true);
+				SetMoveAnim(susie, true);
+				SetMoveAnim(noelle, true);
 				return;
 			}
 			if (susie.transform.position.x < -1.36f)
@@ -195,8 +195,8 @@ public class TileMazeEndCutscene : CutsceneBase
 				ChangeDirection(noelle, Vector2.right);
 				return;
 			}
-			SetMoveAnim(susie, isMoving: false);
-			SetMoveAnim(noelle, isMoving: false);
+			SetMoveAnim(susie, false);
+			SetMoveAnim(noelle, false);
 			ChangeDirection(kris, Vector2.left);
 			if (depressed)
 			{
@@ -230,7 +230,7 @@ public class TileMazeEndCutscene : CutsceneBase
 			}
 			else
 			{
-				gm.SetPartyMembers(susie: true, noelle: true);
+				gm.SetPartyMembers(true, true);
 				RestorePlayerControl();
 				ChangeDirection(kris, Vector2.down);
 				gm.PlayMusic("zoneMusic");
@@ -243,7 +243,7 @@ public class TileMazeEndCutscene : CutsceneBase
 	public override void StartCutscene(params object[] par)
 	{
 		base.StartCutscene(par);
-		papyrus = Util.FindObjectOfType<InteractPapyrusTextbox>();
+		papyrus = Object.FindObjectOfType<InteractPapyrusTextbox>();
 		sans = GameObject.Find("Sans").GetComponent<Animator>();
 		RevokePlayerControl();
 		SetSprite(kris, "spr_kr_pose");
@@ -257,6 +257,6 @@ public class TileMazeEndCutscene : CutsceneBase
 		gm.SetFlag(1, "annoyed");
 		gm.SetFlag(2, "thinking");
 		depressed = Util.GameManager().GetFlagInt(87) >= 7;
-		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(forceActivationTrigger: false);
+		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(false);
 	}
 }

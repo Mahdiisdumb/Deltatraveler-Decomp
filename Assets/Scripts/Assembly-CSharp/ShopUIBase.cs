@@ -159,8 +159,6 @@ public class ShopUIBase : MonoBehaviour
 
 	protected int flavor;
 
-	protected bool sellingEquipment;
-
 	protected virtual void Awake()
 	{
 		text = GetComponent<TextUT>();
@@ -181,13 +179,13 @@ public class ShopUIBase : MonoBehaviour
 				}
 			}
 		}
-		DetermineWillBuy(justSold: false);
+		DetermineWillBuy(false);
 	}
 
 	private void Start()
 	{
-		Util.FindObjectOfType<Fade>().FadeIn(13);
-		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
+		Object.FindObjectOfType<Fade>().FadeIn(13);
+		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(true);
 		OrganizeArrays();
 		UpdateStatText();
 		ToMainMenu();
@@ -206,14 +204,14 @@ public class ShopUIBase : MonoBehaviour
 					holdingAxis = true;
 					if (index == 8)
 					{
-						if (num < 0 && GetItem(0) > -1)
+						if (num < 0 && Util.GameManager().GetItem(0) > -1)
 						{
 							index = 0;
 						}
 						else if (num > 0)
 						{
 							int num3 = 6;
-							while (num3 >= 0 && GetItem(num3) == -1)
+							while (num3 >= 0 && Util.GameManager().GetItem(num3) == -1)
 							{
 								num3 -= 2;
 							}
@@ -235,11 +233,11 @@ public class ShopUIBase : MonoBehaviour
 						{
 							index = 0;
 						}
-						else if (index < 8 && index % 2 == 1 && GetItem(index) == -1)
+						else if (index < 8 && index % 2 == 1 && Util.GameManager().GetItem(index) == -1)
 						{
 							index--;
 						}
-						if (index < 8 && GetItem(index) == -1)
+						if (index < 8 && Util.GameManager().GetItem(index) == -1)
 						{
 							index = 8;
 						}
@@ -255,7 +253,7 @@ public class ShopUIBase : MonoBehaviour
 					holdingAxisH = true;
 					if (index < 8)
 					{
-						if (index % 2 == 0 && GetItem(index + 1) > -1)
+						if (index % 2 == 0 && Util.GameManager().GetItem(index) > -1)
 						{
 							index++;
 						}
@@ -291,7 +289,6 @@ public class ShopUIBase : MonoBehaviour
 				if (state == 1)
 				{
 					UpdateDetailsPanel();
-					UpdateStatText(index >= 4 || Items.IsEquipment(itemIDs[index]));
 				}
 				MonoBehaviour.print(index);
 			}
@@ -361,7 +358,6 @@ public class ShopUIBase : MonoBehaviour
 				index = 0;
 				ToMainMenu();
 				detailsScrollFrames = 0;
-				UpdateStatText();
 			}
 			else if (UTInput.GetButtonDown("Z"))
 			{
@@ -378,7 +374,7 @@ public class ShopUIBase : MonoBehaviour
 					componentsInChildren[i].enabled = true;
 				}
 				base.transform.Find("ConfirmMenu").Find("Message").GetComponent<Text>()
-					.text = $"Buy it for\n{itemPrices[buyIndex]}G ?";
+					.text = string.Format("Buy it for\n{0}G ?", itemPrices[buyIndex]);
 				state = 2;
 				confirmSell = false;
 			}
@@ -401,48 +397,36 @@ public class ShopUIBase : MonoBehaviour
 				{
 					StartText(GetSellDenyText(-1));
 				}
-				else if (!confirmSell && Util.GameManager().GetGold() < itemPrices[buyIndex])
+				else if (!confirmSell && Object.FindObjectOfType<GameManager>().GetGold() < itemPrices[buyIndex])
 				{
 					StartText(buyNoMoney);
 				}
-				else if (!confirmSell && Util.GameManager().NumItemFreeSpace(Items.IsEquipment(itemIDs[buyIndex])) == 0)
+				else if (!confirmSell && Object.FindObjectOfType<GameManager>().NumItemFreeSpace() == 0)
 				{
 					StartText(buyNoSpace);
 				}
 				else if (confirmSell)
 				{
-					int item = GetItem(buyIndex);
-					Util.GameManager().AddGold(Items.GetSellPrice(item));
-					if (sellingEquipment)
-					{
-						Util.GameManager().RemoveEquipment(buyIndex);
-					}
-					else
-					{
-						Util.GameManager().RemoveItem(buyIndex);
-					}
+					Util.GameManager().AddGold(Items.GetSellPrice(Util.GameManager().GetItem(buyIndex)));
+					Util.GameManager().RemoveItem(buyIndex);
 					soul.GetComponent<Image>().color = SOUL.GetSOULColorByID(Util.GameManager().GetFlagInt(312));
 					aud.Play();
 					StartText(sellSuccess);
 					UpdateStatText();
 					UpdateSellOptions();
-					DetermineWillBuy(justSold: true);
+					DetermineWillBuy(true);
 				}
 				else
 				{
-					Util.GameManager().RemoveGold(itemPrices[buyIndex]);
-					Util.GameManager().AddAmbiguousItem(itemIDs[buyIndex]);
+					Object.FindObjectOfType<GameManager>().RemoveGold(itemPrices[buyIndex]);
+					Object.FindObjectOfType<GameManager>().AddItem(itemIDs[buyIndex]);
 					aud.Play();
 					StartText(buySuccess);
 					UpdateStatText();
 				}
 				index = buyIndex;
 				state = ((!confirmSell) ? 1 : 6);
-				if (state == 1)
-				{
-					UpdateStatText(Items.IsEquipment(itemIDs[index]));
-				}
-				if (state == 6 && !flag2 && GetItem(index) == -1)
+				if (state == 6 && !flag2 && Util.GameManager().GetItem(index) == -1)
 				{
 					index--;
 					if (index < 0)
@@ -505,7 +489,7 @@ public class ShopUIBase : MonoBehaviour
 					}
 					else if (endToState == 5)
 					{
-						Util.FindObjectOfType<Fade>().FadeOut(12);
+						Object.FindObjectOfType<Fade>().FadeOut(12);
 						state = 5;
 					}
 					else if (endToState == 6)
@@ -517,18 +501,15 @@ public class ShopUIBase : MonoBehaviour
 		}
 		else if (state == 5)
 		{
-			if (!Util.FindObjectOfType<Fade>().IsPlaying())
+			if (!Object.FindObjectOfType<Fade>().IsPlaying())
 			{
-				HandleExit(enableMovement: true);
+				HandleExit(true);
 			}
 		}
 		else if (state == 6)
 		{
 			if ((UTInput.GetButtonDown("X") && !flag) || (UTInput.GetButtonDown("Z") && index == 8))
 			{
-				base.transform.Find("SellMenu").Find("Tab").GetChild(0)
-					.GetComponent<Image>()
-					.enabled = false;
 				index = 0;
 				ToMainMenu();
 				detailsScrollFrames = 0;
@@ -540,8 +521,7 @@ public class ShopUIBase : MonoBehaviour
 					text.SkipText();
 				}
 				text.DestroyOldText();
-				int item2 = GetItem(index);
-				if (Items.GetSellPrice(item2) > 0)
+				if (Items.GetSellPrice(Util.GameManager().GetItem(index)) > 0)
 				{
 					buyIndex = index;
 					index = 0;
@@ -551,29 +531,14 @@ public class ShopUIBase : MonoBehaviour
 						componentsInChildren[i].enabled = true;
 					}
 					base.transform.Find("ConfirmMenu").Find("Message").GetComponent<Text>()
-						.text = $"Sell the\n{Items.ShortItemName(item2)}?";
+						.text = string.Format("Sell the\n{0}?", Items.ShortItemName(Util.GameManager().GetItem(buyIndex)));
 					confirmSell = true;
 					state = 2;
 				}
 				else
 				{
-					StartText(GetSellDenyText(item2));
+					StartText(GetSellDenyText(Util.GameManager().GetItem(index)));
 				}
-			}
-			else if (UTInput.GetButtonDown("C"))
-			{
-				sellingEquipment = !sellingEquipment;
-				UpdateSellOptions();
-				if (index < 8 && GetItem(index) == -1)
-				{
-					int num7 = 7 - Util.GameManager().NumItemFreeSpace(sellingEquipment);
-					index = num7;
-					if (index == -1)
-					{
-						index = 8;
-					}
-				}
-				UpdateDetailsPanel();
 			}
 		}
 		string n = "SelectionMenu";
@@ -596,7 +561,7 @@ public class ShopUIBase : MonoBehaviour
 
 	protected void ToMainMenu()
 	{
-		ToggleOtherObjects(enabled: true);
+		ToggleOtherObjects(true);
 		state = 0;
 		Text[] componentsInChildren = base.transform.Find("SelectionMenu").GetComponentsInChildren<Text>();
 		for (int i = 0; i < componentsInChildren.Length; i++)
@@ -643,15 +608,14 @@ public class ShopUIBase : MonoBehaviour
 		{
 			componentsInChildren[j].enabled = false;
 		}
-		UpdateStatText(Items.IsEquipment(itemIDs[index]));
 		UpdateDetailsPanel();
 	}
 
 	protected virtual void ToSellMenu()
 	{
 		state = 6;
-		index = ((GetItem(index) <= -1) ? 8 : 0);
-		for (int i = 0; i < 10; i++)
+		index = ((Util.GameManager().GetItem(0) <= -1) ? 8 : 0);
+		for (int i = 0; i < 9; i++)
 		{
 			base.transform.Find("SellMenu").GetChild(i).GetComponent<Text>()
 				.enabled = true;
@@ -668,7 +632,7 @@ public class ShopUIBase : MonoBehaviour
 
 	protected void ToTalkMenu()
 	{
-		ToggleOtherObjects(enabled: true);
+		ToggleOtherObjects(true);
 		state = 3;
 		index = 0;
 		for (int i = 0; i < 4; i++)
@@ -700,7 +664,7 @@ public class ShopUIBase : MonoBehaviour
 		{
 			componentsInChildren[i].enabled = false;
 		}
-		ToggleOtherObjects(enabled: false);
+		ToggleOtherObjects(false);
 		this.diag = diag;
 		curString = 0;
 		state = 4;
@@ -714,22 +678,22 @@ public class ShopUIBase : MonoBehaviour
 			text.SkipText();
 		}
 		text.DestroyOldText();
-		Vector2 thePos = new Vector2(407f, -141f);
+		Vector2 thePos = new Vector2(402f, -141f);
 		if (state == 0)
 		{
-			thePos.x = -11f;
+			thePos.x = -16f;
 		}
 		if (state == 4)
 		{
-			thePos.x = 9f;
+			thePos.x = 4f;
 		}
 		if (fontName == "sans")
 		{
 			thePos.y -= 4f;
 		}
 		text.StartText(txt, thePos, textSound, 0, fontName);
-		text.GetGameObject().GetComponent<Text>().lineSpacing = ((fontName == "sans") ? 0.9f : 1.15f);
-		text.GetGameObject().GetComponent<Text>().rectTransform.sizeDelta = new Vector2(538f, 240f);
+		text.GetGameObject().GetComponent<Text>().lineSpacing = 1.15f;
+		text.GetGameObject().GetComponent<Text>().rectTransform.sizeDelta = new Vector2(528f, 240f);
 	}
 
 	protected void OrganizeArrays()
@@ -745,47 +709,19 @@ public class ShopUIBase : MonoBehaviour
 		for (int i = 0; i < 8; i++)
 		{
 			string text = "";
-			int item = GetItem(i);
-			if (item > -1)
+			if (Util.GameManager().GetItem(i) > -1)
 			{
-				text = Items.ShortItemName(item);
+				text = Items.ShortItemName(Util.GameManager().GetItem(i));
 			}
 			base.transform.Find("SellMenu").GetChild(i).GetComponent<Text>()
 				.text = text;
 		}
-		bool joystickIsActive = UTInput.joystickIsActive;
-		string text2 = "";
-		if (!joystickIsActive)
-		{
-			text2 = string.Format("[{0}] ", UTInput.GetKeyName("Menu"));
-		}
-		string arg = (sellingEquipment ? "FFF" : ColorUtility.ToHtmlStringRGB(Selection.SELECTION_COLORS[Util.GameManager().GetFlagInt(223)]));
-		string arg2 = ((!sellingEquipment) ? "FFF" : ColorUtility.ToHtmlStringRGB(Selection.SELECTION_COLORS[Util.GameManager().GetFlagInt(223)]));
-		base.transform.Find("SellMenu").Find("Tab").GetComponent<Text>()
-			.text = text2 + $"<color=#{arg}>Item</color> <color=#888>|</color> <color=#{arg2}>Equip</color>";
-		Image component = base.transform.Find("SellMenu").Find("Tab").GetChild(0)
-			.GetComponent<Image>();
-		if (!joystickIsActive)
-		{
-			component.enabled = false;
-			return;
-		}
-		component.enabled = true;
-		ButtonPrompts.UpdateImageWithGraphic("Menu", component, 2f, ButtonPrompts.ButtonType.Small);
 	}
 
-	protected void UpdateStatText(bool isEquipment = false)
+	protected void UpdateStatText()
 	{
-		if (state == 1 && index < 4)
-		{
-			base.transform.Find("Gold").GetComponent<Text>().text = Util.GameManager().GetGold() + "G";
-			base.transform.Find("Space").GetComponent<Text>().text = 8 - Util.GameManager().NumItemFreeSpace(isEquipment) + "/8";
-		}
-		else
-		{
-			base.transform.Find("Gold").GetComponent<Text>().text = "";
-			base.transform.Find("Space").GetComponent<Text>().text = Util.GameManager().GetGold() + "G";
-		}
+		base.transform.Find("Gold").GetComponent<Text>().text = Object.FindObjectOfType<GameManager>().GetGold() + "G";
+		base.transform.Find("Space").GetComponent<Text>().text = 8 - Object.FindObjectOfType<GameManager>().NumItemFreeSpace() + "/8";
 	}
 
 	protected void ToggleOtherObjects(bool enabled)
@@ -797,10 +733,10 @@ public class ShopUIBase : MonoBehaviour
 
 	protected virtual void HandleExit(bool enableMovement)
 	{
-		Util.FindObjectOfType<Fade>().FadeIn(13);
+		Object.FindObjectOfType<Fade>().FadeIn(13);
 		if (enableMovement)
 		{
-			Util.GameManager().EnablePlayerMovement();
+			Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
 		}
 		Object.Destroy(base.gameObject);
 	}
@@ -844,7 +780,7 @@ public class ShopUIBase : MonoBehaviour
 				string[] array = new string[3] { "Kris", "Susie", "Noelle" };
 				int[] array2 = new int[3];
 				int[] array3 = new int[3];
-				_ = 1;
+				int num2 = 1;
 				if (num == 1)
 				{
 					detailsPanel.Find("Stats").Find("SusieIcon").GetComponent<Image>()
@@ -877,10 +813,10 @@ public class ShopUIBase : MonoBehaviour
 						};
 						detailsPanel.Find("Stats").Find(array[j] + "StatIcons").GetComponent<Image>()
 							.sprite = detailsIcons[num - 1];
-						array2[j] = Items.ItemValue(itemIDs[index], j) + Util.GameManager().GetATKRaw(j) - Util.GameManager().GetATK(j);
+						array2[j] = Items.ItemValue(itemIDs[index], j) + Object.FindObjectOfType<GameManager>().GetATKRaw(j) - Object.FindObjectOfType<GameManager>().GetATK(j);
 						if (num == 2)
 						{
-							array2[j] = Items.ItemValue(itemIDs[index], j) + Util.GameManager().GetDEFRaw(j) - Util.GameManager().GetDEF(j);
+							array2[j] = Items.ItemValue(itemIDs[index], j) + Object.FindObjectOfType<GameManager>().GetDEFRaw(j) - Object.FindObjectOfType<GameManager>().GetDEF(j);
 						}
 						array3[j] = Items.GetItemMagic(itemIDs[index]) - Items.GetItemMagic((num == 1) ? Util.GameManager().GetWeapon(j) : Util.GameManager().GetArmor(j));
 						if (array2[j] > 0)
@@ -950,7 +886,7 @@ public class ShopUIBase : MonoBehaviour
 			else
 			{
 				detailsPanel.Find("Type").GetComponent<Text>().enabled = true;
-				int sellPrice = Items.GetSellPrice(GetItem(index));
+				int sellPrice = Items.GetSellPrice(Util.GameManager().GetItem(index));
 				if (sellPrice > 0)
 				{
 					detailsPanel.Find("Type").GetComponent<Text>().text = "Worth " + sellPrice + "G";
@@ -970,14 +906,5 @@ public class ShopUIBase : MonoBehaviour
 
 	protected virtual void DetermineWillBuy(bool justSold)
 	{
-	}
-
-	protected int GetItem(int index)
-	{
-		if (!sellingEquipment)
-		{
-			return Util.GameManager().GetItem(index);
-		}
-		return Util.GameManager().GetEquipment(index);
 	}
 }

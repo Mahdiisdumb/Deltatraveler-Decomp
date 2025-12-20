@@ -10,7 +10,7 @@ public class SnowdrakeSpinBullet : BulletBase
 	{
 		base.Awake();
 		baseDmg = 10;
-		if ((bool)Util.FindObjectOfType<Feraldrake>())
+		if ((bool)Object.FindObjectOfType<Feraldrake>())
 		{
 			baseDmg = 8;
 		}

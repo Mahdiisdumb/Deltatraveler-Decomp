@@ -26,7 +26,7 @@ public class FrogBullet : BulletBase
 			{
 				GetComponent<SpriteRenderer>().sprite = sprite;
 			}
-			base.transform.position = new Vector3(Mathf.Lerp(1.18f, -1.22f, (float)frames / 17f), Mathf.Sin(Mathf.Lerp(0f, 90f, (float)frames / 17f) * (MathF.PI / 180f)) * 0.83f - 2.6f);
+			base.transform.position = new Vector3(Mathf.Lerp(1.18f, -1.22f, (float)frames / 17f), Mathf.Sin(Mathf.Lerp(0f, 90f, (float)frames / 17f) * ((float)Math.PI / 180f)) * 0.83f - 2.6f);
 			if (frames == 18)
 			{
 				UnityEngine.Object.Destroy(base.gameObject);

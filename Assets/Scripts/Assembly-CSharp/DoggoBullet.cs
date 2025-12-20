@@ -14,21 +14,21 @@ public class DoggoBullet : BulletBase
 		baseDmg = 8;
 		destroyOnHit = false;
 		reverse = base.transform.position.x < 0f;
-		if (Util.FindObjectOfType<Doggo>().GetProgress() == 0)
+		if (Object.FindObjectOfType<Doggo>().GetProgress() == 0)
 		{
 			scan = true;
 			ChangeType(1);
 		}
 		else
 		{
-			velocity = ((Util.FindObjectOfType<Doggo>().GetProgress() == 1) ? 8 : 4);
+			velocity = ((Object.FindObjectOfType<Doggo>().GetProgress() == 1) ? 8 : 4);
 			ChangeType((Random.Range(0, 5) != 0) ? 1 : 2);
 		}
 	}
 
 	private void Update()
 	{
-		SOUL sOUL = Util.FindObjectOfType<SOUL>();
+		SOUL sOUL = Object.FindObjectOfType<SOUL>();
 		float y = sOUL.transform.position.y - 0.304f;
 		if (scan)
 		{
@@ -51,6 +51,6 @@ public class DoggoBullet : BulletBase
 	public override void SOULHit()
 	{
 		base.SOULHit();
-		Util.FindObjectOfType<Doggo>().HitLastAttack();
+		Object.FindObjectOfType<Doggo>().HitLastAttack();
 	}
 }

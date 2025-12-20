@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1444699614960979
+--- !u!1 &1355711970832001
 GameObject:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -8,11 +8,11 @@ GameObject:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Component:
-  - component: {fileID: 4171502791080239}
-  - component: {fileID: 212783560782379378}
-  - component: {fileID: 82002898423443954}
-  - component: {fileID: 114715030175068754}
-  - component: {fileID: 61008640301376536}
+  - component: {fileID: 4409971193510171}
+  - component: {fileID: 212232154856955164}
+  - component: {fileID: 82103334839496448}
+  - component: {fileID: 114230264605116202}
+  - component: {fileID: 61989944837799397}
   m_Layer: 0
   m_Name: SusieLDRudeBusterHit
   m_TagString: Untagged
@@ -20,41 +20,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4171502791080239
+--- !u!4 &4409971193510171
 Transform:
-  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1444699614960979}
+  m_GameObject: {fileID: 1355711970832001}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
---- !u!212 &212783560782379378
+--- !u!212 &212232154856955164
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1444699614960979}
+  m_GameObject: {fileID: 1355711970832001}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -66,7 +59,6 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -79,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 199
-  m_Sprite: {fileID: 21300000, guid: a707a0a772b122648b1f04e23b5a9515, type: 2}
+  m_Sprite: {fileID: 21300000, guid: 2423cbfb01b77104f838ef368fdac2a7, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -90,18 +82,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!82 &82002898423443954
+--- !u!82 &82103334839496448
 AudioSource:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1444699614960979}
+  m_GameObject: {fileID: 1355711970832001}
   m_Enabled: 1
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -187,60 +178,40 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &114715030175068754
+--- !u!114 &114230264605116202
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1444699614960979}
+  m_GameObject: {fileID: 1355711970832001}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35618630ed35de7571cb03999b0c39e1, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   sprites:
-  - {fileID: 21300000, guid: a707a0a772b122648b1f04e23b5a9515, type: 2}
-  - {fileID: 21300000, guid: 51146b67c09b30f43aa4c3b23bacf554, type: 2}
-  - {fileID: 21300000, guid: 1810c537b2c61ee4b96ee556816f661d, type: 2}
-  - {fileID: 21300000, guid: ebfd48b29f1b6fa4683e7e182204b4fd, type: 2}
-  - {fileID: 21300000, guid: 15bf779243b297c4fab84d1a6edb6655, type: 2}
-  - {fileID: 21300000, guid: 9c051402786a35142beec9679593e55d, type: 2}
-  - {fileID: 21300000, guid: fe68fd8982fc6c846bed0709efd7b326, type: 2}
---- !u!61 &61008640301376536
+  - {fileID: 21300000, guid: 2423cbfb01b77104f838ef368fdac2a7, type: 2}
+  - {fileID: 21300000, guid: df3f04e5727b20e4a8c8108c5c2f2713, type: 2}
+  - {fileID: 21300000, guid: 1d15f5e9de6859445b80b1f94da77291, type: 2}
+  - {fileID: 21300000, guid: 4e8a2f2b7666cea488355722a43cf36a, type: 2}
+  - {fileID: 21300000, guid: 73a79af2a757d484bbd365e7968da80f, type: 2}
+  - {fileID: 21300000, guid: 7b199399b4c01ae4c90fd64fec7072b3, type: 2}
+  - {fileID: 21300000, guid: 3028fa87ca8a7dc4482a5bdb8874e78d, type: 2}
+--- !u!61 &61989944837799397
 BoxCollider2D:
-  serializedVersion: 3
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1444699614960979}
+  m_GameObject: {fileID: 1355711970832001}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
+  m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}

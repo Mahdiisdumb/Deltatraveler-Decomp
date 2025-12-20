@@ -156,12 +156,15 @@ namespace UnityEngine.UI
 
 		private Color BlendColor(Color colorA, Color colorB)
 		{
-			return BlendMode switch
+			switch (BlendMode)
 			{
-				Blend.Add => colorA + colorB, 
-				Blend.Multiply => colorA * colorB, 
-				_ => colorB, 
-			};
+			default:
+				return colorB;
+			case Blend.Add:
+				return colorA + colorB;
+			case Blend.Multiply:
+				return colorA * colorB;
+			}
 		}
 	}
 }

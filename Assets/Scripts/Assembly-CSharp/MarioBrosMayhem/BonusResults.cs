@@ -35,7 +35,7 @@ namespace MarioBrosMayhem
 
 		private void Awake()
 		{
-			players = new Player[1] { Util.FindObjectOfType<Player>() };
+			players = new Player[1] { Object.FindObjectOfType<Player>() };
 			playerPanels = base.transform.Find("NormalPanels");
 			int childCount = playerPanels.childCount;
 			for (int i = 0; i < childCount; i++)
@@ -77,7 +77,7 @@ namespace MarioBrosMayhem
 					spriteText.enabled = false;
 				}
 			}
-			Coin[] array2 = Util.FindObjectsOfType<Coin>();
+			Coin[] array2 = Object.FindObjectsOfType<Coin>();
 			foreach (Coin coin in array2)
 			{
 				if (coin.IsCollected())
@@ -180,10 +180,10 @@ namespace MarioBrosMayhem
 					component2.Text = text;
 					if (collectedCoins >= 10)
 					{
-						Util.FindObjectOfType<MusicPlayer>().Play("mus_bonus_clear", loop: false);
-						Util.GameManager().PlayGlobalSFX("sounds/snd_1up");
+						Object.FindObjectOfType<MusicPlayer>().Play("mus_bonus_clear", false);
+						Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_1up");
 						int points = 5000;
-						if (Util.FindObjectOfType<MarioBrosManager>().GetPhaseNumber() <= 5)
+						if (Object.FindObjectOfType<MarioBrosManager>().GetPhaseNumber() <= 5)
 						{
 							points = 3000;
 						}
@@ -217,8 +217,8 @@ namespace MarioBrosMayhem
 					}
 					else
 					{
-						Util.FindObjectOfType<MusicPlayer>().Stop();
-						Util.GameManager().PlayGlobalSFX("sounds/snd_nobonus");
+						Object.FindObjectOfType<MusicPlayer>().Stop();
+						Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_nobonus");
 					}
 					done = true;
 					timer = 0f;

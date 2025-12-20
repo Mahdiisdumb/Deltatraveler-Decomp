@@ -22,14 +22,14 @@ public class GreaterDogDogBullet : BulletBase
 		frames++;
 		if (state == 0)
 		{
-			sr.flipX = Util.FindObjectOfType<SOUL>().transform.position.x > base.transform.position.x;
+			sr.flipX = Object.FindObjectOfType<SOUL>().transform.position.x > base.transform.position.x;
 			sr.sprite = sprites[(frames < 30) ? (frames / 10 % 2) : (frames / 2 % 2)];
 			if (frames == 40)
 			{
 				sr.sprite = sprites[2];
 				PlaySFX("sounds/snd_jump");
 				base.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-				velocity = (Util.FindObjectOfType<SOUL>().transform.position - base.transform.position).normalized * 0.1875f;
+				velocity = (Object.FindObjectOfType<SOUL>().transform.position - base.transform.position).normalized * 0.1875f;
 				state = 1;
 			}
 		}

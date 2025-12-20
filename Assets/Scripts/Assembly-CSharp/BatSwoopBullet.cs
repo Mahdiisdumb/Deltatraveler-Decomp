@@ -36,13 +36,13 @@ public class BatSwoopBullet : BulletBase
 		{
 			if (frames == 20)
 			{
-				Vector3 position = Util.FindObjectOfType<SOUL>().transform.position;
+				Vector3 position = UnityEngine.Object.FindObjectOfType<SOUL>().transform.position;
 				fromX = base.transform.position.x;
 				fromY = base.transform.position.y;
 				toX = base.transform.position.x + Mathf.Abs(position.x - base.transform.position.x) * (float)multi * 2f;
 				yMulti = position.y - base.transform.position.y;
 			}
-			base.transform.position = new Vector3(Mathf.Lerp(fromX, toX, (float)(frames - 20) / 60f), Mathf.Sin((float)((frames - 20) * 3) * (MathF.PI / 180f)) * yMulti + fromY);
+			base.transform.position = new Vector3(Mathf.Lerp(fromX, toX, (float)(frames - 20) / 60f), Mathf.Sin((float)((frames - 20) * 3) * ((float)Math.PI / 180f)) * yMulti + fromY);
 			if (frames >= 75)
 			{
 				sr.color = new Color(1f, 1f, 1f, (float)(80 - frames) / 5f);

@@ -23,9 +23,9 @@ public class ShopUISansPRV : ShopUISansBase
 
 	protected override void StartFullTalk(string[] diag)
 	{
-		if (diag == topic3lines && (int)Util.GameManager().GetFlag(93) == 0)
+		if (diag == topic3lines && (int)Object.FindObjectOfType<GameManager>().GetFlag(93) == 0)
 		{
-			Util.GameManager().SetFlag(93, 1);
+			Object.FindObjectOfType<GameManager>().SetFlag(93, 1);
 			susieQuestion = true;
 		}
 		base.StartFullTalk(diag);
@@ -36,7 +36,7 @@ public class ShopUISansPRV : ShopUISansBase
 		if (susieQuestion)
 		{
 			enableMovement = false;
-			new GameObject("DamnBroYouSuck", typeof(TextBox)).GetComponent<TextBox>().CreateBox(new string[1] { "* (How the hell does\n  he know my name...?)" }, new string[1] { "snd_txtsus" }, new int[1], 1, giveBackControl: true, new string[1] { "su_side_sweat" });
+			new GameObject("DamnBroYouSuck", typeof(TextBox)).GetComponent<TextBox>().CreateBox(new string[1] { "* (How the hell does\n  he know my name...?)" }, new string[1] { "snd_txtsus" }, new int[1], 1, true, new string[1] { "su_side_sweat" });
 		}
 		base.HandleExit(enableMovement);
 	}

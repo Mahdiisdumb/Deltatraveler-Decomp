@@ -25,19 +25,19 @@ public class OverworldVegetoid : OverworldEnemyBase
 		{
 			GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(path);
 		}
-		UIComponent[] array = Util.FindObjectsOfType<UIComponent>();
+		UIComponent[] array = Object.FindObjectsOfType<UIComponent>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			Object.Destroy(array[i].gameObject);
 		}
-		SelectableUIComponent[] array2 = Util.FindObjectsOfType<SelectableUIComponent>();
+		SelectableUIComponent[] array2 = Object.FindObjectsOfType<SelectableUIComponent>();
 		for (int i = 0; i < array2.Length; i++)
 		{
 			Object.Destroy(array2[i].gameObject);
 		}
 		initiateBattle = true;
-		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
-		OverworldEnemyBase[] array3 = Util.FindObjectsOfType<OverworldEnemyBase>();
+		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+		OverworldEnemyBase[] array3 = Object.FindObjectsOfType<OverworldEnemyBase>();
 		foreach (OverworldEnemyBase overworldEnemyBase in array3)
 		{
 			if (overworldEnemyBase != this)
@@ -49,7 +49,7 @@ public class OverworldVegetoid : OverworldEnemyBase
 
 	public void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (!collision || !collision.gameObject.GetComponent<InteractionTrigger>() || disabled || !canDetectPlayer || !collision.gameObject.GetComponent<InteractionTrigger>().IsTriggering())
+		if (!collision.gameObject.GetComponent<InteractionTrigger>() || disabled || !canDetectPlayer || !collision.gameObject.GetComponent<InteractionTrigger>().IsTriggering())
 		{
 			return;
 		}
@@ -63,19 +63,19 @@ public class OverworldVegetoid : OverworldEnemyBase
 			path = "overworld/snow_objects/spr_snowpoff_ICECAP";
 		}
 		GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(path);
-		UIComponent[] array = Util.FindObjectsOfType<UIComponent>();
+		UIComponent[] array = Object.FindObjectsOfType<UIComponent>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			Object.Destroy(array[i].gameObject);
 		}
-		SelectableUIComponent[] array2 = Util.FindObjectsOfType<SelectableUIComponent>();
+		SelectableUIComponent[] array2 = Object.FindObjectsOfType<SelectableUIComponent>();
 		for (int i = 0; i < array2.Length; i++)
 		{
 			Object.Destroy(array2[i].gameObject);
 		}
 		initiateBattle = true;
-		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
-		OverworldEnemyBase[] array3 = Util.FindObjectsOfType<OverworldEnemyBase>();
+		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+		OverworldEnemyBase[] array3 = Object.FindObjectsOfType<OverworldEnemyBase>();
 		foreach (OverworldEnemyBase overworldEnemyBase in array3)
 		{
 			if (overworldEnemyBase != this)

@@ -27,7 +27,7 @@ public class GyftrotBreath : MonoBehaviour
 		{
 			num = 1f;
 		}
-		base.transform.position = new Vector3(base.transform.position.x, Mathf.Lerp(startY, finalY, Mathf.Sin(num * MathF.PI * 0.5f)));
+		base.transform.position = new Vector3(base.transform.position.x, Mathf.Lerp(startY, finalY, Mathf.Sin(num * (float)Math.PI * 0.5f)));
 		int num2 = ((!reverseRotate) ? 1 : (-1));
 		base.transform.rotation = Quaternion.Euler(0f, 0f, base.transform.rotation.eulerAngles.z + (float)num2);
 		base.transform.localScale = Vector3.Lerp(new Vector3(0.15f, 0.15f), new Vector3(1.3f, 1.3f), (float)frames / 40f);

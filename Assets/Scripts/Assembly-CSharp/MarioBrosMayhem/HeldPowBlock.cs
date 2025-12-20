@@ -57,12 +57,12 @@ namespace MarioBrosMayhem
 				{
 					return;
 				}
-				PowBlock[] array = Util.FindObjectsOfType<PowBlock>();
+				PowBlock[] array = Object.FindObjectsOfType<PowBlock>();
 				foreach (PowBlock powBlock in array)
 				{
 					if (powBlock.GetPowId() == powId)
 					{
-						powBlock.PowToLevel(playerId, 0, sendToServer: true, pickupBlock: true);
+						powBlock.PowToLevel(playerId, 0, true, true);
 						break;
 					}
 				}
@@ -78,7 +78,7 @@ namespace MarioBrosMayhem
 			this.level = level;
 			GetComponent<SpriteRenderer>().sprite = sprites[level];
 			GetComponent<BoxCollider2D>().size = new Vector2(2f / 3f, LEVEL_HEIGHTS[level]);
-			if ((bool)Util.FindObjectOfType<BattleManager>())
+			if ((bool)Object.FindObjectOfType<BattleManager>())
 			{
 				GetComponent<SpriteRenderer>().material = Resources.Load<Material>("mariobros/materials/objects/pow-block-red");
 			}

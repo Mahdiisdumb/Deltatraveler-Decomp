@@ -12,7 +12,7 @@ public class CeilingDropBullet : ActionBulletBase
 
 	private void Start()
 	{
-		Util.FindObjectOfType<ActionBulletHandler>().IsActivated();
+		Object.FindObjectOfType<ActionBulletHandler>().IsActivated();
 		activated = true;
 		fadeFrames = 12;
 	}

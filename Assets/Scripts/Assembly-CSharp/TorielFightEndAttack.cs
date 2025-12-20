@@ -8,15 +8,15 @@ public class TorielFightEndAttack : AttackBase
 		maxFrames = 5000;
 		bbPos = new Vector2(0f, -2.37f);
 		bbSize = new Vector2(575f, 140f);
-		Util.FindObjectOfType<PartyPanels>().DeactivateTargets();
-		Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: false, susie: false, noelle: false);
-		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
+		Object.FindObjectOfType<PartyPanels>().DeactivateTargets();
+		Object.FindObjectOfType<PartyPanels>().RaiseHeads(false, false, false);
+		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
 	}
 
 	public override void StartAttack()
 	{
 		base.StartAttack();
-		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
-		Util.FindObjectOfType<BattleManager>().FadeEndBattle(2);
+		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
+		Object.FindObjectOfType<BattleManager>().FadeEndBattle(2);
 	}
 }

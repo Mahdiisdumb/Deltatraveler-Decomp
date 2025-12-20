@@ -14,7 +14,7 @@ public class OverworldFroggit : OverworldEnemyBase
 
 	protected override void Awake()
 	{
-		if ((int)Util.GameManager().GetFlag(108) == 1)
+		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(108) == 1)
 		{
 			hardMode = true;
 		}
@@ -33,7 +33,7 @@ public class OverworldFroggit : OverworldEnemyBase
 		{
 			prevPos = base.transform.position;
 			float maxDistanceDelta = 5f / 6f;
-			projectedPos = Vector3.MoveTowards(prevPos, Util.OverworldPlayer().transform.position, maxDistanceDelta);
+			projectedPos = Vector3.MoveTowards(prevPos, Object.FindObjectOfType<OverworldPlayer>().transform.position, maxDistanceDelta);
 			Vector3 vector = projectedPos - prevPos;
 			if (runFromPlayer)
 			{

@@ -28,8 +28,8 @@ public class KrisFire : MonoBehaviour
 				obj.flipX = !obj.flipX;
 			}
 		}
-		float num = (Mathf.Cos(12f * (float)frames * (MathF.PI / 180f)) + 1f) / 2f;
-		float num2 = (Mathf.Sin(24f * (float)frames * (MathF.PI / 180f)) + 1f) / 2f;
+		float num = (Mathf.Cos(12f * (float)frames * ((float)Math.PI / 180f)) + 1f) / 2f;
+		float num2 = (Mathf.Sin(24f * (float)frames * ((float)Math.PI / 180f)) + 1f) / 2f;
 		for (int j = 0; j < 2; j++)
 		{
 			float x = Mathf.Lerp(1f, 1.15f, (j == 1) ? (1f - num2) : num2);
@@ -63,7 +63,7 @@ public class KrisFire : MonoBehaviour
 			base.transform.GetChild(i).GetComponent<SpriteRenderer>().sortingOrder = 97 + i;
 		}
 		attachToPartyPanel = true;
-		origin = Util.FindObjectOfType<PartyPanels>().transform.Find("Party0Sprite");
+		origin = UnityEngine.Object.FindObjectOfType<PartyPanels>().transform.Find("KrisSprite");
 		pivot = origin.position;
 	}
 }

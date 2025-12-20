@@ -95,8 +95,8 @@ public class InteractSelectionBase : Interactable
 	{
 		if (!txt && enabled)
 		{
-			CreateTextBox(lines, sounds, speed, giveBackControl: false, portraits, remarks);
-			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
+			CreateTextBox(lines, sounds, speed, false, portraits, remarks);
+			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
 			txt.EnableSelectionAtEnd();
 		}
 	}
@@ -122,10 +122,9 @@ public class InteractSelectionBase : Interactable
 
 	public override void MakeDecision(Vector2 index, int id)
 	{
-		Util.GameManager().EnablePlayerMovement();
+		Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
 		selectActivated = false;
-		Vector2 vector = index;
-		MonoBehaviour.print(vector.ToString() + " " + id);
+		MonoBehaviour.print(string.Concat(index, " ", id));
 	}
 
 	public void ModifyContents(string[] lines, string[] sounds, int[] speed, string[] portraits)

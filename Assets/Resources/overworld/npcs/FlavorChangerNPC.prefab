@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1049644779447731
+--- !u!1 &1195516253520432
 GameObject:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -8,10 +8,10 @@ GameObject:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Component:
-  - component: {fileID: 4517018939657560}
-  - component: {fileID: 212318981255908411}
-  - component: {fileID: 61996874840638435}
-  - component: {fileID: 114962053924627567}
+  - component: {fileID: 4389266535930663}
+  - component: {fileID: 212382403199065373}
+  - component: {fileID: 61222571752175483}
+  - component: {fileID: 114666029811138224}
   m_Layer: 0
   m_Name: FlavorChangerNPC
   m_TagString: Untagged
@@ -19,41 +19,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4517018939657560
+--- !u!4 &4389266535930663
 Transform:
-  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1049644779447731}
+  m_GameObject: {fileID: 1195516253520432}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -3.605, y: 0.96, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &212318981255908411
+--- !u!212 &212382403199065373
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1049644779447731}
+  m_GameObject: {fileID: 1195516253520432}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -65,7 +58,6 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -78,7 +70,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: de12456e780860c40a7c071b615fc37b, type: 2}
+  m_Sprite: {fileID: 21300000, guid: 6fdf44db539a1c945ba3325095374a9e, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -89,40 +81,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &61996874840638435
+--- !u!61 &61222571752175483
 BoxCollider2D:
-  serializedVersion: 3
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1049644779447731}
+  m_GameObject: {fileID: 1195516253520432}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
+  m_UsedByComposite: 0
   m_Offset: {x: 0, y: -0.275}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -135,13 +107,13 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.67, y: 0.36}
   m_EdgeRadius: 0
---- !u!114 &114962053924627567
+--- !u!114 &114666029811138224
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1049644779447731}
+  m_GameObject: {fileID: 1195516253520432}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 12cf6c0ad7b3d747a5e7d5a82df8ac50, type: 3}
@@ -169,8 +141,8 @@ MonoBehaviour:
   downOffset: {x: 0, y: 0}
   centerOffset: {x: 0, y: 0}
   talkSprites:
-  - {fileID: 21300000, guid: de12456e780860c40a7c071b615fc37b, type: 2}
-  - {fileID: 21300000, guid: 91ec87172f1d4e044b71e98359658855, type: 2}
+  - {fileID: 21300000, guid: 6fdf44db539a1c945ba3325095374a9e, type: 2}
+  - {fileID: 21300000, guid: 9fb930ed6ae264948b19b36f4db43f46, type: 2}
   talkFramerate: 6
   adviceLines:
   - 

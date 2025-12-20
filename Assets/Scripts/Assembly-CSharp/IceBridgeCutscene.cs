@@ -15,10 +15,6 @@ public class IceBridgeCutscene : CutsceneBase
 		if (state == 0)
 		{
 			frames++;
-			if (kris.CanMove())
-			{
-				gm.DisablePlayerMovement(deactivatePartyMembers: false);
-			}
 			if (frames == 30)
 			{
 				state = 1;
@@ -53,7 +49,7 @@ public class IceBridgeCutscene : CutsceneBase
 	{
 		base.StartCutscene(par);
 		gm.PauseMusic();
-		gm.DisablePlayerMovement(deactivatePartyMembers: false);
+		gm.DisablePlayerMovement(false);
 		mask = GameObject.Find("IceBridge").transform.GetChild(0);
 	}
 }

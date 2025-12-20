@@ -37,7 +37,7 @@ public class FireballBullet : BulletBase
 	{
 		spriteFrames++;
 		sr.sprite = sprites[spriteFrames / 2 % 3];
-		_ = base.transform.position;
+		Vector3 position = base.transform.position;
 		if (state == 0)
 		{
 			frames++;
@@ -53,12 +53,12 @@ public class FireballBullet : BulletBase
 			{
 				GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, (float)frames / 5f);
 			}
-			base.transform.position = new Vector3(basePos.x, basePos.y + Mathf.Sin((float)(frames * 9) * (MathF.PI / 180f)));
+			base.transform.position = new Vector3(basePos.x, basePos.y + Mathf.Sin((float)(frames * 9) * ((float)Math.PI / 180f)));
 			if (frames == 20)
 			{
 				state = 1;
 				frames = 0;
-				tradjectory = Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position, 5f / 24f) - base.transform.position;
+				tradjectory = Vector3.MoveTowards(base.transform.position, UnityEngine.Object.FindObjectOfType<SOUL>().transform.position, 5f / 24f) - base.transform.position;
 				base.transform.up = -tradjectory;
 			}
 		}
