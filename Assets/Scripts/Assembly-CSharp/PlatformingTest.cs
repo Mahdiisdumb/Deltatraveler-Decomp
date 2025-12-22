@@ -12,7 +12,7 @@ public class PlatformingTest : AttackBase
 	{
 		if (isStarted && UTInput.GetButtonDown("C"))
 		{
-			Object.FindObjectOfType<SOUL>().ChangeSOULMode(0);
+			Util.FindObjectOfType<SOUL>().ChangeSOULMode(0);
 			Object.Destroy(base.gameObject);
 		}
 	}
@@ -22,6 +22,6 @@ public class PlatformingTest : AttackBase
 		base.StartAttack();
 		bb.StartMovement(new Vector3(350f, 250f));
 		Object.Instantiate(Resources.Load<GameObject>("battle/attacks/PlatformingTestPlatforms"), base.transform);
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 	}
 }

@@ -18,10 +18,10 @@ public class BigWhackAMoleAttack : AttackBase
 	protected override void Awake()
 	{
 		base.Awake();
-		whackAMoleSpots = Object.FindObjectOfType<MondoMole>().GetMaxWhackAMoleSpots();
+		whackAMoleSpots = Util.FindObjectOfType<MondoMole>().GetMaxWhackAMoleSpots();
 		bbSize = new Vector2(104f, 140f);
 		maxFrames = 20;
-		spawnRate = 20 - Mathf.RoundToInt((float)Object.FindObjectOfType<MondoMole>().GetDifficultyLevel() * 1.5f) - (whackAMoleSpots - 2) / 2;
+		spawnRate = 20 - Mathf.RoundToInt((float)Util.FindObjectOfType<MondoMole>().GetDifficultyLevel() * 1.5f) - (whackAMoleSpots - 2) / 2;
 		for (int i = 0; i < whackAMoleSpots; i++)
 		{
 			orderedSpots.Add(Random.Range(0, 9));
@@ -42,7 +42,7 @@ public class BigWhackAMoleAttack : AttackBase
 			{
 				moleSpots[orderedSpots[currentSpot - 1]].Unlight();
 			}
-			moleSpots[orderedSpots[currentSpot]].LightUp(true);
+			moleSpots[orderedSpots[currentSpot]].LightUp(sound: true);
 			currentSpot++;
 			if (currentSpot >= whackAMoleSpots)
 			{
@@ -56,7 +56,7 @@ public class BigWhackAMoleAttack : AttackBase
 			{
 				moleSpots[orderedSpots[whackAMoleSpots - 1]].Unlight();
 			}
-			moleSpots[orderedSpots[currentSpot]].ActivateMole(true, spawnRate <= 12);
+			moleSpots[orderedSpots[currentSpot]].ActivateMole(sound: true, spawnRate <= 12);
 			currentSpot++;
 		}
 	}

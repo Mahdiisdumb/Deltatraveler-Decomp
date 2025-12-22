@@ -34,8 +34,8 @@ public class DogiHeartBullet : BulletBase
 			center.x += 1f / 24f;
 			float num2 = Mathf.Lerp(0f, 1.15f, (float)frames / 22f);
 			float num3 = 1.6363636f * (float)frames + degree;
-			float x = Mathf.Cos(num3 * ((float)Math.PI / 180f));
-			float y = Mathf.Sin(num3 * ((float)Math.PI / 180f));
+			float x = Mathf.Cos(num3 * (MathF.PI / 180f));
+			float y = Mathf.Sin(num3 * (MathF.PI / 180f));
 			base.transform.position = new Vector3(x, y) * num2 + center;
 		}
 		if (center.x >= 5.08f)

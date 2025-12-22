@@ -57,13 +57,13 @@ public class SansMazeCatchCutscene : CutsceneBase
 			{
 				ChangeDirection(kris, Vector2.up);
 				kris.EnableAnimator();
-				SetMoveAnim(kris, true, 1.5f);
+				SetMoveAnim(kris, isMoving: true, 1.5f);
 				ChangeDirection(susie, Vector2.up);
 				susie.EnableAnimator();
-				SetMoveAnim(susie, true, 1.5f);
+				SetMoveAnim(susie, isMoving: true, 1.5f);
 				ChangeDirection(noelle, new Vector2(2.648f - noelle.transform.position.x, 0f));
 				noelle.EnableAnimator();
-				SetMoveAnim(noelle, true, 2f);
+				SetMoveAnim(noelle, isMoving: true, 2f);
 			}
 			bool flag = MoveTo(kris, new Vector3(1.71f, -11.62f), 8f);
 			bool flag2 = MoveTo(susie, new Vector3(1.712f, -12.17f), 8f);
@@ -73,12 +73,12 @@ public class SansMazeCatchCutscene : CutsceneBase
 			if (!flag)
 			{
 				ChangeDirection(kris, Vector2.down);
-				SetMoveAnim(kris, false);
+				SetMoveAnim(kris, isMoving: false);
 			}
 			if (!flag2)
 			{
 				ChangeDirection(susie, Vector2.down);
-				SetMoveAnim(susie, false);
+				SetMoveAnim(susie, isMoving: false);
 			}
 			if (noelle.transform.position.x != 2.648f)
 			{
@@ -95,20 +95,20 @@ public class SansMazeCatchCutscene : CutsceneBase
 			else
 			{
 				ChangeDirection(noelle, Vector2.down);
-				SetMoveAnim(noelle, false);
+				SetMoveAnim(noelle, isMoving: false);
 				SetSprite(noelle, "spr_no_surprise");
 			}
 			if (flag4 && MoveTo(sans, new Vector3(1.686f, -13.79f), 2f))
 			{
-				SetMoveAnim(sans, true);
+				SetMoveAnim(sans, isMoving: true);
 				return;
 			}
-			SetMoveAnim(sans, false);
+			SetMoveAnim(sans, isMoving: false);
 			MonoBehaviour.print(flag + " " + flag2 + " " + flag3);
 			if (!flag && !flag2 && !flag3)
 			{
 				gm.PlayMusic("music/mus_him", 0.45f);
-				StartText(new string[9] { "* Back the hell away,^05\n  freak!", "*\tnah.", "*\ti've got you right where\n\ti want you.", "* W-^05what do you want\n  from us???", "*\ty'know,^05 every time i've\n\theld onto hope,^05 it's just\n\teroded away.", "*\tit's about time you felt\n\twhat i felt.", "* That doesn't answer the\n  question,^05 dumbass!!!", "*\tlike i'd tell you about\n\thow i felt.", "*\tyou should know." }, new string[9] { "snd_txtsus", "snd_txtsans", "snd_txtsans", "snd_txtnoe", "snd_txtsans", "snd_txtsans", "snd_txtsus", "snd_txtsans", "snd_txtsans" }, new int[1], new string[9] { "su_annoyed_sweat", "ufsans_closed", "ufsans_empty", "no_afraid_open", "ufsans_side", "ufsans_closed", "su_angry", "ufsans_neutral", "ufsans_empty" }, 1);
+				StartText(new string[9] { "* Back the hell away,^05\n  freak!", "* nah.", "* i've got you right where\n  i want you.", "* W-^05what do you want\n  from us???", "* y'know,^05 every time i've\n  held onto hope,^05 it's just\n  eroded away.", "* it's about time you felt\n  what i felt.", "* That doesn't answer the\n  question,^05 dumbass!!!", "* like i'd tell you about\n  how i felt.", "* you should know." }, new string[9] { "snd_txtsus", "snd_txtsans", "snd_txtsans", "snd_txtnoe", "snd_txtsans", "snd_txtsans", "snd_txtsus", "snd_txtsans", "snd_txtsans" }, new int[1], new string[9] { "su_annoyed_sweat", "ufsans_closed", "ufsans_empty", "no_afraid_open", "ufsans_side", "ufsans_closed", "su_angry", "ufsans_neutral", "ufsans_empty" }, 1);
 				state = 2;
 				frames = 0;
 			}
@@ -124,11 +124,11 @@ public class SansMazeCatchCutscene : CutsceneBase
 			{
 				PlayAnimation(susie, "Kick");
 				ChangeDirection(kris, Vector2.right);
-				SetMoveAnim(kris, true);
+				SetMoveAnim(kris, isMoving: true);
 			}
 			if (!MoveTo(kris, new Vector3(0.731f, -11.72f), 8f))
 			{
-				SetMoveAnim(kris, false);
+				SetMoveAnim(kris, isMoving: false);
 			}
 			susie.transform.position = Vector3.Lerp(new Vector3(1.712f, -12.17f), new Vector3(1.712f, -11.5f), (float)frames / 6f);
 			if (frames == 6)
@@ -145,7 +145,7 @@ public class SansMazeCatchCutscene : CutsceneBase
 				"* HEY!!!^05\n* RABBIT LADY!!!\n^05* OPEN THE DOOR!!!!!",
 				"* she's not gonna help.",
 				"* no one will.",
-				"*\tyou can't even help\n\tyourselves against me.",
+				"* you can't even help\n  yourselves against me.",
 				"* You sure you wanna\n  try us?",
 				(Util.GameManager().GetLV() >= 7) ? "* We've...^05 got quite the\n  body count already." : "* Dimension travellers\n  that can take on\n  a giant mech?",
 				"* S-^05Susie,^05 don't--"
@@ -163,25 +163,25 @@ public class SansMazeCatchCutscene : CutsceneBase
 			};
 			if (Util.GameManager().GetLV() >= 7)
 			{
-				list.AddRange(new string[2] { "*\tnow you're interesting me.", "*\thow many have you killed?" });
+				list.AddRange(new string[2] { "* now you're interesting me.", "* how many have you killed?" });
 				list2.AddRange(new string[2] { "snd_txtsans", "snd_txtsans" });
 				list3.AddRange(new string[2] { "ufsans_side", "ufsans_neutral" });
 				if ((int)Util.GameManager().GetFlag(87) >= 5)
 				{
-					list.AddRange(new string[7] { "* You don't wanna know.", "*\tyeah i do.^05\n*\ttell me.", "* Umm...^10 I don't even\n  know...", "*\tyeah,^05 i think your\n\tdusty,^05 stained clothes\n\tspeak to that.", "*\tso i truly am\n\tdoing a service.", "*\tthe entirety of reality\n\twould benefit from your\n\tdeaths.", "*\ttime to die." });
+					list.AddRange(new string[7] { "* You don't wanna know.", "* yeah i do.^05\n* tell me.", "* Umm...^10 I don't even\n  know...", "* yeah,^05 i think your\n  dusty,^05 stained clothes\n  speak to that.", "* so i truly am\n  doing a service.", "* the entirety of reality\n  would benefit from your\n  deaths.", "* time to die." });
 					list2.AddRange(new string[6] { "snd_txtsus", "snd_txtsans", "snd_txtsus", "snd_txtsans", "snd_txtsans", "snd_txtsans" });
 					list3.AddRange(new string[7] { "su_smirk", "ufsans_neutral", "su_side_sweat", "ufsans_side", "ufsans_closed", "ufsans_closed", "ufsans_empty" });
 				}
 				else
 				{
-					list.AddRange(new string[4] { "* I dunno.^05\n* How many have YOU\n  killed?", "*\t37 people.", "*\t40 in a minute.", "*\ttime to die." });
+					list.AddRange(new string[4] { "* I dunno.^05\n* How many have YOU\n  killed?", "* 37 people.", "* 40 in a minute.", "* time to die." });
 					list2.AddRange(new string[4] { "snd_txtsus", "snd_txtsans", "snd_txtsans", "snd_txtsans" });
 					list3.AddRange(new string[4] { "su_side_sweat", "ufsans_neutral", "ufsans_empty", "ufsans_empty" });
 				}
 			}
 			else
 			{
-				list.AddRange(new string[3] { "*\tyou're really getting my\n\texpectations up,^05 but\n\ti don't believe you.", "*\tnow enough talking.", "*\ttime to die." });
+				list.AddRange(new string[3] { "* you're really getting my\n  expectations up,^05 but\n  i don't believe you.", "* now enough talking.", "* time to die." });
 				list2.AddRange(new string[3] { "snd_txtsans", "snd_txtsans", "snd_txtsans" });
 				list3.AddRange(new string[3] { "ufsans_neutral", "ufsans_closed", "ufsans_empty" });
 			}
@@ -386,18 +386,18 @@ public class SansMazeCatchCutscene : CutsceneBase
 					kris.EnableAnimator();
 					susie.EnableAnimator();
 					noelle.EnableAnimator();
-					SetMoveAnim(kris, true);
-					SetMoveAnim(susie, true);
-					SetMoveAnim(noelle, true);
+					SetMoveAnim(kris, isMoving: true);
+					SetMoveAnim(susie, isMoving: true);
+					SetMoveAnim(noelle, isMoving: true);
 				}
 				MoveTo(kris, new Vector3(0.731f, -300f), 3f);
 				MoveTo(susie, new Vector3(1.712f, -300f), 3f);
 				MoveTo(noelle, new Vector3(2.648f, -300f), 3f);
 				if (frames == 90)
 				{
-					SetMoveAnim(kris, false);
-					SetMoveAnim(susie, false);
-					SetMoveAnim(noelle, false);
+					SetMoveAnim(kris, isMoving: false);
+					SetMoveAnim(susie, isMoving: false);
+					SetMoveAnim(noelle, isMoving: false);
 					StartText(new string[11]
 					{
 						"* Q.C.!!!^05\n* Are you okay?", "* Yeah,^05 I'm fine,^05 but...", "* He got away.", "* Feels like every time I get\n  a chance to kill him,^05 he\n  runs away.", "* So much for his \"kill or\n  be killed\" rhetoric.", "* Uhh...^05 thanks for saving\n  us,^05 but uhh...", "* We've got like four\n  of those ladder parts\n  now.", "* Do you know if we\n  need to get more?", "* Oh,^05 right!^05\n* I believe that's all of them!", "* I'm carrying the ones I\n  found right now,^05 so let's go\n  ahead and rebuild the ladder.",
@@ -430,7 +430,7 @@ public class SansMazeCatchCutscene : CutsceneBase
 			if (frames == 1)
 			{
 				ChangeDirection(qc, Vector2.right);
-				SetMoveAnim(qc, true);
+				SetMoveAnim(qc, isMoving: true);
 			}
 			qc.transform.position += new Vector3(0.125f, 0f);
 			if (frames != 45)
@@ -557,7 +557,7 @@ public class SansMazeCatchCutscene : CutsceneBase
 		ChangeDirection(sans, Vector2.up);
 		qc = GameObject.Find("QC-cutscene").GetComponent<Animator>();
 		ChangeDirection(qc, Vector2.up);
-		Object.FindObjectOfType<DeepMazeEventHandler>().StopChase();
+		Util.FindObjectOfType<DeepMazeEventHandler>().StopChase();
 		gm.SetFlag(84, 10);
 		gm.SetFlag(208, 2);
 		gm.UnlockMenu();

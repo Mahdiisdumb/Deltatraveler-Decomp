@@ -15,8 +15,8 @@ public class Bench : Interactable
 
 	private void Awake()
 	{
-		susie = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
-		noelle = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
+		susie = Util.OverworldPlayer().GetPartyMemberByID(1);
+		noelle = Util.OverworldPlayer().GetPartyMemberByID(2);
 		SpriteRenderer[] componentsInChildren = GetComponentsInChildren<SpriteRenderer>();
 		foreach (SpriteRenderer spriteRenderer in componentsInChildren)
 		{
@@ -36,7 +36,7 @@ public class Bench : Interactable
 			if (frames <= 12)
 			{
 				float num = Mathf.Lerp(0.3f, 0f, (float)frames / 12f);
-				float num2 = Mathf.Sin((float)frames * 22.5f * ((float)Math.PI / 180f));
+				float num2 = Mathf.Sin((float)frames * 22.5f * (MathF.PI / 180f));
 				Vector3 localScale = new Vector3(1f + num * num2, 1f - num * num2, 1f);
 				base.transform.Find("KrisBench").transform.localScale = localScale;
 				base.transform.Find("PaulaBench").transform.localScale = localScale;
@@ -61,7 +61,7 @@ public class Bench : Interactable
 						spriteRenderer.enabled = false;
 					}
 				}
-				UnityEngine.Object.FindObjectOfType<OverworldPlayer>().GetComponent<SpriteRenderer>().enabled = true;
+				Util.OverworldPlayer().GetComponent<SpriteRenderer>().enabled = true;
 				susie.GetComponent<SpriteRenderer>().enabled = true;
 				noelle.GetComponent<SpriteRenderer>().enabled = true;
 				Util.GameManager().EnablePlayerMovement();
@@ -91,8 +91,8 @@ public class Bench : Interactable
 		{
 			holdingAxis = true;
 		}
-		Util.GameManager().DisablePlayerMovement(true);
-		UnityEngine.Object.FindObjectOfType<OverworldPlayer>().GetComponent<SpriteRenderer>().enabled = false;
+		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
+		Util.OverworldPlayer().GetComponent<SpriteRenderer>().enabled = false;
 		susie.GetComponent<SpriteRenderer>().enabled = false;
 		noelle.GetComponent<SpriteRenderer>().enabled = false;
 		susie.transform.position = base.transform.Find("SusieBench").position;

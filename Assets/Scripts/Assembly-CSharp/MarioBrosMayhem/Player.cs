@@ -223,7 +223,7 @@ namespace MarioBrosMayhem
 			jumpVelocity = (0f - gravity) * TIME_TO_JUMP_APEX;
 			chargedJump = CHARGE_JUMP_HEIGHT / MAX_JUMP_HEIGHT * jumpVelocity;
 			jumpSpeedIncrease = (chargedJump - jumpVelocity) * 0.35f;
-			ServerSessionManager serverSessionManager = Object.FindObjectOfType<ServerSessionManager>();
+			ServerSessionManager serverSessionManager = Util.FindObjectOfType<ServerSessionManager>();
 			if (serverSessionManager.GetGamemode() == 0)
 			{
 				lives = serverSessionManager.GetRuleValue(0, 0);
@@ -249,13 +249,13 @@ namespace MarioBrosMayhem
 
 		private void Update()
 		{
-			if (!pauselock && !frozen && (!Object.FindObjectOfType<GameOverContinue>() || !Object.FindObjectOfType<GameOverContinue>().IsActive()) && lives >= 0 && ((UTInput.GetButtonDown("C") && canMove) || (!Object.FindObjectOfType<PauseMenu>().Paused() && !canMove)))
+			if (!pauselock && !frozen && (!Util.FindObjectOfType<GameOverContinue>() || !Util.FindObjectOfType<GameOverContinue>().IsActive()) && lives >= 0 && ((UTInput.GetButtonDown("C") && canMove) || (!Util.FindObjectOfType<PauseMenu>().Paused() && !canMove)))
 			{
 				if (canMove)
 				{
 					canMove = false;
 					StopLoopingSFX();
-					Object.FindObjectOfType<PauseMenu>().Pause();
+					Util.FindObjectOfType<PauseMenu>().Pause();
 				}
 				else
 				{
@@ -373,7 +373,7 @@ namespace MarioBrosMayhem
 				stompFrames++;
 				if (stompFrames > stunTime && controller.collisions.down)
 				{
-					animator.SetBool("Stomped", false);
+					animator.SetBool("Stomped", value: false);
 					stomped = false;
 					skidding = false;
 					stompFrames = 0;
@@ -604,7 +604,7 @@ namespace MarioBrosMayhem
 			animator.SetBool("ChargeJump", doingChargedJump);
 			if (skidding && !aud.isPlaying && !aud.loop && controller.collisions.down)
 			{
-				PlaySFX("mariobros/sounds/snd_player_skid", 1f, true);
+				PlaySFX("mariobros/sounds/snd_player_skid", 1f, loop: true);
 			}
 			animSpeed = Mathf.Abs(speed) * 20f;
 			if (animSpeed > MAX_SPEED_WALK && button)
@@ -720,9 +720,9 @@ namespace MarioBrosMayhem
 				{
 					Revive();
 				}
-				else if ((bool)Object.FindObjectOfType<MarioBrosManager>())
+				else if ((bool)Util.FindObjectOfType<MarioBrosManager>())
 				{
-					Object.FindObjectOfType<MarioBrosManager>().GameOver();
+					Util.FindObjectOfType<MarioBrosManager>().GameOver();
 				}
 			}
 		}
@@ -739,18 +739,18 @@ namespace MarioBrosMayhem
 			{
 				if (UTInput.GetButton("Z") && canMove)
 				{
-					FallOffRevivePlatform(true);
+					FallOffRevivePlatform(activateIFrames: true);
 					DoAction();
 				}
 				else if (UTInput.GetAxis("Horizontal") != 0f && canMove)
 				{
 					speed = MAX_SPEED_WALK * Mathf.Sign(UTInput.GetAxis("Horizontal"));
 					facingRight = speed > 0f;
-					FallOffRevivePlatform(true);
+					FallOffRevivePlatform(activateIFrames: true);
 				}
 				else if (reviveTimer >= 5.3333335f)
 				{
-					FallOffRevivePlatform(true);
+					FallOffRevivePlatform(activateIFrames: true);
 				}
 			}
 			if (reviving)
@@ -823,7 +823,7 @@ namespace MarioBrosMayhem
 					}
 					if ((bool)raycastHit2D.collider.GetComponent<PowBlock>() && flag2 && !holdingObject && !stomped)
 					{
-						Pickup(false, raycastHit2D.collider.GetComponent<PowBlock>().GetPowId(), raycastHit2D.collider.GetComponent<PowBlock>().GetPowLevel());
+						Pickup(isPlayer: false, raycastHit2D.collider.GetComponent<PowBlock>().GetPowId(), raycastHit2D.collider.GetComponent<PowBlock>().GetPowLevel());
 						raycastHit2D.collider.GetComponent<PowBlock>().VanishPowBlock();
 						break;
 					}
@@ -940,7 +940,7 @@ namespace MarioBrosMayhem
 				reviving = true;
 				livesBubble.transform.parent.GetComponent<Canvas>().enabled = true;
 				livesBubble.UpdateContents(lives, skin, palette);
-				animator.SetBool("Reviving", true);
+				animator.SetBool("Reviving", value: true);
 				animator.Play("Revive");
 				base.transform.position = new Vector3(GlobalVariables.SPAWN_POS[0].x, 5.4166665f);
 				reviveTimer = 0f;
@@ -974,7 +974,7 @@ namespace MarioBrosMayhem
 		{
 			reviving = false;
 			livesBubble.transform.parent.GetComponent<Canvas>().enabled = false;
-			animator.SetBool("Reviving", false);
+			animator.SetBool("Reviving", value: false);
 			angelPlatform.Hide();
 			controller.EnableCollisions();
 			if (activateIFrames && iFramesAfterDeath)
@@ -994,13 +994,13 @@ namespace MarioBrosMayhem
 		public void ResetForNextRound()
 		{
 			animator.SetFloat("Speed", 1f);
-			animator.SetBool("Grounded", true);
-			animator.SetBool("IsMoving", false);
-			animator.SetBool("Skidding", false);
-			animator.SetBool("Crouched", false);
-			animator.SetBool("ChargeJump", false);
-			animator.SetBool("Stomped", false);
-			animator.SetBool("Reviving", false);
+			animator.SetBool("Grounded", value: true);
+			animator.SetBool("IsMoving", value: false);
+			animator.SetBool("Skidding", value: false);
+			animator.SetBool("Crouched", value: false);
+			animator.SetBool("ChargeJump", value: false);
+			animator.SetBool("Stomped", value: false);
+			animator.SetBool("Reviving", value: false);
 			ResetCrouchCharge();
 			speed = 0f;
 			yVelocity = 0f;
@@ -1011,7 +1011,7 @@ namespace MarioBrosMayhem
 			crouching = false;
 			doingChargedJump = false;
 			stomped = false;
-			FallOffRevivePlatform(false);
+			FallOffRevivePlatform(activateIFrames: false);
 			invulnerable = false;
 			controller.PlayerCollisions();
 			if (dead && lives > 0)
@@ -1128,7 +1128,7 @@ namespace MarioBrosMayhem
 			}
 			if (stunTime == -1)
 			{
-				int num = Object.FindObjectsOfType<Player>().Length;
+				int num = Util.FindObjectsOfType<Player>().Length;
 				if (num > 4)
 				{
 					stunTime = (int)Mathf.Lerp(80f, 25f, (float)(num - 5) / 3f);
@@ -1170,14 +1170,14 @@ namespace MarioBrosMayhem
 				{
 					return;
 				}
-				FallOffRevivePlatform(true);
+				FallOffRevivePlatform(activateIFrames: true);
 			}
 			if (yVelocity > 0f)
 			{
 				yVelocity = 0f;
 			}
 			ResetCrouchCharge();
-			animator.SetBool("Stomped", true);
+			animator.SetBool("Stomped", value: true);
 			animator.Play(holdingObject ? "HoldStomped" : "Stomped");
 			stomped = true;
 			skidding = false;
@@ -1212,7 +1212,7 @@ namespace MarioBrosMayhem
 			{
 				if (health == 1)
 				{
-					ChangeSize(false);
+					ChangeSize(grow: false);
 				}
 				else
 				{
@@ -1257,7 +1257,7 @@ namespace MarioBrosMayhem
 			}
 			if (!isBig)
 			{
-				ChangeSize(true);
+				ChangeSize(grow: true);
 			}
 		}
 
@@ -1479,7 +1479,7 @@ namespace MarioBrosMayhem
 		public void AddLives(int lives)
 		{
 			this.lives += lives;
-			Object.FindObjectOfType<GameManager>().PlayGlobalSFX("mariobros/sounds/snd_1up");
+			Util.GameManager().PlayGlobalSFX("mariobros/sounds/snd_1up");
 		}
 
 		public int GetPoints()

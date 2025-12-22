@@ -34,7 +34,7 @@ public class CaveSeal : InteractTextBox
 		list.AddRange(lines);
 		if ((int)Util.GameManager().GetFlag(116) == 0)
 		{
-			if (Util.GameManager().GetMiniPartyMember() == 1)
+			if (Util.GameManager().GetPartyMember(3) == 3)
 			{
 				list.Add("* This is where that\n  bomb would be used.");
 				list.Add("* We need to go to\n  the center of town\n  to get it.");
@@ -63,10 +63,10 @@ public class CaveSeal : InteractTextBox
 		base.DoInteract();
 		if ((int)Util.GameManager().GetFlag(116) != 0)
 		{
-			cam = UnityEngine.Object.FindObjectOfType<CameraController>();
-			kris = UnityEngine.Object.FindObjectOfType<OverworldPlayer>();
-			susie = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
-			noelle = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
+			cam = Util.FindObjectOfType<CameraController>();
+			kris = Util.OverworldPlayer();
+			susie = Util.OverworldPlayer().GetPartyMemberByID(1);
+			noelle = Util.OverworldPlayer().GetPartyMemberByID(2);
 			bomb = GameObject.Find("Bomb").transform;
 			Util.GameManager().SetFlag(118, 1);
 			activated = true;
@@ -82,18 +82,18 @@ public class CaveSeal : InteractTextBox
 		if (!started)
 		{
 			started = true;
-			cam.SetFollowPlayer(false);
-			kris.SetSelfAnimControl(false);
-			susie.SetSelfAnimControl(false);
-			noelle.SetSelfAnimControl(false);
-			Util.GameManager().DisablePlayerMovement(true);
-			kris.GetComponent<Animator>().SetBool("isMoving", true);
+			cam.SetFollowPlayer(follow: false);
+			kris.SetSelfAnimControl(setAnimControl: false);
+			susie.SetSelfAnimControl(setAnimControl: false);
+			noelle.SetSelfAnimControl(setAnimControl: false);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
+			kris.GetComponent<Animator>().SetBool("isMoving", value: true);
 			kris.GetComponent<Animator>().SetFloat("speed", 1f);
 			kris.ChangeDirection(Vector2.right);
-			susie.GetComponent<Animator>().SetBool("isMoving", true);
+			susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 			susie.GetComponent<Animator>().SetFloat("speed", 1f);
 			susie.ChangeDirection(Vector2.up);
-			noelle.GetComponent<Animator>().SetBool("isMoving", true);
+			noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
 			noelle.GetComponent<Animator>().SetFloat("speed", 1f);
 			noelle.ChangeDirection(Vector2.right);
 		}
@@ -107,7 +107,7 @@ public class CaveSeal : InteractTextBox
 			}
 			else
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", false);
+				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
 			}
 			if (susie.transform.position != new Vector3(50f, -14.06f))
 			{
@@ -116,7 +116,7 @@ public class CaveSeal : InteractTextBox
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", false);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 			}
 			if (noelle.transform.position.x > 48.04f && noelle.transform.position.y > -15.33f)
 			{
@@ -125,7 +125,7 @@ public class CaveSeal : InteractTextBox
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
 			}
 			if (flag)
 			{
@@ -146,7 +146,7 @@ public class CaveSeal : InteractTextBox
 		}
 		if (frames >= 20 && frames <= 50)
 		{
-			bomb.position = new Vector3(50f, -14.056f + Mathf.Sin((float)((frames - 20) * 6) * ((float)Math.PI / 180f)));
+			bomb.position = new Vector3(50f, -14.056f + Mathf.Sin((float)((frames - 20) * 6) * (MathF.PI / 180f)));
 		}
 		if (frames == 50)
 		{
@@ -171,10 +171,10 @@ public class CaveSeal : InteractTextBox
 				cam.transform.position = Vector3.MoveTowards(cam.transform.position, cam.GetClampedPos(), 0.0625f);
 				return;
 			}
-			cam.SetFollowPlayer(true);
-			kris.SetSelfAnimControl(true);
-			susie.SetSelfAnimControl(true);
-			noelle.SetSelfAnimControl(true);
+			cam.SetFollowPlayer(follow: true);
+			kris.SetSelfAnimControl(setAnimControl: true);
+			susie.SetSelfAnimControl(setAnimControl: true);
+			noelle.SetSelfAnimControl(setAnimControl: true);
 			kris.ChangeDirection(Vector2.down);
 			susie.ChangeDirection(Vector2.left);
 			noelle.ChangeDirection(Vector2.up);

@@ -44,7 +44,7 @@ public class GasterBlaster : BulletBase
 		origAngle = base.transform.rotation.eulerAngles.z;
 		blast = base.transform.GetChild(0);
 		destroyOnHit = false;
-		if ((bool)UnityEngine.Object.FindObjectOfType<Sans>())
+		if ((bool)Util.FindObjectOfType<Sans>())
 		{
 			baseDmg = 10;
 		}
@@ -96,12 +96,12 @@ public class GasterBlaster : BulletBase
 			return;
 		}
 		float num2 = (float)(frames - (30 + delayOffset)) / 15f;
-		num2 = 1f - Mathf.Cos(num2 * (float)Math.PI * 0.5f);
+		num2 = 1f - Mathf.Cos(num2 * MathF.PI * 0.5f);
 		if (frames >= 45 + delayOffset)
 		{
 			num2 = 1f;
 		}
-		Vector3 vector = new Vector3(0f - Mathf.Sin(angle * ((float)Math.PI / 180f)), Mathf.Cos(angle * ((float)Math.PI / 180f))) * 13f;
+		Vector3 vector = new Vector3(0f - Mathf.Sin(angle * (MathF.PI / 180f)), Mathf.Cos(angle * (MathF.PI / 180f))) * 13f;
 		base.transform.position = Vector3.Lerp(position, (Vector3)position + vector, num2);
 		int num3 = Mathf.FloorToInt((float)(frames - 30 + delayOffset) / 6f) % 2 + 4;
 		sr.sprite = sprites[num3];
@@ -128,11 +128,11 @@ public class GasterBlaster : BulletBase
 			GetComponent<BoxCollider2D>().enabled = true;
 			if (width >= 3)
 			{
-				UnityEngine.Object.FindObjectOfType<BattleCamera>().GiantBlastShake();
+				Util.FindObjectOfType<BattleCamera>().GiantBlastShake();
 			}
 			else if (width > 1)
 			{
-				UnityEngine.Object.FindObjectOfType<BattleCamera>().BlastShake();
+				Util.FindObjectOfType<BattleCamera>().BlastShake();
 			}
 		}
 		else if (frames + 8 >= 30 + delayOffset + blastFrames)
@@ -143,7 +143,7 @@ public class GasterBlaster : BulletBase
 				GetComponent<BoxCollider2D>().enabled = false;
 				isBlasting = false;
 			}
-			num4 = Mathf.Sin(num4 * (float)Math.PI * 0.5f);
+			num4 = Mathf.Sin(num4 * MathF.PI * 0.5f);
 			if (frames >= 30 + delayOffset + blastFrames)
 			{
 				num4 = 1f;
@@ -160,12 +160,12 @@ public class GasterBlaster : BulletBase
 				UnityEngine.Object.Destroy(base.gameObject);
 			}
 		}
-		if (inSpearAttack && (bool)UnityEngine.Object.FindObjectOfType<SOULShield>())
+		if (inSpearAttack && (bool)Util.FindObjectOfType<SOULShield>())
 		{
 			num4 = (float)(frames + 8 - (30 + delayOffset + blastFrames)) / 8f;
 			if (frames + 8 < 30 + delayOffset + blastFrames || num4 < 0.25f)
 			{
-				if (UnityEngine.Object.FindObjectOfType<SOULShield>().GetFaceDirection() == GetFaceDirection())
+				if (Util.FindObjectOfType<SOULShield>().GetFaceDirection() == GetFaceDirection())
 				{
 					base.gameObject.layer = 2;
 					SpriteRenderer[] componentsInChildren = GetComponentsInChildren<SpriteRenderer>();
@@ -186,7 +186,7 @@ public class GasterBlaster : BulletBase
 				return;
 			}
 			base.gameObject.layer = 2;
-			if (UnityEngine.Object.FindObjectOfType<SOULShield>().GetFaceDirection() == GetFaceDirection())
+			if (Util.FindObjectOfType<SOULShield>().GetFaceDirection() == GetFaceDirection())
 			{
 				SpriteRenderer[] componentsInChildren = GetComponentsInChildren<SpriteRenderer>();
 				for (int i = 0; i < componentsInChildren.Length; i++)
@@ -256,6 +256,6 @@ public class GasterBlaster : BulletBase
 
 	public Vector2 GetFaceDirection()
 	{
-		return new Vector2(Mathf.Sin((angle - 180f) * ((float)Math.PI / 180f)), Mathf.Cos(angle * ((float)Math.PI / 180f)));
+		return new Vector2(Mathf.Sin((angle - 180f) * (MathF.PI / 180f)), Mathf.Cos(angle * (MathF.PI / 180f)));
 	}
 }

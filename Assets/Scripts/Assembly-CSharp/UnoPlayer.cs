@@ -44,7 +44,7 @@ public class UnoPlayer : MonoBehaviour
 		setUp = false;
 		base.transform.parent = UnoGameManager.instance.transform;
 		points = 0;
-		gm = Object.FindObjectOfType<GameManager>();
+		gm = Util.GameManager();
 		playersGameObject = GameObject.Find("Players");
 	}
 
@@ -55,8 +55,8 @@ public class UnoPlayer : MonoBehaviour
 			chatFrames++;
 			if (chatFrames >= 30)
 			{
-				Object.FindObjectOfType<PartyPanels>().RaiseHeads(false, false, false);
-				Object.FindObjectOfType<PartyPanels>().SetRaisedPanel(-1);
+				Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: false, susie: false, noelle: false);
+				Util.FindObjectOfType<PartyPanels>().SetRaisedPanel(-1);
 				Object.Destroy(chatbox.gameObject);
 			}
 		}
@@ -103,12 +103,12 @@ public class UnoPlayer : MonoBehaviour
 		}
 		string skinUNODialogue = UnoGameManager.GetSkinUNODialogue(UnoGameManager.GetSkinFilename(skin), condition);
 		string text = "Up";
-		Vector3 localPosition = GameObject.Find("KrisStats").transform.localPosition + new Vector3(0f, 85f);
+		Vector3 localPosition = GameObject.Find("Party0Stats").transform.localPosition + new Vector3(0f, 85f);
 		if (Localizer.GetText(skinUNODialogue).Length <= 6)
 		{
 			text += "Small";
 		}
-		Object.FindObjectOfType<PartyPanels>().RaiseHeads(true, false, false);
+		Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: true, susie: false, noelle: false);
 		chatbox = Object.Instantiate(Resources.Load<GameObject>("ui/bubble/Speech" + text), GameObject.Find("BattleCanvas").transform).GetComponent<TextBubble>();
 		chatbox.transform.localScale = new Vector2(1f, 1f);
 		chatbox.transform.localPosition = localPosition;
@@ -116,11 +116,11 @@ public class UnoPlayer : MonoBehaviour
 		string skinTextSound = UnoGameManager.GetSkinTextSound(skinFilename);
 		if (skinFilename == "papyrus")
 		{
-			chatbox.CreateBubble(new string[1] { Localizer.GetText(skinUNODialogue) }, 0, skinTextSound, 0, false, "papyrus");
+			chatbox.CreateBubble(new string[1] { Localizer.GetText(skinUNODialogue) }, 0, skinTextSound, 0, canSkip: false, "papyrus");
 		}
 		else
 		{
-			chatbox.CreateBubble(new string[1] { Localizer.GetText(skinUNODialogue) }, 0, skinTextSound, 0, false);
+			chatbox.CreateBubble(new string[1] { Localizer.GetText(skinUNODialogue) }, 0, skinTextSound, 0, canSkip: false);
 		}
 		chatFrames = 0;
 	}

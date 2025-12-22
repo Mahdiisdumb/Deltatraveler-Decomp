@@ -12,12 +12,12 @@ public class DogiAttack : AttackBase
 		bbSize = new Vector2(185f, 140f);
 		maxFrames = 190;
 		type = Random.Range(0, 2);
-		if (Object.FindObjectOfType<Dogamy>().IsKilled())
+		if (Util.FindObjectOfType<Dogamy>().IsKilled())
 		{
 			type = 1;
 			alone = true;
 		}
-		else if (Object.FindObjectOfType<Dogaressa>().IsKilled())
+		else if (Util.FindObjectOfType<Dogaressa>().IsKilled())
 		{
 			type = 0;
 			alone = true;

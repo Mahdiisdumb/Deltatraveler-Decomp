@@ -23,33 +23,6 @@ public class EarthboundFirstCutscene : CutsceneBase
 
 	private SOUL soul;
 
-	public override Dictionary<string, string[]> GetDefaultStrings()
-	{
-		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
-		dictionary.Add("dark", new string[3] { "Ugh...", "...", "What the hell...?" });
-		dictionary.Add("the_line_eb", new string[1] { "GOD DAMN IT KRIS\nWHERE THE HELL ARE\nWE NOW" });
-		dictionary.Add("intro_0", new string[2] { "That grey door...", "It lead us to another world?" });
-		dictionary.Add("intro_1", new string[2] { "I guess so.", "Wait a minute..." });
-		dictionary.Add("intro_2", new string[1] { "WHERE'S THE DOOR??" });
-		dictionary.Add("intro_3", new string[1] { "W-well,^05 we did fall for\na while." });
-		dictionary.Add("intro_4", new string[2] { "Guess you're right.", "..." });
-		dictionary.Add("intro_5", new string[2] { "Hey,^10 does anyone else feel...^30\nweird?", "Like,^05 there's something about\nthis place that feels...^20 really\noff." });
-		dictionary.Add("intro_6", new string[1] { "Now that you mention it,^05\nI do feel a bit strange." });
-		dictionary.Add("intro_7", new string[1] { "What about you,^10 Kris?" });
-		dictionary.Add("ring_0", new string[3] { "...^20 My ring is glowing?", "What the heck???", "It IS glowing...!" });
-		dictionary.Add("ring_1", new string[2] { "...^20 Wait,^05 why is my ring\nglowing on you...?", "Can we switch for a\nsecond?" });
-		dictionary.Add("ring_2", new string[3] { "...^20 Hey,^05 what's that thing\nthat's glowing in your\npocket?", "... My ring???\n^20Why is it glowing?", "Can you give it\nto me?" });
-		dictionary.Add("ring_3", new string[3] { "...^20 My ring is glowing?", "Wait,^05 I thought you took\nthis from me!", "What happened to the\n{0} that you\ngave me...?" });
-		dictionary.Add("ring_swap", new string[1] { "(You and Noelle swapped\nweapons.)" });
-		dictionary.Add("ring_equip", new string[1] { "(Noelle equipped the\nSnow Ring.)" });
-		dictionary.Add("lightclear_0", new string[2] { "Kris...?", "What's with that glowing\naura that's coming out of\nyou?" });
-		dictionary.Add("lightclear_1", new string[3] { "WAIT.", "Are we able to cast\nmagic here???", "Kris,^10 let's try casting\nsomething to make us\nfeel less weird!" });
-		dictionary.Add("lightclear_2", new string[1] { "(Your SOUL shined its power\nonto Noelle.)" });
-		dictionary.Add("lightclear_3", new string[1] { "(Noelle shined her light\nonto your SOUL.)" });
-		dictionary.Add("lightclear_4", new string[1] { "You and Noelle cast LightClear!" });
-		return dictionary;
-	}
-
 	private void Update()
 	{
 		glowFrames = (glowFrames + 1) % 30;
@@ -113,7 +86,7 @@ public class EarthboundFirstCutscene : CutsceneBase
 			{
 				state = 1;
 				frames = 0;
-				StartTextEB(GetStringArray("the_line_eb"), "snd_txtsus");
+				StartTextEB(new string[1] { "GOD DAMN IT KRIS\nWHERE THE HELL ARE\nWE NOW" }, "snd_txtsus");
 			}
 		}
 		if (state == 1)
@@ -124,14 +97,14 @@ public class EarthboundFirstCutscene : CutsceneBase
 			}
 			if (textState == 0)
 			{
-				StartTextEB(GetStringArray("intro_0"), "snd_txtnoe");
+				StartTextEB(new string[2] { "That grey door...", "It lead us to another world?" }, "snd_txtnoe");
 				textState++;
 			}
 			else if (textState == 1)
 			{
 				kris.SetSprite("eb/spr_kr_up");
 				susie.SetSprite("eb/spr_su_right");
-				StartTextEB(GetStringArray("intro_1"), "snd_txtsus");
+				StartTextEB(new string[2] { "I guess so.", "Wait a minute..." }, "snd_txtsus");
 				textState++;
 			}
 			else if (textState == 2)
@@ -156,19 +129,19 @@ public class EarthboundFirstCutscene : CutsceneBase
 				if (frames == 90)
 				{
 					frames = 0;
-					StartTextEB(GetStringArray("intro_2"), "snd_txtsus");
+					StartTextEB(new string[1] { "WHERE'S THE DOOR??" }, "snd_txtsus");
 					textState++;
 				}
 			}
 			else if (textState == 3)
 			{
 				noelle.SetSprite("eb/spr_no_up");
-				StartTextEB(GetStringArray("intro_3"), "snd_txtnoe");
+				StartTextEB(new string[1] { "W-well,^05 we did fall for\na while." }, "snd_txtnoe");
 				textState++;
 			}
 			else if (textState == 4)
 			{
-				StartTextEB(GetStringArray("intro_4"), "snd_txtsus");
+				StartTextEB(new string[2] { "Guess you're right.", "..." }, "snd_txtsus");
 				textState++;
 			}
 			else if (textState == 5)
@@ -176,14 +149,14 @@ public class EarthboundFirstCutscene : CutsceneBase
 				susie.SetSprite("eb/spr_su_right");
 				noelle.SetSprite("eb/spr_no_right");
 				noelle.GetComponent<SpriteRenderer>().flipX = true;
-				StartTextEB(GetStringArray("intro_5"), "snd_txtsus");
+				StartTextEB(new string[2] { "Hey,^10 does anyone else feel...^30\nweird?", "Like,^05 there's something about\nthis place that feels...^20 really\noff." }, "snd_txtsus");
 				textState++;
 			}
 			else if (textState == 6)
 			{
 				noelle.SetSprite("eb/spr_no_right");
 				noelle.GetComponent<SpriteRenderer>().flipX = false;
-				StartTextEB(GetStringArray("intro_6"), "snd_txtnoe");
+				StartTextEB(new string[1] { "Now that you mention it,^05\nI do feel a bit strange." }, "snd_txtnoe");
 				textState++;
 			}
 			else if (textState == 7)
@@ -203,7 +176,7 @@ public class EarthboundFirstCutscene : CutsceneBase
 					kris.SetSprite("eb/spr_kr_right");
 					noelle.SetSprite("eb/spr_no_right");
 					noelle.GetComponent<SpriteRenderer>().flipX = true;
-					StartTextEB(GetStringArray("intro_7"), "snd_txtnoe");
+					StartTextEB(new string[1] { "What about you,^10 Kris?" }, "snd_txtnoe");
 					textState = 8;
 					frames = 0;
 				}
@@ -213,7 +186,24 @@ public class EarthboundFirstCutscene : CutsceneBase
 				state = 2;
 				textState = 0;
 				needToPlayEquipText = true;
-				StartTextEB(GetStringArrayFormatted("ring_" + ringState, oldWeapon), "snd_txtnoe");
+				string[] strings = new string[0];
+				if (ringState == 0)
+				{
+					strings = new string[3] { "...^20 My ring is glowing?", "What the heck???", "It IS glowing...!" };
+				}
+				else if (ringState == 1)
+				{
+					strings = new string[2] { "...^20 Wait,^05 why is my ring\nglowing on you...?", "Can we switch for a\nsecond?" };
+				}
+				else if (ringState == 2)
+				{
+					strings = new string[3] { "...^20 Hey,^05 what's that thing\nthat's glowing in your\npocket?", "... My ring???\n^20Why is it glowing?", "Can you give it\nto me?" };
+				}
+				else if (ringState == 3)
+				{
+					strings = new string[3] { "...^20 My ring is glowing?", "Wait,^05 I thought you took\nthis from me!", "What happened to the\n{0} that you\ngave me...?" };
+				}
+				StartTextEB(Localizer.FormatArray(strings, oldWeapon), "snd_txtnoe");
 			}
 		}
 		else
@@ -233,13 +223,13 @@ public class EarthboundFirstCutscene : CutsceneBase
 						PlaySFX("sounds/snd_equip_eb");
 						noelle.SetSprite("eb/spr_no_ring_look");
 						noelle.GetComponent<SpriteRenderer>().flipX = false;
-						StartTextEB(GetStringArray((ringState == 1) ? "ring_swap" : "ring_equip"), "snd_txteb");
+						StartTextEB(new string[1] { (ringState == 1) ? "(You and Noelle swapped\nweapons.)" : "(Noelle equipped the\nSnow Ring.)" }, "snd_txteb");
 					}
 					else
 					{
 						playKrisGlow = true;
 						kris.GetComponent<SpriteRenderer>().flipX = true;
-						StartTextEB(GetStringArray("lightclear_0"), "snd_txtsus");
+						StartTextEB(new string[2] { "Kris...?", "What's with that glowing\naura that's coming out of\nyou?" }, "snd_txtsus");
 						textState++;
 					}
 				}
@@ -247,7 +237,7 @@ public class EarthboundFirstCutscene : CutsceneBase
 				{
 					noelle.SetSprite("eb/spr_no_ring_look_shocked");
 					kris.GetComponent<SpriteRenderer>().flipX = false;
-					StartTextEB(GetStringArray("lightclear_1"), "snd_txtnoe");
+					StartTextEB(new string[3] { "WAIT.", "Are we able to cast\nmagic here???", "Kris,^10 let's try casting\nsomething to make us\nfeel less weird!" }, "snd_txtnoe");
 					textState++;
 				}
 				else if (textState == 2)
@@ -255,7 +245,7 @@ public class EarthboundFirstCutscene : CutsceneBase
 					playKrisGlow = false;
 					kris.SetSprite("eb/spr_kr_point");
 					Object.Instantiate(Resources.Load<GameObject>("vfx/SOULShine"), kris.transform.position - new Vector3(0f, 0.1f), Quaternion.identity);
-					StartTextEB(GetStringArray("lightclear_2"), "snd_txteb");
+					StartTextEB(new string[1] { "(Your SOUL shined its power\nonto Noelle.)" }, "snd_txteb");
 					textState++;
 				}
 				else if (textState == 3)
@@ -264,16 +254,16 @@ public class EarthboundFirstCutscene : CutsceneBase
 					soul = new GameObject("SOUL").AddComponent<SOUL>();
 					soul.transform.position = new Vector3(1.9f, -1.49f);
 					GameObject.Find("LightBarBase").transform.position = new Vector3(1.9f, -1.49f);
-					soul.CreateSOUL(new Color(1f, 0f, 0f), false, false);
+					soul.CreateSOUL(new Color(1f, 0f, 0f), monster: false, player: false);
 					soul.GetComponent<SpriteRenderer>().sortingOrder = 300;
-					soul.Emanate(true);
+					soul.Emanate(playSound: true);
 					noelle.SetSprite("eb/spr_no_cast");
-					StartTextEB(GetStringArray("lightclear_3"), "snd_txteb");
+					StartTextEB(new string[1] { "(Noelle shined her light\nonto your SOUL.)" }, "snd_txteb");
 					textState++;
 				}
 				else if (textState == 4)
 				{
-					StartTextEB(GetStringArray("lightclear_4"), "snd_txteb");
+					StartTextEB(new string[1] { "You and Noelle cast LightClear!" }, "snd_txteb");
 					textState++;
 					frames = 0;
 				}
@@ -286,7 +276,7 @@ public class EarthboundFirstCutscene : CutsceneBase
 					frames++;
 					if (frames == 1)
 					{
-						soul.Emanate(false);
+						soul.Emanate(playSound: false);
 						gm.PlayGlobalSFX("sounds/snd_revival");
 					}
 					SpriteRenderer[] componentsInChildren = GameObject.Find("LightBarBase").GetComponentsInChildren<SpriteRenderer>();
@@ -336,7 +326,7 @@ public class EarthboundFirstCutscene : CutsceneBase
 	{
 		txtEB = Object.Instantiate(Resources.Load<GameObject>("ui/TextBoxEB"), GameObject.Find("Canvas").transform).GetComponent<TextBoxEB>();
 		txtEB.SetSound(sound);
-		txtEB.StartTextBox(dialogue, false);
+		txtEB.StartTextBox(dialogue, allowMovementOnDestroy: false);
 	}
 
 	public override void StartCutscene(params object[] par)
@@ -362,9 +352,9 @@ public class EarthboundFirstCutscene : CutsceneBase
 		else
 		{
 			bool flag = false;
-			for (int i = 0; i < gm.GetItemList().Count; i++)
+			for (int i = 0; i < gm.GetEquipmentItemList().Count; i++)
 			{
-				if (gm.GetItem(i) == 8)
+				if (gm.GetEquipment(i) == 8)
 				{
 					gm.ChangeWeapon(2, i);
 					flag = true;
@@ -379,9 +369,9 @@ public class EarthboundFirstCutscene : CutsceneBase
 			{
 				ringState = 3;
 				oldWeapon = Items.ItemName(gm.GetWeapon(2));
-				if (gm.NumItemFreeSpace() > 0)
+				if (gm.NumItemFreeSpace(equipment: true) > 0)
 				{
-					gm.AddItem(gm.GetWeapon(2));
+					gm.AddEquipment(gm.GetWeapon(2));
 				}
 				gm.ForceWeapon(2, 8);
 			}
@@ -435,6 +425,6 @@ public class EarthboundFirstCutscene : CutsceneBase
 		}
 		gm.SetFlag(64, 1);
 		gm.SetFramerate(60);
-		StartTextEB(GetStringArray("dark"), "snd_txtsus");
+		StartTextEB(new string[3] { "Ugh...", "...", "What the hell...?" }, "snd_txtsus");
 	}
 }

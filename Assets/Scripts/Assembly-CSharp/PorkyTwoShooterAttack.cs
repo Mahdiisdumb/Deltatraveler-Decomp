@@ -19,7 +19,7 @@ public class PorkyTwoShooterAttack : AttackBase
 		}
 		for (int j = 0; j < num; j++)
 		{
-			Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/porky/PorkyShooterBullet"), base.transform).GetComponent<PorkyShooterBullet>().Activate(j, num, true);
+			Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/porky/PorkyShooterBullet"), base.transform).GetComponent<PorkyShooterBullet>().Activate(j, num, flip: true);
 		}
 	}
 }

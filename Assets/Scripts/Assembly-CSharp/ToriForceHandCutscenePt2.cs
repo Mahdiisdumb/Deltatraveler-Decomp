@@ -32,7 +32,7 @@ public class ToriForceHandCutscenePt2 : CutsceneBase
 		{
 			if (susie.transform.position.x < -3.68f)
 			{
-				susie.SetSelfAnimControl(false);
+				susie.SetSelfAnimControl(setAnimControl: false);
 				susie.GetComponent<Animator>().Play("RunRight");
 				susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(-3.68f, 0.31f), 0.25f);
 				susie.GetComponent<Animator>().SetFloat("speed", 1.5f);
@@ -50,7 +50,7 @@ public class ToriForceHandCutscenePt2 : CutsceneBase
 				if (frames < 20)
 				{
 					float num = (float)frames / 20f;
-					susie.transform.position = new Vector3(Mathf.Lerp(-3.68f, -1.78f, Mathf.Sin(num * (float)Math.PI * 0.5f)), 0.31f);
+					susie.transform.position = new Vector3(Mathf.Lerp(-3.68f, -1.78f, Mathf.Sin(num * MathF.PI * 0.5f)), 0.31f);
 				}
 				else
 				{
@@ -91,12 +91,12 @@ public class ToriForceHandCutscenePt2 : CutsceneBase
 				if (kris.transform.position.y != 0.79f)
 				{
 					kris.ChangeDirection(Vector2.down);
-					kris.GetComponent<Animator>().SetBool("isMoving", true);
+					kris.GetComponent<Animator>().SetBool("isMoving", value: true);
 					kris.transform.position = Vector3.MoveTowards(kris.transform.position, new Vector3(-0.49f, 0.79f), 0.125f);
 				}
 				else
 				{
-					kris.GetComponent<Animator>().SetBool("isMoving", false);
+					kris.GetComponent<Animator>().SetBool("isMoving", value: false);
 				}
 				if (toriel.transform.position.x != -0.75f)
 				{
@@ -146,7 +146,7 @@ public class ToriForceHandCutscenePt2 : CutsceneBase
 		frames++;
 		if (frames == 1)
 		{
-			UnityEngine.Object.FindObjectOfType<InteractionTrigger>().GetComponent<BoxCollider2D>().enabled = false;
+			Util.FindObjectOfType<InteractionTrigger>().GetComponent<BoxCollider2D>().enabled = false;
 			SpriteRenderer[] componentsInChildren = GameObject.Find("MAP").GetComponentsInChildren<SpriteRenderer>();
 			for (int i = 0; i < componentsInChildren.Length; i++)
 			{
@@ -198,7 +198,7 @@ public class ToriForceHandCutscenePt2 : CutsceneBase
 		if (frames == 25)
 		{
 			gm.StartBattle(29);
-			EndCutscene(false);
+			EndCutscene(enablePlayerMovement: false);
 		}
 	}
 
@@ -212,13 +212,13 @@ public class ToriForceHandCutscenePt2 : CutsceneBase
 			soul.position = new Vector3(-1.77f, 0.13f);
 			gm.StopMusic();
 			kris.ChangeDirection(Vector2.right);
-			kris.SetSelfAnimControl(false);
-			kris.GetComponent<Animator>().SetBool("isMoving", false);
+			kris.SetSelfAnimControl(setAnimControl: false);
+			kris.GetComponent<Animator>().SetBool("isMoving", value: false);
 			susie.transform.position = new Vector3(-7.49f, 0.31f);
 			susie.UseUnhappySprites();
-			susie.SetSelfAnimControl(false);
+			susie.SetSelfAnimControl(setAnimControl: false);
 			susie.ChangeDirection(Vector2.right);
-			susie.GetComponent<Animator>().SetBool("isMoving", false);
+			susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 			kris.GetComponent<Animator>().Play("ToriRight");
 		}
 		else
@@ -228,7 +228,7 @@ public class ToriForceHandCutscenePt2 : CutsceneBase
 		if (gm.IsTestMode())
 		{
 			kris.InitiateBattle(29);
-			EndCutscene(false);
+			EndCutscene(enablePlayerMovement: false);
 		}
 	}
 }

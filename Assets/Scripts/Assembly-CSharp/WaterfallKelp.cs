@@ -19,7 +19,7 @@ public class WaterfallKelp : MonoBehaviour
 		{
 			GetComponent<SpriteRenderer>().sprite = sprites[1];
 		}
-		if (!objects.Contains(collision.gameObject))
+		if ((bool)collision && !objects.Contains(collision.gameObject))
 		{
 			objects.Add(collision.gameObject);
 			GetComponent<AudioSource>().Play();
@@ -28,7 +28,7 @@ public class WaterfallKelp : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if (objects.Contains(collision.gameObject))
+		if ((bool)collision && objects.Contains(collision.gameObject))
 		{
 			objects.Remove(collision.gameObject);
 		}

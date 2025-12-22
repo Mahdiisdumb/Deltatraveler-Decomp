@@ -29,7 +29,7 @@ public class FightTargetBarQuad : FightTargetBar
 
 	protected override void Update()
 	{
-		bool activated2 = activated;
+		_ = activated;
 		if (!ending || endFrames >= 12)
 		{
 			return;
@@ -42,12 +42,12 @@ public class FightTargetBarQuad : FightTargetBar
 			{
 				num = 0;
 			}
-			enemy = Object.FindObjectOfType<FightTarget>().GetEnemies()[num];
+			enemy = Util.FindObjectOfType<FightTarget>().GetEnemies()[num];
 		}
 		if (endFrames == 12 && enemyAlive && !miss)
 		{
 			MonoBehaviour.print("SUCCESS QUAD: " + GetSuccessRate());
-			enemy.Hit(partyMember, GetSuccessRate(), true);
+			enemy.Hit(partyMember, GetSuccessRate(), playSound: true);
 		}
 	}
 
@@ -122,7 +122,7 @@ public class FightTargetBarQuad : FightTargetBar
 			}
 			if (GetSuccessRate() >= 20f)
 			{
-				Object.FindObjectOfType<TPBar>().AddTP(5);
+				Util.FindObjectOfType<TPBar>().AddTP(5);
 				GetComponent<AudioSource>().Play();
 			}
 		}
@@ -141,13 +141,13 @@ public class FightTargetBarQuad : FightTargetBar
 			ending = true;
 			if ((bool)enemy && IsACompleteMiss())
 			{
-				enemy.Hit(partyMember, 0f, false);
+				enemy.Hit(partyMember, 0f, playSound: false);
 				miss = true;
 			}
 			else if ((bool)enemy)
 			{
 				int num = ((partyMember > 2) ? 3 : partyMember);
-				Object.FindObjectOfType<FightTarget>().PlayHitAnimation(enemy, partyMember, GetSuccessRate(), num);
+				Util.FindObjectOfType<FightTarget>().PlayHitAnimation(enemy, partyMember, GetSuccessRate(), num);
 			}
 		}
 	}

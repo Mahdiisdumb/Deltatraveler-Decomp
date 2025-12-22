@@ -42,7 +42,7 @@ public class Napstablook : EnemyBase
 		satisfyTxt = flavorTxt;
 		chatter = new string[3] { "i'm \nfine, \nthanks.", "just \npluggin \nalong...", "nnnnnn\nggghhh." };
 		actNames = new string[3] { "Flirt", "Threat", "Cheer" };
-		sActionName = "Talk";
+		susieMiniACTs[0].SetName("Talk");
 		defaultChatSize = "RightSmall";
 		defaultChatPos = new Vector2(135f, 57f);
 		exp = 0;
@@ -107,12 +107,12 @@ public class Napstablook : EnemyBase
 				rawDmg = 70f;
 				CombineParts();
 				obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/" + enemyName.Replace(".", "") + "/spr_b_" + fileName + "_dmg");
-				Object.FindObjectOfType<BattleManager>().StopMusic();
-				Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
+				Util.FindObjectOfType<BattleManager>().StopMusic();
+				Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
 				aud.clip = Resources.Load<AudioClip>("sounds/snd_damage");
 				aud.Play();
 			}
-			float num3 = 1.5f + (float)Object.FindObjectOfType<GameManager>().GetATK(partyMember) / 3f;
+			float num3 = 1.5f + (float)PartyMembers.GetATK(partyMember) / 3f;
 			num = Mathf.RoundToInt(rawDmg * num3 - (float)(def + buffs[1]));
 			if (num <= 0)
 			{
@@ -154,11 +154,11 @@ public class Napstablook : EnemyBase
 				component.gameObject.name = "EnemyHP" + obj.transform.parent.gameObject.name[5];
 				component.transform.localScale = new Vector2(1f, 1f);
 				component.transform.localPosition = hpPos;
-				component.StartHP(num, num2, maxHp, partyMember, hpWidth, false);
+				component.StartHP(num, num2, maxHp, partyMember, hpWidth, mercy: false);
 			}
 			else
 			{
-				GameObject.Find(text).GetComponent<EnemyHPBar>().StartHP(num, num2, maxHp, partyMember, false);
+				GameObject.Find(text).GetComponent<EnemyHPBar>().StartHP(num, num2, maxHp, partyMember, mercy: false);
 			}
 		}
 	}
@@ -181,7 +181,7 @@ public class Napstablook : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		if (i == 1)
 		{
@@ -196,7 +196,7 @@ public class Napstablook : EnemyBase
 					{
 						if (susieConvince == 4)
 						{
-							Object.FindObjectOfType<GameManager>().SetFlag(12, 0);
+							Util.GameManager().SetFlag(12, 0);
 							return new string[1] { "su_neutral`snd_txtsus`* So if you could just\n  let us get home,^05 we\n  will." };
 						}
 						tired = true;
@@ -208,7 +208,7 @@ public class Napstablook : EnemyBase
 			}
 			return new string[2] { "* Susie tried to talk to\n  Napstablook.", "su_side`snd_txtsus`* Hey, there's something\n  that you need to\n  understand." };
 		}
-		return base.PerformAssistAct(i);
+		return base.PerformAssistAct_Old(i);
 	}
 
 	public override string GetRandomFlavorText()
@@ -263,7 +263,7 @@ public class Napstablook : EnemyBase
 			type = "RightWide";
 			pos = new Vector2(180f, 57f);
 			exp = 25;
-			Object.FindObjectOfType<BattleManager>().StopMusic();
+			Util.FindObjectOfType<BattleManager>().StopMusic();
 			text = new string[5] { "what the...?", "h-^10how did you...", "you used her to \nkill me.", "all just because \ni wanted to take \na nap...", "why......" };
 		}
 		else if (lastAct == 10)

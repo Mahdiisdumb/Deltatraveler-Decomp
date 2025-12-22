@@ -28,7 +28,7 @@ public class FloweyPelletStandard : BulletBase
 		frames++;
 		if (frames == (hardmode ? 12 : 15) + frameOffset)
 		{
-			velocity = Vector3.MoveTowards(base.transform.position, Object.FindObjectOfType<SOUL>().transform.position, speed / 48f) - base.transform.position;
+			velocity = Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position, speed / 48f) - base.transform.position;
 		}
 		base.transform.position += velocity;
 		if (frames % 6 == 3)

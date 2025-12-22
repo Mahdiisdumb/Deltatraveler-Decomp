@@ -11,13 +11,13 @@ public class BunnyCheck : MonoBehaviour
 
 	private AudioSource bunnyMusic;
 
-	private Vector2 bunInitialPos;
+	public Vector2 bunInitialPos;
 
 	private float songBPM = 140f;
 
 	private int lastStep = -1;
 
-	private void Start()
+	private void Awake()
 	{
 		whatTheBunDoin = UnityEngine.Random.Range(0, 2);
 		bnuuy = GetComponent<SpriteRenderer>();
@@ -44,6 +44,14 @@ public class BunnyCheck : MonoBehaviour
 		}
 	}
 
+	private void Start()
+	{
+		if ((bool)Util.GameManager())
+		{
+			UnityEngine.Object.Destroy(Util.GameManager().gameObject);
+		}
+	}
+
 	private void Update()
 	{
 		float num = 60f / songBPM;
@@ -52,12 +60,12 @@ public class BunnyCheck : MonoBehaviour
 		{
 			bnuuy.sprite = bunSprites[(int)Mathf.Floor(num2 * 2f) % 2];
 			bnuuy.GetComponent<SpriteRenderer>().flipX = Mathf.Floor(num2) % 4f > 1f;
-			bnuuy.transform.position = new Vector2(0f, bunInitialPos.y + Mathf.Abs(Mathf.Sin(num2 * (float)Math.PI)) / 2f);
+			bnuuy.transform.position = new Vector2(0f, bunInitialPos.y + Mathf.Abs(Mathf.Sin(num2 * MathF.PI)) / 2f);
 			return;
 		}
 		bnuuy.sprite = bunSprites[(int)Mathf.Floor(num2 / 2f) % 2];
-		bnuuy.transform.localScale = new Vector2(2f, 2f + Mathf.Sin(num2 * (float)Math.PI / 2f) / 4f);
-		int num3 = (int)Mathf.Floor(num2 / 2f);
+        bnuuy.transform.position = new Vector2(bunInitialPos.x, bunInitialPos.y + Mathf.Abs(Mathf.Sin(num2 * MathF.PI)) / 2f);
+        int num3 = (int)Mathf.Floor(num2 / 2f);
 		if (num3 != lastStep)
 		{
 			new GameObject("SnoozeZ").AddComponent<SnoreParticle>().CreateSnore(base.transform.position + new Vector3(-1f, 1f, 0f), 0.5f);

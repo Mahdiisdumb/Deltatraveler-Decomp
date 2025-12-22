@@ -25,7 +25,7 @@ public class LesserDogDogBullet : BulletBase
 			if (frames == 10)
 			{
 				PlaySFX("sounds/snd_doghurt1");
-				runRight = UnityEngine.Object.FindObjectOfType<SOUL>().transform.position.x < base.transform.position.x;
+				runRight = Util.FindObjectOfType<SOUL>().transform.position.x < base.transform.position.x;
 				sr.flipX = !runRight;
 				sr.sprite = sprites[1];
 			}
@@ -44,7 +44,7 @@ public class LesserDogDogBullet : BulletBase
 				PlaySFX("sounds/snd_jump");
 				sr.sprite = sprites[4];
 				float num3 = UnityEngine.Random.Range(25f, 75f);
-				velocity = new Vector3(Mathf.Cos(num3 * ((float)Math.PI / 180f)), Mathf.Sin(num3 * ((float)Math.PI / 180f))) * num2;
+				velocity = new Vector3(Mathf.Cos(num3 * (MathF.PI / 180f)), Mathf.Sin(num3 * (MathF.PI / 180f))) * num2;
 				if (!runRight)
 				{
 					velocity.x *= -1f;

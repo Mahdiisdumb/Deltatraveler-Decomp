@@ -14,7 +14,7 @@ public class BeeBullet : BulletBase
 	{
 		base.Awake();
 		baseDmg = 8;
-		if (Object.FindObjectOfType<MightyBear>().IsLectured())
+		if (Util.FindObjectOfType<MightyBear>().IsLectured())
 		{
 			baseDmg = 7;
 		}
@@ -55,13 +55,13 @@ public class BeeBullet : BulletBase
 
 	public void PissOff()
 	{
-		speed = (Object.FindObjectOfType<MightyBear>().IsLectured() ? 7 : 8);
+		speed = (Util.FindObjectOfType<MightyBear>().IsLectured() ? 7 : 8);
 	}
 
 	public void KillPlayer()
 	{
 		kill = true;
-		tradjectory = Vector3.MoveTowards(base.transform.position, Object.FindObjectOfType<SOUL>().transform.position, 1f / 48f) - base.transform.position;
+		tradjectory = Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position, 1f / 48f) - base.transform.position;
 		base.transform.up = -tradjectory;
 	}
 }

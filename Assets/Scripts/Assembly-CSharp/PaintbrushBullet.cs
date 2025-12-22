@@ -34,10 +34,10 @@ public class PaintbrushBullet : BulletBase
 			base.transform.position = new Vector3(Random.Range(-0.82f, 2.55f), 2.32f);
 			base.transform.eulerAngles = new Vector3(0f, 0f, 270f);
 		}
-		if ((bool)Object.FindObjectOfType<Carpainter>())
+		if ((bool)Util.FindObjectOfType<Carpainter>())
 		{
-			base.transform.right = Object.FindObjectOfType<SOUL>().transform.position - base.transform.GetChild(0).position;
-			velocity = Vector3.MoveTowards(base.transform.GetChild(0).position, Object.FindObjectOfType<SOUL>().transform.position, 1f / 12f) - base.transform.GetChild(0).position;
+			base.transform.right = Util.FindObjectOfType<SOUL>().transform.position - base.transform.GetChild(0).position;
+			velocity = Vector3.MoveTowards(base.transform.GetChild(0).position, Util.FindObjectOfType<SOUL>().transform.position, 1f / 12f) - base.transform.GetChild(0).position;
 		}
 		SpriteRenderer[] componentsInChildren = GetComponentsInChildren<SpriteRenderer>();
 		for (int i = 0; i < componentsInChildren.Length; i++)
@@ -81,13 +81,13 @@ public class PaintbrushBullet : BulletBase
 
 	public override void SOULHit()
 	{
-		if ((bool)Object.FindObjectOfType<PaintbrushAttack>())
+		if ((bool)Util.FindObjectOfType<PaintbrushAttack>())
 		{
-			Object.FindObjectOfType<PaintbrushAttack>().GetHit();
+			Util.FindObjectOfType<PaintbrushAttack>().GetHit();
 		}
-		if ((bool)Object.FindObjectOfType<CarPaintbrushAttack>())
+		if ((bool)Util.FindObjectOfType<CarPaintbrushAttack>())
 		{
-			Object.FindObjectOfType<CarPaintbrushAttack>().GetHit();
+			Util.FindObjectOfType<CarPaintbrushAttack>().GetHit();
 		}
 	}
 }

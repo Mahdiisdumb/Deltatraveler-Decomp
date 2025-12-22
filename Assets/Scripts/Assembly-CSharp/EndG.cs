@@ -22,6 +22,7 @@ public class EndG : MonoBehaviour
 	{
 		text = GameObject.Find("GText").GetComponent<TextUT>();
 		flowey = GameObject.Find("Flowery").transform;
+		Object.FindAnyObjectByType<Fade>().FadeIn(0);
 	}
 
 	private void Start()

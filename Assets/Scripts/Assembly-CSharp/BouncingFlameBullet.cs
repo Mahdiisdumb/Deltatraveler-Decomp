@@ -53,7 +53,7 @@ public class BouncingFlameBullet : FlameBullet
 
 	public void BonBonGoGetEm()
 	{
-		velocity = Vector3.MoveTowards(base.transform.position, Object.FindObjectOfType<SOUL>().transform.position, 1f / 48f) - base.transform.position;
+		velocity = Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position, 1f / 48f) - base.transform.position;
 		moving = true;
 	}
 }

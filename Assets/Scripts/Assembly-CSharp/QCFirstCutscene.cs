@@ -33,36 +33,36 @@ public class QCFirstCutscene : CutsceneBase
 				else
 				{
 					ChangeDirection(qc, Vector2.up);
-					SetMoveAnim(qc, true);
+					SetMoveAnim(qc, isMoving: true);
 				}
 			}
 			if (frames >= 10)
 			{
 				if (!MoveTo(kris, new Vector3(0.79f, -1.18f), 3f))
 				{
-					SetMoveAnim(kris, false);
+					SetMoveAnim(kris, isMoving: false);
 				}
 				else
 				{
-					SetMoveAnim(kris, true, 0.6f);
+					SetMoveAnim(kris, isMoving: true, 0.6f);
 				}
 			}
 			if (frames >= 15 && noellePresent)
 			{
 				if (!MoveTo(noelle, new Vector3(-0.69f, -0.7f), 4f))
 				{
-					SetMoveAnim(noelle, false);
+					SetMoveAnim(noelle, isMoving: false);
 				}
 				else
 				{
-					SetMoveAnim(noelle, true);
+					SetMoveAnim(noelle, isMoving: true);
 				}
 			}
 			if (frames >= 20)
 			{
 				if (frames == 20)
 				{
-					SetMoveAnim(susie, true);
+					SetMoveAnim(susie, isMoving: true);
 				}
 				if (susieMoveState == 0 && !MoveTo(susie, new Vector3(1.33f, -2.4f), 4f))
 				{
@@ -77,7 +77,7 @@ public class QCFirstCutscene : CutsceneBase
 				{
 					susie.GetComponent<SpriteRenderer>().enabled = false;
 					ChangeDirection(susie, Vector2.left);
-					SetMoveAnim(susie, false);
+					SetMoveAnim(susie, isMoving: false);
 					string text = (noellePresent ? "0" : "1");
 					SetSprite(GameObject.Find("toplayer").transform, "overworld/snow_objects/spr_bnuy_home_0_susie_" + text);
 				}
@@ -296,7 +296,7 @@ public class QCFirstCutscene : CutsceneBase
 						ChangeDirection(kris, Vector2.right);
 						SetSprite(GameObject.Find("toplayer").transform, "overworld/snow_objects/spr_bnuy_home_0_toplayer");
 						susie.GetComponent<SpriteRenderer>().enabled = true;
-						SetSprite(susie, "spr_su_wtf", true);
+						SetSprite(susie, "spr_su_wtf", flipX: true);
 					}
 					else if (AtLine(44))
 					{
@@ -365,9 +365,9 @@ public class QCFirstCutscene : CutsceneBase
 					ChangeDirection(susie, Vector2.up);
 					ChangeDirection(noelle, Vector2.right);
 					noelle.EnableAnimator();
-					SetMoveAnim(kris, true);
-					SetMoveAnim(susie, true);
-					SetMoveAnim(noelle, true);
+					SetMoveAnim(kris, isMoving: true);
+					SetMoveAnim(susie, isMoving: true);
+					SetMoveAnim(noelle, isMoving: true);
 				}
 				MoveTo(kris, new Vector3(3.48f, 1.44f), 3f);
 				MoveTo(susie, new Vector3(4.3f, 3.44f), 3f);
@@ -381,7 +381,7 @@ public class QCFirstCutscene : CutsceneBase
 				}
 				if (frames == 45)
 				{
-					gm.LoadArea(89, true, new Vector2(-3.32f, -2.46f), Vector2.up);
+					gm.LoadArea(89, fadeIn: true, new Vector2(-3.32f, -2.46f), Vector2.up);
 				}
 			}
 		}
@@ -398,7 +398,7 @@ public class QCFirstCutscene : CutsceneBase
 		qc = GameObject.Find("QC").GetComponent<Animator>();
 		qc.enabled = true;
 		qc.transform.position = new Vector3(-0.13f, -0.48f);
-		Object.Destroy(Object.FindObjectOfType<SAVEPoint>().gameObject);
+		Object.Destroy(Util.FindObjectOfType<SAVEPoint>().gameObject);
 		StartText(new string[1] { "* Welcome inside!" }, new string[1] { "snd_text" }, new int[1], new string[1] { "" });
 	}
 }

@@ -24,7 +24,7 @@ public class CameraController : MonoBehaviour
 	private void Awake()
 	{
 		SetClamps(GameObject.Find("CameraBound_0").transform.position, GameObject.Find("CameraBound_1").transform.position);
-		GameManager gameManager = Object.FindObjectOfType<GameManager>();
+		GameManager gameManager = Util.GameManager();
 		if (zoneMusic == "mus_cave" && (int)gameManager.GetFlag(65) == 0 && !gameManager.IsTestMode())
 		{
 			zoneMusic = "none";
@@ -71,9 +71,9 @@ public class CameraController : MonoBehaviour
 		{
 			base.transform.position = new Vector3(base.transform.position.x, base.transform.position.y, -10f);
 		}
-		if (!Object.FindObjectOfType<BattleManager>())
+		if (!Util.FindObjectOfType<BattleManager>())
 		{
-			Canvas[] array = Object.FindObjectsOfType<Canvas>();
+			Canvas[] array = Util.FindObjectsOfType<Canvas>();
 			for (int i = 0; i < array.Length; i++)
 			{
 				array[i].transform.position = new Vector3((float)Mathf.RoundToInt(base.transform.position.x * 48f) / 48f, (float)Mathf.RoundToInt(base.transform.position.y * 48f) / 48f, 0f);

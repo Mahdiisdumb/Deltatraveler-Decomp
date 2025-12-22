@@ -28,11 +28,9 @@ public class MemberReference : Record
 
 	public Record Unwrap()
 	{
-		Record record = reference;
-		MemberReference memberReference;
-		while ((memberReference = record as MemberReference) != null)
+		Record record;
+		for (record = reference; record is MemberReference memberReference; record = memberReference.reference)
 		{
-			record = memberReference.reference;
 		}
 		return record;
 	}

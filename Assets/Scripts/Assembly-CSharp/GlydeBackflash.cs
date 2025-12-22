@@ -12,14 +12,14 @@ public class GlydeBackflash : MonoBehaviour
 
 	private void Start()
 	{
-		glyde = UnityEngine.Object.FindObjectOfType<Glyde>();
+		glyde = Util.FindObjectOfType<Glyde>();
 		SetPosition();
 		GetComponent<SpriteRenderer>().enabled = true;
 	}
 
 	private void LateUpdate()
 	{
-		if (!UnityEngine.Object.FindObjectOfType<GlydeAttack>())
+		if (!Util.FindObjectOfType<GlydeAttack>())
 		{
 			UnityEngine.Object.Destroy(base.gameObject);
 			return;
@@ -33,7 +33,7 @@ public class GlydeBackflash : MonoBehaviour
 			for (int i = 0; i < 6; i++)
 			{
 				float num2 = (float)(-20 + i * 8) + UnityEngine.Random.Range(-5f, 5f);
-				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/snowdin/GlydeBullet"), base.transform.position, base.transform.rotation, UnityEngine.Object.FindObjectOfType<GlydeAttack>().transform).GetComponent<GlydeBullet>().Activate(new Vector3(Mathf.Sin(num2 * ((float)Math.PI / 180f)), 0f - Mathf.Cos(num2 * ((float)Math.PI / 180f))));
+				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/snowdin/GlydeBullet"), base.transform.position, base.transform.rotation, Util.FindObjectOfType<GlydeAttack>().transform).GetComponent<GlydeBullet>().Activate(new Vector3(Mathf.Sin(num2 * (MathF.PI / 180f)), 0f - Mathf.Cos(num2 * (MathF.PI / 180f))));
 			}
 			UnityEngine.Object.Destroy(base.gameObject);
 		}

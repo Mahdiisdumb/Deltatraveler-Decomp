@@ -51,7 +51,7 @@ public class JerrySecondBlue : AttackBase
 		hasSpawned = new bool[blueSpawnSpots.Length];
 		sword = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/jerry/JerrySword"), new Vector3(10f, 10f), Quaternion.identity, base.transform).transform;
 		sword.GetComponent<SpriteRenderer>().color = new Color32(0, 60, byte.MaxValue, byte.MaxValue);
-		jerry = UnityEngine.Object.FindObjectOfType<Jerry>();
+		jerry = Util.FindObjectOfType<Jerry>();
 		attackAllTargets = false;
 	}
 
@@ -67,7 +67,7 @@ public class JerrySecondBlue : AttackBase
 			if (frames >= 5 && frames <= 20)
 			{
 				float num = (float)(frames - 5) / 15f;
-				num = Mathf.Sin(num * (float)Math.PI * 0.5f);
+				num = Mathf.Sin(num * MathF.PI * 0.5f);
 				sword.position = Vector3.Lerp(new Vector3(-1.09f, 2.84f), new Vector3(-1.03f, 4.76f), num);
 				sword.eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(-76f, -112f, num));
 			}
@@ -88,7 +88,7 @@ public class JerrySecondBlue : AttackBase
 				jerry.GetPart("body").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Jerry/spr_b_jerry_toss_sword_up_1");
 				jerry.GetPart("sword").GetComponent<SpriteRenderer>().enabled = false;
 				jerry.GetPart("body").Find("headband").localPosition += new Vector3(0f, 0.125f);
-				UnityEngine.Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+				Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 				Util.GameManager().PlayGlobalSFX("sounds/snd_spearappear_choppy");
 			}
 			else if (frames == 8)
@@ -141,7 +141,7 @@ public class JerrySecondBlue : AttackBase
 			if (frames >= 120 && frames <= 180)
 			{
 				float num3 = (float)(frames - 120) / 60f;
-				num3 = Mathf.Sin(num3 * (float)Math.PI * 0.5f);
+				num3 = Mathf.Sin(num3 * MathF.PI * 0.5f);
 				sword.position = new Vector3(Mathf.Lerp(10.28f, 2.09f, num3), -2.75f);
 				sword.localScale = new Vector3(-1f, Mathf.Lerp(1f, 1.75f, num3), 1f);
 			}
@@ -153,8 +153,8 @@ public class JerrySecondBlue : AttackBase
 				}
 				float num4 = (float)(frames - 420) / 30f;
 				num4 = num4 * num4 * num4 * (num4 * (6f * num4 - 15f) + 10f);
-				float t = Mathf.Sin((float)((frames - 420) * 6) * ((float)Math.PI / 180f));
-				sword.position = Vector3.Lerp(new Vector3(2.09f, -2.75f), new Vector3(6.98f, Mathf.Lerp(-1.44f, UnityEngine.Object.FindObjectOfType<SOUL>().transform.position.y, (float)(frames - 445) / 5f)), num4);
+				float t = Mathf.Sin((float)((frames - 420) * 6) * (MathF.PI / 180f));
+				sword.position = Vector3.Lerp(new Vector3(2.09f, -2.75f), new Vector3(6.98f, Mathf.Lerp(-1.44f, Util.FindObjectOfType<SOUL>().transform.position.y, (float)(frames - 445) / 5f)), num4);
 				sword.localScale = new Vector3(-1f, Mathf.Lerp(1.75f, 1f, num4), 1f);
 				sword.eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(90f, 115f, t));
 			}
@@ -164,9 +164,9 @@ public class JerrySecondBlue : AttackBase
 				{
 					sword.GetComponent<JerrySword>().PlaySFX("sounds/snd_spearthrow");
 				}
-				if (UnityEngine.Object.FindObjectOfType<SOUL>().transform.position.x < sword.position.x)
+				if (Util.FindObjectOfType<SOUL>().transform.position.x < sword.position.x)
 				{
-					direction = (UnityEngine.Object.FindObjectOfType<SOUL>().transform.position - sword.position).normalized;
+					direction = (Util.FindObjectOfType<SOUL>().transform.position - sword.position).normalized;
 					direction.x = 0f - Mathf.Abs(direction.x);
 					if (Mathf.Abs(direction.x) < 2f / 3f)
 					{

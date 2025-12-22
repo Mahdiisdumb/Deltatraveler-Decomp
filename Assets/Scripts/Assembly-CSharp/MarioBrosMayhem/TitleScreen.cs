@@ -85,11 +85,11 @@ namespace MarioBrosMayhem
 		private void Start()
 		{
 			Util.GameManager().SetFramerate(60);
-			UTInput.SetPriority(false);
+			UTInput.SetPriority(b: false);
 			skin = (int)Util.GameManager().GetSessionFlag(11);
 			altPalette = (int)Util.GameManager().GetSessionFlag(12) == 1;
 			difficulty = (int)Util.GameManager().GetSessionFlag(13);
-			Object.FindObjectOfType<Fade>().FadeIn(0);
+			Util.FindObjectOfType<Fade>().FadeIn(0);
 		}
 
 		private void Update()
@@ -157,7 +157,7 @@ namespace MarioBrosMayhem
 					if (index == 2 || UTInput.GetButtonDown("X"))
 					{
 						selecting = false;
-						Object.FindObjectOfType<MusicPlayer>().Stop();
+						Util.FindObjectOfType<MusicPlayer>().Stop();
 						exitToDT = true;
 						fade.rectTransform.sizeDelta = new Vector2(320f, 240f);
 						StartFadeout();
@@ -241,9 +241,9 @@ namespace MarioBrosMayhem
 					if (exitToDT)
 					{
 						Util.GameManager().SetFramerate(30);
-						UTInput.SetPriority(true);
+						UTInput.SetPriority(b: true);
 					}
-					SceneManager.LoadScene(exitToDT ? 6 : 104);
+					SceneManager.LoadScene(exitToDT ? 132 : 104);
 				}
 			}
 		}
@@ -261,7 +261,7 @@ namespace MarioBrosMayhem
 		{
 			logo.transform.Find("ClassicSubtitle").GetComponent<Image>().enabled = false;
 			mainmenu.localPosition = Vector3.zero;
-			logo.SetActive(true);
+			logo.SetActive(value: true);
 			logo.GetComponent<TitleLogo>().Flash();
 			base.transform.Find("PressStart").GetComponent<Image>().enabled = false;
 			options.localPosition = OFFSCREEN_POS;
@@ -288,7 +288,7 @@ namespace MarioBrosMayhem
 			options.Find("PlayerSmall").GetComponent<TitleMario>().UpdateSkin(0);
 			UpdateOptionsText();
 			mainmenu.localPosition = OFFSCREEN_POS;
-			logo.SetActive(false);
+			logo.SetActive(value: false);
 			blackBG.enabled = true;
 			copyright.enabled = false;
 			state = State.Options;

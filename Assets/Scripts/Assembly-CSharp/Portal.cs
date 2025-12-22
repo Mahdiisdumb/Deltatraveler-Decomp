@@ -40,7 +40,7 @@ public class Portal : MonoBehaviour
 
 	private void Awake()
 	{
-		curFlagVal = (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(flag);
+		curFlagVal = (int)Util.GameManager().GetFlag(flag);
 		frames = 0;
 		rFrames = 0;
 		isOpen = false;
@@ -91,15 +91,15 @@ public class Portal : MonoBehaviour
 
 	private void Update()
 	{
-		if (curFlagVal != (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(flag))
+		if (curFlagVal != (int)Util.GameManager().GetFlag(flag))
 		{
-			curFlagVal = (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(flag);
+			curFlagVal = (int)Util.GameManager().GetFlag(flag);
 			isActivated = !isActivated;
 		}
 		if (!isActivated && anim.GetBool("activated"))
 		{
 			anim.Play("Off");
-			anim.SetBool("activated", false);
+			anim.SetBool("activated", value: false);
 		}
 		if (!isActivated && isOpen)
 		{
@@ -143,7 +143,7 @@ public class Portal : MonoBehaviour
 			else
 			{
 				float num = (float)(frames - 5) / 10f;
-				base.transform.GetChild(0).localScale = Vector2.Lerp(vector, new Vector2(1f, 1f), Mathf.Sin(num * (float)Math.PI * 0.5f));
+				base.transform.GetChild(0).localScale = Vector2.Lerp(vector, new Vector2(1f, 1f), Mathf.Sin(num * MathF.PI * 0.5f));
 			}
 			if (frames == 15)
 			{
@@ -170,7 +170,7 @@ public class Portal : MonoBehaviour
 			}
 			if (!isConnected)
 			{
-				Portal[] array = UnityEngine.Object.FindObjectsOfType<Portal>();
+				Portal[] array = Util.FindObjectsOfType<Portal>();
 				foreach (Portal portal in array)
 				{
 					if ((isBlue && portal.IsOpen() && portal.IsOrange()) || (!isBlue && portal.IsOpen() && portal.IsBlue()))
@@ -198,11 +198,11 @@ public class Portal : MonoBehaviour
 				aud.clip = Resources.Load<AudioClip>("sounds/snd_portal_enter");
 				aud.Play();
 			}
-			UnityEngine.Object.FindObjectOfType<CameraController>().transform.position = Vector3.Lerp(origPos, UnityEngine.Object.FindObjectOfType<CameraController>().GetClampedPos(), (float)rFrames / 10f);
+			Util.FindObjectOfType<CameraController>().transform.position = Vector3.Lerp(origPos, Util.FindObjectOfType<CameraController>().GetClampedPos(), (float)rFrames / 10f);
 			if (rFrames == 10)
 			{
-				UnityEngine.Object.FindObjectOfType<CameraController>().SetFollowPlayer(true);
-				UnityEngine.Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
+				Util.FindObjectOfType<CameraController>().SetFollowPlayer(follow: true);
+				Util.GameManager().EnablePlayerMovement();
 				isTeleporting = false;
 			}
 		}
@@ -253,7 +253,7 @@ public class Portal : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision.gameObject.GetComponent<OverworldPlayer>())
+		if ((bool)collision && (bool)collision.gameObject.GetComponent<OverworldPlayer>())
 		{
 			collision.gameObject.layer = 2;
 		}
@@ -261,22 +261,25 @@ public class Portal : MonoBehaviour
 
 	private void OnTriggerStay2D(Collider2D collision)
 	{
-		OverworldPlayer component = collision.gameObject.GetComponent<OverworldPlayer>();
-		if ((bool)component && isConnected && !otherPortal.IsTeleporting() && component.transform.position.y - base.transform.position.y >= -0.063f)
+		if ((bool)collision)
 		{
-			UnityEngine.Object.FindObjectOfType<CameraController>().SetFollowPlayer(false);
-			UnityEngine.Object.FindObjectOfType<GameManager>().DisablePlayerMovement(true);
-			origPos = UnityEngine.Object.FindObjectOfType<CameraController>().transform.position;
-			component.transform.position = mPlayer.transform.position;
-			component.ChangeDirection(Vector2.down);
-			isTeleporting = true;
-			rFrames = 0;
+			OverworldPlayer component = collision.gameObject.GetComponent<OverworldPlayer>();
+			if ((bool)component && isConnected && !otherPortal.IsTeleporting() && component.transform.position.y - base.transform.position.y >= -0.063f)
+			{
+				Util.FindObjectOfType<CameraController>().SetFollowPlayer(follow: false);
+				Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
+				origPos = Util.FindObjectOfType<CameraController>().transform.position;
+				component.transform.position = mPlayer.transform.position;
+				component.ChangeDirection(Vector2.down);
+				isTeleporting = true;
+				rFrames = 0;
+			}
 		}
 	}
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if ((bool)collision.gameObject.GetComponent<OverworldPlayer>() && !isTeleporting)
+		if ((bool)collision && (bool)collision.gameObject.GetComponent<OverworldPlayer>() && !isTeleporting)
 		{
 			collision.gameObject.layer = 0;
 		}

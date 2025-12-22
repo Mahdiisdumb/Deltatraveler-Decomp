@@ -29,7 +29,7 @@ public class GreaterDogSpearBullet : BulletBase
 		if (doWave)
 		{
 			frames++;
-			base.transform.position = new Vector3(base.transform.position.x + num, Mathf.Lerp(yFrom, yTo, (Mathf.Cos((float)(frames * 12) * ((float)Math.PI / 180f)) + 1f) / 2f));
+			base.transform.position = new Vector3(base.transform.position.x + num, Mathf.Lerp(yFrom, yTo, (Mathf.Cos((float)(frames * 12) * (MathF.PI / 180f)) + 1f) / 2f));
 		}
 		else
 		{

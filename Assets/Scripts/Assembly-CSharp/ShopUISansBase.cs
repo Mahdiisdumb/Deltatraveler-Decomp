@@ -30,16 +30,16 @@ public class ShopUISansBase : ShopUIBase
 			{
 				topic1lines = new string[17]
 				{
-					"closed`*\t...", "closed`*\theh...", "wink`*\tyou know me, kris.^10\n*\ti'm not much of a talker.", "side`*\tand when it comes to THAT\n\tstuff,^05 well...", "closed`*\t... let's just say i'm not\n\tfeeling any more chatty.", "concerned`*\tespecially with susie and\n\tnoelle around.", "sad`*\tadmittedly, it's...^15 pretty tiring\n\tnot rushing things here.^10\n*\tafter so long.", "closed`*\tbut the last thing any of us\n\tneed is for things to get\n\tmore complicated.", "neutral`*\twe've all dealt with enough\n\tstress for one lifetime.", "closed`*\tand besides...",
-					"empty`*\tmaybe don't stick your nose\n\twhere it doesn't belong.", "empty`*\tyou don't know what kind of\n\tdark secrets you'll find.", "wink`*\t... and regret knowing about.", "neutral`*\tnow gimme back my key.", "neutral`*\thuh?^10\n*\tsomeone stole it from\n\tyou?", "empty`*\twell why didnt'cha kill\n\t'em like you always\n\tdo?", "wink`*\toops,^05 getting ahead of\n\tmyself."
+					"closed`* ...", "closed`* heh...", "wink`* you know me, kris.^10\n* i'm not much of a talker.", "side`* and when it comes to THAT\n  stuff,^05 well...", "closed`* ... let's just say i'm not\n  feeling any more chatty.", "concerned`* especially with susie and\n  noelle around.", "sad`* admittedly, it's...^15 pretty\n  tiring not rushing things here.^10\n* after so long.", "closed`* but the last thing any of us\n  need is for things to get\n  more complicated.", "neutral`* we've all dealt with enough\n  stress for one lifetime.", "closed`* and besides...",
+					"empty`* maybe don't stick your nose\n  where it doesn't belong.", "empty`* you don't know what kind of\n  dark secrets you'll find.", "wink`* ... and regret knowing about.", "neutral`* now gimme back my key.", "neutral`* huh?^10\n* someone stole it from\n  you?", "empty`* well why didnt'cha kill\n  'em like you always\n  do?", "wink`* oops,^05 getting ahead of\n  myself."
 				};
 			}
 			else
 			{
 				topic1lines = new string[15]
 				{
-					"closed`*\t...", "closed`*\theh...", "wink`*\tyou know me, kris.^10\n*\ti'm not much of a talker.", "side`*\tand when it comes to THAT\n\tstuff,^05 well...", "closed`*\t... let's just say i'm not\n\tfeeling any more chatty.", "concerned`*\tespecially with susie and\n\tnoelle around.", "sad`*\tadmittedly, it's...^15 pretty tiring\n\tnot rushing things here.^10\n*\tafter so long.", "closed`*\tbut the last thing any of us\n\tneed is for things to get\n\tmore complicated.", "neutral`*\twe've all dealt with enough\n\tstress for one lifetime.", "closed`*\tand besides...",
-					"empty`*\tmaybe don't stick your nose\n\twhere it doesn't belong.", "empty`*\tyou don't know what kind of\n\tdark secrets you'll find.", "wink`*\t... and regret knowing about.", "neutral`*\tnow gimme back my key.", "wink`*\tthank you."
+					"closed`* ...", "closed`* heh...", "wink`* you know me, kris.^10\n* i'm not much of a talker.", "side`* and when it comes to THAT\n  stuff,^05 well...", "closed`* ... let's just say i'm not\n  feeling any more chatty.", "concerned`* especially with susie and\n  noelle around.", "sad`* admittedly, it's...^15 pretty\n  tiring not rushing things here.^10\n* after so long.", "closed`* but the last thing any of us\n  need is for things to get\n  more complicated.", "neutral`* we've all dealt with enough\n  stress for one lifetime.", "closed`* and besides...",
+					"empty`* maybe don't stick your nose\n  where it doesn't belong.", "empty`* you don't know what kind of\n  dark secrets you'll find.", "wink`* ... and regret knowing about.", "neutral`* now gimme back my key.", "wink`* thank you."
 				};
 			}
 		}
@@ -80,13 +80,13 @@ public class ShopUISansBase : ShopUIBase
 		{
 			if (topic1 == "About yourself" && diag == topic1lines)
 			{
-				if ((int)Object.FindObjectOfType<GameManager>().GetFlag(92) == 0)
+				if ((int)Util.GameManager().GetFlag(92) == 0)
 				{
-					Object.FindObjectOfType<GameManager>().SetFlag(92, 1);
+					Util.GameManager().SetFlag(92, 1);
 				}
 				else
 				{
-					diag = new string[2] { "neutral`*\tthere isn't much that i can\n\treally tell you about me right\n\tnow.", "wink`*\tfor all intents and purposes,^05i'm\n\tjust the convenient store guy." };
+					diag = new string[2] { "neutral`* there isn't much that i can\n  really tell you about me right\n  now.", "wink`* for all intents and purposes,^05i'm\n  just the convenient store guy." };
 				}
 			}
 			else if (topic1.Contains("Photobook") && diag == topic1lines && Util.GameManager().GetFlagInt(303) == 0)
@@ -139,7 +139,7 @@ public class ShopUISansBase : ShopUIBase
 	private void SetToNah()
 	{
 		topic1 = "Photobook";
-		topic1lines = new string[1] { "empty`*\tnah." };
+		topic1lines = new string[1] { "empty`* nah." };
 	}
 
 	protected override string GetSellDenyText(int itemID)

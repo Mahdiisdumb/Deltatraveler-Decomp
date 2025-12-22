@@ -52,8 +52,8 @@ public class TorielDefeatCutscene : CutsceneBase
 		}
 		if (state == 1 && !txt)
 		{
-			kris.SetSelfAnimControl(true);
-			susie.SetSelfAnimControl(true);
+			kris.SetSelfAnimControl(setAnimControl: true);
+			susie.SetSelfAnimControl(setAnimControl: true);
 			gm.PlayMusic("zoneMusic");
 			gm.SetCheckpoint(14, new Vector3(91.8f, 0.6f));
 			EndCutscene();

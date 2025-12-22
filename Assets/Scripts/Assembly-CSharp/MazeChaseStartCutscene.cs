@@ -50,19 +50,19 @@ public class MazeChaseStartCutscene : CutsceneBase
 			{
 				if (MoveTo(susie, (kris.transform.position.y < 1.213f) ? new Vector3(-4.641f, 1.552f) : new Vector3(-5.54f, 0.728f), 4f))
 				{
-					SetMoveAnim(susie, true);
+					SetMoveAnim(susie, isMoving: true);
 				}
 				else
 				{
-					SetMoveAnim(susie, false);
+					SetMoveAnim(susie, isMoving: false);
 				}
 				if (MoveTo(noelle, (kris.transform.position.y > 0.18f) ? new Vector3(-4.63f, 0.129f) : new Vector3(-5.54f, 0.728f), 4f))
 				{
-					SetMoveAnim(susie, true);
+					SetMoveAnim(susie, isMoving: true);
 				}
 				else
 				{
-					SetMoveAnim(susie, false);
+					SetMoveAnim(susie, isMoving: false);
 				}
 			}
 			if (frames == 150)
@@ -111,10 +111,10 @@ public class MazeChaseStartCutscene : CutsceneBase
 					OverworldBoneBullet[] array = bullets;
 					for (int j = 0; j < array.Length; j++)
 					{
-						array[j].StartSpinning(false);
+						array[j].StartSpinning(modifyColor: false);
 					}
-					Object.FindObjectOfType<ActionBulletHandler>().enabled = true;
-					kris.SetCollision(true);
+					Util.FindObjectOfType<ActionBulletHandler>().enabled = true;
+					kris.SetCollision(onoff: true);
 				}
 			}
 			else
@@ -126,7 +126,7 @@ public class MazeChaseStartCutscene : CutsceneBase
 				RestorePlayerControl();
 				ChangeDirection(kris, Vector2.down);
 				gm.PlayMusic("music/mus_creepychase");
-				Object.FindObjectOfType<DeepMazeEventHandler>().StartChase();
+				Util.FindObjectOfType<DeepMazeEventHandler>().StartChase();
 				EndCutscene();
 			}
 		}

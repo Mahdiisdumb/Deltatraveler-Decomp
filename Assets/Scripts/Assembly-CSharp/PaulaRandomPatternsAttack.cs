@@ -66,9 +66,9 @@ public class PaulaRandomPatternsAttack : AttackBase
 
 	private void OnDestroy()
 	{
-		if ((bool)Object.FindObjectOfType<PaulaMeleeTarget>())
+		if ((bool)Util.FindObjectOfType<PaulaMeleeTarget>())
 		{
-			Object.FindObjectOfType<PaulaMeleeTarget>().SetToDestroy();
+			Util.FindObjectOfType<PaulaMeleeTarget>().SetToDestroy();
 		}
 	}
 
@@ -156,7 +156,7 @@ public class PaulaRandomPatternsAttack : AttackBase
 		}
 		if (spawnMelee)
 		{
-			Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/nesspaula/PaulaTarget")).GetComponent<PaulaMeleeTarget>().Activate(3, true);
+			Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/nesspaula/PaulaTarget")).GetComponent<PaulaMeleeTarget>().Activate(3, hard: true);
 		}
 	}
 

@@ -17,7 +17,7 @@ public class PelletVineAttack : AttackBase
 		bbPos = new Vector2(0f, 2f);
 		soulPos = bbPos;
 		hardmode = (int)Util.GameManager().GetFlag(108) == 1;
-		UnityEngine.Object.FindObjectOfType<Flowey>().SetHeadOffset(new Vector3(0f, 1.22f));
+		Util.FindObjectOfType<Flowey>().SetHeadOffset(new Vector3(0f, 1.22f));
 		attackAllTargets = false;
 	}
 
@@ -32,7 +32,7 @@ public class PelletVineAttack : AttackBase
 		{
 			if (frames == 13)
 			{
-				UnityEngine.Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_grab");
+				Util.GameManager().PlayGlobalSFX("sounds/snd_grab");
 			}
 			int num = 18 - frames;
 			bb.transform.position = (Vector3)bbPos + new Vector3(UnityEngine.Random.Range(0, 3) - 1, UnityEngine.Random.Range(0, 3) - 1) * ((float)num / 48f);
@@ -41,7 +41,7 @@ public class PelletVineAttack : AttackBase
 		{
 			if (frames % (hardmode ? 9 : 12) == 1)
 			{
-				float f = (float)UnityEngine.Random.Range(-90, 90) * ((float)Math.PI / 180f);
+				float f = (float)UnityEngine.Random.Range(-90, 90) * (MathF.PI / 180f);
 				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/flowey/FloweyPelletStandard"), new Vector3(Mathf.Sin(f) * 2f, Mathf.Cos(f) + 3.5f), Quaternion.identity, base.transform);
 			}
 			if (frames % (hardmode ? 48 : 60) == 0)
@@ -78,15 +78,15 @@ public class PelletVineAttack : AttackBase
 		}
 		if (frames == 250)
 		{
-			UnityEngine.Object.FindObjectOfType<Flowey>().GetPart("vineLeft").GetComponent<Animator>()
+			Util.FindObjectOfType<Flowey>().GetPart("vineLeft").GetComponent<Animator>()
 				.Play("Uninsert");
-			UnityEngine.Object.FindObjectOfType<Flowey>().GetPart("vineRight").GetComponent<Animator>()
+			Util.FindObjectOfType<Flowey>().GetPart("vineRight").GetComponent<Animator>()
 				.Play("Uninsert");
 		}
 		if (frames == 258)
 		{
-			UnityEngine.Object.FindObjectOfType<Flowey>().SetHeadOffset(Vector3.zero);
-			UnityEngine.Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_grab");
+			Util.FindObjectOfType<Flowey>().SetHeadOffset(Vector3.zero);
+			Util.GameManager().PlayGlobalSFX("sounds/snd_grab");
 		}
 		if (frames >= 259 && frames <= 265)
 		{
@@ -98,9 +98,9 @@ public class PelletVineAttack : AttackBase
 	public override void StartAttack()
 	{
 		base.StartAttack();
-		UnityEngine.Object.FindObjectOfType<Flowey>().GetPart("vineLeft").GetComponent<Animator>()
+		Util.FindObjectOfType<Flowey>().GetPart("vineLeft").GetComponent<Animator>()
 			.Play("Insert");
-		UnityEngine.Object.FindObjectOfType<Flowey>().GetPart("vineRight").GetComponent<Animator>()
+		Util.FindObjectOfType<Flowey>().GetPart("vineRight").GetComponent<Animator>()
 			.Play("Insert");
 	}
 }

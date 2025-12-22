@@ -68,7 +68,7 @@ namespace MarioBrosMayhem
 			}
 			bool edge = Mathf.Abs(num2) == edgeValue;
 			bool rightEdge = Mathf.Sign(num2) > 0f;
-			PlatformHit[] array = Object.FindObjectsOfType<PlatformHit>();
+			PlatformHit[] array = Util.FindObjectsOfType<PlatformHit>();
 			foreach (PlatformHit platformHit in array)
 			{
 				if (platformHit.transform.position.y == base.transform.position.y && platformHit.GetHitX() == num2)
@@ -84,7 +84,7 @@ namespace MarioBrosMayhem
 		{
 			if (platformType != 4)
 			{
-				int platformType2 = platformType;
+				_ = platformType;
 				float num = Mathf.Abs(0f - Mathf.Abs(base.transform.position.x) + sr.size.x / 2f);
 				float num2 = num + (float)blockSize / 3f;
 				if (base.transform.position.x == 0f)

@@ -169,7 +169,7 @@ public class UnoEnemy : EnemyBase
 			sound = "v_" + text2;
 		}
 		bool flag = text == "asgore" || text == "gaster";
-		Chat(new string[1] { Localizer.GetText(text2) }, 0, text3, sound, pos, false, flag ? 1 : 0);
+		Chat(new string[1] { Localizer.GetText(text2) }, 0, text3, sound, pos, canSkip: false, flag ? 1 : 0);
 	}
 
 	public virtual void Chat(string[] text, int start, string type, string sound, Vector3 pos, bool canSkip, int speed)
@@ -269,14 +269,14 @@ public class UnoEnemy : EnemyBase
 				float num = ((cardCount < 4) ? 7f : 5f);
 				float num2 = Mathf.Clamp((float)cardCount * 45f / num, 0f, 45f);
 				float num3 = (float)j / (float)(cardCount - 1);
-				GameObject obj = UnityEngine.Object.Instantiate(original, transform, false);
+				GameObject obj = UnityEngine.Object.Instantiate(original, transform, worldPositionStays: false);
 				obj.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Lerp(0f - num2, num2, num3));
-				obj.transform.localPosition = new Vector3(Mathf.Lerp(0.1f, -0.1f, num3), Mathf.Sin(num3 * (float)Math.PI) * 0.05f);
+				obj.transform.localPosition = new Vector3(Mathf.Lerp(0.1f, -0.1f, num3), Mathf.Sin(num3 * MathF.PI) * 0.05f);
 			}
 		}
 		else if (cardCount == 1)
 		{
-			UnityEngine.Object.Instantiate(original, transform, false);
+			UnityEngine.Object.Instantiate(original, transform, worldPositionStays: false);
 		}
 	}
 
@@ -293,9 +293,9 @@ public class UnoEnemy : EnemyBase
 			sr.sprite = Resources.Load<Sprite>(spriteString + (won ? "win" : "lose"));
 			for (int i = 0; i < 9; i++)
 			{
-				float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
+				float f = UnityEngine.Random.Range(0f, MathF.PI * 2f);
 				Vector3 vector = new Vector3(Mathf.Cos(f), Mathf.Sin(f));
-				SpareDust component = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SpareDust"), base.transform, false).GetComponent<SpareDust>();
+				SpareDust component = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SpareDust"), base.transform, worldPositionStays: false).GetComponent<SpareDust>();
 				component.transform.position = enemySOUL.transform.position + vector * 0.25f;
 				component.StartMovement(vector);
 			}
@@ -345,7 +345,7 @@ public class UnoEnemy : EnemyBase
 
 	public void AddSOUL(Color soulColor)
 	{
-		enemySOUL.CreateSOUL(soulColor, soulColor == Color.white, false);
+		enemySOUL.CreateSOUL(soulColor, soulColor == Color.white, player: false);
 		enemySOUL.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder + 5;
 		enemySOUL.GetComponent<SpriteRenderer>().enabled = false;
 		enemySOUL.GetShield().sortingOrder = sortingOrder + 5;

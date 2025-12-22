@@ -28,7 +28,7 @@ public class InventoryEditor : SelectableBehaviour
 
 	private void Awake()
 	{
-		player = Object.FindObjectOfType<OverworldPlayer>();
+		player = Util.OverworldPlayer();
 		holding = false;
 		dir = 0;
 		curIndex = 0;
@@ -42,20 +42,20 @@ public class InventoryEditor : SelectableBehaviour
 			switch (i)
 			{
 			case 8:
-				items[i] = Object.FindObjectOfType<GameManager>().GetWeapon(partyMember);
+				items[i] = Util.GameManager().GetWeapon(partyMember);
 				break;
 			case 9:
-				items[i] = Object.FindObjectOfType<GameManager>().GetArmor(partyMember);
+				items[i] = Util.GameManager().GetArmor(partyMember);
 				break;
 			default:
-				items[i] = Object.FindObjectOfType<GameManager>().GetItem(i);
+				items[i] = Util.GameManager().GetItem(i);
 				break;
 			}
 		}
 		for (int j = 0; j < 3; j++)
 		{
-			weapons[j] = Object.FindObjectOfType<GameManager>().GetWeapon(j);
-			armors[j] = Object.FindObjectOfType<GameManager>().GetArmor(j);
+			weapons[j] = Util.GameManager().GetWeapon(j);
+			armors[j] = Util.GameManager().GetArmor(j);
 		}
 		aud = base.gameObject.AddComponent<AudioSource>();
 		aud.clip = Resources.Load<AudioClip>("sounds/snd_menumove");
@@ -65,14 +65,14 @@ public class InventoryEditor : SelectableBehaviour
 
 	private void Start()
 	{
-		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 	}
 
 	private void Update()
 	{
 		if ((bool)player && player.CanMove())
 		{
-			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 		}
 		int num = curIndex;
 		curIndex = (int)sel.GetIndex()[0];
@@ -164,25 +164,25 @@ public class InventoryEditor : SelectableBehaviour
 			{
 				return;
 			}
-			while (Object.FindObjectOfType<GameManager>().FirstFreeItemSpace() != 0)
+			while (Util.GameManager().FirstFreeItemSpace(equipment: false) != 0)
 			{
-				Object.FindObjectOfType<GameManager>().RemoveItem(0);
+				Util.GameManager().RemoveItem(0);
 			}
 			for (int i = 0; i < 8; i++)
 			{
 				if (items[i] != -1)
 				{
-					Object.FindObjectOfType<GameManager>().AddItem(items[i]);
+					Util.GameManager().AddItem(items[i]);
 				}
 			}
 			for (int j = 0; j < 3; j++)
 			{
-				Object.FindObjectOfType<GameManager>().ForceWeapon(j, weapons[j]);
-				Object.FindObjectOfType<GameManager>().ForceArmor(j, armors[j]);
+				Util.GameManager().ForceWeapon(j, weapons[j]);
+				Util.GameManager().ForceArmor(j, armors[j]);
 			}
 			if ((bool)player)
 			{
-				Object.FindObjectOfType<GameManager>().LoadArea(SceneManager.GetActiveScene().buildIndex, true, player.transform.position, player.GetDirection());
+				Util.GameManager().LoadArea(SceneManager.GetActiveScene().buildIndex, fadeIn: true, player.transform.position, player.GetDirection());
 			}
 			else
 			{
@@ -213,7 +213,7 @@ public class InventoryEditor : SelectableBehaviour
 			selection = sel.GetIndex();
 			sel.Reset();
 		}
-		sel.CreateSelections(sels, new Vector2(-150f, 48f), new Vector2(0f, -32f), new Vector2(-15f, 94f), "DTM-Sans", true, false, this, 1);
+		sel.CreateSelections(sels, new Vector2(-150f, 48f), new Vector2(0f, -32f), new Vector2(-15f, 94f), "DTM-Sans", useSoul: true, makeSound: false, this, 1);
 		sel.SetSelection(selection);
 		textParent.Find("LEFT").GetComponent<Text>().enabled = true;
 		if (items[curIndex] == -1)

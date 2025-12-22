@@ -88,21 +88,21 @@ public class Dogamy : EnemyBase
 		{
 			GetPart("body").GetComponent<SpriteRenderer>().sprite = sprites[0];
 		}
-		GetPart("axe").GetComponent<SpriteRenderer>().enabled = !Object.FindObjectOfType<Dogaressa>().IsShaking() && !Object.FindObjectOfType<Dogaressa>().IsDone() && !killed;
+		GetPart("axe").GetComponent<SpriteRenderer>().enabled = !Util.FindObjectOfType<Dogaressa>().IsShaking() && !Util.FindObjectOfType<Dogaressa>().IsDone() && !killed;
 	}
 
 	public override string[] PerformAct(int i)
 	{
 		if (GetActNames()[i] == "Pet")
 		{
-			if (!Object.FindObjectOfType<Dogaressa>().IsKilled())
+			if (!Util.FindObjectOfType<Dogaressa>().IsKilled())
 			{
 				if (resniffed)
 				{
 					response = 3;
 					if (satisfied < 100)
 					{
-						if (Object.FindObjectOfType<Dogaressa>().GetSatisfactionLevel() >= 100)
+						if (Util.FindObjectOfType<Dogaressa>().GetSatisfactionLevel() >= 100)
 						{
 							satisfied = 75;
 						}
@@ -121,14 +121,14 @@ public class Dogamy : EnemyBase
 		}
 		if (GetActNames()[i] == "Re-sniff")
 		{
-			if (!Object.FindObjectOfType<Dogaressa>().IsKilled())
+			if (!Util.FindObjectOfType<Dogaressa>().IsKilled())
 			{
 				if (!resniffed)
 				{
 					if (rolled)
 					{
 						AddActPoints(50);
-						Object.FindObjectOfType<Dogaressa>().AddActPoints(50);
+						Util.FindObjectOfType<Dogaressa>().AddActPoints(50);
 						response = 2;
 						resniffed = true;
 					}
@@ -152,13 +152,13 @@ public class Dogamy : EnemyBase
 
 	public override int CalculateDamage(int partyMember, float rawDmg, bool forceMagic = false)
 	{
-		int num = ((!Object.FindObjectOfType<Dogaressa>().IsKilled()) ? 1 : 2);
+		int num = ((!Util.FindObjectOfType<Dogaressa>().IsKilled()) ? 1 : 2);
 		return base.CalculateDamage(partyMember, rawDmg, forceMagic) * num;
 	}
 
 	public override void Chat(string[] text, string type, string sound, Vector2 pos, bool canSkip, int speed)
 	{
-		if (Object.FindObjectOfType<Dogaressa>().IsDone())
+		if (Util.FindObjectOfType<Dogaressa>().IsDone())
 		{
 			text = ((response != 4) ? new string[1] { (Random.Range(0, 2) == 0) ? "Whine." : "Whimper." } : new string[1] { "W...^10\nwhat...?" });
 		}
@@ -203,11 +203,11 @@ public class Dogamy : EnemyBase
 		{
 			return "* Dogamy is flabbergasted.";
 		}
-		if (Object.FindObjectOfType<Dogaressa>().IsKilled())
+		if (Util.FindObjectOfType<Dogaressa>().IsKilled())
 		{
 			return "* Dogamy is brokenhearted.";
 		}
-		if (CanSpare() && Object.FindObjectOfType<Dogaressa>().CanSpare())
+		if (CanSpare() && Util.FindObjectOfType<Dogaressa>().CanSpare())
 		{
 			return "* The Dogs' minds have been\n  expanded.";
 		}
@@ -224,7 +224,7 @@ public class Dogamy : EnemyBase
 
 	public int GetBodyFrames()
 	{
-		if (Object.FindObjectOfType<Dogamy>().IsShaking() || Object.FindObjectOfType<Dogamy>().IsDone() || Object.FindObjectOfType<Dogaressa>().IsShaking() || Object.FindObjectOfType<Dogaressa>().IsDone())
+		if (Util.FindObjectOfType<Dogamy>().IsShaking() || Util.FindObjectOfType<Dogamy>().IsDone() || Util.FindObjectOfType<Dogaressa>().IsShaking() || Util.FindObjectOfType<Dogaressa>().IsDone())
 		{
 			return 0;
 		}
@@ -238,9 +238,9 @@ public class Dogamy : EnemyBase
 
 	public override bool CanSpare()
 	{
-		if (satisfied < 100 || Object.FindObjectOfType<Dogaressa>().GetSatisfactionLevel() < 100)
+		if (satisfied < 100 || Util.FindObjectOfType<Dogaressa>().GetSatisfactionLevel() < 100)
 		{
-			return Object.FindObjectOfType<Dogaressa>().IsKilled();
+			return Util.FindObjectOfType<Dogaressa>().IsKilled();
 		}
 		return true;
 	}
@@ -252,7 +252,7 @@ public class Dogamy : EnemyBase
 
 	public override void Spare(bool sleepMist = false)
 	{
-		if (Object.FindObjectOfType<Dogaressa>().IsKilled())
+		if (Util.FindObjectOfType<Dogaressa>().IsKilled())
 		{
 			if (!sparedOnce)
 			{

@@ -45,7 +45,7 @@ public class SaveMenu : UIComponent
 	{
 		gm = Util.GameManager();
 		borderColor = UIBackground.borderColors[(int)gm.GetFlag(223)];
-		selectionColor = Selection.selectionColors[(int)gm.GetFlag(223)];
+		selectionColor = Selection.SELECTION_COLORS[(int)gm.GetFlag(223)];
 		Image[] componentsInChildren = GetComponentsInChildren<Image>();
 		foreach (Image image in componentsInChildren)
 		{
@@ -113,7 +113,7 @@ public class SaveMenu : UIComponent
 		{
 			gm.PlayGlobalSFX("sounds/snd_save");
 			gm.SetFileID(3);
-			gm.SaveFile(true);
+			gm.SaveFile(savepoint: true);
 			Object.Destroy(base.gameObject);
 			return;
 		}
@@ -207,7 +207,7 @@ public class SaveMenu : UIComponent
 				mainbox.transform.localPosition = new Vector3(1000f, 0f);
 				soul.transform.localPosition = new Vector3(1000f, 0f);
 				state = 4;
-				Object.FindObjectOfType<Fade>().FadeOut(15);
+				Util.FindObjectOfType<Fade>().FadeOut(15);
 				tsExit = ((index == 3) ? 1 : 0);
 			}
 		}
@@ -306,7 +306,7 @@ public class SaveMenu : UIComponent
 		{
 			Object.Destroy(base.gameObject);
 		}
-		else if (state == 4 && !Object.FindObjectOfType<Fade>().IsPlaying())
+		else if (state == 4 && !Util.FindObjectOfType<Fade>().IsPlaying())
 		{
 			if (tsExit == 1)
 			{
@@ -352,7 +352,7 @@ public class SaveMenu : UIComponent
 	{
 		gm.PlayGlobalSFX("sounds/snd_save");
 		gm.SetFileID(overwriteSaveSlot);
-		gm.SaveFile(true);
+		gm.SaveFile(savepoint: true);
 		Text[] componentsInChildren = savefiles.GetComponentsInChildren<Text>();
 		foreach (Text text in componentsInChildren)
 		{
@@ -390,6 +390,11 @@ public class SaveMenu : UIComponent
 		}
 		Object.Destroy(savefiles.Find("Save3").gameObject);
 		soul.GetComponent<Image>().enabled = false;
+		for (int j = 0; j < 6; j++)
+		{
+			PersistentSAVE.SetInt("last-saved-pm-" + j, gm.GetPartyMember(j));
+		}
+		PersistentSAVE.SetInt("kris-eye-title", gm.GetFlagInt(204));
 		state = 3;
 	}
 
@@ -445,19 +450,17 @@ public class SaveMenu : UIComponent
 			{
 				try
 				{
-					using (FileStream fs = File.Open(path, FileMode.Open))
-					{
-						SAVEFileIO.ReadFile(ref saves[i], fs);
-						saveSlotsTaken[i] = true;
-						savefiles.Find("Save" + i).Find("Name").GetComponent<Text>()
-							.text = saves[i].name;
-						savefiles.Find("Save" + i).Find("Time").GetComponent<Text>()
-							.text = gm.GetFormattedPlayTimeFromTime(saves[i].playTime);
-						savefiles.Find("Save" + i).Find("Room").GetComponent<Text>()
-							.text = MapInfo.GetMapName(saves[i].zone);
-						savefiles.Find("Save" + i).Find("LV").GetComponent<Text>()
-							.text = "LV " + gm.GetLV(saves[i].exp);
-					}
+					using FileStream fs = File.Open(path, FileMode.Open);
+					SAVEFileIO.ReadFile(ref saves[i], fs);
+					saveSlotsTaken[i] = true;
+					savefiles.Find("Save" + i).Find("Name").GetComponent<Text>()
+						.text = saves[i].name;
+					savefiles.Find("Save" + i).Find("Time").GetComponent<Text>()
+						.text = gm.GetFormattedPlayTimeFromTime(saves[i].playTime);
+					savefiles.Find("Save" + i).Find("Room").GetComponent<Text>()
+						.text = MapInfo.GetMapName(saves[i].zone);
+					savefiles.Find("Save" + i).Find("LV").GetComponent<Text>()
+						.text = "LV " + gm.GetLV(saves[i].exp);
 				}
 				catch
 				{

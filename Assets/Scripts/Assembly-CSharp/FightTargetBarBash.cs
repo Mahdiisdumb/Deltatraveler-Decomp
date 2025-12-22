@@ -47,7 +47,7 @@ public class FightTargetBarBash : FightTargetBar
 				ending = true;
 				if ((bool)enemy)
 				{
-					enemy.Hit(partyMember, 0f, false);
+					enemy.Hit(partyMember, 0f, playSound: false);
 					miss = true;
 				}
 			}
@@ -55,14 +55,19 @@ public class FightTargetBarBash : FightTargetBar
 		if (ending && endFrames < 12)
 		{
 			endFrames++;
-			GetComponent<SpriteRenderer>().color = Color.Lerp(PartyPanels.defaultColors[partyMember], endColor, (float)endFrames / 6f);
+			Color a = PartyMembers.GetMemberNeonColor(partyMember);
+			if (partyMember == 6 && Util.GameManager().GetFlagInt(108) == 1)
+			{
+				a = Color.white;
+			}
+			GetComponent<SpriteRenderer>().color = Color.Lerp(a, endColor, (float)endFrames / 6f);
 			GetComponent<SpriteRenderer>().color = new Color(GetComponent<SpriteRenderer>().color.r, GetComponent<SpriteRenderer>().color.g, GetComponent<SpriteRenderer>().color.b, 1f - (float)endFrames / 12f);
 			base.transform.localScale *= 1.1f;
 			if (endFrames == 12 && enemyAlive && !miss)
 			{
-				Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_crash");
-				Object.FindObjectOfType<BattleCamera>().BlastShake();
-				enemy.Hit(partyMember, GetSuccessRate(), true);
+				Util.GameManager().PlayGlobalSFX("sounds/snd_crash");
+				Util.FindObjectOfType<BattleCamera>().BlastShake();
+				enemy.Hit(partyMember, GetSuccessRate(), playSound: true);
 			}
 		}
 	}

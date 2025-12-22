@@ -15,7 +15,7 @@ public class UpsideDownAlternateAttack : AttackBase
 		maxFrames = 300;
 		bbSize = new Vector2(375f, 140f);
 		soulPos = new Vector2(-0.055f, -2.83f);
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 	}
 
 	protected override void Update()
@@ -27,11 +27,11 @@ public class UpsideDownAlternateAttack : AttackBase
 		}
 		if (frames == 1)
 		{
-			Object.FindObjectOfType<SansGravityManager>().Slam(Vector2.up, 12f);
+			Util.FindObjectOfType<SansGravityManager>().Slam(Vector2.up, 12f);
 		}
 		if (frames == 25)
 		{
-			Object.FindObjectOfType<Sans>().ResetBreatheAnimation();
+			Util.FindObjectOfType<Sans>().ResetBreatheAnimation();
 		}
 		if (frames % 25 == 1 && frames <= 201)
 		{

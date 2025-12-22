@@ -23,7 +23,7 @@ public class AstigVegeAttacks : AttackBase
 		base.Awake();
 		maxFrames = 150;
 		bbSize = new Vector2(165f, 140f);
-		Astigmatism[] array = Object.FindObjectsOfType<Astigmatism>();
+		Astigmatism[] array = Util.FindObjectsOfType<Astigmatism>();
 		foreach (Astigmatism astigmatism in array)
 		{
 			if (!astigmatism.IsDone())
@@ -39,7 +39,7 @@ public class AstigVegeAttacks : AttackBase
 				totalCount++;
 			}
 		}
-		Parsnik[] array2 = Object.FindObjectsOfType<Parsnik>();
+		Parsnik[] array2 = Util.FindObjectsOfType<Parsnik>();
 		foreach (Parsnik parsnik in array2)
 		{
 			if (!parsnik.IsDone())
@@ -58,7 +58,7 @@ public class AstigVegeAttacks : AttackBase
 
 	private void OnDestroy()
 	{
-		Parsnik[] array = Object.FindObjectsOfType<Parsnik>();
+		Parsnik[] array = Util.FindObjectsOfType<Parsnik>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			array[i].DisableEatingGreens();

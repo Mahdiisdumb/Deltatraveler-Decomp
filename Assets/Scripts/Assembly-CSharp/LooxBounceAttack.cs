@@ -9,7 +9,7 @@ public class LooxBounceAttack : AttackBase
 		base.Awake();
 		bbSize = new Vector2(185f, 140f);
 		maxFrames = 110;
-		if (Object.FindObjectOfType<Loox>().IsNextAttackHard())
+		if (Util.FindObjectOfType<Loox>().IsNextAttackHard())
 		{
 			spawnRate = 5;
 		}
@@ -18,16 +18,16 @@ public class LooxBounceAttack : AttackBase
 
 	public void OnDestroy()
 	{
-		if ((bool)Object.FindObjectOfType<Loox>())
+		if ((bool)Util.FindObjectOfType<Loox>())
 		{
-			Object.FindObjectOfType<Loox>().ResetAttackDifficulty();
+			Util.FindObjectOfType<Loox>().ResetAttackDifficulty();
 		}
 	}
 
 	protected override void Update()
 	{
 		base.Update();
-		if (isStarted && frames % spawnRate == 1 && Object.FindObjectsOfType<LooxBounceBullet>().Length < 5)
+		if (isStarted && frames % spawnRate == 1 && Util.FindObjectsOfType<LooxBounceBullet>().Length < 5)
 		{
 			int num = ((Random.Range(0, 2) != 1) ? 1 : (-1));
 			Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/ruins/LooxBounceBullet"), new Vector3(1.7f * (float)num, Random.Range(-2.68f, -0.62f)), Quaternion.identity, base.transform);

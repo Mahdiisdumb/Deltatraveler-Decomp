@@ -64,7 +64,7 @@ public class LesserDogDefeatCutscene : CutsceneBase
 				if (AtLine(5))
 				{
 					PlaySFX("sounds/snd_wing");
-					SetSprite(susie, "spr_su_throw_ready", true);
+					SetSprite(susie, "spr_su_throw_ready", flipX: true);
 				}
 				else if (AtLine(6))
 				{
@@ -95,7 +95,7 @@ public class LesserDogDefeatCutscene : CutsceneBase
 				if (AtLine(4) || AtLine(10))
 				{
 					PlaySFX("sounds/snd_wing");
-					SetSprite(susie, "spr_su_throw_ready", true);
+					SetSprite(susie, "spr_su_throw_ready", flipX: true);
 				}
 				else if (AtLine(5) || AtLine(11))
 				{
@@ -105,7 +105,7 @@ public class LesserDogDefeatCutscene : CutsceneBase
 				}
 				else if (AtLine(9))
 				{
-					SetSprite(susie, "spr_su_wtf", true);
+					SetSprite(susie, "spr_su_wtf", flipX: true);
 				}
 			}
 			else
@@ -120,9 +120,9 @@ public class LesserDogDefeatCutscene : CutsceneBase
 		RestorePlayerControl();
 		if (oblitEnd != "")
 		{
-			new GameObject("LesserDogDefeatCutsceneOblitEnd").AddComponent<TextBox>().CreateBox(new string[2] { "* (...)", oblitEnd }, true);
+			new GameObject("LesserDogDefeatCutsceneOblitEnd").AddComponent<TextBox>().CreateBox(new string[2] { "* (...)", oblitEnd }, giveBackControl: true);
 			gm.PlayMusic("zoneMusic");
-			EndCutscene(false);
+			EndCutscene(enablePlayerMovement: false);
 		}
 		else
 		{
@@ -177,7 +177,7 @@ public class LesserDogDefeatCutscene : CutsceneBase
 			if (index == Vector2.right)
 			{
 				PlaySFX("sounds/snd_sussurprise");
-				SetSprite(susie, "spr_su_wtf", true);
+				SetSprite(susie, "spr_su_wtf", flipX: true);
 				list.AddRange(new string[12]
 				{
 					"* OH REALLY NOW???", "* ALRIGHT.", "* You want me dead,^05\n  huh???", "* Bet you also want\n  Noelle and Kris dead\n  too,^05 huh???", "* Alright,^05 punk,^05 I\n  see you.", "* You didn't need to\n  do this,^05 y'know.", "* Ya could've just laid\n  low and used me and\n  everyone else for murder.", "* So y'know what?", "* I'm ready to\n  jeopardize EVERYTHING.", "* Don't expect me to\n  take your shit from\n  now on.",
@@ -242,22 +242,22 @@ public class LesserDogDefeatCutscene : CutsceneBase
 		}
 		if (endState == 1)
 		{
-			Object.FindObjectOfType<LesserDogSentry>().KilledDog();
+			Util.FindObjectOfType<LesserDogSentry>().KilledDog();
 			if (!gm.NoelleInParty())
 			{
 				Util.GameManager().SetFlag(1, "side_sweat");
-				gm.SetPartyMembers(true, false);
+				gm.SetPartyMembers(susie: true, noelle: false);
 				Util.GameManager().PlayGlobalSFX("sounds/snd_ominous");
 				oblitEnd = EndBattleHandler.GetSnowdinSecondHalfString();
 				if ((int)gm.GetFlag(256) == 1)
 				{
 					gm.StopMusic();
 					RevokePlayerControl();
-					cam.SetFollowPlayer(true);
+					cam.SetFollowPlayer(follow: true);
 					kris.transform.position = new Vector3(2.9f, 0.83f);
 					susie.transform.position = new Vector3(4.52f, 1.09f);
 					ChangeDirection(kris, Vector2.right);
-					SetSprite(susie, "spr_su_kneel", true);
+					SetSprite(susie, "spr_su_kneel", flipX: true);
 					StartText(new string[2] { "* Nnngh...", "* Okay,^05 punk.^05\n* What the HELL is\n  your problem???" }, new string[1] { "snd_txtsus" }, new int[1], new string[2] { "su_depressed", "su_pissed" });
 					txt.EnableSelectionAtEnd();
 					state = 1;
@@ -289,7 +289,7 @@ public class LesserDogDefeatCutscene : CutsceneBase
 		}
 		else if (endState == 2)
 		{
-			Object.FindObjectOfType<LesserDogSentry>().SparedDog();
+			Util.FindObjectOfType<LesserDogSentry>().SparedDog();
 			if ((int)Util.GameManager().GetFlag(12) == 1)
 			{
 				gm.StopMusic();

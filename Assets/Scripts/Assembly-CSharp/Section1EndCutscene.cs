@@ -46,7 +46,7 @@ public class Section1EndCutscene : CutsceneBase
 		}
 		else
 		{
-			gm.LoadArea(47, true, new Vector2(-4.35f, -0.82f), Vector2.right);
+			gm.LoadArea(47, fadeIn: true, new Vector2(-4.35f, -0.82f), Vector2.right);
 		}
 	}
 
@@ -54,14 +54,14 @@ public class Section1EndCutscene : CutsceneBase
 	{
 		base.StartCutscene(par);
 		hardmode = (int)gm.GetFlag(108) == 1;
-		if (PlayerPrefs.GetInt("CompletionState", 0) < 1 && !hardmode)
+		if (PersistentSAVE.GetInt("completion", 0) < 1 && !hardmode)
 		{
-			PlayerPrefs.SetInt("CompletionState", 1);
+			PersistentSAVE.SetInt("completion", 1);
+			PersistentSAVE.SetInt("last-saved-pm-0", 0);
+			PersistentSAVE.SetInt("last-saved-pm-0", 1);
+			PersistentSAVE.SetInt("last-saved-pm-0", 2);
 		}
-		if (Object.FindObjectOfType<GameManager>().GetItemList().Contains(16))
-		{
-			Object.FindObjectOfType<GameManager>().RemoveItem(Object.FindObjectOfType<GameManager>().GetItemList().IndexOf(16));
-		}
-		Object.FindObjectOfType<Fade>().UTFadeOut();
+		Util.GameManager().SetFlag(286, 0);
+		Util.FindObjectOfType<Fade>().UTFadeOut();
 	}
 }

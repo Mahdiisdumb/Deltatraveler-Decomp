@@ -11,10 +11,10 @@ public class SansSpareAttack : AttackBase
 		base.Awake();
 		bbPos = new Vector2(0f, -2.37f);
 		bbSize = new Vector2(575f, 140f);
-		Object.FindObjectOfType<PartyPanels>().DeactivateTargets();
-		Object.FindObjectOfType<PartyPanels>().RaiseHeads(false, false, false);
-		Object.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
-		sans = Object.FindObjectOfType<Sans>();
+		Util.FindObjectOfType<PartyPanels>().DeactivateTargets();
+		Util.FindObjectOfType<PartyPanels>().RaiseHeads(kris: false, susie: false, noelle: false);
+		Util.FindObjectOfType<SOUL>().GetComponent<SpriteRenderer>().enabled = false;
+		sans = Util.FindObjectOfType<Sans>();
 	}
 
 	protected override void Update()
@@ -29,7 +29,7 @@ public class SansSpareAttack : AttackBase
 			if (frames == 30)
 			{
 				sans.SetFace("empty_down");
-				sans.Chat(new string[3] { "you...^10 little...", "when i...^10 get my hands...^10 \non you...", "you'll look...^15 just like...^10 " }, "snd_txtsans", Util.GameManager().IsTestMode(), 1);
+				sans.Chat(new string[3] { "you...^10 little...", "when i...^10 get my \nhands...^10 on you...", "you'll look...^15 just \nlike...^10 " }, "snd_txtsans", Util.GameManager().IsTestMode(), 1);
 				state = 1;
 				frames = 0;
 			}
@@ -91,7 +91,7 @@ public class SansSpareAttack : AttackBase
 			if (frames == 140)
 			{
 				Util.GameManager().AddGold(sans.GetGold() / 2);
-				Object.FindObjectOfType<BattleManager>().FadeEndBattle(2);
+				Util.FindObjectOfType<BattleManager>().FadeEndBattle(2);
 			}
 		}
 	}

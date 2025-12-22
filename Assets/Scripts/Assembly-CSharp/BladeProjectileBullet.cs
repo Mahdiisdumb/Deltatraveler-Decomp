@@ -14,9 +14,9 @@ public class BladeProjectileBullet : BulletBase
 		base.Awake();
 		destroyOnHit = false;
 		baseDmg = 7;
-		base.transform.up = base.transform.position - Object.FindObjectOfType<SOUL>().transform.position;
-		dir = Vector3.MoveTowards(base.transform.position, Object.FindObjectOfType<SOUL>().transform.position, 1f / 48f) - base.transform.position;
-		speed = Mathf.Lerp(20f, 14f, (float)Object.FindObjectOfType<BladeKnight>().GetHP() / (float)Object.FindObjectOfType<BladeKnight>().GetMaxHP());
+		base.transform.up = base.transform.position - Util.FindObjectOfType<SOUL>().transform.position;
+		dir = Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position, 1f / 48f) - base.transform.position;
+		speed = Mathf.Lerp(20f, 14f, (float)Util.FindObjectOfType<BladeKnight>().GetHP() / (float)Util.FindObjectOfType<BladeKnight>().GetMaxHP());
 	}
 
 	private void Update()
@@ -32,7 +32,7 @@ public class BladeProjectileBullet : BulletBase
 
 	private void SplitApart()
 	{
-		Object.FindObjectOfType<BattleCamera>().BlastShake();
+		Util.FindObjectOfType<BattleCamera>().BlastShake();
 		for (int i = 0; i < 3; i++)
 		{
 			float angle = base.transform.eulerAngles.z + 90f + 15f - (float)(15 * i);

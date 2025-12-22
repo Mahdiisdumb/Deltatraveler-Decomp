@@ -55,7 +55,7 @@ public class EnemyHPBar : MonoBehaviour
 			{
 				oldHp = 100;
 			}
-			base.transform.Find("fg").GetComponent<Image>().color = PartyPanels.defaultColors[2];
+			base.transform.Find("fg").GetComponent<Image>().color = new Color(1f, 1f, 0f);
 		}
 		base.transform.Find("fg").GetComponent<Image>().enabled = hitOnce;
 		base.transform.Find("bg").GetComponent<Image>().enabled = hitOnce;
@@ -103,7 +103,7 @@ public class EnemyHPBar : MonoBehaviour
 		base.transform.Find("bbg").GetComponent<RectTransform>().sizeDelta = new Vector2(width + 2, 15f);
 		base.transform.Find("fg").GetComponent<RectTransform>().localPosition = base.transform.Find("bg").GetComponent<RectTransform>().localPosition - new Vector3((float)width / 2f, 0f);
 		StartHP(oldHp, newHp, maxHp, partyMember, mercy, emptyHPBarWhenZero);
-		GameManager gameManager = Object.FindObjectOfType<GameManager>();
+		GameManager gameManager = Util.GameManager();
 		if ((object)gameManager != null && gameManager.GetFlagInt(94) == 1 && hitOnce)
 		{
 			Image[] componentsInChildren = base.transform.Find("corners").GetComponentsInChildren<Image>();

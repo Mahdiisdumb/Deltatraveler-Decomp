@@ -310,13 +310,13 @@ public class KrisDreamSequenceRuins : CutsceneBase
 					kris.SetSprite("spr_kr_sit_injured");
 					kris.transform.position = new Vector3(-2.83f, 2.92f);
 				}
-				if (gm.NumItemFreeSpace() > 0)
+				if (gm.NumItemFreeSpace(equipment: false) > 0)
 				{
 					PlaySFX("sounds/snd_item");
 					gm.AddItem(hardmode ? 28 : 5);
 					StartText(new string[3]
 					{
-						hardmode ? "* (You got the Snail Pie...)" : "* (You got the Butterscotch Pie.)",
+						hardmode ? "* (You got the Snail Pie...)\n* (It was added to your ITEMs.)" : "* (You got the Butterscotch Pie.)\n* (It was added to your ITEMs.)",
 						"* Now let's get outta\n  here.",
 						"* I'm tired of this\n  place."
 					}, new string[4] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_text" }, new int[18], new string[4] { "", "su_annoyed", "su_annoyed", "su_confident" }, 1);
@@ -379,7 +379,7 @@ public class KrisDreamSequenceRuins : CutsceneBase
 				if (frames == 1)
 				{
 					PlaySFX("sounds/snd_wing");
-					gm.SetPartyMembers(true, false);
+					gm.SetPartyMembers(susie: true, noelle: false);
 					kris.EnableAnimator();
 					kris.ChangeDirection(Vector2.right);
 				}
@@ -387,7 +387,7 @@ public class KrisDreamSequenceRuins : CutsceneBase
 				if (kris.transform.position == new Vector3(-1.13f, 2.32f))
 				{
 					kris.ChangeDirection(Vector2.down);
-					susie.SetSelfAnimControl(true);
+					susie.SetSelfAnimControl(setAnimControl: true);
 					gm.PlayMusic(hardmode ? "music/mus_house1" : "music/mus_home");
 					EndCutscene();
 				}
@@ -430,8 +430,8 @@ public class KrisDreamSequenceRuins : CutsceneBase
 		{
 			genoID = 1;
 		}
-		gm.SetHP(0, 99);
-		gm.SetHP(1, 99);
+		gm.SetHP(0, gm.GetMaxHP(0) + 5, forceOverheal: true);
+		PartyMembers.SetHP(1, PartyMembers.GetMaxHP(1) + 5, forceOverheal: true);
 		hardmode = (int)gm.GetFlag(108) == 1;
 		krisDream = GameObject.Find("KrisDream").GetComponent<Animator>();
 		road = GameObject.Find("Road").transform;

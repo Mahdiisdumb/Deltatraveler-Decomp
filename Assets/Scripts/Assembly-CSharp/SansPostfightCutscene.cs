@@ -229,9 +229,9 @@ public class SansPostfightCutscene : CutsceneBase
 				frames++;
 				if (frames == 1)
 				{
-					SetMoveAnim(kris, true);
-					SetMoveAnim(noelle, true);
-					SetMoveAnim(susie, true);
+					SetMoveAnim(kris, isMoving: true);
+					SetMoveAnim(noelle, isMoving: true);
+					SetMoveAnim(susie, isMoving: true);
 					noelle.EnableAnimator();
 					ChangeDirection(susie, Vector2.left);
 					ChangeDirection(kris, Vector2.up);
@@ -255,10 +255,10 @@ public class SansPostfightCutscene : CutsceneBase
 					SetSprite(kris, "spr_kr_surprise");
 					SetSprite(susie, "spr_su_surprise_right");
 					SetSprite(noelle, "spr_no_surprise_left");
-					SetMoveAnim(kris, false);
-					SetMoveAnim(susie, false);
-					SetMoveAnim(noelle, false);
-					StartText(new string[4] { "*\tpapyrus...^10\n*\tyou don't...^10\n*\tunderstand...", "* Aight,^05 asshole,^05 I'm\n  killing you MYSELF!", "WAIT!!!^05 STOP!!!", "* P-^05Papyrus???" }, new string[4] { "snd_txtsans", "snd_txtsus", "snd_txtpap", "snd_txtnoe" }, new int[2] { 1, 0 }, new string[4] { "", "su_angry", "", "no_awe" }, 0);
+					SetMoveAnim(kris, isMoving: false);
+					SetMoveAnim(susie, isMoving: false);
+					SetMoveAnim(noelle, isMoving: false);
+					StartText(new string[4] { "* papyrus...^10\n* you don't...^10\n* understand...", "* Aight,^05 asshole,^05 I'm\n  killing you MYSELF!", "WAIT!!!^05 STOP!!!", "* P-^05Papyrus???" }, new string[4] { "snd_txtsans", "snd_txtsus", "snd_txtpap", "snd_txtnoe" }, new int[2] { 1, 0 }, new string[4] { "", "su_angry", "", "no_awe" }, 0);
 				}
 			}
 		}
@@ -292,12 +292,12 @@ public class SansPostfightCutscene : CutsceneBase
 					noelle.EnableAnimator();
 					ChangeDirection(kris, Vector2.down);
 					ChangeDirection(noelle, Vector2.down);
-					SetMoveAnim(papyrus, true);
+					SetMoveAnim(papyrus, isMoving: true);
 				}
 				MoveTo(cam, new Vector3(0f, 2.5f, -10f), 4f);
 				if (!MoveTo(papyrus, new Vector3(1f / 48f, 1.25f), 6f))
 				{
-					SetMoveAnim(papyrus, false);
+					SetMoveAnim(papyrus, isMoving: false);
 					StartText(new string[4] { "YES,^05 I DIDN'T DIE!!!", "A MIRACLE I GRABBED \nTHE LEDGE AFTER \nBEING KICKED.", "BUT...", "I WASN'T KICKED \nFOR NO REASON,^05 \nI IMAGINE." }, new string[4] { "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap" }, new int[1], new string[4] { "ufpap_neutral", "ufpap_laugh", "ufpap_side", "ufpap_dejected" }, 1);
 					state = 4;
 					frames = 0;
@@ -309,7 +309,7 @@ public class SansPostfightCutscene : CutsceneBase
 			if (frames == 0)
 			{
 				frames++;
-				SetMoveAnim(papyrus, true, 0.5f);
+				SetMoveAnim(papyrus, isMoving: true, 0.5f);
 				gm.StopMusic(60f);
 			}
 			if (!MoveTo(papyrus, new Vector3(1f / 48f, 3.8f), 2f))
@@ -317,7 +317,7 @@ public class SansPostfightCutscene : CutsceneBase
 				frames++;
 				if (frames == 2)
 				{
-					SetMoveAnim(papyrus, false);
+					SetMoveAnim(papyrus, isMoving: false);
 				}
 				if (frames == 10)
 				{
@@ -368,7 +368,7 @@ public class SansPostfightCutscene : CutsceneBase
 				}
 				if (AtLine(14))
 				{
-					SetSprite(susie, "spr_su_left_worried_0", true);
+					SetSprite(susie, "spr_su_left_worried_0", flipX: true);
 				}
 			}
 			else
@@ -461,7 +461,7 @@ public class SansPostfightCutscene : CutsceneBase
 			}
 			else
 			{
-				PlayAnimation(papyrus, "WalkDownCasualSad", 0.5f, false);
+				PlayAnimation(papyrus, "WalkDownCasualSad", 0.5f, startAtBeginning: false);
 			}
 		}
 		else if (state == 9)
@@ -537,9 +537,9 @@ public class SansPostfightCutscene : CutsceneBase
 			}
 			else
 			{
-				SetMoveAnim(kris, true);
-				SetMoveAnim(noelle, true);
-				SetMoveAnim(susie, true);
+				SetMoveAnim(kris, isMoving: true);
+				SetMoveAnim(noelle, isMoving: true);
+				SetMoveAnim(susie, isMoving: true);
 				state = 50;
 				frames = 0;
 			}
@@ -570,9 +570,9 @@ public class SansPostfightCutscene : CutsceneBase
 		}
 		else if (state == 14 && !txt)
 		{
-			SetMoveAnim(kris, true);
-			SetMoveAnim(noelle, true);
-			SetMoveAnim(susie, true);
+			SetMoveAnim(kris, isMoving: true);
+			SetMoveAnim(noelle, isMoving: true);
+			SetMoveAnim(susie, isMoving: true);
 			state = 50;
 			frames = 0;
 			gm.StopMusic(60f);
@@ -610,9 +610,9 @@ public class SansPostfightCutscene : CutsceneBase
 				frames++;
 				if (frames == 1)
 				{
-					SetMoveAnim(kris, true);
-					SetMoveAnim(noelle, true);
-					SetMoveAnim(susie, true);
+					SetMoveAnim(kris, isMoving: true);
+					SetMoveAnim(noelle, isMoving: true);
+					SetMoveAnim(susie, isMoving: true);
 					ChangeDirection(susie, Vector2.left);
 					ChangeDirection(kris, Vector2.up);
 					ChangeDirection(noelle, Vector2.up);
@@ -662,7 +662,7 @@ public class SansPostfightCutscene : CutsceneBase
 				}
 				else if (AtLine(12))
 				{
-					SetSprite(susie, "spr_su_wtf", true);
+					SetSprite(susie, "spr_su_wtf", flipX: true);
 					SetSprite(kris, "spr_kr_surprise");
 				}
 			}
@@ -674,7 +674,7 @@ public class SansPostfightCutscene : CutsceneBase
 					Util.GameManager().ForceWeapon(1, -1);
 					PlayAnimation(susie, "Throw");
 					kris.EnableAnimator();
-					SetMoveAnim(kris, true, 2f);
+					SetMoveAnim(kris, isMoving: true, 2f);
 					SetSprite(noelle, "spr_no_surprise_left");
 					PlaySFX("sounds/snd_heavyswing");
 				}
@@ -684,12 +684,12 @@ public class SansPostfightCutscene : CutsceneBase
 				}
 				if (frames == 4)
 				{
-					SetMoveAnim(kris, false);
+					SetMoveAnim(kris, isMoving: false);
 				}
 				if (frames <= 30)
 				{
 					float t = (float)frames / 30f;
-					float num2 = Mathf.Sin((float)(frames * 6) * ((float)Math.PI / 180f)) * 2.47f;
+					float num2 = Mathf.Sin((float)(frames * 6) * (MathF.PI / 180f)) * 2.47f;
 					stick.position = new Vector3(Mathf.Lerp(-1.12f, -8.56f, t), 2.9f + num2);
 					stick.eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(0f, 146f, t));
 				}
@@ -714,7 +714,7 @@ public class SansPostfightCutscene : CutsceneBase
 					}, new string[10] { "snd_text", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtnoe", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtnoe" }, new int[1], new string[10] { "", "no_shocked", "su_angry", "su_pissed", "no_afraid", "no_depressed", "no_depressed_side", "su_annoyed", "su_side_sweat", "no_awe" }, 0);
 					state = 18;
 					frames = 0;
-					SetSprite(noelle, "spr_no_think_right_panic", true);
+					SetSprite(noelle, "spr_no_think_right_panic", flipX: true);
 				}
 			}
 		}
@@ -755,9 +755,9 @@ public class SansPostfightCutscene : CutsceneBase
 				if (frames == 1)
 				{
 					kris.EnableAnimator();
-					SetMoveAnim(kris, true);
-					SetMoveAnim(noelle, true);
-					SetMoveAnim(susie, true);
+					SetMoveAnim(kris, isMoving: true);
+					SetMoveAnim(noelle, isMoving: true);
+					SetMoveAnim(susie, isMoving: true);
 					ChangeDirection(susie, Vector2.right);
 					ChangeDirection(kris, Vector2.up);
 					ChangeDirection(noelle, Vector2.up);
@@ -799,7 +799,7 @@ public class SansPostfightCutscene : CutsceneBase
 						if (susieInitFrames == 0)
 						{
 							PlaySFX("sounds/snd_sussurprise");
-							SetSprite(susie, "spr_su_wtf", true);
+							SetSprite(susie, "spr_su_wtf", flipX: true);
 						}
 						susieInitFrames++;
 						MoveTo(susie, new Vector3(-0.792f, 2.164f), 2f);
@@ -813,7 +813,7 @@ public class SansPostfightCutscene : CutsceneBase
 			else if (frames == 0 && MoveTo(susie, new Vector3(-0.792f, 2.164f), 6f))
 			{
 				susie.EnableAnimator();
-				SetMoveAnim(susie, true, 2f);
+				SetMoveAnim(susie, isMoving: true, 2f);
 			}
 			else
 			{
@@ -821,7 +821,7 @@ public class SansPostfightCutscene : CutsceneBase
 				if (frames == 1)
 				{
 					PlaySFX("sounds/snd_grab");
-					SetSprite(susie, "spr_su_grasp_kris_4", true);
+					SetSprite(susie, "spr_su_grasp_kris_4", flipX: true);
 					SetSprite(noelle, "spr_no_surprise_left");
 					kris.GetComponent<SpriteRenderer>().enabled = false;
 					susieInitFrames = 0;
@@ -884,7 +884,7 @@ public class SansPostfightCutscene : CutsceneBase
 				}
 				if (AtLine(susieRage ? 6 : 5))
 				{
-					SetSprite(noelle, "spr_no_panic_right", true);
+					SetSprite(noelle, "spr_no_panic_right", flipX: true);
 				}
 			}
 			else
@@ -897,13 +897,13 @@ public class SansPostfightCutscene : CutsceneBase
 				frames++;
 				if (frames == 1)
 				{
-					SetSprite(noelle, "spr_no_think_right_panic", true);
+					SetSprite(noelle, "spr_no_think_right_panic", flipX: true);
 				}
 				if (frames == 30)
 				{
 					kris.GetComponent<SpriteRenderer>().enabled = true;
 					SetSprite(kris, "spr_kr_sit_injured");
-					SetSprite(susie, "spr_su_kneel", true);
+					SetSprite(susie, "spr_su_kneel", flipX: true);
 					PlaySFX("sounds/snd_bump");
 				}
 				if (frames == 75)
@@ -922,7 +922,7 @@ public class SansPostfightCutscene : CutsceneBase
 			{
 				PlaySFX("sounds/snd_wing");
 				susie.EnableAnimator();
-				SetMoveAnim(susie, false);
+				SetMoveAnim(susie, isMoving: false);
 				susie.GetComponent<SpriteRenderer>().flipX = false;
 				ChangeDirection(susie, Vector2.up);
 			}
@@ -947,11 +947,11 @@ public class SansPostfightCutscene : CutsceneBase
 			if (frames >= 160 && frames < 170)
 			{
 				kris.transform.position -= new Vector3(1f / 24f, 0f);
-				SetMoveAnim(kris, true, 0.75f);
+				SetMoveAnim(kris, isMoving: true, 0.75f);
 			}
 			else
 			{
-				SetMoveAnim(kris, false);
+				SetMoveAnim(kris, isMoving: false);
 			}
 			if (frames == 170)
 			{
@@ -996,9 +996,9 @@ public class SansPostfightCutscene : CutsceneBase
 			ChangeDirection(kris, Vector2.up);
 			ChangeDirection(susie, Vector2.up);
 			ChangeDirection(noelle, Vector2.up);
-			SetMoveAnim(kris, true);
-			SetMoveAnim(susie, true);
-			SetMoveAnim(noelle, true);
+			SetMoveAnim(kris, isMoving: true);
+			SetMoveAnim(susie, isMoving: true);
+			SetMoveAnim(noelle, isMoving: true);
 			state = 50;
 			gm.StopMusic(60f);
 		}
@@ -1010,17 +1010,17 @@ public class SansPostfightCutscene : CutsceneBase
 				if (!MoveTo(susie, new Vector3(-2.211f, 1.294f), 6f))
 				{
 					ChangeDirection(susie, Vector2.right);
-					SetMoveAnim(susie, false);
+					SetMoveAnim(susie, isMoving: false);
 				}
 				else
 				{
 					ChangeDirection(susie, Vector2.left);
-					SetMoveAnim(susie, true);
+					SetMoveAnim(susie, isMoving: true);
 				}
 			}
 			if (frames == 75)
 			{
-				StartText(new string[3] { "*\t...", "*\tpapyrus...", "*\tyou weren't supposed to\n\thear any of that." }, new string[3] { "snd_txtsans", "snd_txtsans", "snd_txtsans" }, new int[1], new string[3] { "ufsans_shocked", "ufsans_shocked", "ufsans_sad" }, 0);
+				StartText(new string[3] { "* ...", "* papyrus...", "* you weren't supposed to\n  hear any of that." }, new string[3] { "snd_txtsans", "snd_txtsans", "snd_txtsans" }, new int[1], new string[3] { "ufsans_shocked", "ufsans_shocked", "ufsans_sad" }, 0);
 				ChangeDirection(kris, Vector2.up);
 				ChangeDirection(susie, Vector2.up);
 				ChangeDirection(noelle, Vector2.up);
@@ -1040,13 +1040,13 @@ public class SansPostfightCutscene : CutsceneBase
 			else if (!MoveTo(papyrus, new Vector3(1f / 48f, 1.35f), 8f))
 			{
 				SetSprite(papyrus, "overworld/npcs/underfell/spr_ufpap_casual_up_0");
-				StartText(new string[9] { "AND WHY NOT?", "*\tw-^05well...", "*\tit's...^10 not for you to\n\tworry about.", "OH,^05 IT'S EVERYTHING \nFOR ME TO WORRY \nABOUT.", "YOU ARE THE ONE \nTHAT STARTED A \nMURDEROUS SPREE.", "YOU PUSHED ME TO \nHELP WITH YOUR \nDIRTY WORK.", "TO THE POINT OF \nHARMING ME AND \nPASSERSBY.", "AND ALL THAT PAIN \nJUST TO END IT \nALL!", "IT IS COMPLETELY \nAND UTTERLY SELFISH." }, new string[9] { "snd_txtpap", "snd_txtsans", "snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap" }, new int[1], new string[9] { "ufpap_sus", "ufsans_sad", "ufsans_depressed", "ufpap_mad", "ufpap_mad", "ufpap_mad", "ufpap_dejected", "ufpap_mad", "ufpap_disappointed" }, 0);
+				StartText(new string[9] { "AND WHY NOT?", "* w-^05well...", "* it's...^10 not for you to\n  worry about.", "OH,^05 IT'S EVERYTHING \nFOR ME TO WORRY \nABOUT.", "YOU ARE THE ONE \nTHAT STARTED A \nMURDEROUS SPREE.", "YOU PUSHED ME TO \nHELP WITH YOUR \nDIRTY WORK.", "TO THE POINT OF \nHARMING ME AND \nPASSERSBY.", "AND ALL THAT PAIN \nJUST TO END IT \nALL!", "IT IS COMPLETELY \nAND UTTERLY SELFISH." }, new string[9] { "snd_txtpap", "snd_txtsans", "snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap" }, new int[1], new string[9] { "ufpap_sus", "ufsans_sad", "ufsans_depressed", "ufpap_mad", "ufpap_mad", "ufpap_mad", "ufpap_dejected", "ufpap_mad", "ufpap_disappointed" }, 0);
 				state = 26;
 				frames = 0;
 			}
 			else
 			{
-				PlayAnimation(papyrus, "WalkUpCasual", 2.75f, false);
+				PlayAnimation(papyrus, "WalkUpCasual", 2.75f, startAtBeginning: false);
 			}
 		}
 		else if (state == 26)
@@ -1102,12 +1102,12 @@ public class SansPostfightCutscene : CutsceneBase
 				frames++;
 				if (frames == 20)
 				{
-					SetSprite(susie, "spr_su_lookaway", true);
+					SetSprite(susie, "spr_su_lookaway", flipX: true);
 				}
 				if (frames == 60)
 				{
 					SetSprite(sans, "overworld/npcs/underfell/spr_ufsans_sad_0");
-					StartText(new string[9] { "*\tpapyrus...", "*\ti don't know what to\n\teven do anymore...", "*\teverything i've done has\n\tbeen so reprehensible.", "*\thow can i say that i\n\tdeserve a second chance?^10\n*\tlet alone allowed to live.", "WELL...", "CONSIDERING HOW \nREVILED WE ARE...", "I'M NOT SURE.", "I DON'T THINK EVEN \nI COULD EVER FULLY \nFORGIVE YOU.", "HOWEVER..." }, new string[9] { "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap" }, new int[1], new string[9] { "ufsans_sad", "ufsans_depressed", "ufsans_sad", "ufsans_depressed", "ufpap_side", "ufpap_worry", "ufpap_dejected", "ufpap_dejected_closed", "ufpap_confident" }, 0);
+					StartText(new string[9] { "* papyrus...", "* i don't know what to\n  even do anymore...", "* everything i've done has\n  been so reprehensible.", "* how can i say that i\n  deserve a second chance?^10\n* let alone allowed to live.", "WELL...", "CONSIDERING HOW \nREVILED WE ARE...", "I'M NOT SURE.", "I DON'T THINK EVEN \nI COULD EVER FULLY \nFORGIVE YOU.", "HOWEVER..." }, new string[9] { "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap" }, new int[1], new string[9] { "ufsans_sad", "ufsans_depressed", "ufsans_sad", "ufsans_depressed", "ufpap_side", "ufpap_worry", "ufpap_dejected", "ufpap_dejected_closed", "ufpap_confident" }, 0);
 					state = 29;
 					frames = 0;
 				}
@@ -1146,7 +1146,7 @@ public class SansPostfightCutscene : CutsceneBase
 				}
 				else
 				{
-					PlayAnimation(papyrus, "WalkUpCasual", 0.5f, false);
+					PlayAnimation(papyrus, "WalkUpCasual", 0.5f, startAtBeginning: false);
 				}
 			}
 		}
@@ -1160,7 +1160,7 @@ public class SansPostfightCutscene : CutsceneBase
 			if (frames == 45)
 			{
 				SetSprite(sans, "overworld/npcs/underfell/spr_ufsans_sad_1");
-				StartText(new string[6] { "*\t...", "*\tbut...^10 after everything\n\ti've done...", "WHAT GOOD WOULD IT \nDO FOR YOU TO \nJUST GIVE UP?", "IF YOU WISH TO \nMAKE AMENDS,^10 YOU \nMUST TRY.", "BESIDES,^05 I HAVE \nMY OWN PATH OF \nATONEMENT TO WALK.", "SO...^10 WHY DON'T WE \nWALK IT TOGETHER?" }, new string[6] { "snd_txtsans", "snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap" }, new int[1], new string[6] { "ufsans_depressed", "ufsans_sad", "ufpap_side", "ufpap_mad", "ufpap_dejected_closed", "ufpap_relief" }, 0);
+				StartText(new string[6] { "* ...", "* but...^10 after everything\n  i've done...", "WHAT GOOD WOULD IT \nDO FOR YOU TO \nJUST GIVE UP?", "IF YOU WISH TO \nMAKE AMENDS,^10 YOU \nMUST TRY.", "BESIDES,^05 I HAVE \nMY OWN PATH OF \nATONEMENT TO WALK.", "SO...^10 WHY DON'T WE \nWALK IT TOGETHER?" }, new string[6] { "snd_txtsans", "snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap" }, new int[1], new string[6] { "ufsans_depressed", "ufsans_sad", "ufpap_side", "ufpap_mad", "ufpap_dejected_closed", "ufpap_relief" }, 0);
 				state = 31;
 				frames = 0;
 			}
@@ -1180,7 +1180,7 @@ public class SansPostfightCutscene : CutsceneBase
 				if (frames == 30)
 				{
 					SetSprite(sans, "overworld/npcs/underfell/spr_ufsans_sad_1");
-					StartText(new string[2] { "*\ti...^15 uhh...", "HERE,^05 WHY DON'T I \nHELP YOU UP." }, new string[2] { "snd_txtsans", "snd_txtpap" }, new int[1], new string[2] { "ufsans_depressed", "ufpap_side" }, 0);
+					StartText(new string[2] { "* i...^15 uhh...", "HERE,^05 WHY DON'T I \nHELP YOU UP." }, new string[2] { "snd_txtsans", "snd_txtpap" }, new int[1], new string[2] { "ufsans_depressed", "ufpap_side" }, 0);
 					state = 32;
 					frames = 0;
 				}
@@ -1206,8 +1206,8 @@ public class SansPostfightCutscene : CutsceneBase
 				{
 					StartText(new string[13]
 					{
-						"*\tbut what about becoming\n\ta royal guardsman?", "I REALIZED WHEN \nHEARING YOUR \nCONFESSION...", "I CANNOT SEEK OUT \nGUARDSMANSHIP \nANYMORE.", "SUCH A TITLE IS \nWRITTEN IN BLOOD.", "WHY WOULD I WANT \nTO SHED EVEN MORE...", "WHEN I CAN HELP \nPEOPLE INSTEAD?", "OR AT LEAST TRY \nTO...", "SO THAT OLD BATTLE \nBODY MUST GO.", "*\t...", "*\twell,^05 heh...",
-						"*\thopefully undyne doesn't\n\tkill you for this.", "I'D BE A LITTLE \nSHOCKED IF SHE DID.", "*\twell,^05 whatever you say."
+						"* but what about becoming\n  a royal guardsman?", "I REALIZED WHEN \nHEARING YOUR \nCONFESSION...", "I CANNOT SEEK OUT \nGUARDSMANSHIP \nANYMORE.", "SUCH A TITLE IS \nWRITTEN IN BLOOD.", "WHY WOULD I WANT \nTO SHED EVEN MORE...", "WHEN I CAN HELP \nPEOPLE INSTEAD?", "OR AT LEAST TRY \nTO...", "SO THAT OLD BATTLE \nBODY MUST GO.", "* ...", "* well,^05 heh...",
+						"* hopefully undyne doesn't\n  kill you for this.", "I'D BE A LITTLE \nSHOCKED IF SHE DID.", "* well,^05 whatever you say."
 					}, new string[13]
 					{
 						"snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtsans", "snd_txtsans",
@@ -1223,7 +1223,7 @@ public class SansPostfightCutscene : CutsceneBase
 			}
 			else
 			{
-				PlayAnimation(papyrus, "WalkUpCasual", 0.5f, false);
+				PlayAnimation(papyrus, "WalkUpCasual", 0.5f, startAtBeginning: false);
 			}
 		}
 		else if (state == 33)
@@ -1271,7 +1271,7 @@ public class SansPostfightCutscene : CutsceneBase
 				if (frames == 25)
 				{
 					SetSprite(papyrus, "overworld/npcs/underfell/spr_ufpap_sans_stand_3");
-					StartText(new string[5] { "SANS...", "LET'S GO HOME.", "*\troger that,^05 boss.", "...", "I'LL LET THAT ONE \nSLIDE...^10\nTHIS TIME." }, new string[5] { "snd_txtpap", "snd_txtpap", "snd_txtsans", "snd_txtpap", "snd_txtpap" }, new int[1], new string[5] { "ufpap_side", "ufpap_relief", "ufsans_closed", "ufpap_sus", "ufpap_side" }, 0);
+					StartText(new string[5] { "SANS...", "LET'S GO HOME.", "* roger that,^05 boss.", "...", "I'LL LET THAT ONE \nSLIDE...^10\nTHIS TIME." }, new string[5] { "snd_txtpap", "snd_txtpap", "snd_txtsans", "snd_txtpap", "snd_txtpap" }, new int[1], new string[5] { "ufpap_side", "ufpap_relief", "ufsans_closed", "ufpap_sus", "ufpap_side" }, 0);
 					state = 35;
 					frames = 0;
 				}
@@ -1341,9 +1341,9 @@ public class SansPostfightCutscene : CutsceneBase
 				noelle.EnableAnimator();
 				ChangeDirection(kris, Vector2.up);
 				ChangeDirection(noelle, Vector2.up);
-				SetMoveAnim(kris, true);
-				SetMoveAnim(noelle, true);
-				SetMoveAnim(susie, true);
+				SetMoveAnim(kris, isMoving: true);
+				SetMoveAnim(noelle, isMoving: true);
+				SetMoveAnim(susie, isMoving: true);
 				state = 50;
 				frames = 0;
 			}
@@ -1357,7 +1357,7 @@ public class SansPostfightCutscene : CutsceneBase
 			}
 			else
 			{
-				kris.GetComponent<Animator>().SetBool("isMoving", false);
+				kris.GetComponent<Animator>().SetBool("isMoving", value: false);
 				kris.ChangeDirection(Vector2.up);
 			}
 			if (MoveTo(susie, new Vector3(0f, 4.75f), 4f))
@@ -1366,7 +1366,7 @@ public class SansPostfightCutscene : CutsceneBase
 			}
 			else
 			{
-				susie.GetComponent<Animator>().SetBool("isMoving", false);
+				susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 				susie.ChangeDirection(Vector2.up);
 			}
 			if (MoveTo(noelle, new Vector3(1.67f, 5.55f), 4f))
@@ -1375,7 +1375,7 @@ public class SansPostfightCutscene : CutsceneBase
 			}
 			else
 			{
-				noelle.GetComponent<Animator>().SetBool("isMoving", false);
+				noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
 				noelle.ChangeDirection(Vector2.up);
 			}
 			if (MoveTo(cam, new Vector3(0f, 6.34f, -10f), 4f))
@@ -1402,9 +1402,9 @@ public class SansPostfightCutscene : CutsceneBase
 				kris.GetComponent<Animator>().Play("RunUp", 0, 0f);
 				susie.GetComponent<Animator>().SetFloat("speed", 0f);
 				susie.GetComponent<Animator>().Play("RunUp", 0, 0f);
-				kris.transform.position = Vector3.Lerp(new Vector3(-1.71f, 5.26f), new Vector3(-1.71f, 4.4f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
-				susie.transform.position = Vector3.Lerp(new Vector3(0f, 4.75f), new Vector3(0f, 4.75f - (susieBackup ? 0.86f : 0f)), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
-				noelle.transform.position = Vector3.Lerp(new Vector3(1.67f, 5.55f), new Vector3(1.67f, 4.69f), Mathf.Sin((float)((frames - 45) * 9) * ((float)Math.PI / 180f)));
+				kris.transform.position = Vector3.Lerp(new Vector3(-1.71f, 5.26f), new Vector3(-1.71f, 4.4f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
+				susie.transform.position = Vector3.Lerp(new Vector3(0f, 4.75f), new Vector3(0f, 4.75f - (susieBackup ? 0.86f : 0f)), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
+				noelle.transform.position = Vector3.Lerp(new Vector3(1.67f, 5.55f), new Vector3(1.67f, 4.69f), Mathf.Sin((float)((frames - 45) * 9) * (MathF.PI / 180f)));
 			}
 			else if (frames >= 65 && frames <= 75)
 			{
@@ -1433,7 +1433,7 @@ public class SansPostfightCutscene : CutsceneBase
 			if (frames <= 15)
 			{
 				float num7 = (float)frames / 15f;
-				num7 = Mathf.Sin(num7 * (float)Math.PI * 0.5f);
+				num7 = Mathf.Sin(num7 * MathF.PI * 0.5f);
 				kris.transform.position = Vector3.Lerp(new Vector3(-0.49f, 6.87f), new Vector3(-1.42f, 7.54f), num7);
 				susie.transform.position = Vector3.Lerp(new Vector3(0f, 6.86f), new Vector3(0f, 7.53f), num7);
 				noelle.transform.position = Vector3.Lerp(new Vector3(0.56f, 6.98f), new Vector3(1.45f, 7.65f), num7);
@@ -1497,7 +1497,7 @@ public class SansPostfightCutscene : CutsceneBase
 			}
 			if (frames == 120)
 			{
-				UnityEngine.Object.FindObjectOfType<GameManager>().ForceLoadArea(112);
+				Util.GameManager().ForceLoadArea(112);
 			}
 		}
 	}
@@ -1565,9 +1565,9 @@ public class SansPostfightCutscene : CutsceneBase
 		ChangeDirection(noelle, Vector2.up);
 		susie.GetComponent<SpriteRenderer>().flipX = false;
 		noelle.GetComponent<SpriteRenderer>().flipX = false;
-		SetMoveAnim(kris, false);
-		SetMoveAnim(susie, false);
-		SetMoveAnim(noelle, false);
+		SetMoveAnim(kris, isMoving: false);
+		SetMoveAnim(susie, isMoving: false);
+		SetMoveAnim(noelle, isMoving: false);
 		PlayAnimation(kris, "idle");
 		PlayAnimation(susie, "idle");
 		PlayAnimation(noelle, "idle");

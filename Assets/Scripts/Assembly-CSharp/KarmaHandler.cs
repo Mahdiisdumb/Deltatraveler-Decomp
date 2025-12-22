@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class KarmaHandler : MonoBehaviour
 {
-	private readonly string[] MEMBER_NAMES = new string[3] { "Kris", "Susie", "Noelle" };
-
 	private PartyPanels partyPanels;
 
 	private RectTransform[] hpBars = new RectTransform[3];
@@ -22,12 +20,12 @@ public class KarmaHandler : MonoBehaviour
 		for (int i = 0; i < 3; i++)
 		{
 			bars[i] = base.transform.GetChild(i).GetComponent<RectTransform>();
-			hpBars[i] = base.transform.parent.Find(MEMBER_NAMES[i] + "Stats").Find("Stats").Find("HPFG")
+			hpBars[i] = base.transform.parent.Find("Party" + i + "Stats").Find("Stats").Find("HPFG")
 				.GetComponent<RectTransform>();
-			hpBarBGs[i] = base.transform.parent.Find(MEMBER_NAMES[i] + "Stats").Find("Stats").Find("HPBG")
+			hpBarBGs[i] = base.transform.parent.Find("Party" + i + "Stats").Find("Stats").Find("HPBG")
 				.GetComponent<RectTransform>();
 		}
-		Object.FindObjectOfType<SOUL>().UseKarma(this);
+		Util.FindObjectOfType<SOUL>().UseKarma(this);
 		partyPanels.UseKarma(this);
 	}
 
@@ -75,7 +73,7 @@ public class KarmaHandler : MonoBehaviour
 				{
 					karmaTimers[i] = 0;
 					karma[i]--;
-					Object.FindObjectOfType<PartyPanels>().KarmaTick(i);
+					Util.FindObjectOfType<PartyPanels>().KarmaTick(i);
 					Util.GameManager().Damage(i, 1);
 				}
 			}

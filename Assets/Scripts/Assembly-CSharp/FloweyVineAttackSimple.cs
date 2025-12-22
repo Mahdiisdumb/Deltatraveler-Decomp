@@ -16,7 +16,7 @@ public class FloweyVineAttackSimple : AttackBase
 		bbPos = new Vector2(0f, 2f);
 		soulPos = bbPos;
 		hardmode = (int)Util.GameManager().GetFlag(108) == 1;
-		Object.FindObjectOfType<Flowey>().SetHeadOffset(new Vector3(0f, 1.22f));
+		Util.FindObjectOfType<Flowey>().SetHeadOffset(new Vector3(0f, 1.22f));
 		attackAllTargets = false;
 	}
 
@@ -31,7 +31,7 @@ public class FloweyVineAttackSimple : AttackBase
 		{
 			if (frames == 13)
 			{
-				Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_grab");
+				Util.GameManager().PlayGlobalSFX("sounds/snd_grab");
 			}
 			int num = 18 - frames;
 			bb.transform.position = (Vector3)bbPos + new Vector3(Random.Range(0, 3) - 1, Random.Range(0, 3) - 1) * ((float)num / 48f);
@@ -69,15 +69,15 @@ public class FloweyVineAttackSimple : AttackBase
 		}
 		if (frames == 250)
 		{
-			Object.FindObjectOfType<Flowey>().GetPart("vineLeft").GetComponent<Animator>()
+			Util.FindObjectOfType<Flowey>().GetPart("vineLeft").GetComponent<Animator>()
 				.Play("Uninsert");
-			Object.FindObjectOfType<Flowey>().GetPart("vineRight").GetComponent<Animator>()
+			Util.FindObjectOfType<Flowey>().GetPart("vineRight").GetComponent<Animator>()
 				.Play("Uninsert");
 		}
 		if (frames == 258)
 		{
-			Object.FindObjectOfType<Flowey>().SetHeadOffset(Vector3.zero);
-			Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_grab");
+			Util.FindObjectOfType<Flowey>().SetHeadOffset(Vector3.zero);
+			Util.GameManager().PlayGlobalSFX("sounds/snd_grab");
 		}
 		if (frames >= 259 && frames <= 265)
 		{
@@ -89,9 +89,9 @@ public class FloweyVineAttackSimple : AttackBase
 	public override void StartAttack()
 	{
 		base.StartAttack();
-		Object.FindObjectOfType<Flowey>().GetPart("vineLeft").GetComponent<Animator>()
+		Util.FindObjectOfType<Flowey>().GetPart("vineLeft").GetComponent<Animator>()
 			.Play("Insert");
-		Object.FindObjectOfType<Flowey>().GetPart("vineRight").GetComponent<Animator>()
+		Util.FindObjectOfType<Flowey>().GetPart("vineRight").GetComponent<Animator>()
 			.Play("Insert");
 	}
 }

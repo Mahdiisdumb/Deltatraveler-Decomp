@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Dummy : EnemyBase
@@ -9,31 +8,20 @@ public class Dummy : EnemyBase
 
 	private bool leaving;
 
-	public override Dictionary<string, string[]> GetDefaultStrings()
-	{
-		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
-		dictionary.Add("enemy_name", new string[1] { "Dummy" });
-		dictionary.Add("enemy_check_description", new string[1] { "^10* A cotton heart and a button eye^10\n* You are the apple of my eye" });
-		dictionary.Add("enemy_acts", new string[2]
-		{
-			GetBMString("act_check", 0),
-			"Talk"
-		});
-		dictionary.Add("enemy_flavor_text", new string[2] { "* Dummy looks like it's\n  going to fall over.", "* Dummy stands around\n  absentmindedly." });
-		dictionary.Add("enemy_chatter", new string[1] { ".^10.^10.^10.^10." });
-		dictionary.Add("act_talk_hm", new string[3] { "* You talk to the DUMMY.^10\n* ...", "* It doesn't seem much for\n  conversation.", "* TORIEL seems happy with you." });
-		dictionary.Add("act_talk", new string[3] { "* You talk to the DUMMY.^10\n* ...", "* It doesn't seem much for\n  conversation.", "* Susie looks confused." });
-		dictionary.Add("act_talk_again", new string[3] { "* You talk to the DUMMY.^10\n* ...", "* It doesn't seem much for\n  conversation.", "su_inquisitive`snd_txtsus`* Why are we talking\n  to it AGAIN???" });
-		dictionary.Add("susie_talk", new string[3] { "* Susie talked to the DUMMY.", "su_smile_sweat`snd_txtsus`* You uhh... look pretty\n  beat-up-able.", "* It doesn't seem much for\n  conversation." });
-		dictionary.Add("susie_annoyed", new string[1] { "su_inquisitive`snd_txtsus`* ..." });
-		return dictionary;
-	}
-
 	protected override void Awake()
 	{
 		base.Awake();
-		SetStrings(GetDefaultStrings(), GetType());
-		SetInfoFromStrings();
+		enemyName = "Dummy";
+		checkDesc = "^10* A cotton heart and a button eye^10\n* You are the apple of my eye";
+		actNames = new string[2]
+		{
+			EnemyBase.CHECK_NAME,
+			"Talk"
+		};
+		flavorTxt = new string[2] { "* Dummy looks like it's\n  going to fall over.", "* Dummy stands around\n  absentmindedly." };
+		satisfyTxt = flavorTxt;
+		dyingTxt = flavorTxt;
+		chatter = new string[1] { ".^10.^10.^10.^10." };
 		fileName = "dummy";
 		maxHp = 15;
 		hp = maxHp;
@@ -42,7 +30,7 @@ public class Dummy : EnemyBase
 		atk = 0;
 		def = 0;
 		canSpareViaFight = false;
-		sActionName = "Talk";
+		susieMiniACTs[0].SetName("Talk");
 		defaultChatSize = "RightSmall";
 		defaultChatPos = new Vector2(50f, 51f);
 		exp = 0;
@@ -83,19 +71,19 @@ public class Dummy : EnemyBase
 			{
 				talkedTo = true;
 				AddActPoints(100);
-				if ((int)Object.FindObjectOfType<GameManager>().GetFlag(108) == 1)
+				if ((int)Util.GameManager().GetFlag(108) == 1)
 				{
 					Spare();
-					return GetStringArray("act_talk_hm");
+					return new string[3] { "* You talk to the DUMMY.^10\n* ...", "* It doesn't seem much for\n  conversation.", "* TORIEL seems happy with you." };
 				}
-				return GetStringArray("act_talk");
+				return new string[3] { "* You talk to the DUMMY.^10\n* ...", "* It doesn't seem much for\n  conversation.", "* Susie looks confused." };
 			}
-			return GetStringArray("act_talk_again");
+			return new string[3] { "* You talk to the DUMMY.^10\n* ...", "* It doesn't seem much for\n  conversation.", "su_inquisitive`snd_txtsus`* Why are we talking\n  to it AGAIN???" };
 		}
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		if (i == 1)
 		{
@@ -103,11 +91,11 @@ public class Dummy : EnemyBase
 			{
 				talkedTo = true;
 				AddActPoints(100);
-				return GetStringArray("susie_talk");
+				return new string[3] { "* Susie talked to the DUMMY.", "su_smile_sweat`snd_txtsus`* You uhh... look pretty\n  beat-up-able.", "* It doesn't seem much for\n  conversation." };
 			}
-			return GetStringArray("susie_annoyed");
+			return new string[1] { "su_inquisitive`snd_txtsus`* ..." };
 		}
-		return base.PerformAssistAct(i);
+		return base.PerformAssistAct_Old(i);
 	}
 
 	public override void Chat()
@@ -135,7 +123,7 @@ public class Dummy : EnemyBase
 
 	public override void Spare(bool sleepMist = false)
 	{
-		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(108) == 0)
+		if ((int)Util.GameManager().GetFlag(108) == 0)
 		{
 			base.Spare(sleepMist);
 			obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/" + enemyName.Replace(".", "") + "/spr_b_" + fileName + "_main");

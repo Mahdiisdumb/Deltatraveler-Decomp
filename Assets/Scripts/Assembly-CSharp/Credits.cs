@@ -1,56 +1,49 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Credits : MonoBehaviour
+public class Credits : CreditsBase
 {
-	private int frames;
-
-	private Transform credits;
-
 	private Transform bg;
 
 	private bool doSonaStuff = true;
 
 	private AudioClip castletown;
 
-	private readonly int CREDITS_LENGTH = 5683;
-
-	private void Awake()
+	protected override void Awake()
 	{
-		credits = base.transform.GetChild(0);
+		base.Awake();
+		length = 5833;
+		startInterval = 150;
+		endInterval = 90;
+		seenFlag = "seen-credits";
 		bg = GameObject.Find("BG").transform;
-		if (PlayerPrefs.GetInt("MBUnlocked", 0) == 0)
+		if (PersistentSAVE.GetInt("mario-unlocked", 0) == 0)
 		{
 			Text component = credits.Find("CreditPage4").Find("SpecialThanksCredits").GetComponent<Text>();
 			component.text = component.text.Replace("Mario Bros. Title Background", "***** **** Title Background");
 		}
-		if (Util.GameManager().GetFlagInt(12) == 1 && Util.GameManager().GetFlagInt(13) == 10)
-		{
-			doSonaStuff = false;
-			Object.Destroy(credits.Find("Sonas").gameObject);
-		}
 		castletown = Resources.Load<AudioClip>("music/mus_castletown");
 	}
 
-	private void Update()
+	private void Start()
 	{
-		frames++;
-		if (frames == 1)
+		if (Util.GameManager().GetFlagInt(12) == 1 && Util.GameManager().GetFlagInt(13) == GameManager.FULL_MURDER_LEVEL)
 		{
-			if (!doSonaStuff)
-			{
-				GetComponent<AudioSource>().pitch = 0.6f;
-			}
-			GetComponent<AudioSource>().Play();
+			doSonaStuff = false;
+			Object.Destroy(sonas.gameObject);
+			music.pitch = 0.6f;
 		}
-		if (!GetComponent<AudioSource>().isPlaying)
+	}
+
+	protected override void Update()
+	{
+		base.Update();
+		if (!music.isPlaying)
 		{
-			GetComponent<AudioSource>().clip = castletown;
-			GetComponent<AudioSource>().Play();
-			GetComponent<AudioSource>().loop = true;
+			music.clip = castletown;
+			music.Play();
+			music.loop = true;
 		}
-		credits.localPosition = Vector3.Lerp(Vector3.zero, new Vector3(0f, CREDITS_LENGTH), (float)(frames - 150) / (float)CREDITS_LENGTH);
-		GetComponent<AudioSource>().volume = Mathf.Lerp(1f, 0f, (float)(frames - 150 - CREDITS_LENGTH) / 60f);
 		bg.transform.position = new Vector3(Mathf.Lerp(-5.9f, 6.7f, (float)(frames - 1800) / 2220f), 0f);
 		if (doSonaStuff)
 		{
@@ -159,21 +152,17 @@ public class Credits : MonoBehaviour
 				credits.Find("Sonas").Find("Marxvee").GetComponent<Animator>()
 					.enabled = true;
 			}
-			MonoBehaviour.print(frames);
 		}
-		if (frames >= CREDITS_LENGTH + 150)
-		{
-			GetComponent<AudioSource>().volume = Mathf.Lerp(1f, 0f, (float)(frames - (CREDITS_LENGTH + 150)) / 60f);
-		}
-		if (frames != CREDITS_LENGTH + 240)
-		{
-			return;
-		}
+	}
+
+	protected override void OnCreditsEnd()
+	{
+		base.OnCreditsEnd();
 		if (Util.GameManager().GetEnding() == -1)
 		{
 			if (Util.GameManager().GetFlagInt(58) == 1)
 			{
-				PlayerPrefs.SetInt("FloweyKilledLastTime", 3);
+				PersistentSAVE.SetInt("flowey-killed-last-time", GameManager.FULL_COMPLETION);
 				if (Util.GameManager().GetFlagInt(12) == 1)
 				{
 					Util.GameManager().ForceLoadArea(129);

@@ -6,7 +6,7 @@ public class PapyrusBalls : MonoBehaviour
 
 	private void Awake()
 	{
-		mus = Object.FindObjectOfType<BattleManager>().GetComponent<AudioSource>();
+		mus = Util.FindObjectOfType<BattleManager>().GetComponent<AudioSource>();
 	}
 
 	private void Update()

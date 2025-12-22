@@ -12,15 +12,15 @@ public class ActionBulletHandler : MonoBehaviour
 
 	private void Start()
 	{
-		if (!Object.FindObjectOfType<ActionSOUL>())
+		if (!Util.FindObjectOfType<ActionSOUL>())
 		{
-			Object.Instantiate(Resources.Load<GameObject>("overworld/ActionSOUL"), base.transform.parent, true).name = "ActionSOUL";
+			Object.Instantiate(Resources.Load<GameObject>("overworld/ActionSOUL"), base.transform.parent, worldPositionStays: true).name = "ActionSOUL";
 		}
-		if (!Object.FindObjectOfType<ActionPartyPanels>())
+		if (!Util.FindObjectOfType<ActionPartyPanels>())
 		{
 			Object.Instantiate(Resources.Load<GameObject>("ui/ActionPartyPanels"), GameObject.Find("Canvas").transform).name = "ActionPartyPanels";
 		}
-		panels = Object.FindObjectOfType<ActionPartyPanels>();
+		panels = Util.FindObjectOfType<ActionPartyPanels>();
 		if ((bool)GameObject.Find("RoomBorders"))
 		{
 			roomBorder = GameObject.Find("RoomBorders").GetComponent<SpriteRenderer>();
@@ -39,10 +39,13 @@ public class ActionBulletHandler : MonoBehaviour
 			fadeFrames--;
 		}
 		GetComponent<SpriteRenderer>().color = Color.Lerp(new Color(0f, 0f, 0f, 0f), new Color(0f, 0f, 0f, 0.5f), (float)fadeFrames / 12f);
-		OverworldPartyMember[] array = Object.FindObjectsOfType<OverworldPartyMember>();
-		for (int i = 0; i < array.Length; i++)
+		OverworldPartyMember[] array = Util.FindObjectsOfType<OverworldPartyMember>();
+		foreach (OverworldPartyMember overworldPartyMember in array)
 		{
-			array[i].GetComponent<SpriteRenderer>().color = Color.Lerp(Color.white, new Color(0.5f, 0.5f, 0.5f, 1f), (float)fadeFrames / 12f);
+			if ((bool)overworldPartyMember)
+			{
+				overworldPartyMember.GetComponent<SpriteRenderer>().color = Color.Lerp(Color.white, new Color(0.5f, 0.5f, 0.5f, 1f), (float)fadeFrames / 12f);
+			}
 		}
 		if ((bool)roomBorder)
 		{
@@ -52,42 +55,49 @@ public class ActionBulletHandler : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<OverworldPlayer>() && base.enabled)
+		if ((bool)collision && (bool)collision.GetComponent<OverworldPlayer>() && base.enabled)
 		{
-			Object.FindObjectOfType<GameManager>().DisableMenu();
+			Util.GameManager().DisableMenu();
 			activated = true;
-			Object.FindObjectOfType<ActionSOUL>().SetActivated(true);
-			panels.SetActivated(true);
-			ActionBulletBase[] array = Object.FindObjectsOfType<ActionBulletBase>();
+			Util.FindObjectOfType<ActionSOUL>().SetActivated(activated: true);
+			panels.SetActivated(activated: true);
+			ActionBulletBase[] array = Util.FindObjectsOfType<ActionBulletBase>();
 			for (int i = 0; i < array.Length; i++)
 			{
-				array[i].SetActivated(true);
+				array[i].SetActivated(activated: true);
 			}
-			ActionBulletGenerator[] array2 = Object.FindObjectsOfType<ActionBulletGenerator>();
+			ActionBulletGenerator[] array2 = Util.FindObjectsOfType<ActionBulletGenerator>();
 			for (int i = 0; i < array2.Length; i++)
 			{
-				array2[i].SetActivated(true);
+				array2[i].SetActivated(activated: true);
+			}
+			if (Util.GameManager().GetCombinedHPNoOverheal() < Util.GameManager().GetCombinedMaxHP())
+			{
+				panels.Raise();
 			}
 		}
 	}
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<OverworldPlayer>() && base.enabled)
+		if ((bool)collision && (bool)collision.GetComponent<OverworldPlayer>() && base.enabled)
 		{
-			Object.FindObjectOfType<GameManager>().EnableMenu();
+			Util.GameManager().EnableMenu();
 			activated = false;
-			Object.FindObjectOfType<ActionSOUL>().SetActivated(false);
-			panels.SetActivated(false);
-			ActionBulletBase[] array = Object.FindObjectsOfType<ActionBulletBase>();
+			if ((bool)Util.FindObjectOfType<ActionSOUL>())
+			{
+				Util.FindObjectOfType<ActionSOUL>().SetActivated(activated: false);
+			}
+			panels.SetActivated(activated: false);
+			ActionBulletBase[] array = Util.FindObjectsOfType<ActionBulletBase>();
 			for (int i = 0; i < array.Length; i++)
 			{
-				array[i].SetActivated(false);
+				array[i].SetActivated(activated: false);
 			}
-			ActionBulletGenerator[] array2 = Object.FindObjectsOfType<ActionBulletGenerator>();
+			ActionBulletGenerator[] array2 = Util.FindObjectsOfType<ActionBulletGenerator>();
 			for (int i = 0; i < array2.Length; i++)
 			{
-				array2[i].SetActivated(false);
+				array2[i].SetActivated(activated: false);
 			}
 		}
 	}

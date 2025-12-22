@@ -21,7 +21,7 @@ public class CarPaintBlobAttack : AttackBase
 		maxFrames = 250;
 		bbSize = new Vector2(260f, 140f);
 		soulPos = new Vector2(-0.055f, -2.83f);
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 		attackAllTargets = false;
 	}
 
@@ -88,12 +88,12 @@ public class CarPaintBlobAttack : AttackBase
 
 	private void OnDestroy()
 	{
-		if ((bool)Object.FindObjectOfType<Carpainter>() && !gottenHit && Object.FindObjectOfType<Carpainter>().LookingForAvoid())
+		if ((bool)Util.FindObjectOfType<Carpainter>() && !gottenHit && Util.FindObjectOfType<Carpainter>().LookingForAvoid())
 		{
-			Object.FindObjectOfType<Carpainter>().AddActPoints(25);
-			if (Object.FindObjectOfType<Carpainter>().GetSatisfactionLevel() >= 100)
+			Util.FindObjectOfType<Carpainter>().AddActPoints(25);
+			if (Util.FindObjectOfType<Carpainter>().GetSatisfactionLevel() >= 100)
 			{
-				Object.FindObjectOfType<Carpainter>().Spare();
+				Util.FindObjectOfType<Carpainter>().Spare();
 			}
 		}
 	}

@@ -27,23 +27,23 @@ public class PeacefulRestStandardAttack : AttackBase
 		maxFrames = 140;
 		bbSize = new Vector2(165f, 140f);
 		attackAllTargets = false;
-		if ((bool)UnityEngine.Object.FindObjectOfType<SpinRobo>())
+		if ((bool)Util.FindObjectOfType<SpinRobo>())
 		{
-			robot = !UnityEngine.Object.FindObjectOfType<SpinRobo>().IsDone();
+			robot = !Util.FindObjectOfType<SpinRobo>().IsDone();
 			if (robot)
 			{
 				totalCount++;
 			}
 		}
-		if ((bool)UnityEngine.Object.FindObjectOfType<ExplosiveOak>())
+		if ((bool)Util.FindObjectOfType<ExplosiveOak>())
 		{
-			tree = !UnityEngine.Object.FindObjectOfType<ExplosiveOak>().IsDone() && !UnityEngine.Object.FindObjectOfType<ExplosiveOak>().IsGonnaExplode();
+			tree = !Util.FindObjectOfType<ExplosiveOak>().IsDone() && !Util.FindObjectOfType<ExplosiveOak>().IsGonnaExplode();
 			if (tree)
 			{
 				totalCount++;
 			}
 		}
-		MobileSprout[] array = UnityEngine.Object.FindObjectsOfType<MobileSprout>();
+		MobileSprout[] array = Util.FindObjectsOfType<MobileSprout>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			if (!array[i].IsDone())
@@ -52,7 +52,7 @@ public class PeacefulRestStandardAttack : AttackBase
 				totalCount++;
 			}
 		}
-		LilUFO[] array2 = UnityEngine.Object.FindObjectsOfType<LilUFO>();
+		LilUFO[] array2 = Util.FindObjectsOfType<LilUFO>();
 		foreach (LilUFO lilUFO in array2)
 		{
 			if (!lilUFO.IsDone())
@@ -65,7 +65,7 @@ public class PeacefulRestStandardAttack : AttackBase
 				if (lilUFO.IsCheckingForSlow() && !slowMode)
 				{
 					slowMode = true;
-					UnityEngine.Object.FindObjectOfType<SOUL>().ChangeSOULMode(4);
+					Util.FindObjectOfType<SOUL>().ChangeSOULMode(4);
 				}
 				ufoCount++;
 				totalCount++;
@@ -95,7 +95,7 @@ public class PeacefulRestStandardAttack : AttackBase
 
 	private void OnDestroy()
 	{
-		LilUFO[] array = UnityEngine.Object.FindObjectsOfType<LilUFO>();
+		LilUFO[] array = Util.FindObjectsOfType<LilUFO>();
 		foreach (LilUFO lilUFO in array)
 		{
 			if (!lilUFO.CanSpare() && !lilUFO.IsDone() && lilUFO.IsCheckingForSlow())
@@ -106,17 +106,17 @@ public class PeacefulRestStandardAttack : AttackBase
 			if (!lilUFO.IsDone())
 			{
 				lilUFO.UnexposeLaser();
-				lilUFO.SetMovement(true);
+				lilUFO.SetMovement(canMove: true);
 			}
 		}
-		if ((bool)UnityEngine.Object.FindObjectOfType<SpinRobo>() && !UnityEngine.Object.FindObjectOfType<SpinRobo>().IsDone())
+		if ((bool)Util.FindObjectOfType<SpinRobo>() && !Util.FindObjectOfType<SpinRobo>().IsDone())
 		{
-			UnityEngine.Object.FindObjectOfType<SpinRobo>().GetPart("body").GetComponent<SpriteRenderer>()
+			Util.FindObjectOfType<SpinRobo>().GetPart("body").GetComponent<SpriteRenderer>()
 				.sprite = Resources.Load<Sprite>("battle/enemies/Spinning Robo/spr_b_robo_body");
 		}
-		if ((bool)UnityEngine.Object.FindObjectOfType<SOUL>())
+		if ((bool)Util.FindObjectOfType<SOUL>())
 		{
-			UnityEngine.Object.FindObjectOfType<SOUL>().ChangeSOULMode(0);
+			Util.FindObjectOfType<SOUL>().ChangeSOULMode(0);
 		}
 	}
 
@@ -141,7 +141,7 @@ public class PeacefulRestStandardAttack : AttackBase
 		int num = 10 + 10 * totalCount;
 		if (frames % num == 1)
 		{
-			LilUFO[] array = UnityEngine.Object.FindObjectsOfType<LilUFO>();
+			LilUFO[] array = Util.FindObjectsOfType<LilUFO>();
 			foreach (LilUFO lilUFO in array)
 			{
 				if (!lilUFO.IsDone() && lilUFO.LaserExposed())
@@ -149,13 +149,13 @@ public class PeacefulRestStandardAttack : AttackBase
 					RoboLaserBullet component = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/eb/RoboLaserBullet"), base.transform).GetComponent<RoboLaserBullet>();
 					component.transform.position += lilUFO.GetPart("body").transform.parent.localPosition + new Vector3(lilUFO.GetEnemyObject().transform.position.x, 0f);
 					component.Activate(lilUFO);
-					lilUFO.SetMovement(false);
+					lilUFO.SetMovement(canMove: false);
 				}
 			}
 		}
 		if (robot && ((frames % num == num / 2 && totalCount > 1) || (frames % num == 1 && totalCount == 1)))
 		{
-			SpinRobo spinRobo = UnityEngine.Object.FindObjectOfType<SpinRobo>();
+			SpinRobo spinRobo = Util.FindObjectOfType<SpinRobo>();
 			if (!spinRobo.IsDone())
 			{
 				RoboLaserBullet component2 = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/eb/RoboLaserBullet"), base.transform).GetComponent<RoboLaserBullet>();
@@ -174,7 +174,7 @@ public class PeacefulRestStandardAttack : AttackBase
 		}
 		if (tree)
 		{
-			bb.transform.position = new Vector3(Mathf.Sin((float)(frames * 4) * ((float)Math.PI / 180f)), bb.transform.position.y);
+			bb.transform.position = new Vector3(Mathf.Sin((float)(frames * 4) * (MathF.PI / 180f)), bb.transform.position.y);
 		}
 	}
 
@@ -187,17 +187,17 @@ public class PeacefulRestStandardAttack : AttackBase
 			bb.StartMovement(new Vector3(181f, 180f));
 			if (totalCount == 1)
 			{
-				UnityEngine.Object.FindObjectOfType<PSIMagnetBullet>().ToggleStrongMode();
+				Util.FindObjectOfType<PSIMagnetBullet>().ToggleStrongMode();
 				maxFrames = 60;
 			}
 		}
-		if (!UnityEngine.Object.FindObjectOfType<ExplosiveOak>())
+		if (!Util.FindObjectOfType<ExplosiveOak>())
 		{
 			return;
 		}
-		if (UnityEngine.Object.FindObjectOfType<ExplosiveOak>().IsGonnaExplode())
+		if (Util.FindObjectOfType<ExplosiveOak>().IsGonnaExplode())
 		{
-			UnityEngine.Object.FindObjectOfType<ExplosiveOak>().Explode();
+			Util.FindObjectOfType<ExplosiveOak>().Explode();
 			if (totalCount == 0)
 			{
 				maxFrames = 80;

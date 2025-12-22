@@ -90,11 +90,11 @@ public class LesserDogSentry : InteractSelectionBase
 		if (!txt && startFight)
 		{
 			startFight = false;
-			Object.FindObjectOfType<OverworldPlayer>().InitiateBattle(68);
+			Util.OverworldPlayer().InitiateBattle(68);
 		}
 		if (!niceDog && (bool)ldog)
 		{
-			if ((bool)Object.FindObjectOfType<OverworldPlayer>() && Vector3.Distance(Object.FindObjectOfType<OverworldPlayer>().transform.position, base.transform.position) < 3.5f)
+			if ((bool)Util.OverworldPlayer() && Vector3.Distance(Util.OverworldPlayer().transform.position, base.transform.position) < 3.5f)
 			{
 				hideDog = true;
 			}
@@ -103,13 +103,13 @@ public class LesserDogSentry : InteractSelectionBase
 				ldog.transform.localPosition -= new Vector3(0f, 1f / 12f);
 			}
 		}
-		else if (niceDog && Mathf.Abs(Object.FindObjectOfType<OverworldPlayer>().transform.position.x - ldog.transform.position.x) > 1f / 48f)
+		else if (niceDog && Mathf.Abs(Util.OverworldPlayer().transform.position.x - ldog.transform.position.x) > 1f / 48f)
 		{
-			if (Object.FindObjectOfType<OverworldPlayer>().transform.position.x < ldog.transform.position.x && ldog.transform.localPosition.x > -0.459f)
+			if (Util.OverworldPlayer().transform.position.x < ldog.transform.position.x && ldog.transform.localPosition.x > -0.459f)
 			{
 				ldog.transform.localPosition -= new Vector3(1f / 24f, 0f);
 			}
-			else if (Object.FindObjectOfType<OverworldPlayer>().transform.position.x > ldog.transform.position.x && ldog.transform.localPosition.x < 0.459f)
+			else if (Util.OverworldPlayer().transform.position.x > ldog.transform.position.x && ldog.transform.localPosition.x < 0.459f)
 			{
 				ldog.transform.localPosition += new Vector3(1f / 24f, 0f);
 			}
@@ -126,7 +126,7 @@ public class LesserDogSentry : InteractSelectionBase
 			{
 				num = 3;
 			}
-			Object.FindObjectOfType<OverworldPlayer>().SetSprite(krisReachFrames[num]);
+			Util.OverworldPlayer().SetSprite(krisReachFrames[num]);
 			if (num == 3)
 			{
 				ldog.sprite = dogSprites[1];
@@ -151,7 +151,7 @@ public class LesserDogSentry : InteractSelectionBase
 			{
 				num2 = 0;
 			}
-			Object.FindObjectOfType<OverworldPlayer>().SetSprite(krisReachFrames[num2]);
+			Util.OverworldPlayer().SetSprite(krisReachFrames[num2]);
 			if (pettingFrames == 20)
 			{
 				ldog.sprite = dogSprites[2];
@@ -163,7 +163,7 @@ public class LesserDogSentry : InteractSelectionBase
 			}
 			if (pettingFrames == 40)
 			{
-				Object.FindObjectOfType<OverworldPlayer>().EnableAnimator();
+				Util.OverworldPlayer().EnableAnimator();
 				Util.GameManager().EnablePlayerMovement();
 				petting = false;
 			}
@@ -175,23 +175,23 @@ public class LesserDogSentry : InteractSelectionBase
 		if ((int)Util.GameManager().GetFlag(253) == 1)
 		{
 			txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-			txt.CreateBox(new string[1] { "* (Perhaps its best to let it\n  finally rest.)" }, true);
-			Util.GameManager().DisablePlayerMovement(false);
+			txt.CreateBox(new string[1] { "* (Perhaps its best to let it\n  finally rest.)" }, giveBackControl: true);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 		}
 		else if ((int)Util.GameManager().GetFlag(253) == 2)
 		{
 			txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
 			if ((int)Util.GameManager().GetFlag(258) == 1)
 			{
-				txt.CreateBox(new string[1] { "* (The dog is finally getting\n  some well-deserved sleep.)" }, true);
+				txt.CreateBox(new string[1] { "* (The dog is finally getting\n  some well-deserved sleep.)" }, giveBackControl: true);
 			}
 			else
 			{
-				txt.CreateBox(new string[2] { "* (The dog looks happy to see\n  you.)", "* (Pet the dog?)" }, false);
+				txt.CreateBox(new string[2] { "* (The dog looks happy to see\n  you.)", "* (Pet the dog?)" }, giveBackControl: false);
 				txt.EnableSelectionAtEnd();
 				left = "Pet";
 			}
-			Util.GameManager().DisablePlayerMovement(false);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 		}
 		else
 		{
@@ -209,8 +209,8 @@ public class LesserDogSentry : InteractSelectionBase
 				pettingFrames = 0;
 				petting = true;
 				state = 0;
-				Object.FindObjectOfType<OverworldPlayer>().ChangeDirection(Vector2.down);
-				Object.FindObjectOfType<OverworldPlayer>().DisableAnimator();
+				Util.OverworldPlayer().ChangeDirection(Vector2.down);
+				Util.OverworldPlayer().DisableAnimator();
 			}
 			else if ((int)Util.GameManager().GetFlag(13) >= 9 && (int)Util.GameManager().GetFlag(254) == 0)
 			{
@@ -220,14 +220,14 @@ public class LesserDogSentry : InteractSelectionBase
 			else
 			{
 				txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-				txt.CreateBox(new string[1] { "* (There's a dog hiding in here.)" }, false);
+				txt.CreateBox(new string[1] { "* (There's a dog hiding in here.)" }, giveBackControl: false);
 				startFight = true;
 			}
 		}
 		else
 		{
 			txt = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-			txt.CreateBox(new string[1] { niceDog ? "* (You wait to pet the dog\n  later.)" : "* (You leave the station\n  undisturbed.)" }, true);
+			txt.CreateBox(new string[1] { niceDog ? "* (You wait to pet the dog\n  later.)" : "* (You leave the station\n  undisturbed.)" }, giveBackControl: true);
 		}
 	}
 }

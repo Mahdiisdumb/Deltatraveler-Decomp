@@ -8,7 +8,7 @@ public class WrongNumberSong : CutsceneBase
 		{
 			return;
 		}
-		gm.DisablePlayerMovement(false);
+		gm.DisablePlayerMovement(deactivatePartyMembers: false);
 		if (state == 0)
 		{
 			frames++;
@@ -64,9 +64,8 @@ public class WrongNumberSong : CutsceneBase
 		gm.SetFlag(84, 11);
 		if (gm.IsMenuOpen())
 		{
-			MainMenu mainMenu = Object.FindObjectOfType<MainMenu>();
-			Object.Destroy(((object)mainMenu != null) ? mainMenu.gameObject : null);
-			gm.DisablePlayerMovement(false);
+			Object.Destroy(Util.FindObjectOfType<OverworldMenu>()?.gameObject);
+			gm.DisablePlayerMovement(deactivatePartyMembers: false);
 		}
 	}
 }

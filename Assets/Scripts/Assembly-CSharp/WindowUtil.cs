@@ -50,8 +50,7 @@ public static class WindowUtil
 				string windowText = GetWindowText(wnd);
 				if (windowText.StartsWith(Application.productName))
 				{
-					int num;
-					GetWindowThreadProcessId(wnd, out num);
+					GetWindowThreadProcessId(wnd, out var num);
 					if (num == processId)
 					{
 						Console.WriteLine("Found game window titled '" + windowText + "' handle is " + wnd);

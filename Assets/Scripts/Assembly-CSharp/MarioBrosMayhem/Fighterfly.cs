@@ -46,7 +46,7 @@ namespace MarioBrosMayhem
 				base.MoveAlgorithm();
 				if (controller.collisions.down)
 				{
-					animator.SetBool("Grounded", true);
+					animator.SetBool("Grounded", value: true);
 				}
 				if (flipped || respawning)
 				{
@@ -60,7 +60,7 @@ namespace MarioBrosMayhem
 			{
 				SetGravityAndSpeed();
 				velocity.y = flipVelocity;
-				animator.SetBool("Grounded", false);
+				animator.SetBool("Grounded", value: false);
 				groundTimer = 0f;
 			}
 			controller.Move(velocity);
@@ -92,7 +92,7 @@ namespace MarioBrosMayhem
 			bool num = flipped;
 			base.IncreaseRage(rage);
 			SetGravityAndSpeed();
-			animator.SetBool("Grounded", false);
+			animator.SetBool("Grounded", value: false);
 			if (num)
 			{
 				velocity.y = flipVelocity;
@@ -119,7 +119,7 @@ namespace MarioBrosMayhem
 			if (!flipped)
 			{
 				SetWalkSpeed();
-				animator.SetBool("Grounded", false);
+				animator.SetBool("Grounded", value: false);
 			}
 		}
 

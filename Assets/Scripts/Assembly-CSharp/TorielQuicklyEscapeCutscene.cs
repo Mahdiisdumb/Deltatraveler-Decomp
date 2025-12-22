@@ -53,7 +53,7 @@ public class TorielQuicklyEscapeCutscene : CutsceneBase
 				susie.transform.position = Vector3.Lerp(new Vector3(0f, -3.09f), new Vector3(0f, -0.42f), (float)(frames - 10) / 10f);
 				if (frames == 10)
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", true);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 					susie.GetComponent<Animator>().Play("walk");
 					susie.GetComponent<Animator>().SetFloat("speed", 3f);
 				}
@@ -63,7 +63,7 @@ public class TorielQuicklyEscapeCutscene : CutsceneBase
 				}
 				else if (frames == 20)
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", false);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 					susie.GetComponent<Animator>().Play("idle");
 					susie.GetComponent<Animator>().SetFloat("speed", 1f);
 				}
@@ -202,10 +202,10 @@ public class TorielQuicklyEscapeCutscene : CutsceneBase
 			PlaySFX("sounds/snd_noise");
 			toriel.Play("WalkLeftFaceless");
 			toriel.SetFloat("speed", 1f);
-			GameObject.Find("StepBL").GetComponent<StepSwitch>().StepOn(false);
-			GameObject.Find("StepBR").GetComponent<StepSwitch>().StepOn(false);
-			GameObject.Find("StepUL").GetComponent<StepSwitch>().StepOn(false);
-			GameObject.Find("StepUR").GetComponent<StepSwitch>().StepOn(false);
+			GameObject.Find("StepBL").GetComponent<StepSwitch>().StepOn(sound: false);
+			GameObject.Find("StepBR").GetComponent<StepSwitch>().StepOn(sound: false);
+			GameObject.Find("StepUL").GetComponent<StepSwitch>().StepOn(sound: false);
+			GameObject.Find("StepUR").GetComponent<StepSwitch>().StepOn(sound: false);
 			GameObject.Find("WallSwitch").GetComponent<SpriteRenderer>().sprite = Resources.LoadAll<Sprite>("overworld/ruins_objects/spr_ruins_wallswitch")[1];
 		}
 		base.StartCutscene(par);

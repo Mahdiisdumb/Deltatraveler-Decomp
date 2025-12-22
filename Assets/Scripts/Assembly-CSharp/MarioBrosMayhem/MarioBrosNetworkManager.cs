@@ -42,11 +42,11 @@ namespace MarioBrosMayhem
 
 		private void Awake()
 		{
-			hardFireballs = Object.FindObjectOfType<ServerSessionManager>().GetRuleValue(0, 3) == 1;
-			bigMode = Object.FindObjectOfType<ServerSessionManager>().GetRuleValue(0, 2) == 2;
+			hardFireballs = Util.FindObjectOfType<ServerSessionManager>().GetRuleValue(0, 3) == 1;
+			bigMode = Util.FindObjectOfType<ServerSessionManager>().GetRuleValue(0, 2) == 2;
 			if (!bigMode)
 			{
-				spawnMushrooms = Object.FindObjectOfType<ServerSessionManager>().GetRuleValue(0, 6) == 1;
+				spawnMushrooms = Util.FindObjectOfType<ServerSessionManager>().GetRuleValue(0, 6) == 1;
 			}
 		}
 
@@ -75,13 +75,13 @@ namespace MarioBrosMayhem
 					}
 				}
 				doneSettingUp = true;
-				Object.FindObjectOfType<MarioBrosManager>().StartNewRound();
+				Util.FindObjectOfType<MarioBrosManager>().StartNewRound();
 			}
 		}
 
 		public void HandleRoundBehavior()
 		{
-			if (!Object.FindObjectOfType<MarioBrosManager>().IsEndingRound())
+			if (!Util.FindObjectOfType<MarioBrosManager>().IsEndingRound())
 			{
 				spawnTimer += Time.deltaTime;
 			}
@@ -117,32 +117,32 @@ namespace MarioBrosMayhem
 		{
 			roundStarted = false;
 			spawnTimer = 0f;
-			Enemy[] array = Object.FindObjectsOfType<Enemy>();
+			Enemy[] array = Util.FindObjectsOfType<Enemy>();
 			for (int i = 0; i < array.Length; i++)
 			{
 				Object.Destroy(array[i].gameObject);
 			}
-			Coin[] array2 = Object.FindObjectsOfType<Coin>();
+			Coin[] array2 = Util.FindObjectsOfType<Coin>();
 			for (int j = 0; j < array2.Length; j++)
 			{
 				Object.Destroy(array2[j].gameObject);
 			}
-			Fireball[] array3 = Object.FindObjectsOfType<Fireball>();
+			Fireball[] array3 = Util.FindObjectsOfType<Fireball>();
 			for (int k = 0; k < array3.Length; k++)
 			{
 				Object.Destroy(array3[k].gameObject);
 			}
-			Freezie[] array4 = Object.FindObjectsOfType<Freezie>();
+			Freezie[] array4 = Util.FindObjectsOfType<Freezie>();
 			for (int l = 0; l < array4.Length; l++)
 			{
 				Object.Destroy(array4[l].gameObject);
 			}
-			Icicle[] array5 = Object.FindObjectsOfType<Icicle>();
+			Icicle[] array5 = Util.FindObjectsOfType<Icicle>();
 			for (int m = 0; m < array5.Length; m++)
 			{
 				Object.Destroy(array5[m].gameObject);
 			}
-			Mushroom[] array6 = Object.FindObjectsOfType<Mushroom>();
+			Mushroom[] array6 = Util.FindObjectsOfType<Mushroom>();
 			for (int n = 0; n < array6.Length; n++)
 			{
 				Object.Destroy(array6[n].gameObject);
@@ -193,7 +193,7 @@ namespace MarioBrosMayhem
 
 		public void SetUpNewRoundClientRpc()
 		{
-			Object.FindObjectOfType<MarioBrosManager>().SetUpNewRound();
+			Util.FindObjectOfType<MarioBrosManager>().SetUpNewRound();
 		}
 
 		public void HitPowBlock(int powId)
@@ -254,7 +254,7 @@ namespace MarioBrosMayhem
 				player.AddLives(1);
 				CreateScoreGraphic(1, position + new Vector3(0f, 2f / 3f), multikick > 0);
 			}
-			if (Object.FindObjectOfType<MarioBrosManager>().GetEnemyCount() > 0)
+			if (Util.FindObjectOfType<MarioBrosManager>().GetEnemyCount() > 0)
 			{
 				if (multikick == 2 && spawnMushrooms)
 				{
@@ -275,7 +275,7 @@ namespace MarioBrosMayhem
 		public void RevivePlayer(int playerId)
 		{
 			Player playerObject = GetPlayerObject(playerId);
-			Object.FindObjectOfType<GameOverContinue>().Deactivate();
+			Util.FindObjectOfType<GameOverContinue>().Deactivate();
 			if (credits > 0)
 			{
 				credits--;
@@ -284,7 +284,7 @@ namespace MarioBrosMayhem
 			}
 			else
 			{
-				Object.FindObjectOfType<MarioBrosManager>().TrueGameOver();
+				Util.FindObjectOfType<MarioBrosManager>().TrueGameOver();
 			}
 		}
 
@@ -294,7 +294,7 @@ namespace MarioBrosMayhem
 			{
 				return null;
 			}
-			return Object.FindObjectOfType<Player>();
+			return Util.FindObjectOfType<Player>();
 		}
 
 		public int GetCredits()

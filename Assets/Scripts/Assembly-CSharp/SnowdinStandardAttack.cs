@@ -24,7 +24,7 @@ public class SnowdinStandardAttack : AttackBase
 		bbSize = new Vector2(185f, 140f);
 		maxFrames = 200;
 		attackAllTargets = false;
-		Snowdrake[] array = Object.FindObjectsOfType<Snowdrake>();
+		Snowdrake[] array = Util.FindObjectsOfType<Snowdrake>();
 		for (int i = 0; i < array.Length; i++)
 		{
 			if (!array[i].IsDone())
@@ -34,7 +34,7 @@ public class SnowdinStandardAttack : AttackBase
 				snowdrakeCount++;
 			}
 		}
-		IceCap[] array2 = Object.FindObjectsOfType<IceCap>();
+		IceCap[] array2 = Util.FindObjectsOfType<IceCap>();
 		foreach (IceCap iceCap in array2)
 		{
 			if (!iceCap.IsDone() && !iceCap.IsIce())

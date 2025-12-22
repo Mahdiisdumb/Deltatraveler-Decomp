@@ -51,9 +51,8 @@ public class StatusNumber : MonoBehaviour
 
 	public void StartWord(string word, Color color, Vector3 position)
 	{
-		string text = "battle/dr/spr_btdr_" + word;
 		GetComponent<SpriteRenderer>().enabled = true;
-		GetComponent<SpriteRenderer>().sprite = Util.PackManager().GetTranslatedSprite(Resources.Load<Sprite>(text), text);
+		GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/dr/spr_btdr_" + word);
 		GetComponent<SpriteRenderer>().color = color;
 		this.color = color;
 		this.position = position;

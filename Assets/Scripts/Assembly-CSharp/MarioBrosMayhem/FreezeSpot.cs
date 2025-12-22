@@ -21,7 +21,7 @@ namespace MarioBrosMayhem
 
 		private void OnTriggerStay2D(Collider2D collision)
 		{
-			if (!freezie && (bool)collision.GetComponent<Freezie>())
+			if (!freezie && (bool)collision && (bool)collision.GetComponent<Freezie>())
 			{
 				freezie = collision.GetComponent<Freezie>();
 				oldPos = freezie.transform.position;

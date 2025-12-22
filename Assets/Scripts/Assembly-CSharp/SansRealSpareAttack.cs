@@ -7,16 +7,16 @@ public class SansRealSpareAttack : AttackBase
 	protected override void Awake()
 	{
 		base.Awake();
-		sans = Object.FindObjectOfType<Sans>();
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(0);
-		Object.FindObjectOfType<SOUL>().SetFrozen(false);
+		sans = Util.FindObjectOfType<Sans>();
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(0);
+		Util.FindObjectOfType<SOUL>().SetFrozen(boo: false);
 		isStarted = true;
 		sans.SetFace("closed_down_mad");
 		sans.Chat(new string[16]
 		{
-			"...", "...", "you want the truth \nthat badly?", "fine.", "no,^05 she didn't die.", "you know how i know?", "she didn't turn to \ndust immediately.", "i...^10 i...", "i couldn't bring myself \nto kill a child.", "despite how much i've \nfallen into this horrible \nmindset.",
-			"despite how much she \nlooked like susie.", "i just couldn't do it.", "i thought it would be \na moment of catharsis...", "to seek some kind of \nrevenge for what \nhappened to me.", "but looking down at \nher,^05 the fear in her \neyes...", "it was a reminder \nof how horrible my \nlife has become."
-		}, "snd_txtsans", true, 0);
+			"...", "...", "you want the \ntruth that badly?", "fine.", "no,^05 she didn't \ndie.", "you know how i \nknow?", "she didn't turn to \ndust immediately.", "i...^10 i...", "i couldn't bring \nmyself to kill a \nchild.", "despite how much \ni've fallen into \nthis horrible \nmindset.",
+			"despite how much \nshe looked like \nsusie.", "i just couldn't \ndo it.", "i thought it would \nbe a moment of \ncatharsis...", "to seek some \nkind of revenge \nfor what happened \nto me.", "but looking down \nat her,^05 the fear \nin her eyes...", "it was a reminder \nof how horrible \nmy life had become."
+		}, "snd_txtsans", canSkip: true, 0);
 		Util.GameManager().SetFlag(318, 1);
 	}
 
@@ -53,7 +53,7 @@ public class SansRealSpareAttack : AttackBase
 			if (frames == 75)
 			{
 				sans.SetSweat(0);
-				sans.Chat(new string[9] { "nobody deserves to live \nin a place like this.", "i'd already fallen so far.^10\nthere was no going back \nfor me.", "i figured, the only way \nto make this world \nbetter...^10 was to destroy \nit.", "so i started getting \nstronger.", "killing the weak and \ngaining LOVE...", "all i needed was a \nhuman soul,^05 and i'd \nfinally have the power \nto end everything.", "that way nobody would \nhave to suffer anymore.", "and papyrus...", "he..." }, "snd_txtsans", true, 0);
+				sans.Chat(new string[9] { "nobody deserves to \nlive in a place \nlike this.", "i'd already fallen \nso far.^10\nthere was no going \nback for me.", "i figured,^10 the only \nway to make this \nworld better...^10 was \nto destroy it.", "so i started \ngetting stronger.", "killing the weak \nand gaining LOVE...", "all i needed was a \nhuman soul,^05 and i'd \nfinally have the \npower to end it all.", "that way nobody \nwould have to \nsuffer anymore.", "and papyrus...", "he..." }, "snd_txtsans", canSkip: true, 0);
 				sans.SetFace("closed_unhappy");
 				state = 1;
 				frames = 0;
@@ -77,13 +77,13 @@ public class SansRealSpareAttack : AttackBase
 			frames++;
 			if (frames == 1)
 			{
-				Object.FindObjectOfType<PartyPanels>().transform.position = new Vector3(100f, 0f);
-				Object.FindObjectOfType<TPBar>().transform.localPosition = new Vector3(-500f, 0f);
-				Object.FindObjectOfType<DescriptionBox>().Vanish();
+				Util.FindObjectOfType<PartyPanels>().transform.position = new Vector3(100f, 0f);
+				Util.FindObjectOfType<TPBar>().transform.localPosition = new Vector3(-500f, 0f);
+				Util.FindObjectOfType<DescriptionBox>().Vanish();
 			}
 			if (frames <= 60)
 			{
-				BattleButton[] array = Object.FindObjectsOfType<BattleButton>();
+				BattleButton[] array = Util.FindObjectsOfType<BattleButton>();
 				foreach (BattleButton battleButton in array)
 				{
 					battleButton.GetComponent<SpriteRenderer>().color = new Color(battleButton.GetComponent<SpriteRenderer>().color.r, battleButton.GetComponent<SpriteRenderer>().color.g, battleButton.GetComponent<SpriteRenderer>().color.b, 1f - (float)frames / 60f);
@@ -95,11 +95,11 @@ public class SansRealSpareAttack : AttackBase
 			}
 			if (frames == 40)
 			{
-				Object.FindObjectOfType<BattleManager>().PlayMusic("music/mus_sansspare", 1f, true);
+				Util.FindObjectOfType<BattleManager>().PlayMusic("music/mus_sansspare", 1f, hasIntro: true);
 			}
 			if (frames == 90)
 			{
-				sans.Chat(new string[5] { "he just didn't get it.", "he always saw the good \nin what this world \nhad to offer.", "despite all the suffering,^05 \nthe pain...", "and the way i tried to \nget him to see things \nmy way...", "..." }, "snd_txtsans", true, 0);
+				sans.Chat(new string[5] { "he just didn't \nget it.", "he always saw the \ngood in what this \nworld had to offer.", "despite all the \nsuffering,^05 the \npain...", "and the way i \ntried to get him \nto see things \nmy way...", "..." }, "snd_txtsans", canSkip: true, 0);
 				sans.SetFace("realsad");
 				state = 2;
 				frames = 0;
@@ -132,7 +132,7 @@ public class SansRealSpareAttack : AttackBase
 			}
 			if (frames == 50)
 			{
-				sans.Chat(new string[5] { "oh, god.^10\nwhat did i do to my \nbrother...?", "i've been so blindsighted \nby my goal that all i've \ndone is make things \nworse.", "for both of us.", "for everyone here in \nsnowdin.", "i just..." }, "snd_txtsans", true, 0);
+				sans.Chat(new string[6] { "oh, god.^10\nwhat did i do to my \nbrother...?", "i've been so \nblindsighted by my \ngoal...", "that all i've done \nis make things \nworse.", "for both of us.", "for everyone here \nin snowdin.", "i just..." }, "snd_txtsans", canSkip: true, 0);
 				state = 3;
 				frames = 19;
 			}
@@ -141,11 +141,11 @@ public class SansRealSpareAttack : AttackBase
 		{
 			if ((bool)sans.GetTextBubble())
 			{
-				if (sans.GetTextBubble().GetCurrentStringNum() == 3)
+				if (sans.GetTextBubble().GetCurrentStringNum() == 4)
 				{
 					sans.GetEnemyObject().transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Sans/spr_b_sans_regret_1");
 				}
-				else if (sans.GetTextBubble().GetCurrentStringNum() == 5)
+				else if (sans.GetTextBubble().GetCurrentStringNum() == 6)
 				{
 					sans.GetEnemyObject().transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Sans/spr_b_sans_regret_2");
 				}
@@ -163,7 +163,7 @@ public class SansRealSpareAttack : AttackBase
 			}
 			if (frames == 160)
 			{
-				sans.Chat(new string[1] { "i thought it would all \nbe worth it." }, "snd_txtsans", Util.GameManager().IsTestMode(), 1);
+				sans.Chat(new string[1] { "i thought it would \nall be worth it." }, "snd_txtsans", Util.GameManager().IsTestMode(), 1);
 				sans.GetTextBubble().GetComponent<ShakingText>().StartShake(5, "sans");
 				state = 4;
 				frames = 0;
@@ -174,14 +174,14 @@ public class SansRealSpareAttack : AttackBase
 			frames++;
 			if (frames == 30)
 			{
-				Object.FindObjectOfType<BattleManager>().StopMusic();
+				Util.FindObjectOfType<BattleManager>().StopMusic();
 				sans.GetEnemyObject().transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Sans/spr_b_sans_regret_4");
-				sans.Chat(new string[1] { "SANS...?^10\nYOU..." }, "LeftSmall", "snd_txtpap", new Vector2(244f, 109f), true, 0);
+				sans.Chat(new string[1] { "SANS...?^10\nYOU..." }, "LeftSmall", "snd_txtpap", new Vector2(244f, 109f), canSkip: true, 0);
 			}
 			if (frames == 45)
 			{
 				Util.GameManager().AddGold(sans.GetGold() * 2 / 3);
-				Object.FindObjectOfType<BattleManager>().FadeEndBattle(2);
+				Util.FindObjectOfType<BattleManager>().FadeEndBattle(2);
 			}
 		}
 	}

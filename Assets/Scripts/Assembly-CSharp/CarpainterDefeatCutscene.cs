@@ -48,7 +48,7 @@ public class CarpainterDefeatCutscene : CutsceneBase
 			flag = false;
 		}
 		carpainterLives = !(num == 1 && flag);
-		cam.SetFollowPlayer(true);
+		cam.SetFollowPlayer(follow: true);
 		if (carpainterLives)
 		{
 			gm.SetFlag(117, 1);
@@ -56,7 +56,7 @@ public class CarpainterDefeatCutscene : CutsceneBase
 			{
 				WeirdChecker.Abort(gm);
 			}
-			Object.FindObjectOfType<CarpainterNPC>().SetSprite(0);
+			Util.FindObjectOfType<CarpainterNPC>().SetSprite(0);
 			List<string> list = new List<string>
 			{
 				"", "* Do you see the Mani Mani\n  statue behind me...", "* Since I got the statue,^05\n  I have been doing peculiar\n  things.", "* Please forgive me,^05 if you can.", "* I just wanted to have a normal,^05\n  peaceful life.", "* I apologize^10 to everyone.", "* Hey,^05 so long as you're\n  genuine with your\n  apology.", "* If you're actually sorry,^05\n  you should get out\n  the paint thinner.", "* Hey,^05 so we're trying\n  to get to the Lilliput\n  Steps.", "* We were told that\n  you have a bomb for\n  that.",
@@ -72,7 +72,7 @@ public class CarpainterDefeatCutscene : CutsceneBase
 				"", "", "", "", "", "", "no_happy", "pau_sussy", "su_neutral", "su_side",
 				"su_annoyed", "", "", "", "su_smile", "su_smile_sweat", "", "su_smile", "su_happy"
 			};
-			if (gm.GetMiniPartyMember() == 0)
+			if (!gm.PartySlotFilled(3))
 			{
 				list.RemoveAt(7);
 				list2.RemoveAt(7);
@@ -109,7 +109,7 @@ public class CarpainterDefeatCutscene : CutsceneBase
 		else
 		{
 			itemSoundAt = 1;
-			Object.FindObjectOfType<CarpainterNPC>().SetSprite(4);
+			Util.FindObjectOfType<CarpainterNPC>().SetSprite(4);
 			StartText(new string[2] { "* (Susie got the Bomb.)", "* ..." }, new string[2] { "snd_text", "" }, new int[2], new string[2] { "", "su_depressed" }, 1);
 		}
 	}

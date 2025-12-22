@@ -36,10 +36,15 @@ public class ElectricMazeHandler : MonoBehaviour
 			Object.Destroy(base.gameObject);
 			return;
 		}
-		kris = Object.FindObjectOfType<OverworldPlayer>();
+		kris = Util.OverworldPlayer();
 		susie = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
 		noelle = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
 		prevPos = new List<Vector3> { kris.transform.position };
+		GameObject.Find("Papyrus").GetComponent<Animator>().SetFloat("dirY", 1f);
+	}
+
+	private void Start()
+	{
 		if (!Util.GameManager().SusieInParty())
 		{
 			oblit = true;
@@ -49,7 +54,7 @@ public class ElectricMazeHandler : MonoBehaviour
 			susie.SetSprite("spr_su_crossed_down");
 			noelle.transform.position = new Vector3(-4.25f, 0.84f);
 			noelle.GetComponent<Animator>().enabled = false;
-			noelle.SetSprite("spr_no_sit_depressed");
+			noelle.SetSprite("depressed/spr_no_sit_depressed");
 			base.transform.Find("SusieTalk").transform.position = new Vector3(-5.4f, 0.3f);
 			base.transform.Find("NoelleTalk").transform.position = new Vector3(-4.25f, 0.3f);
 		}
@@ -58,7 +63,6 @@ public class ElectricMazeHandler : MonoBehaviour
 			oblit = (int)Util.GameManager().GetFlag(172) == 1;
 			niceNoelleVer = oblit && Util.GameManager().GetFlagInt(12) == 0 && Util.GameManager().GetFlagInt(184) == 1;
 		}
-		GameObject.Find("Papyrus").GetComponent<Animator>().SetFloat("dirY", 1f);
 	}
 
 	private void Update()
@@ -74,17 +78,17 @@ public class ElectricMazeHandler : MonoBehaviour
 			{
 				Vector3 vector = prevPos[0];
 				kris.transform.position = vector;
-				kris.SetCollision(true);
-				kris.SetMovement(true);
+				kris.SetCollision(onoff: true);
+				kris.SetMovement(newMove: true);
 				GetComponent<AudioSource>().Stop();
 				Util.GameManager().PlayGlobalSFX("sounds/snd_hurt");
-				Object.FindObjectOfType<CameraController>().StartHitShake();
-				int num = Util.GameManager().GetHP(0) - Util.GameManager().HandleDamageCalculations(7, 1f, false)[0];
+				Util.FindObjectOfType<CameraController>().StartHitShake();
+				int num = Util.GameManager().GetHP(0) - Util.GameManager().HandleDamageCalculations(7, 1f, applyDamageImmediately: false)[0];
 				Util.GameManager().Damage(0, num);
 				Object.Instantiate(Resources.Load<GameObject>("battle/dr/DamageNumber"), new Vector3(500f, 0f), Quaternion.identity).GetComponent<DamageNumber>().StartNumber(num, Color.white, kris.transform.position);
-				Object.FindObjectOfType<ActionPartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
-				Object.FindObjectOfType<ActionPartyPanels>().SetActivated(true);
-				Object.FindObjectOfType<ActionPartyPanels>().Raise();
+				Util.FindObjectOfType<ActionPartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
+				Util.FindObjectOfType<ActionPartyPanels>().SetActivated(activated: true);
+				Util.FindObjectOfType<ActionPartyPanels>().Raise();
 				hitWall = false;
 				iFrames = 10;
 				prevPos.Clear();
@@ -137,8 +141,8 @@ public class ElectricMazeHandler : MonoBehaviour
 		if (!hitWall && iFrames == 0)
 		{
 			GetComponent<AudioSource>().Play();
-			kris.SetMovement(false);
-			kris.SetCollision(false);
+			kris.SetMovement(newMove: false);
+			kris.SetCollision(onoff: false);
 			hitWall = true;
 			collisionPos = kris.transform.position;
 			frames = 0;

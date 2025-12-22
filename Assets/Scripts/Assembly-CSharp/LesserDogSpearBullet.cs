@@ -29,7 +29,7 @@ public class LesserDogSpearBullet : BulletBase
 		if (base.gameObject.tag == "Bullet")
 		{
 			frames++;
-			base.transform.position = new Vector3(base.transform.position.x + num, Mathf.Lerp(-2.9f, -2.074f, (Mathf.Cos((float)(frames * 9) * ((float)Math.PI / 180f)) + 1f) / 2f));
+			base.transform.position = new Vector3(base.transform.position.x + num, Mathf.Lerp(-2.9f, -2.074f, (Mathf.Cos((float)(frames * 9) * (MathF.PI / 180f)) + 1f) / 2f));
 		}
 		else
 		{

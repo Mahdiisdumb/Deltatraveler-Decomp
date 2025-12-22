@@ -21,7 +21,7 @@ public class OverworldSprout : OverworldEnemyBase
 	{
 		if (UTInput.GetAxis("Horizontal") != 0f || UTInput.GetAxis("Vertical") != 0f)
 		{
-			speed = Object.FindObjectOfType<OverworldPlayer>().GetSpeed() + 2f;
+			speed = Util.OverworldPlayer().GetSpeed() + 2f;
 			anim.SetFloat("speed", 1f);
 		}
 		else

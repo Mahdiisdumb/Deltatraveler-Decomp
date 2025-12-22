@@ -14,8 +14,6 @@ public class ActionSOUL : MonoBehaviour
 
 	private bool miniPartyMember;
 
-	private bool hardmode;
-
 	private bool restoreMovement;
 
 	[SerializeField]
@@ -23,9 +21,8 @@ public class ActionSOUL : MonoBehaviour
 
 	private void Start()
 	{
-		kris = Object.FindObjectOfType<OverworldPlayer>();
-		miniPartyMember = Object.FindObjectOfType<GameManager>().GetMiniPartyMember() > 0;
-		hardmode = (int)Util.GameManager().GetFlag(108) == 1;
+		kris = Util.OverworldPlayer();
+		miniPartyMember = Util.GameManager().PartySlotFilled(3);
 	}
 
 	protected virtual void Update()
@@ -53,10 +50,10 @@ public class ActionSOUL : MonoBehaviour
 		if (hurt && hurtFrames < inv)
 		{
 			hurtFrames++;
-			if (((hurtFrames == 3 && inv >= 3) || (hurtFrames == inv && inv < 3)) && !Object.FindObjectOfType<TextBox>() && restoreMovement)
+			if (((hurtFrames == 3 && inv >= 3) || (hurtFrames == inv && inv < 3)) && !Util.FindObjectOfType<TextBox>() && restoreMovement)
 			{
 				restoreMovement = false;
-				Object.FindObjectOfType<OverworldPlayer>().SetMovement(true);
+				Util.OverworldPlayer().SetMovement(newMove: true);
 			}
 			if (hurtFrames == inv)
 			{
@@ -77,7 +74,7 @@ public class ActionSOUL : MonoBehaviour
 		{
 			return;
 		}
-		string text = (hardmode ? "Frisk" : "Kris");
+		string text = ((Util.GameManager().GetPartyMember(0) == 6) ? "Frisk" : "Kris");
 		string text2 = spriteName.Replace("_eye", "");
 		text2 = text2.Replace("_injured", "");
 		Sprite sprite = Resources.Load<Sprite>("player/" + text + "/outlines/" + text2 + "_o");
@@ -110,7 +107,7 @@ public class ActionSOUL : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.gameObject.tag.Contains("Bullet") && collision.gameObject.layer != 2 && !hurt && collision.gameObject.tag == "Bullet")
+		if ((bool)collision && collision.gameObject.tag.Contains("Bullet") && collision.gameObject.layer != 2 && !hurt && collision.gameObject.tag == "Bullet")
 		{
 			Damage(collision.gameObject.GetComponentInParent<BulletBase>().GetBaseDamage());
 			collision.gameObject.GetComponentInParent<BulletBase>().SOULHit();
@@ -132,55 +129,79 @@ public class ActionSOUL : MonoBehaviour
 		hurtFrames = 0;
 		GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("sounds/snd_hurt");
 		GetComponent<AudioSource>().Play();
-		bool[] array = new bool[3]
+		bool[] array = new bool[6]
 		{
 			true,
-			Object.FindObjectOfType<GameManager>().SusieInParty(),
-			Object.FindObjectOfType<GameManager>().NoelleInParty()
+			Util.GameManager().PartySlotFilled(1),
+			Util.GameManager().PartySlotFilled(2),
+			Util.GameManager().PartySlotFilled(3),
+			Util.GameManager().PartySlotFilled(4),
+			Util.GameManager().PartySlotFilled(5)
 		};
-		Transform[] array2 = new Transform[3]
+		Transform[] array2 = new Transform[6];
+		for (int i = 0; i < 6; i++)
 		{
-			kris.transform,
-			GameObject.Find("Susie").transform,
-			GameObject.Find("Noelle").transform
+			if (i == 0 || i == 3)
+			{
+				array2[i] = kris.transform;
+			}
+			else
+			{
+				array2[i] = (kris.GetPartyMemberBySlot(i) ? kris.GetPartyMemberBySlot(i).transform : null);
+			}
+		}
+		bool[] forceAttackMinis = new bool[3]
+		{
+			Util.GameManager().GetHP(0) == 1 && array[3],
+			Util.GameManager().GetHP(1) == 1 && array[4],
+			Util.GameManager().GetHP(2) == 1 && array[5]
 		};
-		int[] array3 = Util.GameManager().HandleDamageCalculations(hp, 1f, false);
+		int[] array3 = Util.GameManager().HandleDamageCalculations(hp, 1f, applyDamageImmediately: false, forceAttackMinis);
 		bool flag = false;
-		for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 6; j++)
 		{
-			if (array3[i] > 0 && array[i])
+			if (array3[j] > 0 && array[j])
 			{
 				flag = true;
 			}
 		}
-		for (int j = 0; j < 3; j++)
+		for (int k = 0; k < 6; k++)
 		{
-			if (array[j])
+			if (array[k])
 			{
-				int num = ((array3[j] <= 0 && flag) ? 1 : array3[j]);
-				int num2 = Util.GameManager().GetHP(j) - num;
-				Util.GameManager().SetHP(j, num);
-				if (num2 > 0)
+				int num = ((array3[k] <= 0 && flag) ? 1 : array3[k]);
+				int num2 = Util.GameManager().GetHP(k) - num;
+				Util.GameManager().SetHP(k, num);
+				if (num2 > 0 && (bool)array2[k])
 				{
-					Object.Instantiate(Resources.Load<GameObject>("battle/dr/DamageNumber"), array2[j].position, Quaternion.identity).GetComponent<DamageNumber>().StartNumber(num2, Color.white, array2[j].position);
+					Object.Instantiate(Resources.Load<GameObject>("battle/dr/DamageNumber"), array2[k].position, Quaternion.identity).GetComponent<DamageNumber>().StartNumber(num2, Color.white, array2[k].position);
 				}
 			}
 		}
-		if (Object.FindObjectOfType<OverworldPlayer>().IsSliding() || Object.FindObjectOfType<OverworldPlayer>().CanMove())
+		if (Util.OverworldPlayer().IsSliding() || Util.OverworldPlayer().CanMove())
 		{
 			restoreMovement = true;
-			Object.FindObjectOfType<OverworldPlayer>().SetMovement(false);
+			Util.OverworldPlayer().SetMovement(newMove: false);
 		}
-		if ((bool)Object.FindObjectOfType<ActionPartyPanels>())
+		if ((bool)Util.FindObjectOfType<ActionPartyPanels>())
 		{
-			Object.FindObjectOfType<ActionPartyPanels>().Raise();
-			Object.FindObjectOfType<ActionPartyPanels>().UpdateHP(Object.FindObjectOfType<GameManager>().GetHPArray());
+			Util.FindObjectOfType<ActionPartyPanels>().Raise();
+			Util.FindObjectOfType<ActionPartyPanels>().UpdateHP(Util.GameManager().GetHPArray());
 		}
-		Object.FindObjectOfType<CameraController>().StartHitShake();
+		Util.FindObjectOfType<CameraController>().StartHitShake();
 	}
 
 	public void SetActivated(bool activated)
 	{
 		this.activated = activated;
+	}
+
+	public int GetInvFrames()
+	{
+		if (hurt)
+		{
+			return inv - hurtFrames;
+		}
+		return 0;
 	}
 }

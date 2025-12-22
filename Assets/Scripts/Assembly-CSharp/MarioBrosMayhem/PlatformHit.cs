@@ -39,16 +39,16 @@ namespace MarioBrosMayhem
 
 		private void OnTriggerStay2D(Collider2D collision)
 		{
-			if (playerId == -1)
+			if (playerId == -1 || !collision)
 			{
 				return;
 			}
 			if ((bool)collision.GetComponent<Enemy>() && collision.GetComponent<Enemy>().Grounded())
 			{
 				collision.GetComponent<Enemy>().Flip(playerId, base.transform.position);
-				if (collision.GetComponent<Enemy>().IsFlipped() && (bool)Object.FindObjectOfType<MarioBrosNetworkManager>())
+				if (collision.GetComponent<Enemy>().IsFlipped() && (bool)Util.FindObjectOfType<MarioBrosNetworkManager>())
 				{
-					Object.FindObjectOfType<MarioBrosNetworkManager>().FlipOverEnemyFromPlatform(Object.FindObjectOfType<Player>());
+					Util.FindObjectOfType<MarioBrosNetworkManager>().FlipOverEnemyFromPlatform(Util.FindObjectOfType<Player>());
 				}
 			}
 			else if ((bool)collision.GetComponent<Coin>())
@@ -58,7 +58,7 @@ namespace MarioBrosMayhem
 			else if ((bool)collision.GetComponent<Fireball>() && collision.GetComponent<Fireball>().CanBeKilled())
 			{
 				collision.GetComponent<Fireball>().Kill(playerId);
-				Object.FindObjectOfType<MarioBrosNetworkManager>().KillFireball(Object.FindObjectOfType<Player>(), collision.GetComponent<Fireball>().IsRed(), collision.transform.position);
+				Util.FindObjectOfType<MarioBrosNetworkManager>().KillFireball(Util.FindObjectOfType<Player>(), collision.GetComponent<Fireball>().IsRed(), collision.transform.position);
 			}
 			else if ((bool)collision.GetComponent<Freezie>() && collision.GetComponent<Freezie>().Grounded())
 			{

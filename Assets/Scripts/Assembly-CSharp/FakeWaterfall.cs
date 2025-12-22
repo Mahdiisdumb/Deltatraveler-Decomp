@@ -16,8 +16,8 @@ public class FakeWaterfall : MonoBehaviour
 
 	private void Awake()
 	{
-		players.Add(Object.FindObjectOfType<OverworldPlayer>().transform);
-		OverworldPartyMember[] array = Object.FindObjectsOfType<OverworldPartyMember>();
+		players.Add(Util.OverworldPlayer().transform);
+		OverworldPartyMember[] array = Util.FindObjectsOfType<OverworldPartyMember>();
 		foreach (OverworldPartyMember overworldPartyMember in array)
 		{
 			players.Add(overworldPartyMember.transform);

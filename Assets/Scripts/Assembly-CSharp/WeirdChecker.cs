@@ -146,7 +146,7 @@ public static class WeirdChecker
 				}
 				if (flag && (int)gm.GetFlag(13) < 3)
 				{
-					AdvanceTo(gm, 3, false);
+					AdvanceTo(gm, 3, sound: false);
 				}
 				return 2;
 			}
@@ -158,7 +158,7 @@ public static class WeirdChecker
 				}
 				if (flag)
 				{
-					AdvanceTo(gm, 2, false);
+					AdvanceTo(gm, 2, sound: false);
 				}
 				return 1;
 			}
@@ -167,7 +167,7 @@ public static class WeirdChecker
 		{
 			if ((int)gm.GetFlag(13) < 4 && flag)
 			{
-				AdvanceTo(gm, 4, false);
+				AdvanceTo(gm, 4, sound: false);
 			}
 			return 2;
 		}
@@ -175,7 +175,7 @@ public static class WeirdChecker
 		{
 			if ((int)gm.GetFlag(13) < 6 && flag)
 			{
-				AdvanceTo(gm, 6, false);
+				AdvanceTo(gm, 6, sound: false);
 			}
 			return 2;
 		}
@@ -213,13 +213,13 @@ public static class WeirdChecker
 				{
 					if ((int)gm.GetFlag(13) < 10 && flag)
 					{
-						AdvanceTo(gm, 10, false);
+						AdvanceTo(gm, 10, sound: false);
 					}
 					return 2;
 				}
 				if ((int)gm.GetFlag(13) < 9 && flag)
 				{
-					AdvanceTo(gm, 9, false);
+					AdvanceTo(gm, 9, sound: false);
 				}
 				return 1;
 			}
@@ -285,17 +285,30 @@ public static class WeirdChecker
 		{
 			Object.Destroy(GameObject.Find("RalseiSmokinAFatOne"));
 		}
+		OverworldPartyMember overworldPartyMember = null;
+		OverworldPartyMember overworldPartyMember2 = null;
+		if ((bool)GameObject.Find("Susie"))
+		{
+			overworldPartyMember = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
+		}
+		if ((bool)GameObject.Find("Noelle"))
+		{
+			overworldPartyMember2 = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
+		}
 		if (HasCommittedBloodshed(gm))
 		{
-			if ((int)gm.GetFlag(12) == 1)
+			if ((int)gm.GetFlag(12) == 1 && (bool)overworldPartyMember)
 			{
-				GameObject.Find("Susie").GetComponent<OverworldPartyMember>().UseUnhappySprites();
+				overworldPartyMember.UseUnhappySprites();
 			}
-			GameObject.Find("Noelle").GetComponent<OverworldPartyMember>().UseUnhappySprites();
+			if ((bool)overworldPartyMember2)
+			{
+				overworldPartyMember2.UseUnhappySprites();
+			}
 		}
-		if (gm.GetFlagInt(108) == 1 && gm.GetFlagInt(13) >= 2 && gm.GetFlagInt(127) == 1)
+		if ((bool)overworldPartyMember && gm.GetFlagInt(108) == 1 && gm.GetFlagInt(13) >= 2 && gm.GetFlagInt(127) == 1)
 		{
-			GameObject.Find("Susie").GetComponent<OverworldPartyMember>().UseUnhappySprites();
+			overworldPartyMember.UseUnhappySprites();
 		}
 		if (SceneManager.GetActiveScene().buildIndex < 50)
 		{
@@ -525,7 +538,7 @@ public static class WeirdChecker
 			}
 			else if (SceneManager.GetActiveScene().buildIndex == 33)
 			{
-				Object.FindObjectOfType<InteractItemPickup>().ModifyPurchaseContents(new string[5] { "* You got the Toy Knife.", "* Oh shoot,^05 Kris!\n^05* A knife!", "* That's uhh...^05 really\n  you...", "* What do you mean\n  I'M acting weird???", "* Maybe if you loosened\n  up a bit,^05 I wouldn't\n  be so tense." }, new string[5] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[6], new string[5] { "", "su_surprised", "su_smirk_sweat", "su_angry", "su_annoyed" });
+				Util.FindObjectOfType<InteractItemPickup>().ModifyPurchaseContents(new string[5] { "* You got the Toy Knife.\n* It was added to your\n  EQUIPMENT.", "* Oh shoot,^05 Kris!\n^05* A knife!", "* That's uhh...^05 really\n  you...", "* What do you mean\n  I'M acting weird???", "* Maybe if you loosened\n  up a bit,^05 I wouldn't\n  be so tense." }, new string[5] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[6], new string[5] { "", "su_surprised", "su_smirk_sweat", "su_angry", "su_annoyed" });
 			}
 		}
 		if ((int)gm.GetFlag(87) >= 3)
@@ -559,7 +572,7 @@ public static class WeirdChecker
 			}
 			else if (SceneManager.GetActiveScene().buildIndex == 9 && (int)gm.GetFlag(13) < 2)
 			{
-				Object.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[2] { "* (The shadow of the ruins\n  looms above,^05 filling you with\n  determination.)", "* (HP fully restored.)" });
+				Util.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[2] { "* (The shadow of the ruins\n  looms above,^05 filling you with\n  determination.)", "* (HP fully restored.)" });
 			}
 			else if (SceneManager.GetActiveScene().buildIndex == 11)
 			{
@@ -571,7 +584,7 @@ public static class WeirdChecker
 			{
 				if ((int)gm.GetFlag(13) < 2)
 				{
-					Object.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[2] { "* (Playfully crinkling through\n  the leaves fills you with\n  determination.)", "* (HP fully restored.)" });
+					Util.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[2] { "* (Playfully crinkling through\n  the leaves fills you with\n  determination.)", "* (HP fully restored.)" });
 				}
 				if ((bool)GameObject.Find("Froggit"))
 				{
@@ -581,7 +594,7 @@ public static class WeirdChecker
 			}
 			else if (SceneManager.GetActiveScene().buildIndex == 21 && (int)gm.GetFlag(13) < 2)
 			{
-				Object.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[2] { "* (Knowing the mouse might one\n  day leave its hole and\n  get the cheese...)", "* (It fills you with\n  determination.)" });
+				Util.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[2] { "* (Knowing the mouse might one\n  day leave its hole and\n  get the cheese...)", "* (It fills you with\n  determination.)" });
 			}
 			else if (SceneManager.GetActiveScene().buildIndex == 24 && (int)gm.GetFlag(13) < 2)
 			{
@@ -589,7 +602,7 @@ public static class WeirdChecker
 			}
 			else if (SceneManager.GetActiveScene().buildIndex == 25)
 			{
-				Object.FindObjectOfType<InteractItemPickup>().ModifyPurchaseContents(new string[4] { "* You got the Faded Ribbon.", "* Hey,^05 I think that's\n  like...^10 armor?", "* I know someone that\n  would say like... you\n^10  wear it with ^C.", "* Hell if I'm wearing\n  THAT,^05 though." }, new string[4] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[6], new string[4] { "", "su_smirk_sweat", "su_smile_sweat", "su_annoyed" });
+				Util.FindObjectOfType<InteractItemPickup>().ModifyPurchaseContents(new string[4] { "* You got the Faded Ribbon.\n* It was added to your\n  EQUIPMENT.", "* Hey,^05 I think that's\n  like...^10 armor?", "* I know someone that\n  would say like... you\n^10  wear it with ^C.", "* Hell if I'm wearing\n  THAT,^05 though." }, new string[4] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[6], new string[4] { "", "su_smirk_sweat", "su_smile_sweat", "su_annoyed" });
 			}
 			else if (SceneManager.GetActiveScene().buildIndex == 32)
 			{
@@ -602,20 +615,20 @@ public static class WeirdChecker
 			{
 				if ((int)gm.GetFlag(13) < 2)
 				{
-					Object.FindObjectOfType<InteractItemPickup>().ModifyPurchaseContents(new string[3] { "* You got the Toy Knife.", "* Oh shoot!\n^05* A knife!", "* Wait, is that a\n  PLASTIC knife?^05\n* That's kinda lame." }, new string[4] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[6], new string[3] { "", "su_surprised", "su_smile_sweat" });
+					Util.FindObjectOfType<InteractItemPickup>().ModifyPurchaseContents(new string[3] { "* You got the Toy Knife.\n* It was added to your\n  EQUIPMENT.", "* Oh shoot!\n^05* A knife!", "* Wait, is that a\n  PLASTIC knife?^05\n* That's kinda lame." }, new string[4] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[6], new string[3] { "", "su_surprised", "su_smile_sweat" });
 				}
 				else
 				{
-					Object.FindObjectOfType<InteractItemPickup>().ModifyPurchaseContents(new string[5] { "* You got the Toy Knife.", "* ...", "* Hey,^05 isn't that made\n  of plastic?", "* Seems kinda useless,^05\n  huh.", "* (... Can this kid stop\n  looking at me like\n  that?)" }, new string[5] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[6], new string[5] { "", "su_side_sweat", "su_smile_sweat", "su_smile", "su_side_sweat" });
+					Util.FindObjectOfType<InteractItemPickup>().ModifyPurchaseContents(new string[5] { "* You got the Toy Knife.\n* It was added to your\n  EQUIPMENT.", "* ...", "* Hey,^05 isn't that made\n  of plastic?", "* Seems kinda useless,^05\n  huh.", "* (... Can this kid stop\n  looking at me like\n  that?)" }, new string[5] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[6], new string[5] { "", "su_side_sweat", "su_smile_sweat", "su_smile", "su_side_sweat" });
 				}
 			}
 			else if (SceneManager.GetActiveScene().buildIndex == 37)
 			{
 				if ((int)gm.GetFlag(13) < 2)
 				{
-					Object.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[1] { "* (Seeing such a cute,^05 tiny\n  house in the RUINS gives\n  you determination.)" });
+					Util.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[1] { "* (Seeing such a cute,^05 tiny\n  house in the RUINS gives\n  you determination.)" });
 				}
-				Object.FindObjectOfType<Moss>().ModifyContents(new string[4] { "* You found the <color=#00FF00FF>[MOSS]</color>!", "* What the hell is\n  with that look?", "* You know what?^05\n* Move over.", "* Susie eats the moss.^10\n* Alone." }, new string[4] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_text" }, new int[4], new string[4] { "", "su_side", "su_annoyed", "" });
+				Util.FindObjectOfType<Moss>().ModifyContents(new string[4] { "* You found the <color=#00FF00FF>[MOSS]</color>!", "* What the hell is\n  with that look?", "* You know what?^05\n* Move over.", "* Susie eats the moss.^10\n* Alone." }, new string[4] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_text" }, new int[4], new string[4] { "", "su_side", "su_annoyed", "" });
 			}
 			else if (SceneManager.GetActiveScene().buildIndex == 34)
 			{
@@ -769,7 +782,7 @@ public static class WeirdChecker
 			}
 			if ((int)gm.GetFlag(116) != 0 && (int)gm.GetFlag(87) < 5)
 			{
-				GameObject.Find("FixedBridge").GetComponent<Tilemap>().enabled = true;
+				((Behaviour)(object)GameObject.Find("FixedBridge").GetComponent<Tilemap>()).enabled = true;
 				GameObject.Find("FixedBridge").GetComponent<TilemapRenderer>().enabled = true;
 				Object.Destroy(GameObject.Find("bridgeblock"));
 				Object.Destroy(GameObject.Find("BlueMario"));
@@ -781,17 +794,17 @@ public static class WeirdChecker
 			}
 			if (HasCommittedBloodshed(gm) && (int)gm.GetFlag(87) == 4)
 			{
-				Object.FindObjectOfType<SansShopBase>().ModifyContents(new string[8] { "*\tif i may ask...", "*\twhat was that yelling that\n\ti heard?", "*\t...", "*\teh,^05 forget it.", "*\tyou don't need to tell\n\tme.", "*\tit doesn't really matter\n\tin the end.", "*\tjust...", "*\ti hope you're happy\n\twith the path that\n\tyou're taking." }, new string[8] { "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans" }, new int[8], new string[8] { "sans_closed", "sans_empty", "sans_closed", "sans_side", "sans_neutral", "sans_neutral", "sans_closed", "sans_closed" });
+				Util.FindObjectOfType<SansShopBase>().ModifyContents(new string[8] { "* if i may ask...", "* what was that yelling that\n  i heard?", "* ...", "* eh,^05 forget it.", "* you don't need to tell\n  me.", "* it doesn't really matter\n  in the end.", "* just...", "* i hope you're happy\n  with the path that\n  you're taking." }, new string[8] { "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans" }, new int[8], new string[8] { "sans_closed", "sans_empty", "sans_closed", "sans_side", "sans_neutral", "sans_neutral", "sans_closed", "sans_closed" });
 			}
 			else if ((int)gm.GetFlag(87) >= 5)
 			{
-				Object.FindObjectOfType<SansShopBase>().ModifyContents(new string[6] { "*\tdid uhh...^05 something\n\thappen?", "*\ti just saw a bunch\n\tof people run out of\n\tthis cave in a hurry.", "*\tand you...^05 you look awful.", "*\t...", "*\teh,^05 don't worry about\n\ttelling me anything.", "*\tyou've got other things\n\tto worry about." }, new string[8] { "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans" }, new int[8], new string[6] { "sans_side", "sans_closed", "sans_neutral", "sans_neutral", "sans_side", "sans_closed" });
+				Util.FindObjectOfType<SansShopBase>().ModifyContents(new string[6] { "* did uhh...^05 something\n  happen?", "* i just saw a bunch\n  of people run out of\n  this cave in a hurry.", "* and you...^05 you look awful.", "* ...", "* eh,^05 don't worry about\n  telling me anything.", "* you've got other things\n  to worry about." }, new string[8] { "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtsans" }, new int[8], new string[6] { "sans_side", "sans_closed", "sans_neutral", "sans_neutral", "sans_side", "sans_closed" });
 				Object.Destroy(GameObject.Find("MushroomLady"));
 				Object.Destroy(GameObject.Find("BlueMario"));
 			}
-			else if (gm.GetMiniPartyMember() == 1)
+			else if (Util.GameManager().GetPartyMember(3) == 3)
 			{
-				Object.FindObjectOfType<SansShopBase>().ModifyContents(new string[9] { "*\they, is that another\n\thuman that you're lugging\n\taround?", "*\tis that the girl that the\n\tpeople in twoson were\n\tworried about?", "* Well,^05 I'd hope that\n  they're worried...", "*\ti see.", "*\tso that makes you\n\tpaula.", "* ...Yeah.", "*\tcool.", "*\twell i hope you get\n\thome safe soon.", "*\tsame to the rest\n\tof you." }, new string[9] { "snd_txtsans", "snd_txtsans", "snd_txtpau", "snd_txtsans", "snd_txtsans", "snd_txtpau", "snd_txtsans", "snd_txtsans", "snd_txtsans" }, new int[9], new string[9] { "sans_side", "sans_neutral", "pau_dejected", "sans_closed", "sans_neutral", "pau_annoyed", "sans_side", "sans_wink", "sans_closed" });
+				Util.FindObjectOfType<SansShopBase>().ModifyContents(new string[9] { "* hey, is that another\n  human that you're lugging\n  around?", "* is that the girl that the\n  people in twoson were\n  worried about?", "* Well,^05 I'd hope that\n  they're worried...", "* i see.", "* so that makes you\n  paula.", "* ...Yeah.", "* cool.", "* well i hope you get\n  home safe soon.", "* same to the rest\n  of you." }, new string[9] { "snd_txtsans", "snd_txtsans", "snd_txtpau", "snd_txtsans", "snd_txtsans", "snd_txtpau", "snd_txtsans", "snd_txtsans", "snd_txtsans" }, new int[9], new string[9] { "sans_side", "sans_neutral", "pau_dejected", "sans_closed", "sans_neutral", "pau_annoyed", "sans_side", "sans_wink", "sans_closed" });
 			}
 		}
 		if (SceneManager.GetActiveScene().buildIndex == 55 && (((int)gm.GetFlag(13) >= 4 && (int)gm.GetFlag(12) == 1) || (int)gm.GetFlag(12) == 0))
@@ -816,11 +829,11 @@ public static class WeirdChecker
 				GameObject.Find("Saturn").GetComponent<InteractKnockKnockDoor>().ModifySecondaryContents(new string[2] { "* (Knock knock knock)", "* (There's no response...)" }, new string[2] { "snd_text", "snd_text" }, new int[2], new string[2]);
 				if ((int)gm.GetFlag(12) == 1)
 				{
-					Object.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[1] { "* The silence is deafening." });
+					Util.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[1] { "* The silence is deafening." });
 				}
 				else
 				{
-					Object.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[2] { "* (You can feel the guilt\n  weighing down on you as you\n  stand in this empty town.)", "* (Despite this,^05 you are filled\n  with a certain power.)" });
+					Util.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[2] { "* (You can feel the guilt\n  weighing down on you as you\n  stand in this empty town.)", "* (Despite this,^05 you are filled\n  with a certain power.)" });
 				}
 				GameObject.Find("Recruit").GetComponent<InteractTextBox>().ModifyContents(new string[3] { "* (There's a sign on the door.)", "* \"The recruitment center will\n  open back up at 1:00 PM!\"", "* Something's telling me\n  they won't get another\n  recruit ever again." }, new string[3] { "snd_text", "snd_text", "snd_txtsus" }, new int[4], new string[3] { "", "", "su_side_sweat" });
 			}
@@ -832,7 +845,7 @@ public static class WeirdChecker
 				GameObject.Find("NPC-HeadLady").GetComponent<InteractTextBox>().ModifyContents(new string[2] { "* I woke up from the dream.", "* ... That's how you'd\n  describe it?" }, new string[3] { "snd_text", "snd_txtnoe", "snd_text" }, new int[4], new string[3] { "", "no_thinking", "" });
 				GameObject.Find("NPC-Hippie").GetComponent<InteractTextBox>().ModifyContents(new string[4] { "* We might've been listening\n  to evil messages rather\n  than good ones.", "* So...", "* I was right.", "* ...^05 Yeah,^05 whatever man." }, new string[4] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_text" }, new int[4], new string[4] { "", "su_side", "su_smile", "" });
 				GameObject.Find("NPC-Hippie").GetComponent<InteractTextBox>().ModifySecondaryContents(new string[1] { "* I still need some time,^05 man." }, new string[1] { "snd_text" }, new int[4], new string[1] { "" });
-				Object.FindObjectOfType<KidnapGuy>().ModifySecondaryContents(new string[6] { "* You really think I was\n  a bad boy?", "* YEAH????", "* YOU LITERALLY\n  KIDNAPPED ME!!!", "* S-sometimes you give into\n  peer pressure!!", "* I'll give into putting\n  this stick through your\n  chest...", "* ... If you don't\n  SHUT UP." }, new string[6] { "snd_text", "snd_txtpau", "snd_txtpau", "snd_text", "snd_txtsus", "snd_txtsus" }, new int[6], new string[6] { "", "pau_mad_sweat", "pau_mad_sweat", "", "su_depressed", "su_teeth" });
+				Util.FindObjectOfType<KidnapGuy>().ModifySecondaryContents(new string[6] { "* You really think I was\n  a bad boy?", "* YEAH????", "* YOU LITERALLY\n  KIDNAPPED ME!!!", "* S-sometimes you give into\n  peer pressure!!", "* I'll give into putting\n  this stick through your\n  chest...", "* ... If you don't\n  SHUT UP." }, new string[6] { "snd_text", "snd_txtpau", "snd_txtpau", "snd_text", "snd_txtsus", "snd_txtsus" }, new int[6], new string[6] { "", "pau_mad_sweat", "pau_mad_sweat", "", "su_depressed", "su_teeth" });
 				GameObject.Find("Cow").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("overworld/npcs/hhvillage/spr_cow");
 				GameObject.Find("Cow").GetComponent<InteractTextBox>().ModifyContents(new string[1] { "* (The blue cow thing wasn't\n  such a great idea, huh.)" }, new string[1] { "snd_text" }, new int[4], new string[1] { "" });
 				GameObject.Find("NPC-Divorce").GetComponent<InteractTextBox>().ModifyContents(new string[4] { "* My wife has run away for\n  a second time.", "* Maybe the issue isn't\n  your religion...", "* Hey,^05 that's a good thing!\n^10* I'm such a lucky man!", "* ..." }, new string[4] { "snd_text", "snd_txtnoe", "snd_text", "snd_txtnoe" }, new int[4], new string[4] { "", "no_happy", "", "no_confused" });
@@ -841,13 +854,13 @@ public static class WeirdChecker
 				GameObject.Find("Sign (2)").GetComponent<InteractTextBox>().ModifyContents(new string[2] { "* (All of our products are\n  blessed.)\n         --Blue-Blue Drugstore", "* You'd think they'd at\n  least change the damn\n  sign." }, new string[2] { "snd_text", "snd_txtsus" }, new int[4], new string[2] { "", "su_annoyed" });
 				GameObject.Find("Recruit").GetComponent<InteractTextBox>().ModifyContents(new string[2] { "* (The door is locked.)", "* Looks like they'll need\n  to find another use\n  for this house." }, new string[2] { "snd_text", "snd_txtsus" }, new int[4], new string[2] { "", "su_smile" });
 			}
-			else if (gm.GetMiniPartyMember() == 1)
+			else if (Util.GameManager().GetPartyMember(3) == 3)
 			{
-				Object.FindObjectOfType<KidnapGuy>().ModifySecondaryContents(new string[4] { "* Recognize her...?", "* P-^05please leave me alone...", "* That's what I thought,^05\n  freak.", "* (...!)" }, new string[4] { "snd_txtsus", "snd_text", "snd_txtsus", "snd_txtnoe" }, new int[4], new string[4] { "su_depressed", "", "su_teeth", "no_surprised_happy" });
+				Util.FindObjectOfType<KidnapGuy>().ModifySecondaryContents(new string[4] { "* Recognize her...?", "* P-^05please leave me alone...", "* That's what I thought,^05\n  freak.", "* (...!)" }, new string[4] { "snd_txtsus", "snd_text", "snd_txtsus", "snd_txtnoe" }, new int[4], new string[4] { "su_depressed", "", "su_teeth", "no_surprised_happy" });
 			}
 			if ((int)gm.GetFlag(87) < 5 && (int)gm.GetFlag(117) == 1)
 			{
-				Object.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[2] { "* (This town's future is starting\n  to look brighter and brighter.)", "* (You're filled with the power\n  of reform.)" });
+				Util.FindObjectOfType<SAVEPoint>().ModifyPhrases(new string[2] { "* (This town's future is starting\n  to look brighter and brighter.)", "* (You're filled with the power\n  of reform.)" });
 			}
 		}
 		if (SceneManager.GetActiveScene().buildIndex == 59)
@@ -929,6 +942,14 @@ public static class WeirdChecker
 		}
 		if (SceneManager.GetActiveScene().buildIndex == 86)
 		{
+			if (PersistentSAVE.GetInt("shayy-cool-s3", 0) == 1)
+			{
+				PersistentSAVE.SetInt("shayy-cool-s3", 0);
+			}
+			else
+			{
+				Object.Destroy(GameObject.Find("FlavorChangerNPC"));
+			}
 			if (!gm.SusieInParty())
 			{
 				GameObject.Find("Spaghetti").GetComponent<InteractTextBox>().ModifyContents(new string[2] { "* (It's a plate of frozen\n  spaghetti.)", "* (It's so cold,^05 it's stuck\n  to the table.)" }, new string[2] { "snd_text", "snd_text" }, new int[4], new string[2] { "", "" });
@@ -1034,7 +1055,7 @@ public static class WeirdChecker
 		if (SceneManager.GetActiveScene().buildIndex == 127)
 		{
 			Util.GameManager().StopMusic(60f);
-			Object.FindObjectOfType<LoadingZone>().SetForceActivationTrigger(true);
+			Util.FindObjectOfType<LoadingZone>().SetForceActivationTrigger(forceActivationTrigger: true);
 		}
 	}
 }

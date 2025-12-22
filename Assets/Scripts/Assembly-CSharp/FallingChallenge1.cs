@@ -11,14 +11,14 @@ public class FallingChallenge1 : AttackBase
 		base.Awake();
 		maxFrames = 400;
 		bbSize = new Vector2(200f, 140f);
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(1);
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(1);
 	}
 
 	private void OnDestroy()
 	{
-		if ((bool)Object.FindObjectOfType<SOUL>())
+		if ((bool)Util.FindObjectOfType<SOUL>())
 		{
-			Object.FindObjectOfType<SOUL>().SetPullForce(Vector3.zero);
+			Util.FindObjectOfType<SOUL>().SetPullForce(Vector3.zero);
 		}
 	}
 
@@ -41,6 +41,6 @@ public class FallingChallenge1 : AttackBase
 		boneOcean = Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/sans/BoneLineSide"), base.transform);
 		boneOcean.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
 		bb.StartMovement(new Vector2(200f, 350f));
-		Object.FindObjectOfType<SOUL>().SetPullForce(new Vector3(0f, 1f / 24f));
+		Util.FindObjectOfType<SOUL>().SetPullForce(new Vector3(0f, 1f / 24f));
 	}
 }

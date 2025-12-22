@@ -3,8 +3,69 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleManager : TranslatableSelectableBehaviour
+public class BattleManager : SelectableBehaviour
 {
+	public struct PartySelection
+	{
+		public int target;
+
+		public ActionType action;
+
+		public int extraData;
+
+		public bool isEquipment;
+
+		public bool miniMagic;
+
+		public bool mainNoFight;
+
+		public bool magicEnemyTarget;
+
+		public int miniActID;
+
+		public void Reset()
+		{
+			target = 0;
+			action = ActionType.Idle;
+			extraData = 0;
+			isEquipment = false;
+			miniMagic = false;
+			mainNoFight = false;
+			magicEnemyTarget = false;
+			miniActID = 0;
+		}
+
+		public bool IsDefend()
+		{
+			if (action == ActionType.Mercy)
+			{
+				return extraData == 1;
+			}
+			return false;
+		}
+
+		public bool IsSparing()
+		{
+			if (action == ActionType.Mercy)
+			{
+				return extraData == 0;
+			}
+			return false;
+		}
+	}
+
+	public enum ActionType
+	{
+		Idle = -1,
+		Fight = 0,
+		Act = 1,
+		Item = 2,
+		Mercy = 3,
+		FollowACT = 4,
+		HasFollowedACT = 5,
+		Magic = 6
+	}
+
 	protected GameManager gm;
 
 	protected BattleCamera cam;
@@ -25,13 +86,15 @@ public class BattleManager : TranslatableSelectableBehaviour
 
 	protected bool doneIntroFade;
 
-	protected BattleBG bg;
+	protected GameObject bg;
 
 	protected ShakingText st;
 
 	protected GameObject selObj;
 
 	protected GameObject selObj2;
+
+	protected GameObject tabSwitcher;
 
 	protected bool doPage2;
 
@@ -51,11 +114,13 @@ public class BattleManager : TranslatableSelectableBehaviour
 
 	protected TextUT boxText;
 
-	protected RectTransform boxPortrait;
+	protected Portrait boxPortrait;
 
 	protected string curFlavor;
 
 	protected bool flavorPlayedOnce;
+
+	protected bool allowSkip = true;
 
 	protected string[] diag;
 
@@ -71,18 +136,11 @@ public class BattleManager : TranslatableSelectableBehaviour
 
 	protected int partySize;
 
-	protected bool krisAndSusie;
-
-	protected int miniPartyMember;
+	protected bool twoPartySecondSlot;
 
 	protected int partyTurn;
 
-	protected int[][] partySelections = new int[3][]
-	{
-		new int[3] { 0, -1, 0 },
-		new int[3] { 0, -1, 0 },
-		new int[3] { 0, -1, 0 }
-	};
+	protected PartySelection[] partySelections = new PartySelection[3];
 
 	protected bool susieDepressionRefuse;
 
@@ -90,25 +148,41 @@ public class BattleManager : TranslatableSelectableBehaviour
 
 	protected bool susieDeviousMisbehave;
 
-	protected readonly string deviousString = "* Susie's acting devious...\n";
+	public static readonly string DEVIOUS_STRING = "* Susie's acting devious...\n";
 
 	protected int deviousChance = 10;
 
-	protected int[] revivalTurns = new int[3];
+	protected int[] revivalTurns = new int[6];
 
 	protected bool[] defending = new bool[3];
+
+	protected TPBar tpBar;
+
+	protected Magic.ID[] spellList;
 
 	protected bool selectingMagic;
 
 	protected bool actMagicSelect;
 
+	protected int[] actMagicSelectMenu = new int[0];
+
 	protected bool castingRedBuster;
 
 	protected bool castingDualHeal;
 
+	protected int dualHealUses;
+
+	protected List<EnemyBase.MiniACT> miniACTs = new List<EnemyBase.MiniACT>();
+
+	protected List<int> miniACTIds = new List<int>();
+
+	protected bool inMiniACTEnemyMenu;
+
+	protected int miniACTId = -1;
+
 	protected int firstAvail;
 
-	protected int niceActIndex;
+	protected int actionTurn;
 
 	protected bool sparingThisRound;
 
@@ -136,22 +210,14 @@ public class BattleManager : TranslatableSelectableBehaviour
 
 	private bool skipNextEnemyTurn;
 
-	public static readonly string[] PARTYMEMBER_NAMES = new string[5] { "Kris", "Susie", "Noelle", "Paula", "Chara" };
+	protected bool isSelEquipment;
+
+	private int itemCount;
 
 	protected DescriptionBox descriptionBox;
 
-	public override Dictionary<string, string[]> GetDefaultStrings()
-	{
-		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
-		dictionary.Add("act_check", new string[1] { "Check" });
-		dictionary.Add("error_acts", new string[2] { "* But it didn't exist.\n* So this is an error.", "* But nothing happened.\n* So this is an error." });
-		dictionary.Add("check_desc_base", new string[1] { "* {0} - ATK {1} DEF {2}\n{3}" });
-		return dictionary;
-	}
-
 	protected virtual void Awake()
 	{
-		SetStrings(GetDefaultStrings(), GetType());
 		endState = 0;
 		startedBattle = false;
 		firstButton = true;
@@ -164,24 +230,24 @@ public class BattleManager : TranslatableSelectableBehaviour
 	protected void Initialize()
 	{
 		UnityEngine.Object.Destroy(GameObject.Find("OWSoul(Clone)"));
-		gm = UnityEngine.Object.FindObjectOfType<GameManager>();
-		cam = UnityEngine.Object.FindObjectOfType<BattleCamera>();
+		gm = Util.GameManager();
+		cam = Util.FindObjectOfType<BattleCamera>();
 		mus = GetComponent<MusicPlayer>();
 		aud = base.gameObject.AddComponent<AudioSource>();
 		aud2 = base.gameObject.AddComponent<AudioSource>();
-		bb = UnityEngine.Object.FindObjectOfType<BulletBoard>();
+		bb = Util.FindObjectOfType<BulletBoard>();
 		fadeObj = GameObject.Find("BattleFadeObj").GetComponentInChildren<Fade>();
-		bg = UnityEngine.Object.FindObjectOfType<BattleBG>();
 		st = base.gameObject.AddComponent<ShakingText>();
+		tpBar = Util.FindObjectOfType<TPBar>();
 		boxText = base.gameObject.AddComponent<TextUT>();
 		boxText.SetParent(GameObject.Find("BattleCanvas").transform);
 		soul = GameObject.Find("SOUL");
 		soul.GetComponent<SOUL>().AdjustSOULColor();
 		curHP = gm.GetCombinedHP();
-		partyPanels = UnityEngine.Object.FindObjectOfType<PartyPanels>();
+		partyPanels = Util.FindObjectOfType<PartyPanels>();
 		ChangeHP();
 		partySize = partyPanels.NumOfActivePartyMembers();
-		krisAndSusie = gm.SusieInParty();
+		twoPartySecondSlot = gm.PartySlotFilled(1);
 		partyTurn = 0;
 		state = 0;
 		actChoice = 0;
@@ -189,12 +255,16 @@ public class BattleManager : TranslatableSelectableBehaviour
 		buttonIndex = 0;
 		SelectButton(buttonIndex);
 		axisIsDown = false;
-		descriptionBox = UnityEngine.Object.FindObjectOfType<DescriptionBox>();
+		descriptionBox = Util.FindObjectOfType<DescriptionBox>();
 		if (!gm.IsEasyMode())
 		{
 			didSoulSparkle = true;
 		}
 		isSOULOut = false;
+		for (int i = 0; i < 3; i++)
+		{
+			partySelections[i].Reset();
+		}
 	}
 
 	public virtual void StartBattle(int id)
@@ -202,111 +272,36 @@ public class BattleManager : TranslatableSelectableBehaviour
 		battleId = id;
 		Initialize();
 		enemies = EnemyGenerator.GetEnemies(battleId);
-		object[] music = EnemyGenerator.GetMusic(battleId);
-		PlayMusic(music[0].ToString(), float.Parse(music[1].ToString()));
-		object[] battleBG = EnemyGenerator.GetBattleBG(battleId);
-		bg.StartBG(int.Parse(battleBG[0].ToString()), float.Parse(battleBG[1].ToString()), float.Parse(battleBG[2].ToString()), (Color)battleBG[3], (bool)battleBG[4]);
+		PlayMusic(EnemyGenerator.GetMusic(battleId), EnemyGenerator.GetMusicPitch(battleId));
+		bg = EnemyGenerator.GetBattleBG(battleId);
 		curFlavor = EnemyGenerator.GetApproachText(battleId);
-		isBoss = battleId == 14 || battleId == 29 || battleId == 40 || battleId == 52 || battleId == 53 || battleId == 54 || battleId == 73;
-		miniPartyMember = gm.GetMiniPartyMember();
-		if (isBoss || (int)gm.GetFlag(13) >= 5 || ((int)gm.GetFlag(13) == 4 && (int)gm.GetFlag(87) == 4))
+		isBoss = EnemyGenerator.IsBossEncounter(battleId);
+		partyPanels.SetInitialSprites(isBoss);
+		int introAttack = EnemyGenerator.GetIntroAttack(battleId);
+		if (introAttack > -1)
 		{
-			partyPanels.SetSprite(1, "spr_su_down_unhappy_0");
-			partyPanels.SetSprite(2, "spr_no_down_unhappy_0");
-		}
-		if (gm.GetFlagInt(107) == 1)
-		{
-			if (gm.GetFlagInt(13) >= 2 && gm.GetFlagInt(127) == 1)
-			{
-				partyPanels.SetSprite(0, "g/spr_fr_down_0_g");
-			}
-		}
-		else
-		{
-			if ((int)gm.GetFlag(87) >= 4)
-			{
-				partyPanels.SetSprite(2, "spr_no_down_unhappy_0");
-			}
-			if ((int)gm.GetFlag(102) == 1)
-			{
-				partyPanels.SetSprite(0, "injured/spr_kr_down_0_injured");
-			}
-			if ((int)gm.GetFlag(204) == 1)
-			{
-				partyPanels.SetSprite(0, "eye/spr_kr_down_0_eye");
-			}
-		}
-		if (battleId == 1)
-		{
-			partyPanels.RaiseHeads(false, false, false);
+			partyPanels.RaiseHeads(kris: false, susie: false, noelle: false);
+			partyPanels.SetTargets(kris: true, susie: true, noelle: true);
 			state = 5;
+			curAtk = AttackSpawner.GetAttack(introAttack);
+			bb.StartMovement(curAtk.GetBoardSize(), curAtk.GetBoardPos(), instant: true);
 			soul.GetComponent<SpriteRenderer>().enabled = true;
-			partyPanels.SetTargets(true, true, false);
-			curAtk = AttackSpawner.GetAttack(3);
-			bb.StartMovement(curAtk.GetBoardSize(), curAtk.GetBoardPos(), true);
-			soul.transform.position = curAtk.GetSoulPos();
-		}
-		if (battleId == 14 || battleId == 40)
-		{
-			partyPanels.RaiseHeads(false, false, false);
-			state = 5;
-			soul.GetComponent<SpriteRenderer>().enabled = true;
-			curAtk = AttackSpawner.GetAttack(22);
 			soul.transform.position = curAtk.GetSoulPos();
 			firstButton = true;
 			SelectButton(-1);
-		}
-		if (battleId == 28)
-		{
-			partyPanels.RaiseHeads(false, false, false);
-			state = 5;
-			soul.GetComponent<SpriteRenderer>().enabled = false;
-			curAtk = AttackSpawner.GetAttack(37);
-			soul.transform.position = curAtk.GetSoulPos();
-			firstButton = true;
-			SelectButton(-1);
-		}
-		if (battleId == 29)
-		{
-			partyPanels.RaiseHeads(false, false, false);
-			state = 5;
-			soul.GetComponent<SpriteRenderer>().enabled = true;
-			soul.GetComponent<SOUL>().CreateSOUL(Color.white, true, false);
-			StopMusic();
-			partyPanels.SetTargets(true, true, false);
-			curAtk = AttackSpawner.GetAttack(40);
-			bb.StartMovement(curAtk.GetBoardSize(), curAtk.GetBoardPos(), true);
-			soul.transform.position = curAtk.GetSoulPos();
-			firstButton = true;
-			SelectButton(-1);
-		}
-		if (battleId == 73)
-		{
-			partyPanels.RaiseHeads(false, false, false);
-			state = 5;
-			soul.GetComponent<SpriteRenderer>().enabled = false;
-			partyPanels.SetTargets(true, true, true);
-			curAtk = AttackSpawner.GetAttack(108);
-			soul.transform.position = curAtk.GetSoulPos();
-			firstButton = true;
-			SelectButton(-1);
-			if (gm.GetEXP() == 0 && Util.GameManager().IsEasyMode())
-			{
-				soul.GetComponent<SOUL>().SetInvFrames(60, true);
-				soul.GetComponent<SOUL>().SetDamageMultiplier(0.725f);
-			}
 		}
 		if (state == 5)
 		{
 			SendBattleEvents(4);
 		}
 		startedBattle = true;
-		UnityEngine.Object.FindObjectOfType<GameManager>().ForceTogglePlayers(false);
+		Util.GameManager().ForceTogglePlayers(tog: false);
 		DetermineDepressionReject();
 		if (state == 0)
 		{
 			DoSOULSparkle();
 		}
+		itemCount = GetTotalNumOfItems();
 	}
 
 	protected virtual void Update()
@@ -320,29 +315,19 @@ public class BattleManager : TranslatableSelectableBehaviour
 			soul.GetComponent<SpriteRenderer>().sortingOrder = 199;
 			doneIntroFade = true;
 		}
-		int num = gm.GetHP(0);
-		float num2 = gm.GetMaxHP(0);
+		int num = 0;
+		float num2 = 0f;
 		int num3 = 0;
-		if (gm.GetHP(0) - gm.GetMiniMemberMaxHP() < 0)
+		for (int i = 0; i < 6; i++)
 		{
-			num3 = 1;
-		}
-		if (gm.SusieInParty())
-		{
-			num += gm.GetHP(1);
-			num2 += (float)gm.GetMaxHP(1);
-			if (gm.GetHP(1) <= 0)
+			if (gm.PartySlotFilled(i))
 			{
-				num3++;
-			}
-		}
-		if (gm.NoelleInParty())
-		{
-			num += gm.GetHP(2);
-			num2 += (float)gm.GetMaxHP(2);
-			if (gm.GetHP(2) <= 0)
-			{
-				num3++;
+				num += gm.GetHP(i);
+				num2 += (float)gm.GetMaxHP(i);
+				if (gm.GetHP(i) <= 0)
+				{
+					num3++;
+				}
 			}
 		}
 		if (num > 0)
@@ -356,9 +341,13 @@ public class BattleManager : TranslatableSelectableBehaviour
 			{
 				num4 = 100;
 			}
-			else if (num3 >= 3)
+			else if (num3 == 3)
 			{
 				num4 = 75;
+			}
+			else if (num3 >= 4)
+			{
+				num4 = 50;
 			}
 			if (isBoss)
 			{
@@ -366,9 +355,9 @@ public class BattleManager : TranslatableSelectableBehaviour
 			}
 			st.StartShake((int)((float)num / num2 * (float)num4));
 		}
-		if (state == 0 && gm.GetHP(partyTurn) == 0)
+		if (state == 0 && !IsSlotAlive(partyTurn))
 		{
-			DecideMemberAction(0, -1, 0);
+			DecideMemberAction(0, ActionType.Idle, 0);
 		}
 		else if (state == 0)
 		{
@@ -380,20 +369,30 @@ public class BattleManager : TranslatableSelectableBehaviour
 			{
 				StartText(curFlavor, new Vector2(-4f, -134f), "snd_txtbtl");
 			}
-			if ((UTInput.GetButton("X") || UTInput.GetButton("C") || flavorPlayedOnce) && boxText.IsPlaying())
+			if (allowSkip && (UTInput.GetButton("X") || UTInput.GetButton("C") || flavorPlayedOnce) && boxText.IsPlaying())
 			{
-				boxText.SkipText(false);
+				boxText.SkipText(sound: false);
 				flavorPlayedOnce = true;
 			}
-			soul.GetComponent<SOUL>().SetFrozen(true);
+			soul.GetComponent<SOUL>().SetFrozen(boo: true);
 			soul.GetComponent<SpriteRenderer>().enabled = true;
-			if (partyTurn == 0 && GameObject.Find("ACT").GetComponent<BattleButton>().GetButtonType() != "act")
+			int partyMember = gm.GetPartyMember(partyTurn);
+			int partyMember2 = gm.GetPartyMember(partyTurn + 3);
+			BattleButton component = GameObject.Find("ACT").GetComponent<BattleButton>();
+			bool flag = gm.GetHP(partyTurn) > 0;
+			bool flag2 = gm.PartySlotFilled(partyTurn + 3) && gm.GetHP(partyTurn + 3) > 0;
+			bool flag3 = (flag && Magic.HasACTAbility(partyMember)) || (flag2 && Magic.HasACTAbility(partyMember2));
+			if (component.GetButtonType() != "act" && flag3)
 			{
-				GameObject.Find("ACT").GetComponent<BattleButton>().ChangeButtonType("act");
+				component.ChangeButtonType("act");
 			}
-			else if ((partyTurn == 1 || partyTurn == 2) && GameObject.Find("ACT").GetComponent<BattleButton>().GetButtonType() != "magic")
+			else if (component.GetButtonType() != "magic" && !flag3 && partyMember2 != 3)
 			{
-				GameObject.Find("ACT").GetComponent<BattleButton>().ChangeButtonType("magic");
+				component.ChangeButtonType("magic");
+			}
+			else if (component.GetButtonType() != "psi" && !flag3 && partyMember2 == 3)
+			{
+				component.ChangeButtonType("psi");
 			}
 			if (Mathf.RoundToInt(UTInput.GetAxisRaw("Horizontal")) != 0 && !axisIsDown)
 			{
@@ -416,260 +415,220 @@ public class BattleManager : TranslatableSelectableBehaviour
 			}
 			if (UTInput.GetButtonDown("Z"))
 			{
-				bool flag = true;
-				string[,] array = new string[4, 2];
-				string[,] array2 = new string[3, 2];
-				int i = 0;
-				int num5 = 0;
-				bool flag2 = false;
-				bool flag3 = false;
-				selObj = new GameObject("SelectTier1");
-				selObj.layer = 5;
-				selObj.AddComponent<RectTransform>();
-				selObj.transform.SetParent(GameObject.Find("BattleCanvas").transform);
-				selObj2 = new GameObject("SelectTier2");
-				selObj2.layer = 5;
-				selObj2.AddComponent<RectTransform>();
-				selObj2.transform.SetParent(GameObject.Find("BattleCanvas").transform);
+				bool ignore = true;
+				string[,] selTxt = new string[4, 2];
+				string[,] selTxt2 = new string[3, 2];
+				int i2 = 0;
+				int j = 0;
+				bool doNum = false;
+				bool enemyList = false;
+				CreateSelectionObjects();
 				firstAvail = -1;
 				if (buttonIndex == 0)
 				{
-					array = GetEnemyListArray();
+					selTxt = GetEnemyListArray();
 					DrawEnemyBars(selObj);
-					flag3 = true;
+					enemyList = true;
 					if (buttonIndex == 1 && gm.IsTestMode())
 					{
-						array[3, 0] = " ";
+						selTxt[3, 0] = " ";
 					}
-					flag = false;
+					ignore = false;
 				}
-				else if (buttonIndex == 1 && partyTurn == 0)
+				else if (buttonIndex == 1)
 				{
-					if (miniPartyMember != 1)
+					int num5 = 0;
+					bool flag4 = Magic.GetSpellListWithoutACT(partyMember).Length != 0 && flag;
+					if (flag4)
 					{
-						array = GetEnemyListArray();
+						num5++;
+					}
+					bool flag5 = Magic.GetSpellListWithoutACT(partyMember2).Length != 0 && flag2;
+					if (flag5)
+					{
+						num5++;
+					}
+					if (num5 == 0)
+					{
+						selTxt = GetEnemyListArray();
 						DrawEnemyBars(selObj);
-						flag3 = true;
+						enemyList = true;
 						if (buttonIndex == 1 && gm.IsTestMode())
 						{
-							array[3, 0] = " ";
+							selTxt[3, 0] = " ";
 						}
-						flag = false;
+						ignore = false;
 					}
-					else if (!gm.KrisInControl())
+					else if (num5 == 1 && !flag3)
 					{
+						partySelections[partyTurn].miniMagic = flag2;
 						selectingMagic = true;
-						array = GetPSISpells();
-						flag = false;
+						selTxt = GetSpellList();
+						ignore = false;
 					}
 					else
 					{
+						bool flag6 = Magic.HasACTAbility(partyMember);
+						bool flag7 = Magic.HasACTAbility(partyMember2);
+						string arg = "FFF";
+						int id = -1;
+						if (flag6 && !flag7)
+						{
+							id = partyMember;
+							arg = PartyMembers.GetMemberNeonColorMenu(partyMember);
+						}
+						else if (!flag6 && flag7)
+						{
+							id = partyMember2;
+							arg = PartyMembers.GetMemberNeonColorMenu(partyMember2);
+						}
+						bool flag8 = num5 == 2;
+						int num6 = 0;
+						Vector3[] array = new Vector3[3]
+						{
+							new Vector3(8f, 94f),
+							new Vector3(248f, 94f),
+							new Vector3(8f, 62f)
+						};
 						actMagicSelect = true;
-						array[0, 0] = "<color=#69FFFFFF>  ACT</color>";
-						array[0, 1] = "<color=#FF6969FF>  PSI</color>";
-						UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/KrisIcon"), selObj.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(8f, 94f);
-						UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/PaulaIcon"), selObj.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(248f, 94f);
-						flag = false;
-					}
-				}
-				else if (buttonIndex == 1 && partyTurn > 0)
-				{
-					selectingMagic = true;
-					string text = ((partyTurn == 1) ? EnemyBase.SACTION_DEFAULT : EnemyBase.NACTION_DEFAULT);
-					int num6 = 0;
-					int num7 = 0;
-					for (int j = 0; j < enemies.Length; j++)
-					{
-						if (!enemies[j].IsDone())
+						actMagicSelectMenu = new int[(flag8 && flag3) ? 3 : 2];
+						if (flag3)
 						{
-							num6++;
-							num7 = j;
-						}
-					}
-					if (num6 == 1)
-					{
-						text = ((partyTurn == 1) ? enemies[num7].GetSActionName() : enemies[num7].GetNActionName());
-					}
-					array[0, 0] = ((partyTurn == 1) ? "<color=#FF69FFFF>* " : "<color=#FFFF69FF>* ") + text + "</color>";
-					if (partyTurn == 1)
-					{
-						array[0, 1] = "* Rude Buster";
-						array[1, 0] = "* UltimateHeal";
-					}
-					else if (partyTurn == 2)
-					{
-						array[0, 1] = "* Sleep Mist";
-						array[1, 0] = "* HealPrayer";
-						array[1, 1] = "* Ice Shock";
-						if (Items.GetItemElement(gm.GetWeapon(2)) != 1)
-						{
-							array[0, 1] = "<color=#888888FF>* Sleep Mist</color>";
-							array[1, 1] = "<color=#888888FF>* Ice Shock</color>";
-						}
-						else
-						{
-							for (; i < enemies.Length; i++)
+							selTxt[num6 / 2, num6 % 2] = ((flag6 && flag7) ? "    ACT" : $"<color=#{arg}>  ACT</color>");
+							actMagicSelectMenu[num6] = -1;
+							if (flag6 != flag7)
 							{
-								if (enemies[i].IsTired() && !enemies[i].IsDone())
-								{
-									array[0, 1] = "<color=#00A2E8FF>* Sleep Mist</color>";
-								}
+								UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/" + PartyMembers.GetMemberName(id) + "Icon"), selObj.transform).transform.localPosition = new Vector3(-220f, -177f) + array[num6];
 							}
+							else
+							{
+								UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/" + PartyMembers.GetMemberName(partyMember) + "Icon"), selObj.transform).transform.localPosition = new Vector3(-220f, -177f) + array[num6];
+								UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/" + PartyMembers.GetMemberName(partyMember2) + "Icon"), selObj.transform).transform.localPosition = new Vector3(-186f, -177f) + array[num6];
+							}
+							num6++;
 						}
+						if (flag4 && flag)
+						{
+							selTxt[num6 / 2, num6 % 2] = $"<color=#{PartyMembers.GetMemberNeonColorMenu(partyMember)}>  {Magic.GetNameOfMagicMenu(partyMember)}</color>";
+							actMagicSelectMenu[num6] = partyMember;
+							UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/" + PartyMembers.GetMemberName(partyMember) + "Icon"), selObj.transform).transform.localPosition = new Vector3(-220f, -177f) + array[num6];
+							num6++;
+						}
+						if (flag5 && flag2)
+						{
+							selTxt[num6 / 2, num6 % 2] = $"<color=#{PartyMembers.GetMemberNeonColorMenu(partyMember2)}>  {Magic.GetNameOfMagicMenu(partyMember2)}</color>";
+							actMagicSelectMenu[num6] = partyMember2;
+							UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/" + PartyMembers.GetMemberName(partyMember2) + "Icon"), selObj.transform).transform.localPosition = new Vector3(-220f, -177f) + array[num6];
+						}
+						ignore = false;
 					}
-					flag = false;
 				}
 				else if (buttonIndex == 2)
 				{
-					GameObject obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("ui/TextBase"), selObj.transform);
-					obj.name = "PAGE1";
-					obj.transform.localPosition = new Vector2(330f, -198f);
-					obj.transform.localScale = new Vector3(1f, 1f, 1f);
-					obj.GetComponent<Text>().text = "PAGE 1";
-					GameObject obj2 = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("ui/TextBase"), selObj2.transform);
-					obj2.name = "PAGE2";
-					obj2.transform.localPosition = new Vector2(330f, -198f);
-					obj2.transform.localScale = new Vector3(1f, 1f, 1f);
-					obj2.GetComponent<Text>().text = "PAGE 2";
-					List<int> itemListPerTurn = GetItemListPerTurn();
-					doPage2 = false;
-					foreach (int item in itemListPerTurn)
+					InstantiateItems(ref ignore, ref doNum, ref selTxt, ref selTxt2, ref i2, ref j);
+					if (ignore)
 					{
-						if (item == -1)
-						{
-							continue;
-						}
-						flag = false;
-						if (flag2)
-						{
-							doPage2 = true;
-							array2[i, num5] = "* " + Items.ShortItemName(item, isBoss);
-						}
-						else
-						{
-							array[i, num5] = "* " + Items.ShortItemName(item, isBoss);
-						}
-						num5++;
-						if (num5 == 2)
-						{
-							num5 = 0;
-							i++;
-							if (i == 2)
-							{
-								i = 0;
-								flag2 = true;
-							}
-						}
+						isSelEquipment = !isSelEquipment;
+						UnityEngine.Object.Destroy(selObj);
+						UnityEngine.Object.Destroy(selObj2);
+						UnityEngine.Object.Destroy(tabSwitcher);
+						CreateSelectionObjects();
+						InstantiateItems(ref ignore, ref doNum, ref selTxt, ref selTxt2, ref i2, ref j);
 					}
 				}
 				else if (buttonIndex == 3)
 				{
-					array[0, 0] = "* Spare";
-					bool flag4 = false;
+					selTxt[0, 0] = "* Spare";
+					bool flag9 = false;
 					for (int k = 0; k < enemies.Length; k++)
 					{
 						if (enemies[k].CanSpare() && !enemies[k].IsDone())
 						{
-							flag4 = true;
+							flag9 = true;
 						}
 					}
-					if (flag4)
+					if (flag9)
 					{
-						array[0, 0] = "<color=#ffff00ff>* Spare</color>";
+						selTxt[0, 0] = "<color=#ffff00ff>* Spare</color>";
 					}
-					array[1, 0] = "* Defend";
+					selTxt[1, 0] = "* Defend";
 					if (gm.IsTestMode())
 					{
-						array[2, 0] = "* Flee (DEBUG)";
+						selTxt[2, 0] = "* Flee (DEBUG)";
 					}
-					flag = false;
+					ignore = false;
 				}
-				for (num5 = 0; num5 <= 1; num5++)
+				for (j = 0; j <= 1; j++)
 				{
-					for (i = 0; i <= 2; i++)
+					for (i2 = 0; i2 <= 2; i2++)
 					{
-						if (array[i, num5] == null)
+						if (selTxt[i2, j] == null)
 						{
-							array[i, num5] = "";
+							selTxt[i2, j] = "";
 						}
 					}
 				}
-				boxText.SkipText(false);
-				if (!flag)
+				boxText.SkipText(sound: false);
+				if (!ignore)
 				{
-					flavorPlayedOnce = true;
-					if (firstAvail == -1)
-					{
-						firstAvail = 0;
-					}
-					selObj.AddComponent<Selection>().CreateSelections(array, new Vector2(-220f, -177f), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", true, true, this, 0);
-					selObj.transform.localScale = new Vector2(1f, 1f);
-					selObj.GetComponent<Selection>().SetSelection(new Vector2(firstAvail, 0f), false);
-					selObj2.AddComponent<Selection>().CreateSelections(array2, new Vector2(-220f, -177f), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", true, true, this, 1);
-					selObj2.transform.localScale = new Vector2(1f, 1f);
-					selObj2.GetComponent<Selection>().Disable();
-					selObj2.SetActive(false);
-					if (flag3)
-					{
-						HandleEnemyNameColor();
-					}
-					ResetText();
-					state = 1;
+					CreateSelectionsItems(ref flavorPlayedOnce, ref selTxt, ref selTxt2, ref enemyList);
 				}
 				else
 				{
 					UnityEngine.Object.Destroy(selObj);
 				}
-				aud.clip = Resources.Load<AudioClip>("sounds/snd_select");
+				aud.clip = Resources.Load<AudioClip>(ignore ? "sounds/snd_cantselect" : "sounds/snd_select");
 				aud.Play();
 			}
 			else if (UTInput.GetButtonDown("X") && partyTurn != 0)
 			{
-				int num8 = partyTurn;
-				if (partySize == 2 && gm.GetHP(0) > 0)
+				int num7 = partyTurn;
+				if (partySize == 2 && IsSlotAlive(0))
 				{
 					partyTurn = 0;
 				}
-				else if ((gm.GetHP(1) == 0 || partySelections[1][1] == 4) && gm.GetHP(0) > 0)
+				else if ((!IsSlotAlive(1) || partySelections[1].action == ActionType.FollowACT) && IsSlotAlive(0))
 				{
 					partyTurn -= 2;
 				}
-				else if (((gm.GetHP(0) == 0 && gm.GetHP(1) > 0 && partyTurn == 2) || gm.GetHP(0) != 0) && partySize == 3)
+				else if (((!IsSlotAlive(0) && IsSlotAlive(1) && partyTurn == 2) || IsSlotAlive(0)) && partySize == 3)
 				{
 					partyTurn--;
 				}
-				if (num8 != partyTurn)
+				if (num7 != partyTurn)
 				{
+					partySelections[num7].Reset();
 					partyPanels.DeselectedAction(partyTurn);
-					UnityEngine.Object.FindObjectOfType<TPBar>().SetSpecificTPUse(partyTurn, 0);
-					int num9 = buttonIndex;
-					buttonIndex = partySelections[partyTurn][1];
+					tpBar.SetSpecificTPUse(partyTurn, 0);
+					int num8 = buttonIndex;
+					buttonIndex = (int)partySelections[partyTurn].action;
 					if (buttonIndex == 6)
 					{
 						buttonIndex = 1;
 					}
-					if (num9 != buttonIndex)
+					if (num8 != buttonIndex)
 					{
 						firstButton = true;
 					}
 					SelectButton(buttonIndex);
-					if (partySelections[partyTurn][1] == 3 && partySelections[partyTurn][2] == 1)
+					if (partySelections[partyTurn].IsDefend())
 					{
-						UnityEngine.Object.FindObjectOfType<TPBar>().SetDefendingMember(partyTurn, false);
-						partyPanels.SetAsDefending(partyTurn, false);
+						tpBar.SetDefendingMember(partyTurn, tpToGain: false);
+						partyPanels.SetAsDefending(partyTurn, defend: false);
 						defending[partyTurn] = false;
 					}
+					partySelections[partyTurn].Reset();
 					if (partyTurn == 0)
 					{
-						if (partySelections[1][1] == 4)
+						if (partySelections[1].action == ActionType.FollowACT)
 						{
 							partyPanels.DeselectedAction(1);
-							partySelections[1][1] = -1;
+							partySelections[1].Reset();
 						}
-						if (partySelections[2][1] == 4)
+						if (partySelections[2].action == ActionType.FollowACT)
 						{
 							partyPanels.DeselectedAction(2);
-							partySelections[2][1] = -1;
+							partySelections[2].Reset();
 						}
 					}
 				}
@@ -677,10 +636,10 @@ public class BattleManager : TranslatableSelectableBehaviour
 		}
 		if (state == 1)
 		{
-			if (buttonIndex == 2 && UTInput.GetAxisRaw("Horizontal") == 1f && selObj.GetComponent<Selection>().GetIndex()[1] == 1f && doPage2 && gm.GetItem(4 + 2 * (int)selObj.GetComponent<Selection>().GetIndex()[0]) != -1 && !selObj.GetComponent<Selection>().AxisDown())
+			if (buttonIndex == 2 && selObj.GetComponent<Selection>().GetID() != 2 && UTInput.GetAxisRaw("Horizontal") == 1f && selObj.GetComponent<Selection>().GetIndex()[1] == 1f && doPage2 && CanMoveToNextPage() && !selObj.GetComponent<Selection>().AxisDown())
 			{
 				Vector2 index = selObj.GetComponent<Selection>().GetIndex();
-				if (GetItemListPerTurn().Count - 4 > 2)
+				if ((isSelEquipment ? GetNumOfEquips() : GetNumOfItems()) - 4 > 2)
 				{
 					index -= new Vector2(0f, 1f);
 				}
@@ -689,20 +648,22 @@ public class BattleManager : TranslatableSelectableBehaviour
 					index -= new Vector2((index.x == 1f) ? 1 : 0, 1f);
 				}
 				selObj.GetComponent<Selection>().Disable();
-				selObj.SetActive(false);
-				selObj2.SetActive(true);
+				selObj.SetActive(value: false);
+				selObj2.SetActive(value: true);
 				selObj2.GetComponent<Selection>().Enable();
 				selObj2.GetComponent<Selection>().SetSelection(index);
-				selObj2.GetComponent<Selection>().SetAxisDown(true);
+				selObj2.GetComponent<Selection>().SetAxisDown(boo: true);
 				gm.PlayGlobalSFX("sounds/snd_menumove");
 				state = 2;
 			}
 			if (UTInput.GetButtonDown("X"))
 			{
-				UnityEngine.Object.FindObjectOfType<TPBar>().UpdateTPPreviewBar(0);
+				tpBar.UpdateTPPreviewBar(0);
 				descriptionBox.Hide();
 				UnityEngine.Object.Destroy(selObj);
 				UnityEngine.Object.Destroy(selObj2);
+				UnityEngine.Object.Destroy(tabSwitcher);
+				isSelEquipment = false;
 				state = 0;
 				SelectButton(buttonIndex);
 			}
@@ -713,11 +674,11 @@ public class BattleManager : TranslatableSelectableBehaviour
 			{
 				Vector2 selection = selObj2.GetComponent<Selection>().GetIndex() + new Vector2(0f, 1f);
 				selObj2.GetComponent<Selection>().Disable();
-				selObj2.SetActive(false);
-				selObj.SetActive(true);
+				selObj2.SetActive(value: false);
+				selObj.SetActive(value: true);
 				selObj.GetComponent<Selection>().Enable();
 				selObj.GetComponent<Selection>().SetSelection(selection);
-				selObj.GetComponent<Selection>().SetAxisDown(true);
+				selObj.GetComponent<Selection>().SetAxisDown(boo: true);
 				gm.PlayGlobalSFX("sounds/snd_menumove");
 				state = 1;
 			}
@@ -735,61 +696,92 @@ public class BattleManager : TranslatableSelectableBehaviour
 					if (partyTurn == 0)
 					{
 						descriptionBox.Hide();
-						UnityEngine.Object.FindObjectOfType<TPBar>().UpdateTPPreviewBar(0);
+						tpBar.UpdateTPPreviewBar(0);
 					}
 				}
 				if (buttonIndex == 2)
 				{
 					UnityEngine.Object.Destroy(selObj);
 					UnityEngine.Object.Destroy(selObj2);
+					UnityEngine.Object.Destroy(tabSwitcher);
 					state = 0;
 					SelectButton(buttonIndex);
 					descriptionBox.Hide();
 				}
 				else
 				{
-					selObj2.SetActive(false);
-					selObj.SetActive(true);
+					selObj2.SetActive(value: false);
+					selObj.SetActive(value: true);
 					state = 1;
 				}
 			}
 		}
+		if (buttonIndex == 2 && (state == 1 || state == 2) && UTInput.GetButtonDown("C"))
+		{
+			bool ignore2 = true;
+			string[,] selTxt3 = new string[4, 2];
+			string[,] selTxt4 = new string[3, 2];
+			int i3 = 0;
+			int j2 = 0;
+			bool doNum2 = false;
+			bool enemyList2 = false;
+			isSelEquipment = !isSelEquipment;
+			ItemFill(ref ignore2, ref doNum2, ref selTxt3, ref selTxt4, ref i3, ref j2);
+			if (ignore2)
+			{
+				isSelEquipment = !isSelEquipment;
+				aud.clip = Resources.Load<AudioClip>("sounds/snd_cantselect");
+				aud.Play();
+			}
+			else
+			{
+				UnityEngine.Object.Destroy(selObj);
+				UnityEngine.Object.Destroy(selObj2);
+				UnityEngine.Object.Destroy(tabSwitcher);
+				CreateSelectionObjects();
+				CreateSelectionsItems(ref flavorPlayedOnce, ref selTxt3, ref selTxt4, ref enemyList2);
+				InstantiateItems(ref ignore2, ref doNum2, ref selTxt3, ref selTxt4, ref i3, ref j2);
+				aud.clip = Resources.Load<AudioClip>("sounds/snd_menumove");
+				aud.Play();
+			}
+			descriptionBox.SetDescription(GetDescriptionOfItemFromSelection(), "");
+		}
 		if (state == 3)
 		{
-			if (!boxText.IsPlaying() && (bool)UnityEngine.Object.FindObjectOfType<SpecialACT>() && !UnityEngine.Object.FindObjectOfType<SpecialACT>().IsActivated())
+			if (!boxText.IsPlaying() && (bool)Util.FindObjectOfType<SpecialACT>() && !Util.FindObjectOfType<SpecialACT>().IsActivated())
 			{
-				UnityEngine.Object.FindObjectOfType<SpecialACT>().Activate();
+				Util.FindObjectOfType<SpecialACT>().Activate();
 			}
-			if ((UTInput.GetButton("X") || UTInput.GetButton("C")) && boxText.IsPlaying())
+			if (allowSkip && (UTInput.GetButton("X") || UTInput.GetButton("C")) && boxText.IsPlaying())
 			{
 				boxText.SkipText();
-				if ((bool)UnityEngine.Object.FindObjectOfType<SpecialACT>())
+				if ((bool)Util.FindObjectOfType<SpecialACT>())
 				{
-					UnityEngine.Object.FindObjectOfType<SpecialACT>().Activate();
+					Util.FindObjectOfType<SpecialACT>().Activate();
 				}
 			}
-			else if ((((UTInput.GetButtonDown("Z") || UTInput.GetButton("C")) && !boxText.IsPlaying()) || !boxText.GetGameObject()) && (!UnityEngine.Object.FindObjectOfType<SpecialACT>() || !UnityEngine.Object.FindObjectOfType<SpecialACT>().IsActivated()))
+			else if ((((UTInput.GetButtonDown("Z") || UTInput.GetButton("C")) && !boxText.IsPlaying()) || !boxText.GetGameObject()) && (!Util.FindObjectOfType<SpecialACT>() || !Util.FindObjectOfType<SpecialACT>().IsActivated()))
 			{
-				bool flag5 = false;
+				bool flag10 = false;
 				if ((UTInput.GetButtonDown("Z") || UTInput.GetButton("C")) && (bool)boxText.GetGameObject())
 				{
 					curDiag++;
-					flag5 = true;
-					if (!UnityEngine.Object.FindObjectOfType<SpecialACT>())
+					flag10 = true;
+					if (!Util.FindObjectOfType<SpecialACT>())
 					{
 						ResetText();
 					}
 				}
-				bool flag6 = true;
-				EnemyBase[] array3 = enemies;
-				for (int m = 0; m < array3.Length; m++)
+				bool flag11 = true;
+				EnemyBase[] array2 = enemies;
+				for (int m = 0; m < array2.Length; m++)
 				{
-					if (array3[m].IsShaking())
+					if (array2[m].IsShaking())
 					{
-						flag6 = false;
+						flag11 = false;
 					}
 				}
-				if ((!boxText.Exists() || flag5) && !UnityEngine.Object.FindObjectOfType<SpecialAttackEffect>() && flag6)
+				if ((!boxText.Exists() || flag10) && !Util.FindObjectOfType<SpecialAttackEffect>() && flag11)
 				{
 					if (curDiag > finalDiag)
 					{
@@ -797,9 +789,9 @@ public class BattleManager : TranslatableSelectableBehaviour
 						{
 							ResetText();
 						}
-						if (!UnityEngine.Object.FindObjectOfType<SpecialACT>())
+						if (!Util.FindObjectOfType<SpecialACT>())
 						{
-							if (niceActIndex < 3 || (niceActIndex == 3 && (fightingThisRound || sparingThisRound)))
+							if (actionTurn < 3 || (actionTurn == 3 && (fightingThisRound || sparingThisRound)))
 							{
 								AdvancePlayerTurn();
 							}
@@ -811,33 +803,54 @@ public class BattleManager : TranslatableSelectableBehaviour
 					}
 					else
 					{
+						if (curDiag == 1 && castingDualHeal && dualHealUses >= 1 && dualHealUses <= 6)
+						{
+							if (dualHealUses == 1)
+							{
+								diag[curDiag] += "\n* The power of the spell began\n  to weaken...";
+							}
+							else if (dualHealUses < 6)
+							{
+								diag[curDiag] += "\n* The power of the spell\n  continues to weaken...";
+							}
+							else
+							{
+								diag[curDiag] += "\n* The power of the spell\n  has fully weakened!";
+							}
+						}
 						StartText(diag[curDiag], new Vector2(-4f, -134f), "snd_txtbtl");
 						if (curDiag == 1 && castingRedBuster)
 						{
-							UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/RedBuster")).GetComponent<RedBusterEffect>().AssignEnemy(enemies[partySelections[0][0]]);
+							UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/RedBuster")).GetComponent<RedBusterEffect>().AssignEnemy(enemies[partySelections[0].target]);
 							castingRedBuster = false;
-							if (miniPartyMember > 0)
+							if (gm.PartySlotFilled(3) && gm.GetHP(3) > 0)
 							{
 								fightingThisRound = true;
-								partySelections[0][2] = 2;
-								partySelections[0][1] = 0;
-								partySelections[0][0] = 0;
+								partySelections[0].mainNoFight = true;
+								partySelections[0].action = ActionType.Fight;
+								partySelections[0].target = 0;
 							}
 						}
 						else if (curDiag == 1 && castingDualHeal)
 						{
 							castingDualHeal = false;
-							int num10 = gm.GetMaxHP(2) / 2 + Mathf.FloorToInt(gm.GetMagicRaw(2) * 2f / 3f);
-							if (Items.GetItemElement(gm.GetWeapon(2)) == 1)
+							int num9 = PartyMembers.GetMaxHP(0) / 2 + Mathf.FloorToInt(PartyMembers.GetMagicRaw(2) * 2f / 3f);
+							if (Items.GetItemElement(PartyMembers.GetWeapon(2)) == 1)
 							{
-								int num11 = gm.GetMagicEquipment(2);
-								if (Items.GetWeaponType(gm.GetWeapon(2)) == 4)
+								int num10 = PartyMembers.GetMagicEquipment(2);
+								if (Items.GetWeaponType(PartyMembers.GetWeapon(2)) == 4)
 								{
-									num11 = num11 * 2 / 3;
+									num10 = num10 * 2 / 3;
 								}
-								num10 += num11;
+								num9 += num10;
 							}
-							gm.HealAll(num10);
+							if (!gm.IsEasyMode())
+							{
+								float b = ((gm.GetFlagInt(211) == 1 || gm.GetFlagInt(172) > 0) ? 0.6f : 0.8f);
+								num9 = Mathf.RoundToInt((float)num9 * Mathf.Lerp(1f, b, (float)dualHealUses / 6f));
+								dualHealUses++;
+							}
+							gm.HealAll(num9);
 							gm.PlayTimedHealSound();
 							aud2.clip = Resources.Load<AudioClip>("sounds/snd_spellcast");
 							aud2.Play();
@@ -846,25 +859,25 @@ public class BattleManager : TranslatableSelectableBehaviour
 				}
 			}
 		}
-		if (state == 7 && !target.GetComponentInChildren<FightTarget>().IsGoing() && !UnityEngine.Object.FindObjectOfType<SpecialAttackEffect>())
+		if (state == 7 && !target.GetComponentInChildren<FightTarget>().IsGoing() && !Util.FindObjectOfType<SpecialAttackEffect>())
 		{
 			soul.GetComponent<SpriteRenderer>().enabled = true;
 			AdvanceToEnemyTurn();
 		}
 		if (state == 4)
 		{
-			bool flag7 = false;
-			EnemyBase[] array3 = enemies;
-			for (int m = 0; m < array3.Length; m++)
+			bool flag12 = false;
+			EnemyBase[] array2 = enemies;
+			for (int m = 0; m < array2.Length; m++)
 			{
-				if (array3[m].IsTalking())
+				if (array2[m].IsTalking())
 				{
-					flag7 = true;
+					flag12 = true;
 				}
 			}
-			if (!bb.IsPlaying() && !flag7)
+			if (!bb.IsPlaying() && !flag12)
 			{
-				soul.GetComponent<SOUL>().SetFrozen(false);
+				soul.GetComponent<SOUL>().SetFrozen(boo: false);
 				state = 5;
 			}
 		}
@@ -872,7 +885,7 @@ public class BattleManager : TranslatableSelectableBehaviour
 		{
 			if (curAtk == null)
 			{
-				soul.GetComponent<SOUL>().SetControllable(false);
+				soul.GetComponent<SOUL>().SetControllable(boo: false);
 				soul.GetComponent<SpriteRenderer>().enabled = false;
 				partyPanels.DeactivateTargets();
 				bb.ResetSize();
@@ -886,12 +899,12 @@ public class BattleManager : TranslatableSelectableBehaviour
 		}
 		if (state == 6 && !bb.IsPlaying())
 		{
-			bool flag8 = false;
-			for (int n = 0; n < 3; n++)
+			bool flag13 = false;
+			for (int n = 0; n < 6; n++)
 			{
-				if (gm.GetHP(n) <= 0)
+				if (gm.GetHP(n) <= 0 && gm.PartySlotFilled(n))
 				{
-					flag8 = true;
+					flag13 = true;
 					revivalTurns[n]--;
 					if (revivalTurns[n] == 0)
 					{
@@ -903,20 +916,20 @@ public class BattleManager : TranslatableSelectableBehaviour
 					revivalTurns[n] = 0;
 				}
 			}
-			if (flag8)
+			if (flag13)
 			{
 				gm.PlayGlobalSFX("sounds/snd_heal");
 			}
 			ChangeHP();
 			flavorPlayedOnce = false;
 			defending = new bool[3];
-			partyPanels.SetAsDefending(0, false);
-			partyPanels.SetAsDefending(1, false);
-			partyPanels.SetAsDefending(2, false);
+			partyPanels.SetAsDefending(0, defend: false);
+			partyPanels.SetAsDefending(1, defend: false);
+			partyPanels.SetAsDefending(2, defend: false);
 			if (AllEnemiesDone())
 			{
 				bb.SetBGOrder(100);
-				EndNormalFight(false, "");
+				EndNormalFight(customMessage: false, "");
 			}
 			else
 			{
@@ -927,12 +940,16 @@ public class BattleManager : TranslatableSelectableBehaviour
 				SelectButton(buttonIndex);
 				soul.GetComponent<SOUL>().SetGravityDirection(Vector2.down);
 				DetermineDepressionReject();
+				for (int num11 = 0; num11 < 3; num11++)
+				{
+					partySelections[num11].Reset();
+				}
 				DoSOULSparkle();
 			}
 		}
 		if (state == 10)
 		{
-			if ((UTInput.GetButton("X") || UTInput.GetButton("C")) && boxText.IsPlaying())
+			if (allowSkip && (UTInput.GetButton("X") || UTInput.GetButton("C")) && boxText.IsPlaying())
 			{
 				boxText.SkipText();
 			}
@@ -963,11 +980,11 @@ public class BattleManager : TranslatableSelectableBehaviour
 				soul.transform.SetParent(component.transform);
 				soul.transform.localPosition = new Vector2(-0.82f, -0.022f);
 				soul.transform.SetParent(null);
-				component.Select(true);
+				component.Select(boo: true);
 			}
 			else
 			{
-				component.Select(false);
+				component.Select(boo: false);
 			}
 		}
 	}
@@ -980,11 +997,15 @@ public class BattleManager : TranslatableSelectableBehaviour
 		}
 		if (gm.GetCombinedHP() != curHP)
 		{
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 6; i++)
 			{
-				if (gm.GetHP(i) == 0 && revivalTurns[i] == 0)
+				if (gm.GetHP(i) == 0 && revivalTurns[i] == 0 && gm.PartySlotFilled(i))
 				{
 					revivalTurns[i] = 4;
+					if (i > 2 || gm.PartySlotFilled(i + 3))
+					{
+						revivalTurns[i] = 6;
+					}
 				}
 			}
 			curHP = gm.GetCombinedHP();
@@ -993,20 +1014,7 @@ public class BattleManager : TranslatableSelectableBehaviour
 		ChangeACTTPCost();
 		if ((state == 1 || state == 2) && buttonIndex == 2 && (bool)selObj.transform.Find("PAGE1"))
 		{
-			int num = -1;
-			if (state == 1)
-			{
-				num = (int)selObj.GetComponent<Selection>().GetIndex()[1] + (int)selObj.GetComponent<Selection>().GetIndex()[0] * 2;
-			}
-			else if (state == 2)
-			{
-				num = (int)selObj2.GetComponent<Selection>().GetIndex()[1] + (int)selObj2.GetComponent<Selection>().GetIndex()[0] * 2 + 4;
-			}
-			if (num > -1)
-			{
-				string battleDescription = Items.GetBattleDescription(GetItemListPerTurn()[num]);
-				descriptionBox.SetDescription(battleDescription, "");
-			}
+			descriptionBox.SetDescription(GetDescriptionOfItemFromSelection(), "");
 		}
 		Vector3 vector = new Vector3(69f, 420f);
 		if ((bool)selObj && (bool)selObj.GetComponent<Selection>() && selObj.GetComponent<Selection>().IsEnabled() && selObj.activeInHierarchy)
@@ -1032,113 +1040,68 @@ public class BattleManager : TranslatableSelectableBehaviour
 				soul.GetComponent<SpriteRenderer>().sortingOrder = 199;
 			}
 		}
+		int totalNumOfItems = GetTotalNumOfItems();
+		if (totalNumOfItems == 0 && itemCount > 0)
+		{
+			GameObject.Find("ITEM").GetComponent<BattleButton>().SetUnselectableColor();
+		}
+		else if (totalNumOfItems > itemCount)
+		{
+			GameObject.Find("ITEM").GetComponent<BattleButton>().SetSelectableColor();
+		}
+		itemCount = totalNumOfItems;
 	}
 
 	private void ChangeACTTPCost()
 	{
 		if (state == 1 && buttonIndex == 1 && selectingMagic)
 		{
-			Dictionary<Vector2, string> dictionary = new Dictionary<Vector2, string>();
-			string text = "`";
-			if (partyTurn == 1)
+			Vector2 index = selObj.GetComponent<Selection>().GetIndex();
+			int num = (int)index.y + (int)index.x * 2;
+			Magic.Spell spell = Magic.GetSpell(spellList[num]);
+			string description = spell.GetShortDescription();
+			int tPCost = spell.GetTPCost();
+			if (spellList[num] == Magic.ID.MiniACT)
 			{
-				dictionary = new Dictionary<Vector2, string>
-				{
-					{
-						new Vector2(0f, 1f),
-						"Deals RUDE Damage`50"
-					},
-					{
-						new Vector2(1f, 0f),
-						"The best healing`100"
-					}
-				};
+				description = miniACTs[num].GetDescription();
+				tPCost = miniACTs[num].GetTPCost();
 			}
-			else if (partyTurn == 2)
+			string tpCost = tPCost + "% TP";
+			if (tPCost == 0)
 			{
-				dictionary = new Dictionary<Vector2, string>
-				{
-					{
-						new Vector2(0f, 1f),
-						"Spares TIRED Enemies`32"
-					},
-					{
-						new Vector2(1f, 0f),
-						"Uses LIGHT to heal`32"
-					},
-					{
-						new Vector2(1f, 1f),
-						"Deals ICE Damage`24"
-					}
-				};
+				tpCost = "";
 			}
-			else if (partyTurn == 0)
-			{
-				dictionary = new Dictionary<Vector2, string>
-				{
-					{
-						new Vector2(0f, 0f),
-						"Heals 15 HP`24"
-					},
-					{
-						new Vector2(0f, 1f),
-						"Creates a LIGHT shield`50"
-					},
-					{
-						new Vector2(1f, 0f),
-						"Deals ICE Damage`24"
-					},
-					{
-						new Vector2(1f, 1f),
-						"Deals all FIRE Damage`36"
-					}
-				};
-			}
-			if (dictionary.ContainsKey(selObj.GetComponent<Selection>().GetIndex()))
-			{
-				text = dictionary[selObj.GetComponent<Selection>().GetIndex()];
-			}
-			string[] array = text.Split('`');
-			if (array[1].Length != 0)
-			{
-				int tpPreview = int.Parse(array[1]);
-				UnityEngine.Object.FindObjectOfType<TPBar>().UpdateTPPreviewBar(tpPreview);
-				array[1] += "% TP";
-			}
-			else
-			{
-				UnityEngine.Object.FindObjectOfType<TPBar>().UpdateTPPreviewBar(0);
-			}
-			descriptionBox.SetDescription(array[0], array[1]);
+			tpBar.UpdateTPPreviewBar(tPCost);
+			descriptionBox.SetDescription(description, tpCost);
 		}
 		if (state != 2 || buttonIndex != 1 || partyTurn != 0 || selectingMagic || selTarget <= -1 || selTarget >= enemies.Length)
 		{
 			return;
 		}
-		int num = (int)selObj2.GetComponent<Selection>().GetIndex()[1] + (int)selObj2.GetComponent<Selection>().GetIndex()[0] * 2;
-		string text2 = enemies[selTarget].GetActNames()[num];
-		if (text2 == null)
+		int num2 = (int)selObj2.GetComponent<Selection>().GetIndex()[1] + (int)selObj2.GetComponent<Selection>().GetIndex()[0] * 2;
+		string text = enemies[selTarget].GetActNames()[num2];
+		if (text == null)
 		{
 			return;
 		}
-		if (text2.Contains(";"))
+		if (text.Contains(";"))
 		{
-			string[] array2 = text2.Substring(text2.IndexOf(";") + 1).Split('`');
-			if (array2[1].Length != 0)
+			string[] array = text.Substring(text.IndexOf(";") + 1).Split('`');
+			if (array[1].Length != 0)
 			{
-				UnityEngine.Object.FindObjectOfType<TPBar>().UpdateTPPreviewBar(int.Parse(array2[1]));
-				array2[1] += "% TP";
+				tpBar.UpdateTPPreviewBar(int.Parse(array[1]));
+				array[1] += "% TP";
 			}
 			else
 			{
-				UnityEngine.Object.FindObjectOfType<TPBar>().UpdateTPPreviewBar(0);
+				tpBar.UpdateTPPreviewBar(0);
 			}
-			descriptionBox.SetDescription(array2[0], array2[1]);
+			descriptionBox.SetDescription(array[0], array[1]);
 		}
 		else
 		{
 			descriptionBox.Hide();
-			UnityEngine.Object.FindObjectOfType<TPBar>().UpdateTPPreviewBar(0);
+			tpBar.UpdateTPPreviewBar(0);
 		}
 	}
 
@@ -1150,7 +1113,7 @@ public class BattleManager : TranslatableSelectableBehaviour
 			selTarget = (int)index[0];
 			UnityEngine.Object.Destroy(selObj);
 			UnityEngine.Object.Destroy(selObj2);
-			DecideMemberAction(selTarget, 0, 0);
+			DecideMemberAction(selTarget, ActionType.Fight, 0);
 			aud.clip = Resources.Load<AudioClip>("sounds/snd_select");
 			aud.Play();
 		}
@@ -1158,15 +1121,20 @@ public class BattleManager : TranslatableSelectableBehaviour
 		{
 			ChangeACTTPCost();
 			bool flag = true;
-			if (partyTurn == 2)
+			if (selectingMagic)
 			{
 				int num = (int)index[0] * 2 + (int)index[1];
-				if ((num == 1 || num == 3) && Items.GetItemElement(gm.GetWeapon(2)) != 1)
+				int partyMember = gm.GetPartyMember(partySelections[partyTurn].miniMagic ? (partyTurn + 3) : partyTurn);
+				if (spellList[num] == Magic.ID.MiniACT && tpBar.GetCalculatedTP() < miniACTs[num].GetTPCost())
+				{
+					flag = false;
+				}
+				else if (!Magic.CanCastSpell(spellList[num], partyMember, tpBar.GetCalculatedTP()))
 				{
 					flag = false;
 				}
 			}
-			if (id == 0 && partyTurn == 0 && actMagicSelect)
+			if (id == 0 && actMagicSelect)
 			{
 				firstAvail = -1;
 				selObj.GetComponent<Selection>().Reset();
@@ -1177,29 +1145,31 @@ public class BattleManager : TranslatableSelectableBehaviour
 				{
 					UnityEngine.Object.DestroyImmediate(selObj.transform.GetChild(0).gameObject);
 				}
-				string[,] array;
-				if (index == Vector2.zero)
+				int num2 = (int)index[0] * 2 + (int)index[1];
+				string[,] enemyListArray;
+				if (actMagicSelectMenu[num2] == -1)
 				{
-					array = GetEnemyListArray();
+					enemyListArray = GetEnemyListArray();
 					DrawEnemyBars(selObj);
 					flag2 = true;
 					if (buttonIndex == 1 && gm.IsTestMode())
 					{
-						array[3, 0] = " ";
+						enemyListArray[3, 0] = " ";
 					}
 				}
 				else
 				{
+					partySelections[partyTurn].miniMagic = gm.GetPartyMember(partyTurn + 3) == actMagicSelectMenu[num2];
 					selectingMagic = true;
-					array = GetPSISpells();
+					enemyListArray = GetSpellList();
 				}
 				if (firstAvail == -1)
 				{
 					firstAvail = 0;
 				}
-				selObj.GetComponent<Selection>().CreateSelections(array, new Vector2(-220f, -177f), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", true, true, this, 0);
+				selObj.GetComponent<Selection>().CreateSelections(enemyListArray, new Vector2(-220f, -177f), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", useSoul: true, makeSound: true, this, 0);
 				selObj.transform.localScale = new Vector2(1f, 1f);
-				selObj.GetComponent<Selection>().SetSelection(new Vector2(firstAvail, 0f), false);
+				selObj.GetComponent<Selection>().SetSelection(new Vector2(firstAvail, 0f), playSound: false);
 				if (flag2)
 				{
 					HandleEnemyNameColor();
@@ -1207,162 +1177,86 @@ public class BattleManager : TranslatableSelectableBehaviour
 				aud.clip = Resources.Load<AudioClip>("sounds/snd_select");
 				aud.Play();
 			}
-			else if (id == 0 && UnityEngine.Object.FindObjectOfType<TPBar>().ValidTPAmount() && flag)
+			else if (id == 0 && flag)
 			{
-				selTarget = ((partyTurn == 0 && !selectingMagic) ? ((int)index[0]) : ((int)index[0] * 2 + (int)index[1]));
-				int num2 = 0;
+				selTarget = ((!selectingMagic) ? ((int)index[0]) : ((int)index[0] * 2 + (int)index[1]));
 				int num3 = 0;
+				int num4 = 0;
 				bool flag3 = false;
-				selObj.SetActive(false);
-				selObj2.SetActive(true);
+				selObj.SetActive(value: false);
+				selObj2.SetActive(value: true);
 				selObj2.GetComponent<Selection>().Reset();
 				int childCount2 = selObj2.transform.childCount;
 				for (int j = 0; j < childCount2; j++)
 				{
 					UnityEngine.Object.DestroyImmediate(selObj2.transform.GetChild(0).gameObject);
 				}
-				string[,] array2 = new string[4, 2];
+				string[,] array = new string[4, 2];
 				firstAvail = -1;
 				bool flag4 = false;
 				if ((int)index[0] == 3)
 				{
-					array2[0, 0] = "* Godmode";
-					array2[0, 1] = "* SwapSOULMode";
-					array2[1, 0] = "* -1 HP Player";
-					array2[1, 1] = "* +1 HP Player";
-					array2[2, 0] = "* -25 DMG Enmy";
-					array2[2, 1] = "* TestHUD";
-					array2[3, 0] = "* +25 HP Enmy";
-					array2[3, 1] = "* Max TP";
+					array[0, 0] = "* Godmode";
+					array[0, 1] = "* SwapSOULMode";
+					array[1, 0] = "* -1 HP Player";
+					array[1, 1] = "* +1 HP Player";
+					array[2, 0] = "* -25 DMG Enmy";
+					array[2, 1] = "* TestHUD";
+					array[3, 0] = "* +25 HP Enmy";
+					array[3, 1] = "* Max TP";
 				}
-				else if (partyTurn == 0 && !selectingMagic)
+				else if (!selectingMagic)
 				{
 					string[] actNames = enemies[(int)index[0]].GetActNames();
-					for (int k = 0; k < actNames.Length; k++)
+					foreach (string actName in actNames)
 					{
-						string text = actNames[k];
-						array2[num2, num3] = "* " + text;
-						if (text != null)
+						array[num3, num4] = DetermineACTMenuName(actName, num3, num4);
+						num4++;
+						if (num4 == 2)
 						{
-							if (text.Contains(";"))
-							{
-								text = text.Substring(0, text.IndexOf(';'));
-							}
-							bool flag5 = text.StartsWith("S!") && gm.SusieInParty() && gm.GetHP(1) > 0;
-							bool flag6 = text.StartsWith("N!") && gm.NoelleInParty() && gm.GetHP(2) > 0;
-							bool flag7 = text.StartsWith("SN!") && partySize == 3 && gm.GetHP(1) > 0 && gm.GetHP(2) > 0;
-							bool flag8 = text.StartsWith("KS!") && gm.SusieInParty() && gm.GetHP(1) > 0 && gm.KrisInControl() && gm.GetHP(0) > 0 && (int)gm.GetFlag(107) == 0;
-							if (text.StartsWith("S!"))
-							{
-								if (flag5)
-								{
-									array2[num2, num3] = "  <color=#FF69FFFF>" + text.Replace("S!", "") + "</color>";
-								}
-								else
-								{
-									array2[num2, num3] = "  <color=#888888FF>" + text.Replace("S!", "") + "</color>";
-								}
-								UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SusieIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(8 + 240 * num3, 94 + -32 * num2);
-							}
-							else if (text.StartsWith("N!"))
-							{
-								if (flag6)
-								{
-									array2[num2, num3] = "  <color=#FFFF69FF>" + text.Replace("N!", "") + "</color>";
-								}
-								else
-								{
-									array2[num2, num3] = "  <color=#888888FF>" + text.Replace("N!", "") + "</color>";
-								}
-								UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/NoelleIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(8 + 240 * num3, 94 + -32 * num2);
-							}
-							else if (text.StartsWith("SN!"))
-							{
-								if (flag7)
-								{
-									array2[num2, num3] = "    " + text.Replace("SN!", "");
-								}
-								else
-								{
-									array2[num2, num3] = "    <color=#888888FF>" + text.Replace("SN!", "") + "</color>";
-								}
-								UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SusieIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(8 + 240 * num3, 94 + -32 * num2);
-								UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/NoelleIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(42 + 240 * num3, 94 + -32 * num2);
-							}
-							else if (text.StartsWith("KS!"))
-							{
-								if (flag8)
-								{
-									array2[num2, num3] = "    " + text.Replace("KS!", "");
-								}
-								else
-								{
-									array2[num2, num3] = "    <color=#888888FF>" + text.Replace("KS!", "") + "</color>";
-								}
-								UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/KrisIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(8 + 240 * num3, 94 + -32 * num2);
-								UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SusieIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(42 + 240 * num3, 94 + -32 * num2);
-							}
-							else
-							{
-								array2[num2, num3] = "* " + text;
-							}
-						}
-						num3++;
-						if (num3 == 2)
-						{
-							num3 = 0;
-							num2++;
-							if (num2 == 3)
+							num4 = 0;
+							num3++;
+							if (num3 == 3)
 							{
 								break;
 							}
 						}
 					}
 				}
-				else if (partyTurn > 0)
+				else
 				{
-					if (selTarget == 2)
-					{
-						array2 = GetMemberListArray();
-						DrawMemberBars(selObj2);
-					}
-					else if (selTarget == 0 || (selTarget == 1 && partyTurn == 1) || (selTarget == 3 && partyTurn == 2))
-					{
-						array2 = GetEnemyListArray();
-						DrawEnemyBars(selObj2);
-						flag3 = true;
-					}
-					else if (selTarget == 1 && partyTurn == 2)
+					gm.GetPartyMember(partySelections[partyTurn].miniMagic ? (partyTurn + 3) : partyTurn);
+					Magic.Spell spell = Magic.GetSpell(spellList[selTarget]);
+					if (spell.TargetsEveryone())
 					{
 						flag4 = true;
 					}
+					else if (spell.TargetsEnemies())
+					{
+						if (spellList[selTarget] == Magic.ID.MiniACT)
+						{
+							miniACTId = miniACTIds[selTarget];
+							partySelections[partyTurn].miniActID = miniACTId;
+						}
+						array = GetEnemyListArray(spellList[selTarget] == Magic.ID.MiniACT);
+						DrawEnemyBars(selObj2);
+						flag3 = true;
+						partySelections[partyTurn].magicEnemyTarget = true;
+					}
 					else
 					{
-						array2[0, 0] = "* Temp";
+						array = GetMemberListArray();
+						DrawMemberBars(selObj2);
+						partySelections[partyTurn].magicEnemyTarget = false;
 					}
 				}
-				else if (selTarget == 0)
+				for (num4 = 0; num4 <= 1; num4++)
 				{
-					array2 = GetMemberListArray();
-					DrawMemberBars(selObj2);
-				}
-				else if (selTarget == 2)
-				{
-					array2 = GetEnemyListArray();
-					DrawEnemyBars(selObj2);
-					flag3 = true;
-				}
-				else
-				{
-					flag4 = true;
-				}
-				for (num3 = 0; num3 <= 1; num3++)
-				{
-					for (num2 = 0; num2 <= 2; num2++)
+					for (num3 = 0; num3 <= 2; num3++)
 					{
-						if (array2[num2, num3] == null || array2[num2, num3] == "* ")
+						if (array[num3, num4] == null || array[num3, num4] == "* ")
 						{
-							array2[num2, num3] = "";
+							array[num3, num4] = "";
 						}
 					}
 				}
@@ -1379,20 +1273,13 @@ public class BattleManager : TranslatableSelectableBehaviour
 				{
 					UnityEngine.Object.Destroy(selObj);
 					UnityEngine.Object.Destroy(selObj2);
-					if (partyTurn > 0)
-					{
-						DecideMemberAction(0, 1, selTarget);
-					}
-					else
-					{
-						DecideMemberAction(0, 6, selTarget);
-					}
+					DecideMemberAction(0, ActionType.Magic, (int)spellList[selTarget]);
 				}
 				else
 				{
-					selObj2.GetComponent<Selection>().CreateSelections(array2, new Vector2(-220f, -177f), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", true, true, this, origId);
+					selObj2.GetComponent<Selection>().CreateSelections(array, new Vector2(-220f, -177f), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", useSoul: true, makeSound: true, this, origId);
 					selObj2.transform.localScale = new Vector2(1f, 1f);
-					selObj2.GetComponent<Selection>().SetSelection(new Vector2(firstAvail, 0f), false);
+					selObj2.GetComponent<Selection>().SetSelection(new Vector2(firstAvail, 0f), playSound: false);
 					state = 2;
 					if (flag3)
 					{
@@ -1402,7 +1289,7 @@ public class BattleManager : TranslatableSelectableBehaviour
 				aud.clip = Resources.Load<AudioClip>("sounds/snd_select");
 				aud.Play();
 			}
-			else if (id == 0 && (!UnityEngine.Object.FindObjectOfType<TPBar>().ValidTPAmount() || !flag))
+			else if (id == 0 && (!tpBar.ValidTPAmount() || !flag))
 			{
 				selObj.GetComponent<Selection>().GetSelectionTexts()[(int)index[0], (int)index[1]].GetComponent<AudioSource>().Stop();
 				aud.clip = Resources.Load<AudioClip>("sounds/snd_cantselect");
@@ -1414,40 +1301,35 @@ public class BattleManager : TranslatableSelectableBehaviour
 				{
 				case 1:
 				{
-					int num5 = (int)index[0] * 2 + (int)index[1];
-					if (partyTurn == 0 && !selectingMagic)
+					if (!selectingMagic)
 					{
-						string text2 = enemies[selTarget].GetActNames()[num5];
-						bool num6 = !text2.StartsWith("S!") && !text2.StartsWith("N!") && !text2.StartsWith("SN!") && !text2.StartsWith("KS!");
-						bool flag9 = text2.StartsWith("S!") && gm.SusieInParty() && gm.GetHP(1) > 0;
-						bool flag10 = text2.StartsWith("N!") && gm.NoelleInParty() && gm.GetHP(2) > 0;
-						bool flag11 = text2.StartsWith("SN!") && partySize == 3 && gm.GetHP(1) > 0 && gm.GetHP(2) > 0;
-						bool flag12 = text2.StartsWith("KS!") && gm.SusieInParty() && gm.GetHP(1) > 0 && gm.KrisInControl() && gm.GetHP(0) > 0 && (int)gm.GetFlag(107) == 0;
-						if ((num6 || flag9 || flag10 || flag11 || flag12) && UnityEngine.Object.FindObjectOfType<TPBar>().ValidTPAmount())
+						int num6 = (int)index[0] * 2 + (int)index[1];
+						string text = enemies[selTarget].GetActNames()[num6];
+						if (IsValidACT(text) && tpBar.ValidTPAmount())
 						{
 							UnityEngine.Object.Destroy(selObj);
 							UnityEngine.Object.Destroy(selObj2);
-							DecideMemberAction(selTarget, 1, num5);
-							if (text2.StartsWith("S!"))
+							DecideMemberAction(selTarget, ActionType.Act, num6);
+							if (text.StartsWith("S!"))
 							{
-								DecideMemberAction(0, 4, 0);
+								DecideMemberAction(0, ActionType.FollowACT, 0);
 							}
-							if (text2.StartsWith("N!"))
+							if (text.StartsWith("N!"))
 							{
 								if (partySize == 2 || gm.GetHP(1) == 0)
 								{
-									DecideMemberAction(0, 4, 0);
+									DecideMemberAction(0, ActionType.FollowACT, 0);
 								}
 								else
 								{
-									partySelections[2][1] = 4;
+									partySelections[2].action = ActionType.FollowACT;
 									partyPanels.SelectedAction(2);
 								}
 							}
-							if (text2.StartsWith("SN!"))
+							if (text.StartsWith("SN!"))
 							{
-								DecideMemberAction(0, 4, 0);
-								DecideMemberAction(0, 4, 0);
+								DecideMemberAction(0, ActionType.FollowACT, 0);
+								DecideMemberAction(0, ActionType.FollowACT, 0);
 							}
 							aud.clip = Resources.Load<AudioClip>("sounds/snd_select");
 							aud.Play();
@@ -1458,28 +1340,36 @@ public class BattleManager : TranslatableSelectableBehaviour
 							aud.clip = Resources.Load<AudioClip>("sounds/snd_cantselect");
 							aud.Play();
 						}
+						break;
 					}
-					else
+					int num7 = (int)index[0];
+					int partyMember2 = gm.GetPartyMember(partySelections[partyTurn].miniMagic ? (partyTurn + 3) : partyTurn);
+					if (spellList[selTarget] == Magic.ID.MiniACT && !enemies[num7].HasMiniACT(partyMember2, miniACTId))
 					{
-						UnityEngine.Object.Destroy(selObj);
-						UnityEngine.Object.Destroy(selObj2);
-						if (partyTurn > 0)
-						{
-							DecideMemberAction(num5 / 2, 1, selTarget);
-						}
-						else
-						{
-							DecideMemberAction(num5 / 2, 6, selTarget);
-						}
-						aud.clip = Resources.Load<AudioClip>("sounds/snd_select");
+						selObj2.GetComponent<Selection>().GetSelectionTexts()[(int)index[0], (int)index[1]].GetComponent<AudioSource>().Stop();
+						aud.clip = Resources.Load<AudioClip>("sounds/snd_cantselect");
 						aud.Play();
+						break;
 					}
+					UnityEngine.Object.Destroy(selObj);
+					UnityEngine.Object.Destroy(selObj2);
+					if (!partySelections[partyTurn].magicEnemyTarget)
+					{
+						if (!twoPartySecondSlot && num7 == 1)
+						{
+							num7 = 2;
+						}
+						num7 += (int)index[1] * 3;
+					}
+					DecideMemberAction(num7, ActionType.Magic, (int)spellList[selTarget]);
+					aud.clip = Resources.Load<AudioClip>("sounds/snd_select");
+					aud.Play();
 					break;
 				}
 				case 2:
 				{
-					int num4 = (int)index[0] * 2 + (int)index[1];
-					DebugTools.UseTool(DebugTools.GetKeys()[num4]);
+					int num5 = (int)index[0] * 2 + (int)index[1];
+					DebugTools.UseTool(DebugTools.GetKeys()[num5]);
 					aud.clip = Resources.Load<AudioClip>("sounds/snd_select");
 					aud.Play();
 					break;
@@ -1489,25 +1379,30 @@ public class BattleManager : TranslatableSelectableBehaviour
 		}
 		if (buttonIndex == 2)
 		{
-			bool flag13 = false;
+			bool flag5 = false;
 			if (id != 2)
 			{
-				int num7 = (int)index[0] * 2 + (int)index[1];
-				selObj.SetActive(true);
-				selObj2.SetActive(false);
+				int num8 = (int)index[0] * 2 + (int)index[1];
+				selObj.SetActive(value: true);
+				selObj2.SetActive(value: false);
 				state = 1;
-				int num8 = num7 + 4 * id;
-				partySelections[partyTurn][2] = num8;
-				UnityEngine.Object.Destroy(selObj.transform.Find("PAGE1").gameObject);
+				int extraData = num8 + 4 * id;
+				partySelections[partyTurn].isEquipment = isSelEquipment;
+				partySelections[partyTurn].extraData = extraData;
+				if ((bool)selObj.transform.Find("PAGE1"))
+				{
+					UnityEngine.Object.Destroy(selObj.transform.Find("PAGE1").gameObject);
+				}
+				UnityEngine.Object.Destroy(tabSwitcher);
 				selObj.GetComponent<Selection>().Reset();
-				if (partySize == 1 || Items.ItemType(gm.GetItem(num8)) == 4 || gm.GetItem(num8) == 45)
+				if (partySize == 1 || (!partySelections[partyTurn].isEquipment && (Items.ItemType(GetItemListPerTurn()[num8]) == 4 || GetItemListPerTurn()[num8] == 45)))
 				{
 					id = 2;
-					flag13 = true;
+					flag5 = true;
 				}
 				else
 				{
-					selObj.GetComponent<Selection>().CreateSelections(GetMemberListArray(), new Vector2(-220f, -177f), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", true, true, this, 2);
+					selObj.GetComponent<Selection>().CreateSelections(GetMemberListArray(), new Vector2(-220f, -177f), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", useSoul: true, makeSound: true, this, 2);
 					DrawMemberBars(selObj);
 				}
 			}
@@ -1515,16 +1410,14 @@ public class BattleManager : TranslatableSelectableBehaviour
 			{
 				UnityEngine.Object.Destroy(selObj);
 				UnityEngine.Object.Destroy(selObj2);
-				partySelections[partyTurn][0] = (int)index[0];
-				if (!krisAndSusie && partySelections[partyTurn][0] == 1)
+				isSelEquipment = false;
+				int num9 = (int)index[0];
+				if (!twoPartySecondSlot && num9 == 1)
 				{
-					partySelections[partyTurn][0] = 2;
+					num9 = 2;
 				}
-				if (flag13)
-				{
-					partySelections[partyTurn][0] = 0;
-				}
-				DecideMemberAction(partySelections[partyTurn][0], 2, partySelections[partyTurn][2]);
+				num9 = ((!flag5) ? (num9 + (int)index[1] * 3) : 0);
+				DecideMemberAction(num9, ActionType.Item, partySelections[partyTurn].extraData);
 			}
 			aud.clip = Resources.Load<AudioClip>("sounds/snd_select");
 			aud.Play();
@@ -1535,16 +1428,16 @@ public class BattleManager : TranslatableSelectableBehaviour
 			UnityEngine.Object.Destroy(selObj2);
 			if (index[0] == 1f)
 			{
-				UnityEngine.Object.FindObjectOfType<TPBar>().SetDefendingMember(partyTurn, true);
-				partyPanels.SetAsDefending(partyTurn, true);
+				tpBar.SetDefendingMember(partyTurn, tpToGain: true);
+				partyPanels.SetAsDefending(partyTurn, defend: true);
 				defending[partyTurn] = true;
 			}
 			if (index[0] == 2f)
 			{
-				gm.EndBattle(0, true);
+				gm.EndBattle(2, !UTInput.GetButton("C"));
 				gm.EnablePlayerMovement();
 			}
-			DecideMemberAction(0, 3, (int)index[0]);
+			DecideMemberAction(0, ActionType.Mercy, (int)index[0]);
 			aud.clip = Resources.Load<AudioClip>("sounds/snd_select");
 			aud.Play();
 		}
@@ -1605,7 +1498,7 @@ public class BattleManager : TranslatableSelectableBehaviour
 				gameObject2.transform.Find("Text").GetComponent<Text>().enabled = false;
 				gameObject2.transform.Find("TextShadow").GetComponent<Text>().enabled = false;
 			}
-			if ((int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(94) == 1)
+			if ((int)Util.GameManager().GetFlag(94) == 1)
 			{
 				Image[] componentsInChildren = gameObject.transform.Find("corners").GetComponentsInChildren<Image>();
 				for (int j = 0; j < componentsInChildren.Length; j++)
@@ -1650,20 +1543,27 @@ public class BattleManager : TranslatableSelectableBehaviour
 
 	protected virtual void DrawMemberBars(GameObject selObj)
 	{
-		for (int i = 0; i < 3; i++)
+		int num = ((gm.PartySlotFilled(3) || gm.PartySlotFilled(4) || gm.PartySlotFilled(5)) ? (-32) : 0);
+		for (int i = 0; i < 6; i++)
 		{
-			if (i != 0 && (i != 1 || !gm.SusieInParty()) && (i != 2 || !gm.NoelleInParty()))
+			int num2 = i / 3;
+			if (!gm.PartySlotFilled(i))
 			{
 				continue;
 			}
+			int num3 = 101;
+			if ((i < 3 && gm.PartySlotFilled(i + 3)) || i >= 3)
+			{
+				num3 = 48;
+			}
 			GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/enemies/FightEnemyHP"), selObj.transform);
 			gameObject.name = "PartyMemberHP" + i;
-			gameObject.transform.localPosition += new Vector3(80f, -32 * i - 36);
-			gameObject.transform.Find("fg").GetComponent<RectTransform>().sizeDelta = new Vector2((float)gm.GetHP(i) / (float)gm.GetMaxHP(i) * 101f, 17f);
-			gameObject.transform.Find("bg").GetComponent<RectTransform>().sizeDelta = new Vector2(101f, 17f);
+			gameObject.transform.localPosition += new Vector3(80 + num + 240 * num2, -32 * (i % 3) - 36);
+			gameObject.transform.Find("fg").GetComponent<RectTransform>().sizeDelta = new Vector2((float)gm.GetHP(i) / (float)gm.GetMaxHP(i) * (float)num3, 17f);
+			gameObject.transform.Find("bg").GetComponent<RectTransform>().sizeDelta = new Vector2(num3, 17f);
 			gameObject.transform.Find("Text").GetComponent<Text>().enabled = false;
 			gameObject.transform.Find("TextShadow").GetComponent<Text>().enabled = false;
-			if ((int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(94) != 1)
+			if ((int)Util.GameManager().GetFlag(94) != 1)
 			{
 				continue;
 			}
@@ -1673,7 +1573,7 @@ public class BattleManager : TranslatableSelectableBehaviour
 				image.enabled = true;
 				if (image.gameObject.name.EndsWith("R"))
 				{
-					image.transform.localPosition = new Vector3(51f, image.transform.localPosition.y);
+					image.transform.localPosition = new Vector3(num3 - 50, image.transform.localPosition.y);
 				}
 			}
 		}
@@ -1681,24 +1581,25 @@ public class BattleManager : TranslatableSelectableBehaviour
 
 	protected string[,] GetMemberListArray()
 	{
-		string[,] array = new string[3, 2]
+		string[,] array = new string[3, 2];
+		for (int i = 0; i < 6; i++)
 		{
-			{ "* Kris", null },
-			{ null, null },
-			{ null, null }
-		};
-		if ((int)gm.GetFlag(108) == 1)
-		{
-			array[0, 0] = "* Frisk";
+			if (gm.PartySlotFilled(i))
+			{
+				array[i % 3, i / 3] = "* " + PartyMembers.GetMemberName(gm.GetPartyMember(i));
+			}
+			else
+			{
+				array[i % 3, i / 3] = "";
+			}
 		}
-		array[1, 0] = (gm.SusieInParty() ? "* Susie" : "");
-		array[2, 0] = (gm.NoelleInParty() ? "* Noelle" : "");
 		return array;
 	}
 
-	protected string[,] GetEnemyListArray()
+	protected string[,] GetEnemyListArray(bool greyNamesOnMiniACT = false)
 	{
 		string[,] array = new string[4, 2];
+		int partyMember = gm.GetPartyMember(partySelections[partyTurn].miniMagic ? (partyTurn + 3) : partyTurn);
 		for (int i = 0; i < enemies.Length; i++)
 		{
 			if (!enemies[i].IsDone())
@@ -1707,7 +1608,14 @@ public class BattleManager : TranslatableSelectableBehaviour
 				{
 					firstAvail = i;
 				}
-				array[i, 0] = "* " + enemies[i].GetName();
+				if (greyNamesOnMiniACT && !enemies[i].HasMiniACT(partyMember, miniACTId))
+				{
+					array[i, 0] = "<color=#888888FF>* " + enemies[i].GetName() + "</color>";
+				}
+				else
+				{
+					array[i, 0] = "* " + enemies[i].GetName();
+				}
 			}
 		}
 		return array;
@@ -1757,14 +1665,121 @@ public class BattleManager : TranslatableSelectableBehaviour
 		}
 	}
 
-	private string[,] GetPSISpells()
+	private string[,] GetSpellList()
 	{
-		return new string[3, 2]
+		string[,] array = new string[3, 2];
+		spellList = new Magic.ID[6];
+		miniACTIds = new List<int>();
+		miniACTs = new List<EnemyBase.MiniACT>();
+		List<bool> list = new List<bool>();
+		inMiniACTEnemyMenu = false;
+		int partyMember = gm.GetPartyMember(partySelections[partyTurn].miniMagic ? (partyTurn + 3) : partyTurn);
+		int num = 0;
+		for (int i = 0; i < 3; i++)
 		{
-			{ "* Lifeup", "* Shield" },
-			{ "* PK Freeze", "* PK Fire" },
-			{ null, null }
-		};
+			for (int j = 0; j < 2; j++)
+			{
+				if (num >= Magic.GetSpellListWithoutACT(partyMember).Length)
+				{
+					continue;
+				}
+				Magic.ID iD = Magic.GetSpellListWithoutACT(partyMember)[num];
+				if (iD == Magic.ID.MiniACT)
+				{
+					int num2 = 0;
+					List<EnemyBase.MiniACT> list2 = new List<EnemyBase.MiniACT>();
+					for (int k = 0; k < enemies.Length; k++)
+					{
+						if (!enemies[k].IsDone())
+						{
+							num2++;
+							list2.AddRange(enemies[k].GetMiniACTs(partyMember));
+						}
+					}
+					for (int l = 0; l < list2.Count; l++)
+					{
+						int iD2 = list2[l].GetID();
+						if (!miniACTIds.Contains(iD2))
+						{
+							miniACTIds.Add(iD2);
+							miniACTs.Add(list2[l]);
+							list.Add(item: false);
+							continue;
+						}
+						int index = miniACTIds.IndexOf(iD2);
+						list[index] = true;
+						if (iD2 == 0)
+						{
+							switch (partyMember)
+							{
+							case 1:
+								miniACTs[index] = EnemyBase.SACTION_DEFAULT;
+								break;
+							case 2:
+								miniACTs[index] = EnemyBase.NACTION_DEFAULT;
+								break;
+							case 5:
+								miniACTs[index] = EnemyBase.CACTION_DEFAULT;
+								break;
+							default:
+								miniACTs[index] = EnemyBase.SACTION_DEFAULT;
+								miniACTs[index].SetName("Mini-ACT");
+								break;
+							}
+						}
+						else
+						{
+							miniACTs[index] = new EnemyBase.MiniACT("Conflict", iD2, $"Mini-ACT conflict id {iD2}", 101);
+						}
+					}
+					for (int m = 0; m < miniACTs.Count; m++)
+					{
+						array[i, j] = $"<color=#{PartyMembers.GetMemberNeonColorMenu(partyMember)}>* {miniACTs[m].GetName()}</color>";
+						if (m < miniACTs.Count - 1)
+						{
+							spellList[j + i * 2] = iD;
+							j++;
+							if (j > 1)
+							{
+								j = 0;
+								i++;
+							}
+						}
+					}
+				}
+				else if (!Magic.CanCastSpell(iD, partyMember, 100))
+				{
+					array[i, j] = "<color=#888888FF>* " + Magic.GetSpell(iD).GetName() + "</color>";
+				}
+				else if (iD == Magic.ID.SleepMist)
+				{
+					bool flag = false;
+					for (int n = 0; n < enemies.Length; n++)
+					{
+						if (enemies[n].IsTired() && !enemies[n].IsDone())
+						{
+							flag = true;
+							break;
+						}
+					}
+					if (flag)
+					{
+						array[i, j] = "<color=#00A2E8FF>* " + Magic.GetSpell(iD).GetName() + "</color>";
+					}
+					else
+					{
+						array[i, j] = "* " + Magic.GetSpell(iD).GetName();
+					}
+				}
+				else
+				{
+					array[i, j] = "* " + Magic.GetSpell(iD).GetName();
+				}
+				spellList[j + i * 2] = iD;
+				num++;
+			}
+		}
+		return array;
 	}
 
 	public virtual void SendBattleEvents(int? state = null)
@@ -1778,7 +1793,9 @@ public class BattleManager : TranslatableSelectableBehaviour
 		{
 			if (!enemyBase.IsDone())
 			{
-				MonoBehaviour.print("Sending " + enemyBase.GetName() + " event for state " + state);
+				string text = enemyBase.GetName();
+				int? num = state;
+				MonoBehaviour.print("Sending " + text + " event for state " + num);
 				switch (state)
 				{
 				case 4:
@@ -1788,7 +1805,8 @@ public class BattleManager : TranslatableSelectableBehaviour
 					enemyBase.EnemyTurnEnd();
 					break;
 				default:
-					throw new InvalidOperationException("No event for state " + state);
+					num = state;
+					throw new InvalidOperationException("No event for state " + num);
 				}
 			}
 		}
@@ -1839,12 +1857,12 @@ public class BattleManager : TranslatableSelectableBehaviour
 		if (music != "" && music.Replace("_intro", "") != mus.CurrentMusic())
 		{
 			bool flag = music.EndsWith("_intro");
-			mus.ChangeMusic(flag ? music.Replace("_intro", "") : music, flag, true);
+			mus.ChangeMusic(flag ? music.Replace("_intro", "") : music, flag, playImmediately: true);
 			mus.GetSource().pitch = pitch;
 		}
-		else if ((bool)UnityEngine.Object.FindObjectOfType<LostCoreMusic>())
+		else if ((bool)Util.FindObjectOfType<LostCoreMusic>())
 		{
-			UnityEngine.Object.FindObjectOfType<LostCoreMusic>().SetDanger(true);
+			Util.FindObjectOfType<LostCoreMusic>().SetDanger(danger: true);
 		}
 	}
 
@@ -1852,12 +1870,12 @@ public class BattleManager : TranslatableSelectableBehaviour
 	{
 		if (music != "" && music != mus.CurrentMusic())
 		{
-			mus.ChangeMusic(music, hasIntro, true);
+			mus.ChangeMusic(music, hasIntro, playImmediately: true);
 			mus.GetSource().pitch = pitch;
 		}
-		else if ((bool)UnityEngine.Object.FindObjectOfType<LostCoreMusic>())
+		else if ((bool)Util.FindObjectOfType<LostCoreMusic>())
 		{
-			UnityEngine.Object.FindObjectOfType<LostCoreMusic>().SetDanger(true);
+			Util.FindObjectOfType<LostCoreMusic>().SetDanger(danger: true);
 		}
 	}
 
@@ -1868,7 +1886,7 @@ public class BattleManager : TranslatableSelectableBehaviour
 
 	public void FadeEndBattle()
 	{
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			if (gm.GetHP(i) < 1)
 			{
@@ -1891,46 +1909,48 @@ public class BattleManager : TranslatableSelectableBehaviour
 		return fadeObj;
 	}
 
-	public virtual void DecideMemberAction(int target, int action, int extraData)
+	public virtual void DecideMemberAction(int target, ActionType action, int extraData)
 	{
 		flavorPlayedOnce = true;
-		partySelections[partyTurn] = new int[3] { target, action, extraData };
-		if (action != -1)
+		partySelections[partyTurn].target = target;
+		partySelections[partyTurn].action = action;
+		partySelections[partyTurn].extraData = extraData;
+		if (action != ActionType.Idle)
 		{
 			partyPanels.SelectedAction(partyTurn);
 		}
 		switch (action)
 		{
-		case 1:
-		case 6:
+		case ActionType.Act:
+		case ActionType.Magic:
 			descriptionBox.Hide();
-			UnityEngine.Object.FindObjectOfType<TPBar>().ApplyPreviewTP(partyTurn);
+			tpBar.ApplyPreviewTP(partyTurn);
 			break;
-		case 2:
+		case ActionType.Item:
 			descriptionBox.Hide();
 			break;
 		}
 		partyTurn++;
-		if (partyTurn == 1 && gm.GetHP(1) == 0)
+		if (partyTurn == 1 && gm.GetHP(1) == 0 && (!gm.PartySlotFilled(4) || gm.GetHP(4) == 0))
 		{
-			partySelections[1][1] = -1;
+			partySelections[1].action = ActionType.Idle;
 			partyTurn++;
 		}
-		if (partyTurn == 2 && gm.GetHP(2) == 0)
+		if (partyTurn == 2 && gm.GetHP(2) == 0 && (!gm.PartySlotFilled(5) || gm.GetHP(5) == 0))
 		{
-			partySelections[2][1] = -1;
+			partySelections[2].action = ActionType.Idle;
 			partyTurn++;
 		}
-		if (partySelections[1][1] == 4 && partyTurn == 1)
-		{
-			partyTurn++;
-		}
-		if (partySelections[2][1] == 4 && partyTurn == 2)
+		if (partySelections[1].action == ActionType.FollowACT && partyTurn == 1)
 		{
 			partyTurn++;
 		}
-		MonoBehaviour.print(partySelections[2][1]);
-		if (partyTurn >= 3 || (partySize == 2 && krisAndSusie && partyTurn >= 2) || partySize == 1)
+		if (partySelections[2].action == ActionType.FollowACT && partyTurn == 2)
+		{
+			partyTurn++;
+		}
+		MonoBehaviour.print(partySelections[2].action.ToString());
+		if (partyTurn >= 3 || (partySize == 2 && twoPartySecondSlot && partyTurn >= 2) || partySize == 1)
 		{
 			partyPanels.SetRaisedPanel(-1);
 			MonoBehaviour.print("BEGIN ROUND EXECUTION");
@@ -1942,27 +1962,27 @@ public class BattleManager : TranslatableSelectableBehaviour
 			{
 				partyPanels.DeselectedAction(i);
 			}
-			if (!gm.SusieInParty())
+			if (!gm.PartySlotFilled(1) && !gm.PartySlotFilled(4))
 			{
-				partySelections[1][1] = -1;
+				partySelections[1].action = ActionType.Idle;
 			}
-			if (!gm.NoelleInParty())
+			if (!gm.PartySlotFilled(2) && !gm.PartySlotFilled(5))
 			{
-				partySelections[2][1] = -1;
+				partySelections[2].action = ActionType.Idle;
 			}
-			niceActIndex = 0;
-			partyPanels.RaiseHeads(false, false, false);
+			actionTurn = 0;
+			partyPanels.RaiseHeads(kris: false, susie: false, noelle: false);
 			state = 3;
 			soul.GetComponent<SpriteRenderer>().enabled = false;
 			soul.transform.position = new Vector3(500f, 500f);
 			SelectButton(-1);
 			fightingThisRound = false;
-			UnityEngine.Object.FindObjectOfType<TPBar>().UseTP();
+			tpBar.UseTP();
 			AdvancePlayerTurn();
 		}
 		else
 		{
-			if (!krisAndSusie && partySize == 2 && partyTurn == 1)
+			if (!twoPartySecondSlot && partySize == 2 && partyTurn == 1)
 			{
 				partyTurn = 2;
 			}
@@ -1976,58 +1996,58 @@ public class BattleManager : TranslatableSelectableBehaviour
 		bool flag = false;
 		bool flag2 = false;
 		bool flag3 = false;
-		while (niceActIndex < 3)
+		while (actionTurn < 3)
 		{
-			bool flag4 = partySelections[niceActIndex][1] == 1 && (partySelections[niceActIndex][2] == 2 || partySelections[niceActIndex][2] == 0 || (partySelections[niceActIndex][2] == 1 && niceActIndex == 2));
-			if (partySelections[niceActIndex][1] != -1 && partySelections[niceActIndex][1] < 2 && !flag4 && ((susieDepressionRefuse && niceActIndex == 1) || (noelleDepressionRefuse && niceActIndex == 2)))
+			bool flag4 = partySelections[actionTurn].action == ActionType.Magic && !Magic.GetSpell(partySelections[actionTurn].extraData).IsAttackMagic();
+			if (partySelections[actionTurn].action != ActionType.Idle && partySelections[actionTurn].action < ActionType.Item && !flag4 && ((susieDepressionRefuse && actionTurn == 1) || (noelleDepressionRefuse && actionTurn == 2)))
 			{
 				flag3 = true;
-				partySelections[niceActIndex][1] = -1;
+				partySelections[actionTurn].action = ActionType.Idle;
 				break;
 			}
-			if (partySelections[niceActIndex][1] != 0 && partySelections[niceActIndex][1] != 3 && partySelections[niceActIndex][1] != -1 && partySelections[niceActIndex][1] != 4)
+			if (partySelections[actionTurn].action != ActionType.Fight && partySelections[actionTurn].action != ActionType.Mercy && partySelections[actionTurn].action != ActionType.Idle && partySelections[actionTurn].action != ActionType.FollowACT)
 			{
 				break;
 			}
-			if (partySelections[niceActIndex][1] == 0)
+			if (partySelections[actionTurn].action == ActionType.Fight)
 			{
-				if (niceActIndex != 0)
+				if (actionTurn != 0)
 				{
-					if (!enemies[partySelections[niceActIndex][0]].PartyMemberAcceptAttack(niceActIndex, 0))
+					if (!enemies[partySelections[actionTurn].target].PartyMemberAcceptAttack(gm.GetPartyMember(actionTurn), 0))
 					{
 						flag2 = true;
-						partySelections[niceActIndex][1] = -1;
+						partySelections[actionTurn].action = ActionType.Idle;
 						break;
 					}
 					fightingThisRound = true;
-					if (niceActIndex == 1 && susieDeviousMisbehave)
+					if (actionTurn == 1 && susieDeviousMisbehave)
 					{
 						break;
 					}
 				}
 				else
 				{
-					if ((int)gm.GetFlag(102) == 1 && UnityEngine.Random.Range(0, 6) == 1)
+					if (gm.GetPartyMember(0) == 0 && (int)gm.GetFlag(102) == 1 && UnityEngine.Random.Range(0, 6) == 1)
 					{
 						flag = true;
-						partySelections[niceActIndex][1] = -1;
+						partySelections[actionTurn].action = ActionType.Idle;
 						break;
 					}
 					fightingThisRound = true;
 				}
 			}
-			if (partySelections[niceActIndex][1] == 3 && partySelections[niceActIndex][2] == 0)
+			if (partySelections[actionTurn].IsSparing())
 			{
 				sparingThisRound = true;
-				sparers[niceActIndex] = true;
+				sparers[actionTurn] = true;
 			}
-			if (partySelections[niceActIndex][1] == 4)
+			if (partySelections[actionTurn].action == ActionType.FollowACT)
 			{
-				partySelections[niceActIndex][1] = 5;
+				partySelections[actionTurn].action = ActionType.HasFollowedACT;
 			}
-			niceActIndex++;
-			MonoBehaviour.print(niceActIndex);
-			if (niceActIndex == 3)
+			actionTurn++;
+			MonoBehaviour.print(actionTurn);
+			if (actionTurn == 3)
 			{
 				break;
 			}
@@ -2035,27 +2055,27 @@ public class BattleManager : TranslatableSelectableBehaviour
 		string[] array = new string[3] { "* You", "* Susie", "* Noelle" };
 		if (AllEnemiesDone())
 		{
-			EndNormalFight(false, "");
+			EndNormalFight(customMessage: false, "");
 		}
-		else if (!flag2 && susieDeviousMisbehave && niceActIndex == 1 && partySelections[niceActIndex][1] == 0)
+		else if (!flag2 && susieDeviousMisbehave && actionTurn == 1 && partySelections[actionTurn].action == ActionType.Fight)
 		{
-			partyPanels.RaiseHeads(false, true, false);
-			diag = new string[1] { deviousString };
+			partyPanels.RaiseHeads(kris: false, susie: true, noelle: false);
+			diag = new string[1] { DEVIOUS_STRING };
 			curDiag = 0;
 			finalDiag = diag.Length - 1;
 			StartText(diag[curDiag], new Vector2(-4f, -134f), "snd_txtbtl");
 		}
 		else if (flag3)
 		{
-			partyPanels.RaiseHeads(false, niceActIndex == 1, niceActIndex == 2);
-			diag = new string[1] { array[niceActIndex] + " couldn't bring herself\n  to do anything." };
+			partyPanels.RaiseHeads(kris: false, actionTurn == 1, actionTurn == 2);
+			diag = new string[1] { array[actionTurn] + " couldn't bring herself\n  to do anything." };
 			curDiag = 0;
 			finalDiag = diag.Length - 1;
 			StartText(diag[curDiag], new Vector2(-4f, -134f), "snd_txtbtl");
 		}
 		else if (flag)
 		{
-			partyPanels.RaiseHeads(true, false, false);
+			partyPanels.RaiseHeads(kris: true, susie: false, noelle: false);
 			string[] array2 = new string[4] { "* You felt light-headed and\n  couldn't draw your weapon.", "* You couldn't gather the\n  strength to fight.", "* You decided to listen to\n  the doctor and rested.", "* You collapsed to the ground\n  trying to draw your weapon." };
 			diag = new string[1] { array2[UnityEngine.Random.Range(0, array2.Length)] };
 			curDiag = 0;
@@ -2064,86 +2084,70 @@ public class BattleManager : TranslatableSelectableBehaviour
 		}
 		else if (flag2)
 		{
-			partyPanels.RaiseHeads(false, niceActIndex == 1, niceActIndex == 2);
-			diag = new string[1] { array[niceActIndex] + " refused to fight\n  " + enemies[partySelections[niceActIndex][0]].GetName() + "." };
+			partyPanels.RaiseHeads(kris: false, actionTurn == 1, actionTurn == 2);
+			diag = new string[1] { array[actionTurn] + " refused to fight\n  " + enemies[partySelections[actionTurn].target].GetName() + "." };
 			curDiag = 0;
 			finalDiag = diag.Length - 1;
 			StartText(diag[curDiag], new Vector2(-4f, -134f), "snd_txtbtl");
 		}
-		else if (niceActIndex == 3 && sparingThisRound)
+		else if (actionTurn == 3 && sparingThisRound)
 		{
 			sparingThisRound = false;
-			partyPanels.RaiseHeads(partySelections[0][1] == 3 && partySelections[0][2] == 0, partySelections[1][1] == 3 && partySelections[1][2] == 0, partySelections[2][1] == 3 && partySelections[2][2] == 0);
+			partyPanels.RaiseHeads(partySelections[0].IsSparing(), partySelections[1].IsSparing(), partySelections[2].IsSparing());
 			string text = "";
 			bool flag5 = false;
-			bool flag6 = false;
 			if (sparers[0] && sparers[1] && sparers[2])
 			{
 				text = "* Everyone";
-				sparers = new bool[3];
 			}
 			else
 			{
-				text = "*";
-				if (sparers[0])
+				int num = -1;
+				for (int i = 0; i < sparers.Length; i++)
 				{
-					sparers[0] = false;
-					text += " You";
-					flag5 = true;
-				}
-				if (sparers[1])
-				{
-					sparers[1] = false;
-					if (flag5)
+					if (sparers[i])
 					{
-						flag6 = true;
-						text += " and";
+						int num2 = ((gm.GetHP(i) == 0 && gm.PartySlotFilled(i + 3)) ? gm.GetPartyMember(i + 3) : gm.GetPartyMember(i));
+						text = "* " + PartyMembers.GetResponsibilityString(num, num2);
+						if (num > -1)
+						{
+							flag5 = true;
+						}
+						num = num2;
 					}
-					text += " Susie";
-					flag5 = true;
-				}
-				if (sparers[2])
-				{
-					sparers[2] = false;
-					if (flag5)
-					{
-						flag6 = true;
-						text += " and";
-					}
-					text += " Noelle";
-					flag5 = true;
 				}
 			}
-			bool flag7 = false;
-			int num = 0;
-			for (int i = 0; i < enemies.Length; i++)
+			sparers = new bool[3];
+			bool flag6 = false;
+			int num3 = 0;
+			for (int j = 0; j < enemies.Length; j++)
 			{
-				if (!enemies[i].IsDone())
+				if (!enemies[j].IsDone())
 				{
-					num++;
+					num3++;
 				}
-				if (enemies[i].CanSpare() && !enemies[i].IsDone())
+				if (enemies[j].CanSpare() && !enemies[j].IsDone())
 				{
-					enemies[i].Spare();
-					if (flag7)
+					enemies[j].Spare();
+					if (flag6)
 					{
-						enemies[i].GetComponent<AudioSource>().Stop();
+						enemies[j].GetComponent<AudioSource>().Stop();
 					}
-					flag7 = true;
+					flag6 = true;
 				}
-				else if (!enemies[i].CanSpare() && !enemies[i].IsDone())
+				else if (!enemies[j].CanSpare() && !enemies[j].IsDone())
 				{
-					enemies[i].AttemptedSpare();
+					enemies[j].AttemptedSpare();
 				}
 			}
 			string text2 = "* But none of the enemies'\n  names were <color=#FFFF00FF>YELLOW</color>...";
-			if (num == 1)
+			if (num3 == 1)
 			{
 				text2 = "* But the enemy's name\n  wasn't <color=#FFFF00FF>YELLOW</color>...";
 			}
-			if (flag6)
+			if (flag5)
 			{
-				if (flag7)
+				if (flag6)
 				{
 					diag = new string[1] { text + " spared\n  the enemies!" };
 				}
@@ -2159,483 +2163,220 @@ public class BattleManager : TranslatableSelectableBehaviour
 			else
 			{
 				diag = new string[1] { text + " spared the enemies!" };
-				if (!flag7)
+				if (!flag6)
 				{
-					string[] array3 = diag;
-					int num2 = 0;
-					array3[num2] = array3[num2] + "\n" + text2;
+					ref string reference = ref diag[0];
+					reference = reference + "\n" + text2;
 				}
 			}
 			curDiag = 0;
 			finalDiag = diag.Length - 1;
 			StartText(diag[curDiag], new Vector2(-4f, -134f), "snd_txtbtl");
 		}
-		else if (niceActIndex == 3 && fightingThisRound)
+		else if (actionTurn == 3 && fightingThisRound)
 		{
-			partyPanels.RaiseHeads(partySelections[0][1] == 0, partySelections[1][1] == 0, partySelections[2][1] == 0);
+			partyPanels.RaiseHeads(partySelections[0].action == ActionType.Fight, partySelections[1].action == ActionType.Fight, partySelections[2].action == ActionType.Fight);
 			target = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/FightTarget"));
 			EnemyBase krisTarget = null;
 			EnemyBase susieTarget = null;
 			EnemyBase noelleTarget = null;
-			if (partySelections[0][1] == 0)
+			if (partySelections[0].action == ActionType.Fight)
 			{
-				krisTarget = enemies[partySelections[0][0]];
+				krisTarget = enemies[partySelections[0].target];
 			}
-			if (partySelections[1][1] == 0)
+			if (partySelections[1].action == ActionType.Fight)
 			{
-				susieTarget = enemies[partySelections[1][0]];
+				susieTarget = enemies[partySelections[1].target];
 			}
-			if (partySelections[2][1] == 0)
+			if (partySelections[2].action == ActionType.Fight)
 			{
-				noelleTarget = enemies[partySelections[2][0]];
+				noelleTarget = enemies[partySelections[2].target];
 			}
 			target.GetComponent<FightTarget>().SetEnemies(krisTarget, susieTarget, noelleTarget);
-			target.GetComponent<FightTarget>().SetAttackers(partySelections[0][1] == 0, partySelections[1][1] == 0, partySelections[2][1] == 0, partySize, partySelections[0][2]);
+			bool kris = gm.PartySlotFilled(0) && gm.GetHP(0) > 0 && partySelections[0].action == ActionType.Fight && !partySelections[0].mainNoFight;
+			bool susie = gm.PartySlotFilled(1) && gm.GetHP(1) > 0 && partySelections[1].action == ActionType.Fight && !partySelections[1].mainNoFight;
+			bool noelle = gm.PartySlotFilled(2) && gm.GetHP(2) > 0 && partySelections[2].action == ActionType.Fight && !partySelections[2].mainNoFight;
+			bool mini = gm.PartySlotFilled(3) && gm.GetHP(3) > 0 && partySelections[0].action == ActionType.Fight && !partySelections[0].miniMagic;
+			bool mini2 = gm.PartySlotFilled(4) && gm.GetHP(4) > 0 && partySelections[1].action == ActionType.Fight && !partySelections[1].miniMagic;
+			bool mini3 = gm.PartySlotFilled(5) && gm.GetHP(5) > 0 && partySelections[2].action == ActionType.Fight && !partySelections[2].miniMagic;
+			target.GetComponent<FightTarget>().SetAttackers(kris, susie, noelle, partySize, mini, mini2, mini3);
 			state = 7;
 		}
-		else if (niceActIndex == 3 && !fightingThisRound)
+		else if (actionTurn == 3 && !fightingThisRound)
 		{
 			AdvanceToEnemyTurn();
 		}
 		else
 		{
-			bool kris = niceActIndex == 0;
-			bool susie = niceActIndex == 1 || (niceActIndex == 0 && partySelections[1][1] == 4);
-			bool noelle = niceActIndex == 2 || (niceActIndex == 0 && partySelections[2][1] == 4);
-			partyPanels.RaiseHeads(kris, susie, noelle);
-			if (partySelections[niceActIndex][1] == 1)
+			bool kris2 = actionTurn == 0;
+			bool susie2 = actionTurn == 1 || (actionTurn == 0 && partySelections[1].action == ActionType.FollowACT);
+			bool noelle2 = actionTurn == 2 || (actionTurn == 0 && partySelections[2].action == ActionType.FollowACT);
+			partyPanels.RaiseHeads(kris2, susie2, noelle2);
+			if (partySelections[actionTurn].action == ActionType.Act)
 			{
-				if (niceActIndex == 0)
+				diag = enemies[partySelections[actionTurn].target].PerformAct(partySelections[actionTurn].extraData);
+				if (diag[0] == "* Your SOUL shined its power\n  onto Susie!")
 				{
-					diag = enemies[partySelections[niceActIndex][0]].PerformAct(partySelections[niceActIndex][2]);
-					if (diag[0] == "* Your SOUL shined its power\n  onto Susie!")
+					UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/SOULShine"), new Vector3(partyPanels.transform.Find("Party0Sprite").localPosition.x / 48f, -0.2f), Quaternion.identity);
+					castingRedBuster = true;
+					if ((int)gm.GetFlag(211) == 1)
 					{
-						UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/SOULShine"), new Vector3(partyPanels.transform.Find("KrisSprite").localPosition.x / 48f, -0.2f), Quaternion.identity);
-						castingRedBuster = true;
-						if ((int)gm.GetFlag(211) == 1)
-						{
-							partyPanels.SetSprite(0, "spr_kr_evil_look");
-						}
-					}
-					else if (diag[0] == "* Your SOUL shined its power\n  onto Noelle!")
-					{
-						UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/SOULShine"), new Vector3(partyPanels.transform.Find("KrisSprite").localPosition.x / 48f, -0.2f), Quaternion.identity);
-						castingDualHeal = true;
+						partyPanels.SetSprite(0, "spr_kr_evil_look");
 					}
 				}
-				else
+				else if (diag[0] == "* Your SOUL shined its power\n  onto Noelle!")
 				{
-					int num3 = -1;
-					if (susieDeviousMisbehave && niceActIndex == 1 && partySelections[niceActIndex][2] == 1)
-					{
-						num3 = UnityEngine.Random.Range(0, 5);
-						if (num3 == 4)
-						{
-							partySelections[niceActIndex][2] = 2;
-							UnityEngine.Object.FindObjectOfType<TPBar>().RemoveTP(100);
-						}
-						MonoBehaviour.print("SUSIE DEVIOUS RUDE BUSTER: " + num3);
-					}
-					if (partySelections[niceActIndex][2] == 0)
-					{
-						diag = enemies[partySelections[niceActIndex][0]].PerformAssistAct(niceActIndex);
-					}
-					else if (partySelections[niceActIndex][2] == 2)
-					{
-						string text3 = ((niceActIndex == 1) ? "ULTIMATE HEAL" : "HEAL PRAYER");
-						int num4 = -1;
-						if (susieDeviousMisbehave && niceActIndex == 1 && (num3 == 4 || UnityEngine.Random.Range(0, 1) == 0))
-						{
-							if (UnityEngine.Random.Range(0, 5) == 0)
-							{
-								if (num3 != 4)
-								{
-									MonoBehaviour.print("SUSIE DEVIOUS HEAL: random enemy");
-								}
-								for (int j = 0; j < enemies.Length; j++)
-								{
-									if (!enemies[j].IsDone())
-									{
-										num4 = j;
-										break;
-									}
-								}
-							}
-							else
-							{
-								if (num3 != 4)
-								{
-									MonoBehaviour.print("SUSIE DEVIOUS HEAL: random party member");
-								}
-								partySelections[niceActIndex][0] = UnityEngine.Random.Range(0, partySize);
-							}
-						}
-						string text4 = ((niceActIndex == partySelections[niceActIndex][0]) ? "herself." : (new string[3] { "you.", "Susie.", "Noelle." })[partySelections[niceActIndex][0]]);
-						if (num4 >= 0)
-						{
-							text4 = enemies[num4].GetName() + ".";
-						}
-						int num5 = Mathf.FloorToInt(gm.GetMagicRaw(1));
-						if (niceActIndex == 2)
-						{
-							num5 = gm.GetMaxHP(2) / 4 + Mathf.FloorToInt(gm.GetMagicRaw(2) / 2f);
-							if (Items.GetItemElement(gm.GetWeapon(2)) == 1)
-							{
-								int num6 = gm.GetMagicEquipment(2);
-								if (Items.GetWeaponType(gm.GetWeapon(2)) == 4)
-								{
-									num6 /= 2;
-								}
-								num5 += num6;
-							}
-						}
-						else if (isBoss)
-						{
-							num5 += 3;
-						}
-						if (susieDeviousMisbehave)
-						{
-							string text5 = deviousString + array[niceActIndex] + " cast " + text3 + "\n  onto " + text4;
-							if (num4 >= 0)
-							{
-								diag = new string[1] { text5 };
-							}
-							else
-							{
-								diag = new string[2]
-								{
-									text5,
-									Items.GetRecoveryString(partySelections[niceActIndex][0], num5)
-								};
-							}
-						}
-						else
-						{
-							diag = new string[1] { array[niceActIndex] + " cast " + text3 + "\n  onto " + text4 + "\n" + Items.GetRecoveryString(partySelections[niceActIndex][0], num5) };
-						}
-						if (num4 >= 0)
-						{
-							enemies[num4].Hit(1, -num5, true);
-						}
-						else
-						{
-							gm.Heal(partySelections[niceActIndex][0], num5);
-							gm.PlayTimedHealSound();
-						}
-						aud2.clip = Resources.Load<AudioClip>((niceActIndex == 1) ? "sounds/snd_spell_cure_slight_smaller" : "sounds/snd_spellcast");
-						aud2.Play();
-					}
-					else if (partySelections[niceActIndex][2] == 1 && niceActIndex == 1)
-					{
-						if (!enemies[partySelections[niceActIndex][0]].PartyMemberAcceptAttack(niceActIndex, 1) || num3 == 1)
-						{
-							diag = new string[1] { "* Susie cast RUDE BUSTER...^10\n  onto the wall." };
-						}
-						else
-						{
-							RudeBusterEffect component = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/RudeBuster")).GetComponent<RudeBusterEffect>();
-							int num7 = partySelections[niceActIndex][0];
-							if (enemies[num7].IsDone())
-							{
-								for (int k = 0; k < enemies.Length; k++)
-								{
-									if (!enemies[k].IsDone() && k != num7)
-									{
-										num7 = k;
-										break;
-									}
-								}
-							}
-							component.AssignEnemy(enemies[num7]);
-							if (num3 == 2 || num3 == 3)
-							{
-								component.SetDevious(num3 == 2);
-							}
-							diag = new string[1] { "* Susie cast RUDE BUSTER!" };
-						}
-						if (susieDeviousMisbehave)
-						{
-							diag[0] = deviousString + diag[0];
-						}
-					}
-					else if (partySelections[niceActIndex][2] == 1 && niceActIndex == 2)
-					{
-						if (Items.GetItemElement(gm.GetWeapon(2)) == 1)
-						{
-							SleepMist component2 = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SleepMist")).GetComponent<SleepMist>();
-							diag = new string[1] { array[niceActIndex] + " cast SLEEP MIST!" };
-							bool flag8 = false;
-							int num8 = 0;
-							for (int l = 0; l < enemies.Length; l++)
-							{
-								if (!enemies[l].IsDone())
-								{
-									num8++;
-								}
-								if (enemies[l].IsTired() && !enemies[l].IsDone())
-								{
-									enemies[l].Spare(true);
-									if (flag8)
-									{
-										enemies[l].GetComponent<AudioSource>().Stop();
-									}
-									flag8 = true;
-								}
-								else if (!enemies[l].CanSpare() && !enemies[l].IsDone())
-								{
-									enemies[l].AttemptedSpare();
-								}
-							}
-							string text6 = "* But none of the enemies\n  were <color=#00A2E8FF>TIRED</color>...";
-							if (num8 == 1)
-							{
-								text6 = "* But the enemy wasn't\n  <color=#00A2E8FF>TIRED</color>...";
-							}
-							if (!flag8)
-							{
-								string[] array4 = diag;
-								int num9 = 0;
-								array4[num9] = array4[num9] + "\n" + text6;
-							}
-							else
-							{
-								component2.GetComponents<AudioSource>()[0].Play();
-							}
-						}
-						else
-						{
-							diag = new string[1] { array[niceActIndex] + " tried SLEEP MIST,^05\n  but wasn't able to..." };
-						}
-					}
-					else if (partySelections[niceActIndex][2] == 3 && niceActIndex == 2)
-					{
-						if (Items.GetItemElement(gm.GetWeapon(2)) == 1)
-						{
-							if (!enemies[partySelections[niceActIndex][0]].PartyMemberAcceptAttack(niceActIndex, 1))
-							{
-								diag = new string[1] { "* Noelle cast ICE SHOCK...^10\n  onto herself." };
-								gm.PlayGlobalSFX("sounds/snd_hurt");
-								gm.Damage(2, 5);
-							}
-							else
-							{
-								IceShock component3 = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/IceShock")).GetComponent<IceShock>();
-								int num10 = partySelections[niceActIndex][0];
-								if (enemies[num10].IsDone())
-								{
-									for (int m = 0; m < enemies.Length; m++)
-									{
-										if (!enemies[m].IsDone())
-										{
-											num10 = m;
-											break;
-										}
-									}
-								}
-								component3.AssignEnemy(enemies[num10]);
-								diag = new string[1] { array[niceActIndex] + " cast ICE SHOCK!" };
-							}
-						}
-						else
-						{
-							diag = new string[1] { array[niceActIndex] + " tried ICE SHOCK,^05\n  but wasn't able to..." };
-						}
-					}
-					else
-					{
-						diag = new string[1] { "* not implemented yet lol" };
-					}
-					MonoBehaviour.print("Magic Index: " + partySelections[niceActIndex][2]);
+					UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/SOULShine"), new Vector3(partyPanels.transform.Find("Party0Sprite").localPosition.x / 48f, -0.2f), Quaternion.identity);
+					castingDualHeal = true;
 				}
 				curDiag = 0;
 				finalDiag = diag.Length - 1;
 				StartText(diag[curDiag], new Vector2(-4f, -134f), "snd_txtbtl");
 			}
-			else if (partySelections[niceActIndex][1] == 2)
+			else if (partySelections[actionTurn].action == ActionType.Magic)
 			{
-				int num11 = niceActIndex;
-				int num12 = -1;
-				if (susieDeviousMisbehave && Items.ItemType(gm.GetItem(partySelections[niceActIndex][2])) == 0 && niceActIndex == 1 && UnityEngine.Random.Range(0, 1) == 0)
+				int num4 = -1;
+				if (susieDeviousMisbehave && actionTurn == 1 && partySelections[actionTurn].extraData == 2)
+				{
+					num4 = UnityEngine.Random.Range(0, 5);
+					if (num4 == 4)
+					{
+						partySelections[actionTurn].extraData = 3;
+						tpBar.RemoveTP(100);
+					}
+					MonoBehaviour.print("SUSIE DEVIOUS RUDE BUSTER: " + num4);
+				}
+				int partyMember = gm.GetPartyMember(partySelections[actionTurn].miniMagic ? (actionTurn + 3) : actionTurn);
+				int partyMember2 = partySelections[actionTurn].target;
+				if (!partySelections[actionTurn].magicEnemyTarget)
+				{
+					partyMember2 = gm.GetPartyMember(partyMember2);
+				}
+				if (partyMember == 3)
+				{
+					gm.SetFlag(105, 1);
+				}
+				diag = Magic.UseMagic((Magic.ID)partySelections[actionTurn].extraData, enemies, partyMember, partyMember2, num4, partySelections[actionTurn].miniActID);
+				MonoBehaviour.print("Magic Spell Index: " + partySelections[actionTurn].extraData);
+				curDiag = 0;
+				finalDiag = diag.Length - 1;
+				StartText(diag[curDiag], new Vector2(-4f, -134f), "snd_txtbtl");
+			}
+			else if (partySelections[actionTurn].action == ActionType.Item)
+			{
+				int from_slot = ((gm.GetHP(actionTurn) == 0 && gm.PartySlotFilled(actionTurn + 3)) ? (actionTurn + 3) : actionTurn);
+				int num5 = -1;
+				bool flag7 = false;
+				if (partySelections[actionTurn].isEquipment)
+				{
+					if (susieDeviousMisbehave && Items.ItemType(gm.GetEquipment(partySelections[actionTurn].extraData)) != 3 && actionTurn == 1 && UnityEngine.Random.Range(0, 5) == 0)
+					{
+						diag = new string[1] { DEVIOUS_STRING + "* Susie threw away the\n  " + Items.ItemName(gm.GetEquipment(partySelections[actionTurn].extraData)) + "!" };
+						gm.RemoveEquipment(partySelections[actionTurn].extraData);
+						flag7 = true;
+					}
+				}
+				else if (susieDeviousMisbehave && Items.ItemType(gm.GetItem(partySelections[actionTurn].extraData)) == 0 && actionTurn == 1 && UnityEngine.Random.Range(0, 1) == 0)
 				{
 					if (UnityEngine.Random.Range(0, 5) == 0)
 					{
-						for (int n = 0; n < enemies.Length; n++)
+						for (int k = 0; k < enemies.Length; k++)
 						{
-							if (!enemies[n].IsDone())
+							if (!enemies[k].IsDone())
 							{
-								num12 = n;
+								num5 = k;
 								break;
 							}
 						}
 					}
 					else
 					{
-						partySelections[niceActIndex][0] = UnityEngine.Random.Range(0, partySize);
+						partySelections[actionTurn].target = UnityEngine.Random.Range(0, partySize);
 					}
 				}
-				int num13 = partySelections[niceActIndex][0];
-				if (!gm.KrisInControl())
+				int num6 = partySelections[actionTurn].target;
+				if (num5 >= 0)
 				{
-					if (num11 == 0)
-					{
-						num11 = miniPartyMember + 2;
-					}
-					if (num13 == 0)
-					{
-						num13 = miniPartyMember + 2;
-					}
+					diag = new string[1] { DEVIOUS_STRING + "* Susie gave the " + Items.ItemName(gm.GetItem(partySelections[actionTurn].extraData)) + "\n  to " + enemies[num5].GetName() + "!" };
+					enemies[num5].Hit(1, -Items.ItemValue(gm.GetItem(partySelections[actionTurn].extraData)), playSound: true);
+					gm.RemoveItem(partySelections[actionTurn].extraData);
 				}
-				if (num12 >= 0)
+				else if (!flag7)
 				{
-					diag = new string[1] { deviousString + "* Susie gave the " + Items.ItemName(gm.GetItem(partySelections[niceActIndex][2])) + "\n  to " + enemies[num12].GetName() + "!" };
-					enemies[num12].Hit(1, -Items.ItemValue(gm.GetItem(partySelections[niceActIndex][2])), true);
-					gm.RemoveItem(partySelections[niceActIndex][2]);
-				}
-				else
-				{
-					bool flag9 = true;
-					diag = Items.ItemUse(gm.GetItem(partySelections[niceActIndex][2]), num11, num13, isBoss).Split('}');
-					if (gm.GetItem(partySelections[niceActIndex][2]) == 22 && soul.GetComponent<SOUL>().GetMaxSpeed() < 8f)
+					bool flag8 = true;
+					int extraData = partySelections[actionTurn].extraData;
+					bool isEquipment = partySelections[actionTurn].isEquipment;
+					int num7 = -1;
+					Debug.Log(partySelections[actionTurn].extraData);
+					Debug.Log("EQUIP " + partySelections[actionTurn].isEquipment);
+					MonoBehaviour.print(num6);
+					num7 = ((!isEquipment) ? gm.GetItem(extraData) : gm.GetEquipment(extraData));
+					diag = Items.ItemUse(num7, from_slot, num6, isBoss).Split('}');
+					if (num7 == 22 && soul.GetComponent<SOUL>().GetMaxSpeed() < 8f)
 					{
-						int num22 = 3;
 						soul.GetComponent<SOUL>().IncrementSpeed();
-						Vector3 position = partyPanels.GetStatPanel(num13).transform.localPosition / 48f;
+						Vector3 position = partyPanels.GetStatPanel(num6).transform.localPosition / 48f;
 						UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/dr/DamageNumber"), new Vector3(10f, 0f), Quaternion.identity).GetComponent<DamageNumber>().StartWord("spdup", Color.white, position);
 					}
-					if (gm.GetItem(partySelections[niceActIndex][2]) == 24)
+					if (num7 == 24)
 					{
-						bool flag10 = false;
-						if (gm.GetHP(1) == 0)
+						if (gm.SusieInParty())
 						{
-							gm.Heal(1, gm.GetMaxHP(1));
-							revivalTurns[1] = 0;
-							partyPanels.UpdateHP(gm.GetHPArray());
-							flag10 = true;
-						}
-						gm.SetATKBuff(1, 10);
-						Vector3 position2 = partyPanels.GetStatPanel(1).transform.localPosition / 48f - new Vector3(0f, flag10 ? 0f : (-0.5f));
-						UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/dr/DamageNumber"), new Vector3(10f, 0f), Quaternion.identity).GetComponent<DamageNumber>().StartWord("atup", Color.white, position2);
-					}
-					if (gm.GetItem(partySelections[niceActIndex][2]) == 45)
-					{
-						int num14 = 0;
-						int num15 = 0;
-						EnemyBase[] array5 = enemies;
-						foreach (EnemyBase enemyBase in array5)
-						{
-							if ((bool)enemyBase && !enemyBase.IsDone())
+							bool flag9 = false;
+							if (PartyMembers.GetHP(1) == 0)
 							{
-								num15++;
-								if (enemyBase.CanBeSkipped())
-								{
-									num14++;
-								}
+								PartyMembers.Heal(1, PartyMembers.GetMaxHP(1));
+								revivalTurns[1] = 0;
+								partyPanels.UpdateHP(gm.GetHPArray());
+								flag9 = true;
 							}
-						}
-						if (num14 == num15)
-						{
-							skipNextEnemyTurn = true;
-							string[] array6 = new string[6] { "RED", "BLUE", "GREEN", "ORANGE", "CYAN", "YELLOW" };
-							int num17 = niceActIndex;
-							if (miniPartyMember > 0)
-							{
-								num17 = 2 + miniPartyMember;
-							}
-							string text7 = "* " + PARTYMEMBER_NAMES[num17] + " plays";
-							if (num17 == 0)
-							{
-								text7 = "* You play";
-							}
-							diag = new string[1] { text7 + " a WILD REVERSE.\n* Turn order has been reversed!\n* The color changes to " + array6[soul.GetComponent<SOUL>().GetSOULMode()] + "!" };
+							gm.SetATKBuff(1, 10);
+							Vector3 position2 = partyPanels.GetStatPanel(1).transform.localPosition / 48f - new Vector3(0f, flag9 ? 0f : (-0.5f));
+							UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/dr/DamageNumber"), new Vector3(10f, 0f), Quaternion.identity).GetComponent<DamageNumber>().StartWord("atup", Color.white, position2);
 						}
 						else
 						{
-							flag9 = false;
-							int num18 = niceActIndex;
-							if (miniPartyMember > 0)
-							{
-								num18 = 2 + miniPartyMember;
-							}
-							string text8 = "* " + PARTYMEMBER_NAMES[num18] + " tries to play";
-							if (num18 == 0)
-							{
-								text8 = "* You try to play";
-							}
-							string text9 = "the enemy\n  ";
-							if (num15 > 1)
-							{
-								text9 = ((num14 == 0) ? "the enemies\n  " : "one of the\n  enemies ");
-							}
-							diag = new string[1] { text8 + " the\n  WILD REVERSE, but " + text9 + "cannot be skipped!" };
+							flag8 = false;
 						}
 					}
-					if (flag9)
+					if (num7 == 45)
 					{
-						gm.UseItem(partySelections[niceActIndex][0], partySelections[niceActIndex][2]);
-					}
-				}
-				curDiag = 0;
-				finalDiag = diag.Length - 1;
-				StartText(diag[curDiag], new Vector2(-4f, -134f), "snd_txtbtl");
-			}
-			else if (partySelections[niceActIndex][1] == 6 && niceActIndex == 0)
-			{
-				gm.SetFlag(105, 1);
-				if (partySelections[niceActIndex][2] == 0)
-				{
-					int num19 = 15;
-					diag = new string[1] { "* Paula tried LIFEUP...\n" + Items.GetRecoveryString(partySelections[niceActIndex][0], num19) };
-					gm.Heal(partySelections[niceActIndex][0], num19);
-					gm.PlayTimedHealSound();
-					aud2.clip = Resources.Load<AudioClip>("sounds/snd_psi");
-					aud2.Play();
-				}
-				else if (partySelections[niceActIndex][2] == 1)
-				{
-					diag = new string[1] { "* Paula tried SHIELD...\n* Your SOUL was protected by\n  a LIGHT shield for 15 hits!" };
-					soul.GetComponent<SOUL>().ActivateLightShield();
-					aud2.clip = Resources.Load<AudioClip>("sounds/snd_psi_shield");
-					aud2.Play();
-				}
-				else if (partySelections[niceActIndex][2] == 2)
-				{
-					diag = new string[1] { "* Paula tried PK FREEZE..." };
-					PKFreezeEffect component4 = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/PKFreeze")).GetComponent<PKFreezeEffect>();
-					int num20 = partySelections[niceActIndex][0];
-					if (enemies[num20].IsDone())
-					{
-						for (int num21 = 0; num21 < enemies.Length; num21++)
+						int num8 = 0;
+						int num9 = 0;
+						EnemyBase[] array3 = enemies;
+						foreach (EnemyBase enemyBase in array3)
 						{
-							if (!enemies[num21].IsDone())
+							if ((bool)enemyBase && !enemyBase.IsDone())
 							{
-								num20 = num21;
-								break;
+								num9++;
+								if (enemyBase.CanBeSkipped())
+								{
+									num8++;
+								}
+							}
+						}
+						if (num8 == num9)
+						{
+							skipNextEnemyTurn = true;
+							diag = Items.ItemUse(-21, from_slot, num6, isBoss).Split('}');
+						}
+						else
+						{
+							flag8 = false;
+							diag = Items.ItemUse(-22, from_slot, num6, isBoss).Split('}');
+							if (num9 > 1)
+							{
+								diag[0] = diag[0].Replace("the enemy\n  ", (num8 == 0) ? "the enemies\n  " : "one of the\n  enemies ");
 							}
 						}
 					}
-					component4.AssignEnemy(enemies[num20]);
-					aud2.clip = Resources.Load<AudioClip>("sounds/snd_psi");
-					aud2.Play();
-					if (gm.KrisInControl())
+					if (flag8)
 					{
-						fightingThisRound = true;
-						partySelections[niceActIndex][2] = 1;
-						partySelections[niceActIndex][1] = 0;
-						partySelections[niceActIndex][0] = num20;
+						gm.UseItem(partySelections[actionTurn].target, extraData, isEquipment);
 					}
-				}
-				else if (partySelections[niceActIndex][2] == 3)
-				{
-					diag = new string[1] { "* Paula tried PK FIRE..." };
-					UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/PKFire")).GetComponent<PKFireEffect>();
-					aud2.clip = Resources.Load<AudioClip>("sounds/snd_psi");
-					aud2.Play();
-					if (gm.KrisInControl())
+					else
 					{
-						fightingThisRound = true;
-						partySelections[niceActIndex][2] = 1;
-						partySelections[niceActIndex][1] = 0;
-						partySelections[niceActIndex][0] = 0;
+						gm.MoveItemToBack(extraData);
 					}
 				}
 				curDiag = 0;
@@ -2643,31 +2384,33 @@ public class BattleManager : TranslatableSelectableBehaviour
 				StartText(diag[curDiag], new Vector2(-4f, -134f), "snd_txtbtl");
 			}
 		}
-		if (niceActIndex < 3)
+		if (actionTurn < 3)
 		{
-			niceActIndex++;
+			actionTurn++;
 		}
 	}
 
 	private void DetermineDepressionReject()
 	{
-		if ((int)gm.GetFlag(172) == 2)
+		if ((int)gm.GetFlag(172) == 2 && gm.SusieInParty())
 		{
 			susieDepressionRefuse = UnityEngine.Random.Range(0, 5) == 0;
-			noelleDepressionRefuse = UnityEngine.Random.Range(0, 8) == 0;
-			partyPanels.SetSprite(1, "spr_su_down_depressed_" + (susieDepressionRefuse ? "reject" : "0"));
-			partyPanels.SetSprite(2, "spr_no_down_depressed_" + (noelleDepressionRefuse ? "reject" : "0"));
+			partyPanels.SetSprite(1, susieDepressionRefuse ? "spr_su_down_depressed_reject" : "depressed/spr_su_down_0_depressed");
 		}
-		else if ((int)gm.GetFlag(172) == 1)
+		if ((int)gm.GetFlag(172) >= 1 && gm.NoelleInParty())
 		{
 			noelleDepressionRefuse = UnityEngine.Random.Range(0, 8) == 0;
-			partyPanels.SetSprite(2, "spr_no_down_depressed_" + (noelleDepressionRefuse ? "reject" : "0"));
+			partyPanels.SetSprite(2, noelleDepressionRefuse ? "spr_no_down_depressed_reject" : "depressed/spr_no_down_0_depressed");
 		}
-		if ((int)gm.GetFlag(257) == 1)
+		if ((int)gm.GetFlag(257) != 1 || !gm.SusieInParty())
+		{
+			return;
+		}
+		if (gm.SusieInParty() && gm.GetHP(1) > 0)
 		{
 			if (susieDeviousMisbehave)
 			{
-				partyPanels.SetSprite(1, "spr_su_down_unhappy_0");
+				partyPanels.SetSprite(1, "unhappy/spr_su_down_0_unhappy");
 			}
 			susieDeviousMisbehave = UnityEngine.Random.Range(0, deviousChance) == 0;
 			if (susieDeviousMisbehave)
@@ -2680,6 +2423,10 @@ public class BattleManager : TranslatableSelectableBehaviour
 				deviousChance -= 2;
 			}
 		}
+		else
+		{
+			susieDeviousMisbehave = false;
+		}
 	}
 
 	public virtual void AdvanceToEnemyTurn()
@@ -2688,8 +2435,9 @@ public class BattleManager : TranslatableSelectableBehaviour
 		{
 			boxText.DestroyOldText();
 		}
-		partyPanels.RaiseHeads(false, false, false);
+		partyPanels.RaiseHeads(kris: false, susie: false, noelle: false);
 		state = 4;
+		soul.GetComponent<SpriteRenderer>().sortingOrder = 199;
 		soul.GetComponent<SpriteRenderer>().enabled = true;
 		if (diag == null || buttonIndex == 0 || buttonIndex == 3)
 		{
@@ -2698,7 +2446,7 @@ public class BattleManager : TranslatableSelectableBehaviour
 		}
 		if (AllEnemiesDone())
 		{
-			EndNormalFight(false, "");
+			EndNormalFight(customMessage: false, "");
 			return;
 		}
 		SendBattleEvents();
@@ -2723,7 +2471,7 @@ public class BattleManager : TranslatableSelectableBehaviour
 		else
 		{
 			skipNextEnemyTurn = false;
-			partyPanels.SetTargets(true, true, true);
+			partyPanels.SetTargets(kris: true, susie: true, noelle: true);
 			curAtk = AttackSpawner.GetAttack(-1);
 		}
 		bb.StartMovement(curAtk.GetBoardSize(), curAtk.GetBoardPos());
@@ -2732,7 +2480,7 @@ public class BattleManager : TranslatableSelectableBehaviour
 
 	public void SkipPartyMemberTurn(int partyMember)
 	{
-		partySelections[partyMember][1] = -1;
+		partySelections[partyMember].action = ActionType.Idle;
 	}
 
 	public void ForceNoSpare()
@@ -2746,8 +2494,9 @@ public class BattleManager : TranslatableSelectableBehaviour
 		fightingThisRound = false;
 	}
 
-	public void StartText(string diag, Vector2 pos, string sound)
+	public void StartText(string diag, Vector2 pos, string sound, bool allowSkip = true)
 	{
+		this.allowSkip = allowSkip;
 		string[] array = diag.Split('`');
 		if (boxText.Exists())
 		{
@@ -2755,20 +2504,19 @@ public class BattleManager : TranslatableSelectableBehaviour
 		}
 		if (array.Length > 1 && !array[0].StartsWith("sounds/"))
 		{
-			boxPortrait = new GameObject("BoxPortrait", typeof(RectTransform), typeof(Image)).GetComponent<RectTransform>();
+			boxPortrait = Portrait.CreatePortrait(array[0]);
 			boxPortrait.transform.SetParent(GameObject.Find("BattleCanvas").transform);
-			Sprite sprite = Resources.Load<Sprite>("overworld/npcs/portraits/spr_" + array[0] + "_0");
-			boxPortrait.sizeDelta = new Vector2(sprite.rect.width / 24f, sprite.rect.height / 24f);
-			boxPortrait.GetComponent<Image>().sprite = sprite;
-			boxPortrait.localPosition = new Vector2(-218f, 20f) + pos;
+			boxPortrait.transform.localPosition = new Vector2(-218f, 20f) + pos;
+			boxPortrait.transform.localScale = Vector3.one;
+			boxPortrait.Play();
 			pos += new Vector2(108f, 0f);
 		}
-		if (array.Length > 1 && array[array.Length - 2].StartsWith("snd_"))
+		if (array.Length > 1 && array[^2].StartsWith("snd_"))
 		{
-			sound = array[array.Length - 2];
+			sound = array[^2];
 		}
-		boxText.StartText(array[array.Length - 1], pos, sound, 0, "DTM-Mono");
-		if ((UTInput.GetButton("X") || UTInput.GetButton("C")) && (state == 0 || state == 3 || state == 10))
+		boxText.StartText(array[^1], pos, sound, 0, "DTM-Mono");
+		if (allowSkip && (UTInput.GetButton("X") || UTInput.GetButton("C")) && (state == 0 || state == 3 || state == 10))
 		{
 			boxText.SkipText(state != 0);
 		}
@@ -2808,7 +2556,7 @@ public class BattleManager : TranslatableSelectableBehaviour
 		int num = 0;
 		int num2 = 0;
 		int num3 = (int)gm.GetFlag(125);
-		partyPanels.RaiseHeads(true, true, true);
+		partyPanels.RaiseHeads(kris: true, susie: true, noelle: true);
 		bool flag = false;
 		endState = 2;
 		EnemyBase[] array = enemies;
@@ -2837,11 +2585,11 @@ public class BattleManager : TranslatableSelectableBehaviour
 		{
 			endState = 3;
 		}
-		num2 += UnityEngine.Object.FindObjectOfType<TPBar>().GetCurrentTP() / 5;
+		num2 += tpBar.GetCurrentTP() / 5;
 		gm.SetFlag(125, num3);
 		soul.GetComponent<SpriteRenderer>().enabled = false;
 		StopMusic();
-		for (int j = 0; j < 3; j++)
+		for (int j = 0; j < 6; j++)
 		{
 			if (gm.GetHP(j) < 1)
 			{
@@ -2862,29 +2610,18 @@ public class BattleManager : TranslatableSelectableBehaviour
 		{
 			text = message;
 		}
-		StartText(text, new Vector2(-4f, -134f), "snd_txtbtl");
+		StartText(text, new Vector2(-4f, -134f), "snd_txtbtl", allowSkip: false);
 		state = 10;
 	}
 
 	public void ForceSoloKris(bool removeMiniPartyMember = false)
 	{
 		partySize = 1;
-		partySelections[1] = new int[3] { 0, -1, 0 };
-		partySelections[2] = new int[3] { 0, -1, 0 };
-		if (removeMiniPartyMember && gm.GetMiniPartyMember() != 0)
+		partySelections[1].Reset();
+		partySelections[2].Reset();
+		if (removeMiniPartyMember && gm.PartySlotFilled(3))
 		{
-			miniPartyMember = 0;
-			int hP = gm.GetHP(0);
-			hP -= gm.GetMiniMemberMaxHP();
-			gm.SetMiniPartyMember(0);
-			if (hP < 0)
-			{
-				gm.SetHP(0, 1);
-			}
-			else
-			{
-				gm.SetHP(0, hP);
-			}
+			gm.SetPartyMember(3, -1);
 			partyPanels.DisableMiniPartyMember();
 		}
 	}
@@ -2893,16 +2630,15 @@ public class BattleManager : TranslatableSelectableBehaviour
 	{
 		partyPanels.Reinitialize();
 		partySize = partyPanels.NumOfActivePartyMembers();
-		krisAndSusie = gm.SusieInParty();
-		miniPartyMember = gm.GetMiniPartyMember();
+		twoPartySecondSlot = gm.SusieInParty();
 		ChangeHP();
 	}
 
 	public void ActivateSeriousMode()
 	{
 		isBoss = true;
-		partyPanels.SetSprite(1, "spr_su_down_unhappy_0");
-		partyPanels.SetSprite(2, "spr_no_down_unhappy_0");
+		partyPanels.SetSprite(1, "unhappy/spr_su_down_0_unhappy");
+		partyPanels.SetSprite(2, "unhappy/spr_no_down_0_unhappy");
 	}
 
 	public void JerryFightReorganize()
@@ -2917,6 +2653,14 @@ public class BattleManager : TranslatableSelectableBehaviour
 			didSoulSparkle = true;
 			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/EyeFlashSparkle"), soul.transform.position, Quaternion.identity);
 		}
+	}
+
+	public void MiniPartyMemberSpellToMainFight(int enemyID = 0)
+	{
+		fightingThisRound = true;
+		partySelections[actionTurn].miniMagic = true;
+		partySelections[actionTurn].action = ActionType.Fight;
+		partySelections[actionTurn].target = enemyID;
 	}
 
 	public bool[] GetDefendingMembers()
@@ -2949,17 +2693,323 @@ public class BattleManager : TranslatableSelectableBehaviour
 		return susieDeviousMisbehave;
 	}
 
+	public int GetPartySize()
+	{
+		return partySize;
+	}
+
+	public void PlaySound2(string path)
+	{
+		aud2.clip = Resources.Load<AudioClip>(path);
+		aud2.Play();
+	}
+
 	private List<int> GetItemListPerTurn()
 	{
 		List<int> list = new List<int>(gm.GetItemList());
-		if (partyTurn > 0 && partySelections[0][1] == 2 && list[partySelections[0][2]] != 16)
+		if (partyTurn > 0 && partySelections[0].action == ActionType.Item && !partySelections[0].isEquipment && list[partySelections[0].extraData] != 16)
 		{
-			list.RemoveAt(partySelections[0][2]);
+			list.RemoveAt(partySelections[0].extraData);
 		}
-		if (partyTurn > 1 && partySelections[1][1] == 2 && list[partySelections[1][2]] != 16)
+		if (partyTurn > 1 && partySelections[1].action == ActionType.Item && !partySelections[1].isEquipment && list[partySelections[1].extraData] != 16)
 		{
-			list.RemoveAt(partySelections[1][2]);
+			list.RemoveAt(partySelections[1].extraData);
 		}
 		return list;
+	}
+
+	private List<int> GetEquipmentListPerTurn()
+	{
+		List<int> list = new List<int>(gm.GetEquipmentItemList());
+		if (partyTurn > 0 && partySelections[0].action == ActionType.Item && partySelections[0].isEquipment && list[partySelections[0].extraData] != 16)
+		{
+			list.RemoveAt(partySelections[0].extraData);
+		}
+		if (partyTurn > 1 && partySelections[1].action == ActionType.Item && partySelections[1].isEquipment && list[partySelections[1].extraData] != 16)
+		{
+			list.RemoveAt(partySelections[1].extraData);
+		}
+		return list;
+	}
+
+	private int GetTotalNumOfItems()
+	{
+		return GetNumOfEquips() + GetNumOfItems();
+	}
+
+	private int GetNumOfItems()
+	{
+		List<int> itemListPerTurn = GetItemListPerTurn();
+		itemListPerTurn.RemoveAll(isBlank);
+		return itemListPerTurn.Count;
+	}
+
+	private int GetNumOfEquips()
+	{
+		List<int> equipmentListPerTurn = GetEquipmentListPerTurn();
+		equipmentListPerTurn.RemoveAll(isBlank);
+		return equipmentListPerTurn.Count;
+	}
+
+	private bool CanMoveToNextPage()
+	{
+		List<int> obj = (isSelEquipment ? GetEquipmentListPerTurn() : GetItemListPerTurn());
+		obj.RemoveAll(isBlank);
+		return obj.Count > 4;
+	}
+
+	private bool isBlank(int i)
+	{
+		return i == -1;
+	}
+
+	private void InstantiateItems(ref bool ignore, ref bool doNum2, ref string[,] selTxt, ref string[,] selTxt2, ref int i, ref int j)
+	{
+		GameObject obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("ui/TextBase"), selObj.transform);
+		obj.name = "PAGE1";
+		obj.transform.localPosition = new Vector2(330f, -198f);
+		obj.transform.localScale = new Vector3(1f, 1f, 1f);
+		obj.GetComponent<Text>().text = "PAGE 1";
+		GameObject obj2 = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("ui/TextBase"), selObj2.transform);
+		obj2.name = "PAGE2";
+		obj2.transform.localPosition = new Vector2(330f, -198f);
+		obj2.transform.localScale = new Vector3(1f, 1f, 1f);
+		obj2.GetComponent<Text>().text = "PAGE 2";
+		GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("ui/TextButtonBase"), tabSwitcher.transform);
+		gameObject.name = "TABSWITCH";
+		gameObject.transform.localPosition = new Vector2(45f, -210f);
+		gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+		bool joystickIsActive = UTInput.joystickIsActive;
+		Debug.Log(ColorUtility.ToHtmlStringRGB(Selection.SELECTION_COLORS[gm.GetFlagInt(223)]));
+		string arg = ((GetNumOfItems() == 0) ? "888" : ((!isSelEquipment) ? ColorUtility.ToHtmlStringRGB(Selection.SELECTION_COLORS[gm.GetFlagInt(223)]) : "FFF"));
+		string text = string.Concat(str1: string.Format(" <color=#{0}>item</color>  |  <color=#{1}>equip</color>", arg, (GetNumOfEquips() == 0) ? "888" : (isSelEquipment ? ColorUtility.ToHtmlStringRGB(Selection.SELECTION_COLORS[gm.GetFlagInt(223)]) : "FFF")), str0: joystickIsActive ? "        " : string.Format("<color=#FFF>[{0}]</color> ", UTInput.GetKeyName("Menu")));
+		gameObject.GetComponent<Text>().font = Resources.Load<Font>("fonts/battlehud");
+		gameObject.GetComponent<Text>().fontSize = 16;
+		gameObject.GetComponent<Text>().text = text;
+		gameObject.GetComponent<Text>().color = Color.grey;
+		Image component = gameObject.transform.Find("Confirm").GetComponent<Image>();
+		component.transform.localPosition = new Vector3(-252f, 57f);
+		if (!joystickIsActive)
+		{
+			component.enabled = false;
+		}
+		else
+		{
+			component.enabled = true;
+			ButtonPrompts.UpdateImageWithGraphic("Menu", component);
+		}
+		ItemFill(ref ignore, ref doNum2, ref selTxt, ref selTxt2, ref i, ref j);
+	}
+
+	private void ItemFill(ref bool ignore, ref bool doNum2, ref string[,] selTxt, ref string[,] selTxt2, ref int i, ref int j)
+	{
+		List<int> obj = (isSelEquipment ? GetEquipmentListPerTurn() : GetItemListPerTurn());
+		doPage2 = false;
+		foreach (int item in obj)
+		{
+			if (item == -1)
+			{
+				continue;
+			}
+			ignore = false;
+			if (doNum2)
+			{
+				doPage2 = true;
+				selTxt2[i, j] = "* " + Items.ShortItemName(item, isBoss);
+			}
+			else
+			{
+				selTxt[i, j] = "* " + Items.ShortItemName(item, isBoss);
+			}
+			j++;
+			if (j == 2)
+			{
+				j = 0;
+				i++;
+				if (i == 2)
+				{
+					i = 0;
+					doNum2 = true;
+				}
+			}
+		}
+	}
+
+	private void CreateSelectionsItems(ref bool flavorPlayedOnce, ref string[,] selTxt, ref string[,] selTxt2, ref bool enemyList)
+	{
+		flavorPlayedOnce = true;
+		if (firstAvail == -1)
+		{
+			firstAvail = 0;
+		}
+		selObj.AddComponent<Selection>().CreateSelections(selTxt, new Vector2(-220f, -177f), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", useSoul: true, makeSound: true, this, 0);
+		selObj.transform.localScale = new Vector2(1f, 1f);
+		selObj.GetComponent<Selection>().SetSelection(new Vector2(firstAvail, 0f), playSound: false);
+		selObj2.AddComponent<Selection>().CreateSelections(selTxt2, new Vector2(-220f, -177f), new Vector2(240f, -32f), new Vector2(-28f, 95f), "DTM-Mono", useSoul: true, makeSound: true, this, 1);
+		selObj2.transform.localScale = new Vector2(1f, 1f);
+		selObj2.GetComponent<Selection>().Disable();
+		selObj2.SetActive(value: false);
+		tabSwitcher.transform.localScale = new Vector2(1f, 1f);
+		if (enemyList)
+		{
+			HandleEnemyNameColor();
+		}
+		ResetText();
+		state = 1;
+	}
+
+	private string GetDescriptionOfItemFromSelection()
+	{
+		int num = -1;
+		if (state == 1)
+		{
+			num = (int)selObj.GetComponent<Selection>().GetIndex()[1] + (int)selObj.GetComponent<Selection>().GetIndex()[0] * 2;
+		}
+		else if (state == 2)
+		{
+			num = (int)selObj2.GetComponent<Selection>().GetIndex()[1] + (int)selObj2.GetComponent<Selection>().GetIndex()[0] * 2 + 4;
+		}
+		if (num > -1)
+		{
+			return Items.GetBattleDescription(isSelEquipment ? GetEquipmentListPerTurn()[num] : GetItemListPerTurn()[num]);
+		}
+		Debug.Log("Error in Battle Manager: Failed to get description of Item");
+		return "";
+	}
+
+	private void CreateSelectionObjects()
+	{
+		if ((bool)selObj)
+		{
+			UnityEngine.Object.Destroy(selObj);
+		}
+		if ((bool)selObj2)
+		{
+			UnityEngine.Object.Destroy(selObj2);
+		}
+		if ((bool)tabSwitcher)
+		{
+			UnityEngine.Object.Destroy(tabSwitcher);
+		}
+		selObj = new GameObject("SelectTier1");
+		selObj.layer = 5;
+		selObj.AddComponent<RectTransform>();
+		selObj.transform.SetParent(GameObject.Find("BattleCanvas").transform);
+		selObj2 = new GameObject("SelectTier2");
+		selObj2.layer = 5;
+		selObj2.AddComponent<RectTransform>();
+		selObj2.transform.SetParent(GameObject.Find("BattleCanvas").transform);
+		tabSwitcher = new GameObject("ItemSwitcher");
+		tabSwitcher.layer = 5;
+		tabSwitcher.AddComponent<RectTransform>();
+		tabSwitcher.transform.SetParent(GameObject.Find("BattleCanvas").transform);
+	}
+
+	private string DetermineACTMenuName(string actName, int i, int j)
+	{
+		if (actName != null)
+		{
+			if (actName.Contains(";"))
+			{
+				actName = actName.Substring(0, actName.IndexOf(';'));
+			}
+			bool flag = gm.SusieInParty() && PartyMembers.GetHP(1) > 0;
+			bool flag2 = gm.NoelleInParty() && PartyMembers.GetHP(2) > 0;
+			bool flag3 = gm.GetPartyMember(0) == 0 && gm.GetHP(0) > 0;
+			if (actName.StartsWith("S!"))
+			{
+				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SusieIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(8 + 240 * j, 94 + -32 * i);
+				if (flag)
+				{
+					return "  <color=#FF69FFFF>" + actName.Replace("S!", "") + "</color>";
+				}
+				return "  <color=#888888FF>" + actName.Replace("S!", "") + "</color>";
+			}
+			if (actName.StartsWith("N!"))
+			{
+				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/NoelleIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(8 + 240 * j, 94 + -32 * i);
+				if (flag2)
+				{
+					return "  <color=#FFFF69FF>" + actName.Replace("N!", "") + "</color>";
+				}
+				return "  <color=#888888FF>" + actName.Replace("N!", "") + "</color>";
+			}
+			if (actName.StartsWith("SN!"))
+			{
+				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SusieIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(8 + 240 * j, 94 + -32 * i);
+				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/NoelleIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(42 + 240 * j, 94 + -32 * i);
+				if (flag && flag2)
+				{
+					return "    " + actName.Replace("SN!", "");
+				}
+				return "    <color=#888888FF>" + actName.Replace("SN!", "") + "</color>";
+			}
+			if (actName.StartsWith("KS!"))
+			{
+				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/KrisIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(8 + 240 * j, 94 + -32 * i);
+				UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SusieIcon"), selObj2.transform).transform.localPosition = new Vector3(-220f, -177f) + new Vector3(42 + 240 * j, 94 + -32 * i);
+				if (flag3 && flag)
+				{
+					return "    " + actName.Replace("KS!", "");
+				}
+				return "    <color=#888888FF>" + actName.Replace("KS!", "") + "</color>";
+			}
+			return "* " + actName;
+		}
+		return "";
+	}
+
+	private bool IsValidACT(string actName)
+	{
+		if (actName.Contains(";"))
+		{
+			actName = actName.Substring(0, actName.IndexOf(';'));
+		}
+		bool flag = gm.SusieInParty() && PartyMembers.GetHP(1) > 0;
+		bool flag2 = gm.NoelleInParty() && PartyMembers.GetHP(2) > 0;
+		bool flag3 = gm.GetPartyMember(0) == 0 && gm.GetHP(0) > 0;
+		if (!actName.Contains("!"))
+		{
+			return true;
+		}
+		if (actName.StartsWith("S!") && flag)
+		{
+			return true;
+		}
+		if (actName.StartsWith("N!") && flag2)
+		{
+			return true;
+		}
+		if (actName.StartsWith("SN!") && flag && flag2)
+		{
+			return true;
+		}
+		if (actName.StartsWith("KS!") && flag3 && flag)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	private bool IsSlotAlive(int i)
+	{
+		if (gm.GetHP(i) > 0)
+		{
+			return true;
+		}
+		if (i < 3 && gm.PartySlotFilled(i + 3) && gm.GetHP(i + 3) > 0)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public bool AttackIsActive()
+	{
+		if (state == 5 && curAtk != null)
+		{
+			return curAtk.HasStarted();
+		}
+		return false;
 	}
 }

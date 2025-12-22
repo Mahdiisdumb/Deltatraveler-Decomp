@@ -16,7 +16,7 @@ public class BaseballBullet : BulletBase
 	protected override void Awake()
 	{
 		base.Awake();
-		baseDmg = (UnityEngine.Object.FindObjectOfType<Ness>().ReduceDamage() ? 6 : 8);
+		baseDmg = (Util.FindObjectOfType<Ness>().ReduceDamage() ? 6 : 8);
 		destroyOnHit = false;
 		sr.color = new Color(1f, 1f, 1f, 0f);
 	}
@@ -26,7 +26,7 @@ public class BaseballBullet : BulletBase
 		basePos = base.transform.position;
 		yStrength = UnityEngine.Random.Range(1f, 2f);
 		framesToFreefall = Mathf.RoundToInt(20f * yStrength);
-		xVelocity = (UnityEngine.Object.FindObjectOfType<SOUL>().transform.position.x - base.transform.position.x) / (float)framesToFreefall;
+		xVelocity = (Util.FindObjectOfType<SOUL>().transform.position.x - base.transform.position.x) / (float)framesToFreefall;
 	}
 
 	private void Update()
@@ -39,7 +39,7 @@ public class BaseballBullet : BulletBase
 			{
 				GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, (float)frames / 5f);
 			}
-			base.transform.position = new Vector3(basePos.x, basePos.y + Mathf.Sin((float)(frames * 9) * ((float)Math.PI / 180f)));
+			base.transform.position = new Vector3(basePos.x, basePos.y + Mathf.Sin((float)(frames * 9) * (MathF.PI / 180f)));
 			if (frames == 20)
 			{
 				state = 1;
@@ -51,7 +51,7 @@ public class BaseballBullet : BulletBase
 			frames++;
 			if (frames <= framesToFreefall)
 			{
-				float y = basePos.y + Mathf.Sin((float)frames * (180f / (float)framesToFreefall) * ((float)Math.PI / 180f)) * yStrength;
+				float y = basePos.y + Mathf.Sin((float)frames * (180f / (float)framesToFreefall) * (MathF.PI / 180f)) * yStrength;
 				base.transform.position = new Vector3(base.transform.position.x + xVelocity, y);
 				if (frames == framesToFreefall)
 				{

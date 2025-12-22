@@ -25,7 +25,7 @@ public class OverworldUFO : OverworldEnemyBase
 			{
 				wanderingFrames++;
 				wanderingForward = true;
-				float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
+				float f = UnityEngine.Random.Range(0f, MathF.PI * 2f);
 				targetLocation = base.transform.position + new Vector3(Mathf.Cos(f), Mathf.Sin(f)) * 20f;
 				if (targetLocation.x <= base.transform.position.x)
 				{
@@ -76,7 +76,7 @@ public class OverworldUFO : OverworldEnemyBase
 	{
 		if (frames == 0)
 		{
-			targetLocation = Vector3.MoveTowards(base.transform.position, UnityEngine.Object.FindObjectOfType<OverworldPlayer>().transform.position, 20f) - base.transform.position;
+			targetLocation = Vector3.MoveTowards(base.transform.position, Util.OverworldPlayer().transform.position, 20f) - base.transform.position;
 			targetLocation *= 100f;
 			if ((targetLocation.x <= base.transform.position.x && !runFromPlayer) || (targetLocation.x > base.transform.position.x && runFromPlayer))
 			{

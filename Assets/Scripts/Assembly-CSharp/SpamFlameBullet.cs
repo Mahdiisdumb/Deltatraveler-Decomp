@@ -25,7 +25,7 @@ public class SpamFlameBullet : FlameBullet
 	{
 		base.Update();
 		angle += 12f;
-		float num = (Mathf.Cos(angle * ((float)Math.PI / 180f)) - 1f) * (float)multi / 2f;
+		float num = (Mathf.Cos(angle * (MathF.PI / 180f)) - 1f) * (float)multi / 2f;
 		if (falling)
 		{
 			speed += gravity;

@@ -49,7 +49,7 @@ public class Dogaressa : EnemyBase
 		{
 			return;
 		}
-		int bodyFrames = Object.FindObjectOfType<Dogamy>().GetBodyFrames();
+		int bodyFrames = Util.FindObjectOfType<Dogamy>().GetBodyFrames();
 		if (bodyFrames > 20)
 		{
 			int num = (bodyFrames - 20) / 7;
@@ -74,14 +74,14 @@ public class Dogaressa : EnemyBase
 	{
 		if (GetActNames()[i] == "Pet")
 		{
-			if (!Object.FindObjectOfType<Dogamy>().IsKilled())
+			if (!Util.FindObjectOfType<Dogamy>().IsKilled())
 			{
-				if (Object.FindObjectOfType<Dogamy>().CanPet())
+				if (Util.FindObjectOfType<Dogamy>().CanPet())
 				{
-					Object.FindObjectOfType<Dogamy>().SetResponseFromDogaressa(3);
+					Util.FindObjectOfType<Dogamy>().SetResponseFromDogaressa(3);
 					if (satisfied < 100)
 					{
-						if (Object.FindObjectOfType<Dogamy>().GetSatisfactionLevel() >= 100)
+						if (Util.FindObjectOfType<Dogamy>().GetSatisfactionLevel() >= 100)
 						{
 							satisfied = 75;
 						}
@@ -93,29 +93,29 @@ public class Dogaressa : EnemyBase
 					}
 					return new string[1] { "* You pet the Dogaressa." };
 				}
-				Object.FindObjectOfType<Dogamy>().SetResponseFromDogaressa(1);
+				Util.FindObjectOfType<Dogamy>().SetResponseFromDogaressa(1);
 				return new string[1] { "* The Dogaressa is too\n  suspicious of your smell." };
 			}
 			return new string[1] { "* The Dogaressa just growls\n  at you." };
 		}
 		if (GetActNames()[i] == "Re-sniff")
 		{
-			if (Object.FindObjectOfType<Dogamy>().IsKilled())
+			if (Util.FindObjectOfType<Dogamy>().IsKilled())
 			{
 				return new string[1] { "* The Dogaressa won't even\n  lift up her snout." };
 			}
-			return Object.FindObjectOfType<Dogamy>().PerformAct(i);
+			return Util.FindObjectOfType<Dogamy>().PerformAct(i);
 		}
 		if (GetActNames()[i] == "Roll Around")
 		{
-			return Object.FindObjectOfType<Dogamy>().PerformAct(i);
+			return Util.FindObjectOfType<Dogamy>().PerformAct(i);
 		}
 		return base.PerformAct(i);
 	}
 
 	public override bool CanSpare()
 	{
-		if (satisfied >= 100 && Object.FindObjectOfType<Dogamy>().GetSatisfactionLevel() >= 100)
+		if (satisfied >= 100 && Util.FindObjectOfType<Dogamy>().GetSatisfactionLevel() >= 100)
 		{
 			return !hostile;
 		}
@@ -124,14 +124,14 @@ public class Dogaressa : EnemyBase
 
 	public override void Chat(string[] text, string type, string sound, Vector2 pos, bool canSkip, int speed)
 	{
-		if (!Object.FindObjectOfType<Dogamy>().IsDone())
+		if (!Util.FindObjectOfType<Dogamy>().IsDone())
 		{
-			int dialogue = (int)Object.FindObjectOfType<Dogamy>().GetDialogue();
+			int dialogue = (int)Util.FindObjectOfType<Dogamy>().GetDialogue();
 			text[0] = (new string[9] { "(Don't, \nactually \n...)", "(He \nmeans \nme.)", "(When \nwill \nthey do \nanother \none???)", "(Are \nthey \neven \nhuman?)", "(That's \nnot your \nhusband, \nOK?)", "(Beware \nof \ndog.)", "(...Okay, \nyou were \njust \npranking \nus.)", "(Well. \nDon't \nleave me \nout!)", "(A dog \nthat pets \ndogs... \nAmazing!)" })[dialogue];
 		}
 		else
 		{
-			if (Object.FindObjectOfType<Dogamy>().IsKilled() && !killed && !hostile)
+			if (Util.FindObjectOfType<Dogamy>().IsKilled() && !killed && !hostile)
 			{
 				renderSpareBar = false;
 				hostile = true;

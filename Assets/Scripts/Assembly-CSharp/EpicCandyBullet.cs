@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class EpicCandyBullet : BulletBase
 {
 	protected override void Awake()
@@ -12,6 +10,6 @@ public class EpicCandyBullet : BulletBase
 	public override void PreSOULHit()
 	{
 		base.PreSOULHit();
-		Object.FindObjectOfType<TPBar>().AddTP(16);
+		Util.FindObjectOfType<TPBar>().AddTP(16);
 	}
 }

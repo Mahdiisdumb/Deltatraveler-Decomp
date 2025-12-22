@@ -50,7 +50,7 @@ public class PorkyLegBullet : BulletBase
 				goingDown = false;
 				GetComponent<AudioSource>().volume = 0.5f;
 				PlaySFX("sounds/snd_crash");
-				Object.FindObjectOfType<BattleCamera>().BlastShake();
+				Util.FindObjectOfType<BattleCamera>().BlastShake();
 			}
 		}
 		else
@@ -67,7 +67,7 @@ public class PorkyLegBullet : BulletBase
 	{
 		if (activated)
 		{
-			GetComponent<SpriteRenderer>().color = Object.FindObjectOfType<Porky>().GetLegColor(leg);
+			GetComponent<SpriteRenderer>().color = Util.FindObjectOfType<Porky>().GetLegColor(leg);
 		}
 	}
 
@@ -92,7 +92,7 @@ public class PorkyLegBullet : BulletBase
 			base.transform.position = new Vector3(Random.Range(-1.392f, 1.392f), 1.35f * (0f - dir.y) - 1.66f);
 			base.transform.localEulerAngles = new Vector3(0f, 0f, (dir.y != -1f) ? 180 : 0);
 		}
-		baseDmg = 9 - Object.FindObjectOfType<Porky>().GetLegStates()[leg];
+		baseDmg = 9 - Util.FindObjectOfType<Porky>().GetLegStates()[leg];
 		activated = true;
 	}
 
@@ -102,8 +102,8 @@ public class PorkyLegBullet : BulletBase
 		{
 			parried = true;
 			GetComponent<PolygonCollider2D>().enabled = false;
-			Object.FindObjectOfType<Porky>().ToppleSpecificLeg(leg);
-			Object.FindObjectOfType<TPBar>().AddTP(2);
+			Util.FindObjectOfType<Porky>().ToppleSpecificLeg(leg);
+			Util.FindObjectOfType<TPBar>().AddTP(2);
 		}
 	}
 }

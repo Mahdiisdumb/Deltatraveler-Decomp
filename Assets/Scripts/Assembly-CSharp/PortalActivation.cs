@@ -6,7 +6,7 @@ public class PortalActivation : StateMachineBehaviour
 	{
 		if (stateInfo.IsName("Activate"))
 		{
-			animator.SetBool("activated", true);
+			animator.SetBool("activated", value: true);
 		}
 	}
 }

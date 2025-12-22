@@ -22,10 +22,10 @@ public class SusieLDAttack : AttackBase
 	{
 		base.Awake();
 		bbSize = new Vector3(165f, 140f);
-		Object.FindObjectOfType<BattleManager>().GetComponent<MusicPlayer>().FadeOut(2f);
+		Util.FindObjectOfType<BattleManager>().GetComponent<MusicPlayer>().FadeOut(2f);
 		axePrefab = Resources.Load<GameObject>("battle/attacks/bullets/snowdin/SusieLDAxeBullet");
 		rudeBusterPrefab = Resources.Load<GameObject>("battle/attacks/bullets/snowdin/SusieLDBigRudeBuster");
-		susie = Object.FindObjectOfType<SusieLD>();
+		susie = Util.FindObjectOfType<SusieLD>();
 	}
 
 	protected override void Update()
@@ -49,7 +49,7 @@ public class SusieLDAttack : AttackBase
 					"...",
 					"Think about what I \ndid in the <color=#FF0000FF>Dark \nWorld</color>?",
 					"Hmm..."
-				}, "RightWide", "snd_txtsus", Vector2.zero, true, 0);
+				}, "RightWide", "snd_txtsus", Vector2.zero, canSkip: true, 0);
 				state = 1;
 				frames = 0;
 			}
@@ -112,17 +112,17 @@ public class SusieLDAttack : AttackBase
 			}
 			if (frames == 90)
 			{
-				susie.Chat(new string[1] { "(So like when me \nand Lancer fought \nKris and Ralsei...)" }, "RightWide", "snd_txtsus", Vector2.zero, false, 0);
+				susie.Chat(new string[1] { "(So like when me \nand Lancer fought \nKris and Ralsei...)" }, "RightWide", "snd_txtsus", Vector2.zero, canSkip: false, 0);
 				susie.GetTextBubble().Disable();
 			}
 			if (frames == 220)
 			{
-				susie.Chat(new string[1] { "(But that's lame...)" }, "RightWide", "snd_txtsus", Vector2.zero, false, 0);
+				susie.Chat(new string[1] { "(But that's lame...)" }, "RightWide", "snd_txtsus", Vector2.zero, canSkip: false, 0);
 				susie.GetTextBubble().Disable();
 			}
 			if (frames == 420)
 			{
-				susie.Chat(new string[1] { "(Hm^03m^03m^03m^03m^03m^03...)" }, "RightWide", "snd_txtsus", Vector2.zero, false, 0);
+				susie.Chat(new string[1] { "(Hm^03m^03m^03m^03m^03m^03...)" }, "RightWide", "snd_txtsus", Vector2.zero, canSkip: false, 0);
 				susie.GetTextBubble().Disable();
 			}
 			if (frames == 160 || frames == 280 || frames == 520)
@@ -132,7 +132,7 @@ public class SusieLDAttack : AttackBase
 			if (frames == 660 || (frames == 1 && debug))
 			{
 				Util.GameManager().PlayGlobalSFX("sounds/snd_bell");
-				susie.Chat(new string[2] { "Oh wait no duh.", "RUDE BUSTER!!!!!!" }, "RightWide", "snd_txtsus", Vector2.zero, false, 0);
+				susie.Chat(new string[2] { "Oh wait no duh.", "RUDE BUSTER!!!!!!" }, "RightWide", "snd_txtsus", Vector2.zero, canSkip: false, 0);
 				susie.GetPart("body").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Susie/spr_b_susie_notice");
 				frames = 0;
 				state = 3;
@@ -155,9 +155,9 @@ public class SusieLDAttack : AttackBase
 				susie.GetPart("body").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Susie/spr_b_susie_rudebuster_" + num);
 				if (frames == 9)
 				{
-					Object.FindObjectOfType<TPBar>().RemoveTP(50);
+					Util.FindObjectOfType<TPBar>().RemoveTP(50);
 					susie.PlaySFX("sounds/snd_rudebuster_swing");
-					spawnOnRightFirst = Object.FindObjectOfType<SOUL>().transform.position.x >= 0f;
+					spawnOnRightFirst = Util.FindObjectOfType<SOUL>().transform.position.x >= 0f;
 					int num2 = (spawnOnRightFirst ? 1 : (-1));
 					Object.Instantiate(rudeBusterPrefab, new Vector3(0.45f * (float)num2, 4f), Quaternion.Euler(0f, 0f, 90 - 30 * num2), base.transform);
 					Object.Instantiate(rudeBusterPrefab, new Vector3(0f, 4.5f), Quaternion.Euler(0f, 0f, 90f), base.transform);
@@ -174,7 +174,7 @@ public class SusieLDAttack : AttackBase
 				}
 				if (frames == 79)
 				{
-					susie.Chat(new string[10] { "I dunno why I \ndidn't think of that \nsooner.", "Huh?^05\nI was shooting \nbullets at you?", "No way.", "I wasn't even doing \nanything.", "I was thinking about \nhow I could try to \nthrow a bunch of \naxes at your heart.", "... That's actually \nwhat HAPPENED?????", "...", "Damn,^05 I'll keep that \nin mind next time \nI have to do \nthis.", "But,^05 uhh...", "I guess we should \nget going." }, "RightWide", "snd_txtsus", Vector2.zero, true, 0);
+					susie.Chat(new string[10] { "I dunno why I \ndidn't think of that \nsooner.", "Huh?^05\nI was shooting \nbullets at you?", "No way.", "I wasn't even doing \nanything.", "I was thinking about \nhow I could try to \nthrow a bunch of \naxes at your heart.", "... That's actually \nwhat HAPPENED?????", "...", "Damn,^05 I'll keep that \nin mind next time \nI have to do \nthis.", "But,^05 uhh...", "I guess we should \nget going." }, "RightWide", "snd_txtsus", Vector2.zero, canSkip: true, 0);
 					state = 4;
 					susie.GetPart("body").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Susie/spr_b_susie_confident");
 				}

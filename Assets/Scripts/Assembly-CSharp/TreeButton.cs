@@ -14,11 +14,11 @@ public class TreeButton : InteractSelectionBase
 			frames++;
 			if (frames == 1)
 			{
-				Object.FindObjectOfType<OverworldPlayer>().ChangeDirection(Vector2.down);
+				Util.OverworldPlayer().ChangeDirection(Vector2.down);
 			}
 			if (frames == 30)
 			{
-				Object.Instantiate(Resources.Load<GameObject>("vfx/RealisticExplosion"), Object.FindObjectOfType<OverworldPlayer>().transform.position, Quaternion.identity).transform.localScale = new Vector2(3f, 3f);
+				Object.Instantiate(Resources.Load<GameObject>("vfx/RealisticExplosion"), Util.OverworldPlayer().transform.position, Quaternion.identity).transform.localScale = new Vector2(3f, 3f);
 			}
 			if (frames == 40)
 			{
@@ -32,7 +32,7 @@ public class TreeButton : InteractSelectionBase
 		if (index == Vector2.left)
 		{
 			txt = new GameObject("TreeButtonTxt").AddComponent<TextBox>();
-			txt.CreateBox(new string[1] { "* (You pressed the button.)" }, false);
+			txt.CreateBox(new string[1] { "* (You pressed the button.)" }, giveBackControl: false);
 			explode = true;
 			Util.GameManager().SetPersistentFlag(2, 1);
 			Util.GameManager().PlayGlobalSFX("sounds/snd_item");
@@ -41,7 +41,7 @@ public class TreeButton : InteractSelectionBase
 		else
 		{
 			txt = new GameObject("TreeButtonTxt").AddComponent<TextBox>();
-			txt.CreateBox(new string[1] { "* (You resisted the urge to press\n  the button.)" }, true);
+			txt.CreateBox(new string[1] { "* (You resisted the urge to press\n  the button.)" }, giveBackControl: true);
 		}
 		selectActivated = false;
 	}

@@ -11,7 +11,7 @@ public class GlitchText : InteractTextBox
 	protected override void Awake()
 	{
 		interactsTaken = Random.Range(15, 25);
-		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(87) >= 5)
+		if ((int)Util.GameManager().GetFlag(87) >= 5)
 		{
 			Object.Destroy(base.gameObject);
 		}

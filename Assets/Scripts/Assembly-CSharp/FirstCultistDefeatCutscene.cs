@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FirstCultistDefeatCutscene : CutsceneBase
@@ -8,16 +7,6 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 	private Animator creepyLady;
 
 	private int cutsceneMode;
-
-	public override Dictionary<string, string[]> GetDefaultStrings()
-	{
-		Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
-		dictionary.Add("spared_0", new string[4] { "* ...", "* Well...^10 after that...", "* I might need to think about\n  this whole blue thing.", "* Excuse me." });
-		dictionary.Add("spared_1", new string[4] { "* Painting the whole\n  world blue??", "* What on earth does\n  that mean?", "* I guess this place\n  is for some weird\n  cult thing?", "* We should go look\n  around." });
-		dictionary.Add("ob_spare_after_0", new string[4] { "* But uhh,^05 Kris.", "* You decided to spare\n  the first human we\n  fight?", "* ...", "* I guess it's better\n  than...^10 well...^10\n  doing the opposite." });
-		dictionary.Add("ranaway_0", new string[5] { "* Heheheh....\n^05* Looks like we taught\n  THEM a lesson!", "* Painting the whole\n  world blue??", "* What on earth does\n  that mean?", "* I guess this place\n  is for some weird\n  cult thing?", "* We should go look\n  around." });
-		return dictionary;
-	}
 
 	private void Update()
 	{
@@ -32,7 +21,7 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 				frames++;
 				if (frames == 1)
 				{
-					cultist.SetBool("isMoving", true);
+					cultist.SetBool("isMoving", value: true);
 				}
 				if (frames == 15)
 				{
@@ -63,7 +52,7 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 				{
 					kris.ChangeDirection(Vector2.right);
 					susie.ChangeDirection(Vector2.down);
-					StartText(GetStringArray("spared_1"), new string[4] { "snd_txtnoe", "snd_txtnoe", "snd_txtsus", "snd_txtsus" }, new int[18], new string[4] { "no_confused", "no_confused_side", "su_side", "su_smirk" }, 1);
+					StartText(new string[4] { "* Painting the whole\n  world blue??", "* What on earth does\n  that mean?", "* I guess this place\n  is for some weird\n  cult thing?", "* We should go look\n  around." }, new string[4] { "snd_txtnoe", "snd_txtnoe", "snd_txtsus", "snd_txtsus" }, new int[18], new string[4] { "no_confused", "no_confused_side", "su_side", "su_smirk" }, 1);
 					frames = 0;
 					state = 1;
 				}
@@ -75,7 +64,7 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 					frames = 0;
 					state = 2;
 					susie.ChangeDirection(Vector2.left);
-					StartText(GetStringArray("ob_spare_after_0"), new string[4] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[18], new string[4] { "su_neutral", "su_annoyed", "su_side", "su_dejected" }, 1);
+					StartText(new string[4] { "* But uhh,^05 Kris.", "* You decided to spare\n  the first human we\n  fight?", "* ...", "* I guess it's better\n  than...^10 well...^10\n  doing the opposite." }, new string[4] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[18], new string[4] { "su_neutral", "su_annoyed", "su_side", "su_dejected" }, 1);
 				}
 				else if (cam.transform.position != cam.GetClampedPos())
 				{
@@ -84,13 +73,13 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 				else
 				{
 					cultist.transform.position = new Vector3(0f, 500f);
-					kris.SetSelfAnimControl(true);
-					susie.SetSelfAnimControl(true);
-					noelle.SetSelfAnimControl(true);
+					kris.SetSelfAnimControl(setAnimControl: true);
+					susie.SetSelfAnimControl(setAnimControl: true);
+					noelle.SetSelfAnimControl(setAnimControl: true);
 					susie.UseHappySprites();
 					noelle.UseHappySprites();
 					kris.ChangeDirection(Vector2.down);
-					cam.SetFollowPlayer(true);
+					cam.SetFollowPlayer(follow: true);
 					gm.SetCheckpoint(56);
 					EndCutscene();
 				}
@@ -176,12 +165,12 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 					return;
 				}
 				cultist.transform.position = new Vector3(0f, 500f);
-				kris.SetSelfAnimControl(true);
-				susie.SetSelfAnimControl(true);
-				noelle.SetSelfAnimControl(true);
+				kris.SetSelfAnimControl(setAnimControl: true);
+				susie.SetSelfAnimControl(setAnimControl: true);
+				noelle.SetSelfAnimControl(setAnimControl: true);
 				susie.UseHappySprites();
 				kris.ChangeDirection(Vector2.down);
-				cam.SetFollowPlayer(true);
+				cam.SetFollowPlayer(follow: true);
 				gm.SetCheckpoint(56);
 				EndCutscene();
 			}
@@ -196,7 +185,7 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 					kris.ChangeDirection(Vector2.right);
 					susie.ChangeDirection(Vector2.down);
 					noelle.ChangeDirection(Vector2.up);
-					StartText(GetStringArray("ranaway_0"), new string[5] { "snd_txtsus", "snd_txtnoe", "snd_txtnoe", "snd_txtsus", "snd_txtsus" }, new int[18], new string[5] { "su_confident", "no_confused", "no_confused_side", "su_side", "su_smirk" }, 1);
+					StartText(new string[5] { "* Heheheh....\n^05* Looks like we taught\n  THEM a lesson!", "* Painting the whole\n  world blue??", "* What on earth does\n  that mean?", "* I guess this place\n  is for some weird\n  cult thing?", "* We should go look\n  around." }, new string[5] { "snd_txtsus", "snd_txtnoe", "snd_txtnoe", "snd_txtsus", "snd_txtsus" }, new int[18], new string[5] { "su_confident", "no_confused", "no_confused_side", "su_side", "su_smirk" }, 1);
 					susie.DisableAnimator();
 					susie.SetSprite("spr_su_pose");
 					frames = 0;
@@ -214,13 +203,13 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 					cam.transform.position = Vector3.MoveTowards(cam.transform.position, cam.GetClampedPos(), 0.0625f);
 					return;
 				}
-				kris.SetSelfAnimControl(true);
-				susie.SetSelfAnimControl(true);
-				noelle.SetSelfAnimControl(true);
+				kris.SetSelfAnimControl(setAnimControl: true);
+				susie.SetSelfAnimControl(setAnimControl: true);
+				noelle.SetSelfAnimControl(setAnimControl: true);
 				susie.UseHappySprites();
 				noelle.UseHappySprites();
 				kris.ChangeDirection(Vector2.down);
-				cam.SetFollowPlayer(true);
+				cam.SetFollowPlayer(follow: true);
 				gm.SetCheckpoint(56);
 				EndCutscene();
 			}
@@ -256,7 +245,7 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 				if (frames == 1)
 				{
 					creepyLady.SetFloat("dirX", -1f);
-					creepyLady.SetBool("isMoving", true);
+					creepyLady.SetBool("isMoving", value: true);
 					creepyLady.SetFloat("speed", 0.75f);
 				}
 				creepyLady.transform.position = Vector3.Lerp(new Vector3(9.51f, -3.35f), new Vector3(6.94f, -2.26f), (float)frames / 45f);
@@ -267,7 +256,7 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 				}
 				if (frames == 45)
 				{
-					creepyLady.SetBool("isMoving", false);
+					creepyLady.SetBool("isMoving", value: false);
 				}
 				if (frames == 65)
 				{
@@ -280,7 +269,7 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 			{
 				if (creepyLady.transform.position.x != 0.98f)
 				{
-					creepyLady.SetBool("isMoving", true);
+					creepyLady.SetBool("isMoving", value: true);
 					creepyLady.transform.position = Vector3.MoveTowards(creepyLady.transform.position, new Vector3(0.98f, -2.26f), 1f / 12f);
 					if (creepyLady.transform.position.x < 3.07f)
 					{
@@ -295,7 +284,7 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 					{
 						susie.ChangeDirection(Vector2.left);
 						noelle.ChangeDirection(Vector2.left);
-						creepyLady.SetBool("isMoving", false);
+						creepyLady.SetBool("isMoving", value: false);
 					}
 					if (frames == 30)
 					{
@@ -391,16 +380,15 @@ public class FirstCultistDefeatCutscene : CutsceneBase
 			noelle.DisableAnimator();
 			noelle.SetSprite("spr_no_right_shocked_0");
 			gm.StopMusic();
+			return;
 		}
-		else if (cutsceneMode == 1)
+		if (cutsceneMode == 1)
 		{
 			susie.EnableAnimator();
 			cultist.transform.position = new Vector3(0f, -666f);
+			return;
 		}
-		else
-		{
-			susie.EnableAnimator();
-			StartText(GetStringArray("spared_0"), new string[4] { "snd_text", "snd_text", "snd_text", "snd_text" }, new int[18], new string[4] { "", "", "", "" }, 1);
-		}
+		susie.EnableAnimator();
+		StartText(new string[4] { "* ...", "* Well...^10 after that...", "* I might need to think about\n  this whole blue thing.", "* Excuse me." }, new string[4] { "snd_text", "snd_text", "snd_text", "snd_text" }, new int[18], new string[4] { "", "", "", "" }, 1);
 	}
 }

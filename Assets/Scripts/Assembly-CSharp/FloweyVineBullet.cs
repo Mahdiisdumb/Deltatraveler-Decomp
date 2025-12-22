@@ -74,8 +74,8 @@ public class FloweyVineBullet : BulletBase
 	{
 		activated = true;
 		this.startDir = startDir;
-		midDir = Vector3.MoveTowards(base.transform.position, Object.FindObjectOfType<SOUL>().transform.position, 1f / 48f) - base.transform.position;
-		base.transform.right = base.transform.position - Object.FindObjectOfType<SOUL>().transform.position;
+		midDir = Vector3.MoveTowards(base.transform.position, Util.FindObjectOfType<SOUL>().transform.position, 1f / 48f) - base.transform.position;
+		base.transform.right = base.transform.position - Util.FindObjectOfType<SOUL>().transform.position;
 		midStartSpot = base.transform.position + midDir * 32f;
 		line = base.transform.GetChild(0).GetComponent<SpriteRenderer>();
 		line.transform.parent = base.transform.parent;

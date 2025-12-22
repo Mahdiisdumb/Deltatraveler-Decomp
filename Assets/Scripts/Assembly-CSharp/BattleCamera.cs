@@ -11,6 +11,10 @@ public class BattleCamera : MonoBehaviour
 	{
 		frames = 0;
 		doShake = 0;
+		if (!UnityEngine.Object.FindAnyObjectByType<AudioListener>())
+		{
+			base.gameObject.AddComponent<AudioListener>();
+		}
 	}
 
 	private void Update()
@@ -37,7 +41,7 @@ public class BattleCamera : MonoBehaviour
 		else if (doShake == 2)
 		{
 			frames++;
-			float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
+			float f = UnityEngine.Random.Range(0f, MathF.PI * 2f);
 			if (frames == 1)
 			{
 				base.transform.position = new Vector3(Mathf.Cos(f) * -0.12f, Mathf.Sin(f) * -0.12f, -10f);
@@ -55,7 +59,7 @@ public class BattleCamera : MonoBehaviour
 		else if (doShake == 3)
 		{
 			frames++;
-			float f2 = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
+			float f2 = UnityEngine.Random.Range(0f, MathF.PI * 2f);
 			if (frames == 1)
 			{
 				base.transform.position = new Vector3(Mathf.Cos(f2) * -0.32f, Mathf.Sin(f2) * -0.32f, -10f);

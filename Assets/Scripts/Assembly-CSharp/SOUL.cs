@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SOUL : MonoBehaviour
@@ -13,7 +14,9 @@ public class SOUL : MonoBehaviour
 		Trap = 6
 	}
 
-	private static readonly Color[] SOUL_COLORS = new Color[7]
+	private readonly int AUTOFIRE_TIMER_DEFAULT = 6;
+
+	public static readonly Color[] SOUL_COLORS = new Color[7]
 	{
 		Color.red,
 		new Color32(0, 60, byte.MaxValue, byte.MaxValue),
@@ -24,7 +27,7 @@ public class SOUL : MonoBehaviour
 		new Color32(213, 53, 217, byte.MaxValue)
 	};
 
-	private static readonly Color[] PASTEL_SOUL_COLORS = new Color[7]
+	public static readonly Color[] PASTEL_SOUL_COLORS = new Color[7]
 	{
 		new Color32(byte.MaxValue, 102, 102, byte.MaxValue),
 		new Color32(102, 138, byte.MaxValue, byte.MaxValue),
@@ -128,6 +131,8 @@ public class SOUL : MonoBehaviour
 
 	private bool parryHoldThisFrame;
 
+	private bool parryLockout;
+
 	private bool dashing;
 
 	private bool dashUsed;
@@ -145,6 +150,10 @@ public class SOUL : MonoBehaviour
 	private Vector3 lastValiddashDir = Vector3.zero;
 
 	private bool dropThrough;
+
+	private bool autofire;
+
+	private int autofireTimer;
 
 	private int bigShotCharge;
 
@@ -190,6 +199,8 @@ public class SOUL : MonoBehaviour
 		emnDoReverse = false;
 		isGrabbed = false;
 		debugInv = false;
+		autofire = (int)Util.GameManager().GetFlag(333) == 1;
+		autofireTimer = AUTOFIRE_TIMER_DEFAULT;
 		sr = base.gameObject.AddComponent<SpriteRenderer>();
 		sr.sortingOrder = 100;
 		sr.sprite = Resources.Load<Sprite>("battle/spr_soul");
@@ -263,7 +274,7 @@ public class SOUL : MonoBehaviour
 						}
 						if (dashFrames <= 6)
 						{
-							DashEffect component = Object.Instantiate(Resources.Load<GameObject>("vfx/DashEffect"), base.transform.position, Quaternion.identity).GetComponent<DashEffect>();
+							DashEffect component = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/DashEffect"), base.transform.position, Quaternion.identity).GetComponent<DashEffect>();
 							component.transform.eulerAngles = base.transform.eulerAngles;
 							component.SetAttributes(soulColor, sr);
 						}
@@ -419,7 +430,7 @@ public class SOUL : MonoBehaviour
 					}
 					if (yDashFrames < 4)
 					{
-						Object.Instantiate(Resources.Load<GameObject>("vfx/DashEffect"), base.transform.position, Quaternion.identity).GetComponent<DashEffect>().SetAttributes(soulColor, sr);
+						UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/DashEffect"), base.transform.position, Quaternion.identity).GetComponent<DashEffect>().SetAttributes(soulColor, sr);
 					}
 					yDashFrames++;
 					if (bigShotCharge < 20)
@@ -483,20 +494,26 @@ public class SOUL : MonoBehaviour
 			}
 			else if (soulMode == SoulMode.Shoot)
 			{
+				if (autofire && inControl && bigShotCharge == 0)
+				{
+					autofireTimer--;
+				}
 				if (bigShotDelay > 0)
 				{
 					bigShotDelay--;
 				}
-				if (UTInput.GetButtonDown("Z") && bigShotDelay == 0 && Object.FindObjectsOfType<SOULShot>().Length < 4 && inControl)
+				if ((UTInput.GetButtonDown("Z") || (autofire && autofireTimer <= 0)) && bigShotDelay == 0 && Util.FindObjectsOfType<SOULShot>().Length < 4 && inControl)
 				{
-					Object.Instantiate(Resources.Load<GameObject>("battle/SOULShot"), base.transform.position + new Vector3(0f, 0.3f), Quaternion.identity);
+					UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SOULShot"), base.transform.position + new Vector3(0f, 0.3f), Quaternion.identity);
+					autofireTimer = AUTOFIRE_TIMER_DEFAULT;
 				}
 				if (UTInput.GetButton("Z") && bigShotCharge < 20 && inControl)
 				{
+					autofireTimer = AUTOFIRE_TIMER_DEFAULT;
 					bigShotCharge++;
 					if (bigShotCharge == 5)
 					{
-						Object.Instantiate(Resources.Load<GameObject>("vfx/SOULShotChargeEffect"), base.transform).GetComponent<SOULShotChargeEffect>().Activate(this);
+						UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/SOULShotChargeEffect"), base.transform).GetComponent<SOULShotChargeEffect>().Activate(this);
 					}
 					if (bigShotCharge < 15)
 					{
@@ -509,13 +526,14 @@ public class SOUL : MonoBehaviour
 				}
 				if (UTInput.GetButtonUp("Z") && inControl)
 				{
-					if (bigShotCharge >= 5 && bigShotCharge < 20 && Object.FindObjectsOfType<SOULShot>().Length < 4)
+					autofireTimer = AUTOFIRE_TIMER_DEFAULT;
+					if (bigShotCharge >= 5 && bigShotCharge < 20 && Util.FindObjectsOfType<SOULShot>().Length < 4)
 					{
-						Object.Instantiate(Resources.Load<GameObject>("battle/SOULShot"), base.transform.position + new Vector3(0f, 0.3f), Quaternion.identity);
+						UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SOULShot"), base.transform.position + new Vector3(0f, 0.3f), Quaternion.identity);
 					}
 					else if (bigShotCharge >= 20)
 					{
-						Object.Instantiate(Resources.Load<GameObject>("battle/BigShot"), base.transform.position + new Vector3(0f, 0.168f), Quaternion.identity);
+						UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/BigShot"), base.transform.position + new Vector3(0f, 0.168f), Quaternion.identity);
 						bigShotCheating++;
 						bigShotDelay = 5;
 					}
@@ -524,7 +542,7 @@ public class SOUL : MonoBehaviour
 				{
 					if ((bool)GetComponentInChildren<SOULShotChargeEffect>())
 					{
-						Object.Destroy(GetComponentInChildren<SOULShotChargeEffect>().gameObject);
+						UnityEngine.Object.Destroy(GetComponentInChildren<SOULShotChargeEffect>().gameObject);
 					}
 					if (!yDashActive)
 					{
@@ -542,8 +560,8 @@ public class SOUL : MonoBehaviour
 				sr.enabled = false;
 				for (int i = 0; i < 6; i++)
 				{
-					GameObject obj = Object.Instantiate(Resources.Load<GameObject>("battle/SOULPiece"), base.gameObject.transform);
-					obj.transform.localPosition = new Vector2(Random.Range(-0.14f, 0.14f), Random.Range(-0.14f, 0.14f));
+					GameObject obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SOULPiece"), base.gameObject.transform);
+					obj.transform.localPosition = new Vector2(UnityEngine.Random.Range(-0.14f, 0.14f), UnityEngine.Random.Range(-0.14f, 0.14f));
 					obj.GetComponent<SOULPiece>().ChangeSOULColor(soulColor);
 					obj.GetComponent<SOULPiece>().StartMoving();
 				}
@@ -582,7 +600,7 @@ public class SOUL : MonoBehaviour
 				if ((bool)GetComponentInChildren<SOULChargeEffect>() && (bool)drainGraphic && soulMode == SoulMode.Slow)
 				{
 					drainGraphic.SetGraphicType(0, Color.white);
-					Object.Destroy(GetComponentInChildren<SOULChargeEffect>().gameObject);
+					UnityEngine.Object.Destroy(GetComponentInChildren<SOULChargeEffect>().gameObject);
 				}
 				hurt = false;
 				frames = 0;
@@ -633,7 +651,7 @@ public class SOUL : MonoBehaviour
 				aud.Play();
 				aud2.clip = Resources.Load<AudioClip>("sounds/snd_crash");
 				aud2.Play();
-				Object.FindObjectOfType<BattleCamera>().BlastShake();
+				Util.FindObjectOfType<BattleCamera>().BlastShake();
 			}
 		}
 		if (lightShieldActivated)
@@ -657,6 +675,7 @@ public class SOUL : MonoBehaviour
 		}
 		dashHoldThisFrame = false;
 		parryHoldThisFrame = false;
+		parryLockout = false;
 	}
 
 	private void PlatformDetection()
@@ -715,7 +734,7 @@ public class SOUL : MonoBehaviour
 				}
 				hitGround = true;
 				blueGravity = 0f;
-				Object.FindObjectOfType<SOULGraze>().AddTPBuildup(curPlatform.GetTPGain());
+				Util.FindObjectOfType<SOULGraze>().AddTPBuildup(curPlatform.GetTPGain());
 				curPlatform.Landed();
 			}
 			else if (soulMode == SoulMode.Fall)
@@ -788,12 +807,20 @@ public class SOUL : MonoBehaviour
 		inControl = boo;
 		isGrabbed = false;
 		ResetDash();
+		if (inControl)
+		{
+			autofireTimer = 0;
+		}
 	}
 
 	public void SetFrozen(bool boo)
 	{
 		inControl = !boo;
 		isGrabbed = boo;
+		if (inControl)
+		{
+			autofireTimer = 0;
+		}
 	}
 
 	public void Break()
@@ -814,9 +841,9 @@ public class SOUL : MonoBehaviour
 		aud.Play();
 		for (int i = 0; i < 3; i++)
 		{
-			if (Object.FindObjectOfType<PartyPanels>().GetTargettedMembers()[i])
+			if (Util.FindObjectOfType<PartyPanels>().GetTargettedMembers()[i])
 			{
-				Object.FindObjectOfType<GameManager>().Heal(i, hp);
+				Util.GameManager().Heal(i, hp);
 			}
 		}
 	}
@@ -829,18 +856,18 @@ public class SOUL : MonoBehaviour
 			return;
 		}
 		lastValiddashDir = vector;
-		if (!inControl && isGrabbed && (bool)Object.FindObjectOfType<JumpDashTutorial>() && UTInput.GetButtonDown("Z") && UTInput.GetAxisRaw("Vertical") > 0f)
+		if (!inControl && isGrabbed && (bool)Util.FindObjectOfType<JumpDashTutorial>() && UTInput.GetButtonDown("Z") && UTInput.GetAxisRaw("Vertical") > 0f)
 		{
-			SetFrozen(false);
-			Object.FindObjectOfType<JumpDashTutorial>().Unfreeze();
+			SetFrozen(boo: false);
+			Util.FindObjectOfType<JumpDashTutorial>().Unfreeze();
 		}
 		if (soulMode != SoulMode.Jump || !inControl || dashing || !UTInput.GetButtonDown("Z") || dashHoldThisFrame || !(lastValiddashDir != Vector3.zero) || dashUsed)
 		{
 			return;
 		}
-		if ((bool)Object.FindObjectOfType<JumpDashTutorial>())
+		if ((bool)Util.FindObjectOfType<JumpDashTutorial>())
 		{
-			Object.Destroy(Object.FindObjectOfType<JumpDashTutorial>().gameObject);
+			UnityEngine.Object.Destroy(Util.FindObjectOfType<JumpDashTutorial>().gameObject);
 		}
 		aud.clip = Resources.Load<AudioClip>("sounds/snd_bomb");
 		aud.Play();
@@ -890,7 +917,7 @@ public class SOUL : MonoBehaviour
 			dashDir *= 0.9f;
 		}
 		dashDir /= num;
-		Object.Instantiate(Resources.Load<GameObject>("vfx/SuccessfulDash"), base.transform.position, base.transform.rotation).GetComponent<SpriteRenderer>().sortingOrder = sr.sortingOrder - 20;
+		UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/SuccessfulDash"), base.transform.position, base.transform.rotation).GetComponent<SpriteRenderer>().sortingOrder = sr.sortingOrder - 20;
 	}
 
 	public void HandleYDash()
@@ -921,7 +948,7 @@ public class SOUL : MonoBehaviour
 
 	public void HandleParry()
 	{
-		if (soulMode == SoulMode.Slow && (!hurt || (hurt && parryDuringIframes)) && !parrying && UTInput.GetButtonDown("Z") && parryFrames >= 30 && inControl && !parryHoldThisFrame)
+		if (soulMode == SoulMode.Slow && (!hurt || (hurt && parryDuringIframes)) && !parrying && UTInput.GetButtonDown("Z") && parryFrames >= 30 && inControl && !parryHoldThisFrame && !parryLockout)
 		{
 			aud.clip = Resources.Load<AudioClip>("sounds/snd_bell_bounce_short");
 			aud.Play();
@@ -939,6 +966,7 @@ public class SOUL : MonoBehaviour
 		}
 		if (parrying && (!hurt || (hurt && parryDuringIframes)))
 		{
+			parryLockout = true;
 			MonoBehaviour.print("Parry Calc");
 			int num = 5;
 			if (hurt)
@@ -948,7 +976,7 @@ public class SOUL : MonoBehaviour
 			MonoBehaviour.print("TP GAIN: " + num);
 			if (num > 0)
 			{
-				Object.FindObjectOfType<TPBar>().AddTP(num);
+				Util.FindObjectOfType<TPBar>().AddTP(num);
 			}
 			if (hurt)
 			{
@@ -966,10 +994,10 @@ public class SOUL : MonoBehaviour
 			parrying = false;
 			parryFrames = 30;
 			parryDuringIframes = true;
-			Object.Instantiate(Resources.Load<GameObject>("vfx/SuccessfulParry"), base.transform.position, Quaternion.identity).GetComponent<SpriteRenderer>().sortingOrder = sr.sortingOrder - 20;
+			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/SuccessfulParry"), base.transform.position, Quaternion.identity).GetComponent<SpriteRenderer>().sortingOrder = sr.sortingOrder - 20;
 			if (!GetComponentInChildren<SOULChargeEffect>())
 			{
-				SOULChargeEffect component = Object.Instantiate(Resources.Load<GameObject>("vfx/SOULChargeEffect"), base.transform).GetComponent<SOULChargeEffect>();
+				SOULChargeEffect component = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("vfx/SOULChargeEffect"), base.transform).GetComponent<SOULChargeEffect>();
 				component.transform.localPosition = Vector3.zero;
 				component.Activate(this);
 			}
@@ -977,9 +1005,9 @@ public class SOUL : MonoBehaviour
 			{
 				lastHitBullet.Parry();
 			}
-			if ((bool)Object.FindObjectOfType<Porky>())
+			if ((bool)Util.FindObjectOfType<Porky>())
 			{
-				Object.FindObjectOfType<Porky>().DetectParry();
+				Util.FindObjectOfType<Porky>().DetectParry();
 			}
 		}
 	}
@@ -987,7 +1015,7 @@ public class SOUL : MonoBehaviour
 	public void Damage(int hp)
 	{
 		HandleParry();
-		if (parrying && (!hurt || (hurt && parryDuringIframes)))
+		if (parrying && (!hurt || (hurt && parryDuringIframes)) && !parryLockout)
 		{
 			HandleParryCollision();
 		}
@@ -1003,9 +1031,9 @@ public class SOUL : MonoBehaviour
 			hurt = true;
 			aud.clip = Resources.Load<AudioClip>("sounds/snd_hurt");
 			aud.Play();
-			if (Object.FindObjectOfType<BattleCamera>() != null && invFrames > 0)
+			if (Util.FindObjectOfType<BattleCamera>() != null && invFrames > 0)
 			{
-				Object.FindObjectOfType<BattleCamera>().HurtShake();
+				Util.FindObjectOfType<BattleCamera>().HurtShake();
 			}
 			GameManager gameManager = Util.GameManager();
 			gameManager.HandleDamageCalculations(hp, damageMulti);
@@ -1024,9 +1052,14 @@ public class SOUL : MonoBehaviour
 		}
 	}
 
-	public bool PapCharmWasHit(int partyMember)
+	public bool PapCharmWasHit(int slot)
 	{
-		if (!papCharmHit && Util.GameManager().GetArmor(partyMember) == 42)
+		bool flag = true;
+		if (slot > 2)
+		{
+			flag = false;
+		}
+		if (!papCharmHit && (Util.GameManager().GetArmor(slot) == 42 || (flag && Util.GameManager().GetArmor(slot + 3) == 42)))
 		{
 			aud.clip = Resources.Load<AudioClip>("sounds/snd_glassbreak");
 			aud.Play();
@@ -1082,18 +1115,18 @@ public class SOUL : MonoBehaviour
 	{
 		if ((bool)parryHitbox)
 		{
-			Object.Destroy(parryHitbox.gameObject);
+			UnityEngine.Object.Destroy(parryHitbox.gameObject);
 		}
 		SetGravityDirection(Vector2.down);
 		SoulMode soulMode = this.soulMode;
 		this.soulMode = mode;
 		if ((bool)GetComponentInChildren<SOULChargeEffect>())
 		{
-			Object.Destroy(GetComponentInChildren<SOULChargeEffect>().gameObject);
+			UnityEngine.Object.Destroy(GetComponentInChildren<SOULChargeEffect>().gameObject);
 		}
 		if ((bool)drainGraphic)
 		{
-			Object.Destroy(drainGraphic.gameObject);
+			UnityEngine.Object.Destroy(drainGraphic.gameObject);
 		}
 		sr.sortingOrder = 199;
 		grazer.GetComponent<CircleCollider2D>().radius = 0.45f;
@@ -1101,7 +1134,7 @@ public class SOUL : MonoBehaviour
 		grazer.GetComponent<SpriteRenderer>().flipY = sr.flipY;
 		if (this.soulMode == SoulMode.Jump)
 		{
-			drainGraphic = Object.Instantiate(Resources.Load<GameObject>("battle/SOULDrainGraphic"), base.transform).GetComponent<SOULDrainGraphic>();
+			drainGraphic = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SOULDrainGraphic"), base.transform).GetComponent<SOULDrainGraphic>();
 			drainGraphic.transform.localPosition = Vector3.zero;
 		}
 		else if (this.soulMode == SoulMode.Shield)
@@ -1119,7 +1152,7 @@ public class SOUL : MonoBehaviour
 				parryHitbox.SetParentSOUL(this);
 				parryHitbox.transform.parent = base.transform;
 				parryHitbox.transform.localPosition = Vector3.zero;
-				drainGraphic = Object.Instantiate(Resources.Load<GameObject>("battle/SOULDrainGraphic"), base.transform).GetComponent<SOULDrainGraphic>();
+				drainGraphic = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/SOULDrainGraphic"), base.transform).GetComponent<SOULDrainGraphic>();
 				drainGraphic.transform.localPosition = Vector3.zero;
 			}
 			else if (this.soulMode == SoulMode.Shoot)
@@ -1139,7 +1172,7 @@ public class SOUL : MonoBehaviour
 		AdjustSOULColor();
 		if (soulMode != this.soulMode && makeSound)
 		{
-			Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_bell");
+			Util.GameManager().PlayGlobalSFX("sounds/snd_bell");
 		}
 	}
 
@@ -1149,9 +1182,9 @@ public class SOUL : MonoBehaviour
 		soulMode = ((this.soulMode != SoulMode.Normal) ? this.soulMode : ((SoulMode)Util.GameManager().GetFlagInt(312)));
 		soulColor = GetSOULColorByID((int)soulMode);
 		sr.color = soulColor;
-		if (isPlayer && (bool)Object.FindObjectOfType<TouchPad>())
+		if (isPlayer && (bool)Util.FindObjectOfType<TouchPad>())
 		{
-			Object.FindObjectOfType<TouchPad>().SetSoulColor(soulColor);
+			Util.FindObjectOfType<TouchPad>().SetSoulColor(soulColor);
 		}
 	}
 
@@ -1217,7 +1250,7 @@ public class SOUL : MonoBehaviour
 
 	public static Color GetSOULColorByID(int i, bool forceNormal = false)
 	{
-		if (Util.GameManager().IsEasyMode())
+		if (!forceNormal && Util.GameManager().IsEasyMode())
 		{
 			return PASTEL_SOUL_COLORS[i];
 		}
@@ -1231,7 +1264,7 @@ public class SOUL : MonoBehaviour
 
 	public void BulletTriggerEnter(Collider2D collision)
 	{
-		if (!collision.gameObject.tag.Contains("Bullet") || collision.gameObject.layer == 2 || !isPlayer)
+		if (!collision || !collision.gameObject.tag.Contains("Bullet") || collision.gameObject.layer == 2 || !isPlayer)
 		{
 			return;
 		}
@@ -1245,7 +1278,7 @@ public class SOUL : MonoBehaviour
 			{
 				inControl = false;
 				isGrabbed = true;
-				base.transform.SetParent(collision.transform, true);
+				base.transform.SetParent(collision.transform, worldPositionStays: true);
 				base.transform.localPosition = Vector3.zero;
 			}
 		}
@@ -1259,7 +1292,7 @@ public class SOUL : MonoBehaviour
 
 	public void BulletTriggerStay(Collider2D collision)
 	{
-		if (collision.gameObject.tag.Contains("Bullet") && collision.gameObject.layer != 2 && isPlayer && ((collision.gameObject.tag.StartsWith("Blue") && isMoving) || (collision.gameObject.tag.StartsWith("Orange") && !isMoving) || collision.gameObject.tag == "Bullet"))
+		if ((bool)collision && collision.gameObject.tag.Contains("Bullet") && collision.gameObject.layer != 2 && isPlayer && ((collision.gameObject.tag.StartsWith("Blue") && isMoving) || (collision.gameObject.tag.StartsWith("Orange") && !isMoving) || collision.gameObject.tag == "Bullet"))
 		{
 			DamageSOUL(collision);
 		}
@@ -1267,7 +1300,7 @@ public class SOUL : MonoBehaviour
 
 	public void DamageSOUL(Collider2D collision)
 	{
-		if (collision.gameObject.GetComponentInParent<BulletBase>().GetBaseDamage() > -1)
+		if ((bool)collision && collision.gameObject.GetComponentInParent<BulletBase>().GetBaseDamage() > -1)
 		{
 			lastHitBullet = collision.GetComponent<BulletBase>();
 			int num = collision.gameObject.GetComponentInParent<BulletBase>().GetBaseDamage();
@@ -1311,7 +1344,7 @@ public class SOUL : MonoBehaviour
 	public void DebugMode()
 	{
 		int mode = (int)(soulMode + 1);
-		ChangeSOULMode(mode, true);
+		ChangeSOULMode(mode, makeSound: true);
 	}
 
 	public void DebugDamage(int hp)
@@ -1483,17 +1516,104 @@ public class SOUL : MonoBehaviour
 
 	public void UnoDamage(float percent)
 	{
-		Object.FindObjectOfType<UnoBattleManager>().UpdateFakeHP(percent);
+		Util.FindObjectOfType<UnoBattleManager>().UpdateFakeHP(percent);
 		aud.clip = Resources.Load<AudioClip>("sounds/snd_hurt");
 		aud.Play();
-		if (Object.FindObjectOfType<BattleCamera>() != null && invFrames > 0)
+		if (Util.FindObjectOfType<BattleCamera>() != null && invFrames > 0)
 		{
-			Object.FindObjectOfType<BattleCamera>().HurtShake();
+			Util.FindObjectOfType<BattleCamera>().HurtShake();
 		}
 	}
 
 	public void SetCollision(bool enabled)
 	{
 		GetComponent<BoxCollider2D>().enabled = enabled;
+	}
+
+	public bool IsShattered()
+	{
+		return shattered;
+	}
+
+	public int GetFrames()
+	{
+		return frames;
+	}
+
+	public static SOUL FindPlayerSOUL()
+	{
+		SOUL[] array = UnityEngine.Object.FindObjectsByType<SOUL>(FindObjectsSortMode.None);
+		foreach (SOUL sOUL in array)
+		{
+			if (sOUL.IsPlayer())
+			{
+				return sOUL;
+			}
+		}
+		return null;
+	}
+
+	public void EnableAutofire()
+	{
+		autofire = true;
+		autofireTimer = 0;
+	}
+
+	public void DisableAutofire()
+	{
+		autofire = false;
+	}
+
+	public static Color GetLightBarColor()
+	{
+		GameManager gameManager = Util.GameManager();
+		SOUL sOUL = FindPlayerSOUL();
+		ActionSOUL actionSOUL = UnityEngine.Object.FindFirstObjectByType<ActionSOUL>();
+		float num = (float)gameManager.GetCombinedHP() / (float)gameManager.GetCombinedMaxHP();
+		float num2 = 0.3f + Mathf.Sin(Time.time * MathF.PI) * 0.2f;
+		int num3 = 0;
+		if ((bool)actionSOUL)
+		{
+			num3 = actionSOUL.GetInvFrames();
+		}
+		else if ((bool)sOUL)
+		{
+			num3 = sOUL.GetInvFrames();
+		}
+		int i = (Util.OverworldPlayer() ? gameManager.GetFlagInt(312) : 0);
+		Color color = (sOUL ? sOUL.GetSOULColor() : GetSOULColorByID(i));
+		if ((bool)sOUL && color == Color.white)
+		{
+			color = GetSOULColorByID(sOUL.GetSOULMode());
+		}
+		if ((bool)sOUL && sOUL.IsShattered())
+		{
+			int num4 = sOUL.GetFrames();
+			if (num4 >= 5 && num4 < 25)
+			{
+				return color * 0.2f;
+			}
+			if (num4 >= 25 && num4 < 40)
+			{
+				if (UnityEngine.Random.Range(0, 3) != 0)
+				{
+					return color * 0.02f;
+				}
+				return color * 0.2f;
+			}
+			if (num4 >= 39)
+			{
+				return Color.black;
+			}
+		}
+		else if (num3 > 0)
+		{
+			if (num3 / 4 % 2 != 0)
+			{
+				return color * 0.1f;
+			}
+			return color * 0.6f;
+		}
+		return color * ((num < 0.2f) ? num2 : 0.6f);
 	}
 }

@@ -31,7 +31,7 @@ public class SnoreParticle : MonoBehaviour
 	public SnoreParticle CreateSnore(Vector2 firstPosition, float size)
 	{
 		snooze = base.gameObject.AddComponent<SpriteRenderer>();
-		snooze.sprite = Util.PackManager().GetTranslatedSprite(Resources.Load<Sprite>("ui/spr_snooze"), "ui/spr_snooze");
+		snooze.sprite = Resources.Load<Sprite>("ui/spr_snooze");
 		base.transform.localScale = new Vector2(size, size);
 		guranteedPosition = firstPosition;
 		base.transform.position = firstPosition;

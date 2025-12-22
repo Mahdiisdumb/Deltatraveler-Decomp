@@ -54,7 +54,7 @@ public class SansBG : MonoBehaviour
 		}
 		base.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(0f, 0f, 0f, 1f - (float)fadeFrames / 90f);
 		frames = (frames + 1) % 96;
-		float t = (0f - Mathf.Cos((float)frames * 3.75f * ((float)Math.PI / 180f)) + 1f) / 2f;
+		float t = (0f - Mathf.Cos((float)frames * 3.75f * (MathF.PI / 180f)) + 1f) / 2f;
 		base.transform.Find("TopGradient").localScale = new Vector3(1.25f, Mathf.Lerp(1f / 12f, 1f, t), 1f);
 		base.transform.Find("BottomGradient").localScale = new Vector3(1.25f, Mathf.Lerp(1f, 0.5f, t), 1f);
 		for (int i = 0; i < 6; i++)
@@ -66,7 +66,7 @@ public class SansBG : MonoBehaviour
 				{
 					num += 9;
 				}
-				t = Mathf.Sin((float)num * 3.75f * ((float)Math.PI / 180f));
+				t = Mathf.Sin((float)num * 3.75f * (MathF.PI / 180f));
 				Transform child = base.transform.Find(LAYERS[j]).GetChild(i);
 				child.localPosition = new Vector3(child.localPosition.x, 2.35f + 8f * t / 48f);
 			}

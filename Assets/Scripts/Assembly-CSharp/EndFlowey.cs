@@ -25,31 +25,38 @@ public class EndFlowey : MonoBehaviour
 
 	private bool bald;
 
+	private int callOutLine = -1;
+
+	private int skipCounter;
+
+	private bool canSkip = true;
+
 	private void Awake()
 	{
-		Util.GameManager();
+		GameManager gameManager = Util.GameManager();
+		Object.FindAnyObjectByType<Fade>().FadeIn(0);
 		text = GameObject.Find("FloweyText").GetComponent<TextUT>();
-		bool flag = PlayerPrefs.GetInt("LastFloweySection", 0) == 2;
+		bool flag = PersistentSAVE.GetInt("last-flowey-section", 0) == 2;
 		if (NOT_DEBUG)
 		{
-			PlayerPrefs.SetInt("LastFloweySection", 3);
+			PersistentSAVE.SetInt("last-flowey-section", 3);
 			if (flag)
 			{
-				PlayerPrefs.SetInt("FloweyIteration", 0);
+				PersistentSAVE.SetInt("flowey-iteration", 0);
 			}
 		}
-		bool flag2 = PlayerPrefs.GetInt("FloweyKilledLastTime", 0) == 3;
+		bool flag2 = PersistentSAVE.GetInt("flowey-killed-last-time", 0) == GameManager.FULL_COMPLETION;
 		if (flag2 && NOT_DEBUG)
 		{
-			PlayerPrefs.SetInt("FloweyKilledLastTime", 0);
+			PersistentSAVE.SetInt("flowey-killed-last-time", 0);
 		}
-		int num = PlayerPrefs.GetInt("FloweyIteration", 0);
+		int num = PersistentSAVE.GetInt("flowey-iteration", 0);
 		if (num < MAX_ITERATIONS && NOT_DEBUG)
 		{
-			PlayerPrefs.SetInt("FloweyIteration", num + 1);
+			PersistentSAVE.SetInt("flowey-iteration", num + 1);
 		}
-		bool flag3 = PlayerPrefs.GetInt("HardmodeCompletion", 0) == 1;
-		int num2 = PlayerPrefs.GetInt("HardModeReminder", 0);
+		bool flag3 = PersistentSAVE.GetInt("hardmode-completion", 0) == 1;
+		int num2 = PersistentSAVE.GetInt("hardmode-reminder", 0);
 		if (!NOT_DEBUG)
 		{
 			flag = false;
@@ -98,16 +105,33 @@ public class EndFlowey : MonoBehaviour
 			{
 				if (NOT_DEBUG)
 				{
-					PlayerPrefs.SetInt("HardModeReminder", 0);
+					PersistentSAVE.SetInt("hardmode-reminder", 0);
 				}
 				list.AddRange(new string[7] { "Well TOO BAD!!!", "You look like you \nalready did the \nFRISK thing.", "So you get NOTHING!", "Maybe in the future \nyou'll get something \nnew.", "But for now...", "I'm all you have.", "See you soon!" });
 				list2.AddRange(new string[7] { "grin", "side", "grin", "sassy", "neutral", "wink", "excited" });
+			}
+			else if (gameManager.GetPlayerName() == "IANB")
+			{
+				if (NOT_DEBUG)
+				{
+					PersistentSAVE.SetInt("hardmode-reminder", 1);
+				}
+				list.AddRange(new string[12]
+				{
+					"Probably NOT!", "Considering that this \nis IANB I'm talking \nto...", "You never DID the \nFRISK thing.", "Where you tell a \ncertain someone that \nyour name is \"FRISK\".", "You SAID that you'd \ndo it.", "And then you didn't!", "Well I heard there's \nan option now to \ndo it automatically.", "It's called...^10\n\"<color=#FFFF00FF>Hard Mode</color>\"?^10\nIn the \"Extras\" menu?", "What,^05 is this a \ngame or something?", "Why call it something \nlike that?",
+					"Well,^05 whatever.", "I'll be waiting..."
+				});
+				list2.AddRange(new string[12]
+				{
+					"grin", "sassy", "side", "side", "neutral", "grin", "sad", "sad_side", "sassy", "side",
+					"neutral", "wink"
+				});
 			}
 			else if (flag)
 			{
 				if (NOT_DEBUG)
 				{
-					PlayerPrefs.SetInt("HardModeReminder", 1);
+					PersistentSAVE.SetInt("hardmode-reminder", 1);
 				}
 				list.AddRange(new string[9] { "Well,^05 clearly not \nexcited enough.", "You didn't do the \nFRISK thing like I \ntold you to!", "What?^05\nAre you waiting for \nEAGLELAND to be a \nplace to visit?", "Well that's NOT \nhappening!", "So if you wanna \ntry it out,^05 now \nwould be the time.", "Tell a certain someone \nthat your name is \n\"FRISK\".", "C'mon...^05\nIt won't bite.", "I expect to hear \nabout how dumb it \nis next time we talk.", "See ya." });
 				list2.AddRange(new string[9] { "mad", "angry", "sassy", "grin", "side", "neutral", "sassy", "wink", "neutral" });
@@ -187,11 +211,17 @@ public class EndFlowey : MonoBehaviour
 			list2.Add("neutral");
 			break;
 		}
+		if (num < 4 && gameManager.GetSessionFlagInt(20) == 1)
+		{
+			list.Add("also i'm calling\nu out btw u skipped\nthe credits");
+			list2.Add("sassy");
+			callOutLine = list.Count;
+		}
 		if (num > 0 && flag3 && num2 == 1)
 		{
 			if (NOT_DEBUG)
 			{
-				PlayerPrefs.SetInt("HardModeReminder", 0);
+				PersistentSAVE.SetInt("hardmode-reminder", 0);
 			}
 			list.AddRange(new string[7] { "...^05 Huh?^05\nYou played hard mode?", "That's the \"FRISK\" thing,^05\nright?", "I,^05 umm,^05 don't remember \nanything about it.", "Shoot...", "I was hoping that \nit'd,^05 umm...", "Oh,^05 whatever.", "See ya." });
 			list2.AddRange(new string[7] { "sad", "sad_happy", "sad_side", "sad_side", "sincere_side", "mad", "neutral" });
@@ -222,6 +252,10 @@ public class EndFlowey : MonoBehaviour
 		}
 		else if (state == 1)
 		{
+			if (skipCounter > 0)
+			{
+				skipCounter--;
+			}
 			if (lastString < 0)
 			{
 				return;
@@ -237,14 +271,22 @@ public class EndFlowey : MonoBehaviour
 			}
 			if (text.IsPlaying())
 			{
-				if (UTInput.GetButton("X") || UTInput.GetButton("C"))
+				if (canSkip && (UTInput.GetButton("X") || UTInput.GetButton("C")))
 				{
 					text.SkipText();
+					if (UTInput.GetButton("C"))
+					{
+						skipCounter = 20;
+					}
+					else if (UTInput.GetButton("X"))
+					{
+						skipCounter = 10;
+					}
 				}
 			}
 			else
 			{
-				if (!UTInput.GetButtonDown("Z") && !UTInput.GetButton("C"))
+				if (!UTInput.GetButtonDown("Z") && (!canSkip || !UTInput.GetButton("C")))
 				{
 					return;
 				}
@@ -256,9 +298,21 @@ public class EndFlowey : MonoBehaviour
 					text.GetText().lineSpacing = 1.3f;
 					GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ui/flowey/spr_end_flowey_" + faces[currentString]);
 					currentString++;
-					if (UTInput.GetButton("X") || UTInput.GetButton("C"))
+					if (currentString == callOutLine && skipCounter > 0)
+					{
+						canSkip = false;
+					}
+					if (canSkip && (UTInput.GetButton("X") || UTInput.GetButton("C")))
 					{
 						text.SkipText();
+						if (UTInput.GetButton("C"))
+						{
+							skipCounter = 20;
+						}
+						else if (UTInput.GetButton("X"))
+						{
+							skipCounter = 10;
+						}
 					}
 				}
 				else

@@ -6,7 +6,7 @@ namespace MarioBrosMayhem
 	{
 		private void Awake()
 		{
-			if (!Object.FindObjectOfType<MarioBrosManager>() || !Object.FindObjectOfType<MarioBrosManager>().IsEndingRound())
+			if (!Util.FindObjectOfType<MarioBrosManager>() || !Util.FindObjectOfType<MarioBrosManager>().IsEndingRound())
 			{
 				GetComponent<AudioSource>().Play();
 			}

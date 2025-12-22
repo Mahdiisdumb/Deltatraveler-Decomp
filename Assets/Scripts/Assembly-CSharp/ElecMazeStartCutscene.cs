@@ -79,8 +79,8 @@ public class ElecMazeStartCutscene : CutsceneBase
 					papyrus.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
 					if (!leave)
 					{
-						SetMoveAnim(susie, true);
-						SetMoveAnim(noelle, true);
+						SetMoveAnim(susie, isMoving: true);
+						SetMoveAnim(noelle, isMoving: true);
 						ChangeDirection(susie, -(susie.transform.position - new Vector3(-5.11f, 0.48f)));
 						ChangeDirection(noelle, -(noelle.transform.position - new Vector3(-5.64f, -0.62f)));
 					}
@@ -89,12 +89,12 @@ public class ElecMazeStartCutscene : CutsceneBase
 				{
 					if (!MoveTo(susie, new Vector3(-5.11f, 0.48f), 4f))
 					{
-						SetMoveAnim(susie, false);
+						SetMoveAnim(susie, isMoving: false);
 						ChangeDirection(susie, Vector2.right);
 					}
 					if (!MoveTo(noelle, new Vector3(-5.64f, -0.62f), 4f))
 					{
-						SetMoveAnim(noelle, false);
+						SetMoveAnim(noelle, isMoving: false);
 						ChangeDirection(noelle, Vector2.right);
 					}
 				}
@@ -116,7 +116,7 @@ public class ElecMazeStartCutscene : CutsceneBase
 			{
 				txt.Disable();
 				txt.MakeUnskippable();
-				SetMoveAnim(sans, true, 0.25f);
+				SetMoveAnim(sans, isMoving: true, 0.25f);
 				if (!MoveTo(sans, new Vector3(3.1f, 1.231f), 2f / 3f))
 				{
 					Object.Destroy(txt);
@@ -131,7 +131,7 @@ public class ElecMazeStartCutscene : CutsceneBase
 					{
 						SetSprite(noelle, "spr_no_surprise");
 					}
-					SetMoveAnim(sans, false);
+					SetMoveAnim(sans, isMoving: false);
 				}
 			}
 			else
@@ -229,13 +229,13 @@ public class ElecMazeStartCutscene : CutsceneBase
 				{
 					txt.Disable();
 					txt.MakeUnskippable();
-					SetMoveAnim(sans, true, 0.25f);
+					SetMoveAnim(sans, isMoving: true, 0.25f);
 					if (!MoveTo(sans, new Vector3(2.4f, 1.231f), 0.5f))
 					{
 						Object.Destroy(txt);
 						PlayAnimation(papyrus, "Electrocute");
 						PlaySFX("sounds/snd_shock");
-						SetMoveAnim(sans, false);
+						SetMoveAnim(sans, isMoving: false);
 					}
 				}
 				return;
@@ -262,9 +262,9 @@ public class ElecMazeStartCutscene : CutsceneBase
 					oblit ? "* Wow,^05 what a shocker." : "* OH MY GOD,^05 you're\n  HILARIOUS!",
 					"* You really need to\n  get smiley trashbag in\n  check,^05 dumbass.",
 					"WHY YOU...!!!",
-					"*\tsay,^05 boss...",
-					"*\tprobably should give that\n\tthing to them if you\n\tactually wanna,^05 y'know...",
-					"*\tkill em.",
+					"* say,^05 boss...",
+					"* probably should give that\n  thing to them if you\n  actually wanna,^05 y'know...",
+					"* kill em.",
 					"OH,^05 OKAY."
 				}, new string[7] { "snd_txtsus", "snd_txtsus", "snd_txtpap", "snd_txtsans", "snd_txtsans", "snd_txtsans", "snd_txtpap" }, new int[1], new string[7]
 				{
@@ -299,12 +299,12 @@ public class ElecMazeStartCutscene : CutsceneBase
 					{
 						if (!MoveTo(sans, new Vector3(3.853f, 1.231f), 4f))
 						{
-							SetMoveAnim(sans, false);
+							SetMoveAnim(sans, isMoving: false);
 							ChangeDirection(sans, Vector2.down);
 						}
 						else
 						{
-							SetMoveAnim(sans, true);
+							SetMoveAnim(sans, isMoving: true);
 							ChangeDirection(sans, Vector2.right);
 						}
 						if (AtLine(6))
@@ -333,7 +333,7 @@ public class ElecMazeStartCutscene : CutsceneBase
 			if (sans.transform.position != new Vector3(3.853f, 1.231f))
 			{
 				sans.transform.position = new Vector3(3.853f, 1.231f);
-				SetMoveAnim(sans, false);
+				SetMoveAnim(sans, isMoving: false);
 			}
 			ChangeDirection(sans, Vector2.left);
 			if (curPapPos > 0 && curPapPos < 4)
@@ -352,7 +352,7 @@ public class ElecMazeStartCutscene : CutsceneBase
 			}
 			if (MoveTo(papyrus, pos[curPapPos + 1], 4f))
 			{
-				SetMoveAnim(papyrus, true);
+				SetMoveAnim(papyrus, isMoving: true);
 				ChangeDirection(papyrus, dir[curPapPos]);
 				return;
 			}
@@ -360,8 +360,8 @@ public class ElecMazeStartCutscene : CutsceneBase
 			ChangeDirection(papyrus, dir[curPapPos]);
 			if (curPapPos == 4)
 			{
-				SetMoveAnim(papyrus, false);
-				StartText(new string[4] { "*\tboss,^05 take off your boots.", "WHAT?!?!?!?!^05\nYOU WANT <color=#FFFF00FF>ANOTHER \nREDESIGN</color>!?!?!?!?!?", "OH,^05 WAIT,^05 A TRAIL...\n^10NICE CATCH.", "* (What are these morons\n  even talking about???)" }, new string[4] { "snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtsus" }, new int[1], new string[4] { "ufsans_neutral", "ufpap_mad", "ufpap_side", "su_smirk_sweat" });
+				SetMoveAnim(papyrus, isMoving: false);
+				StartText(new string[4] { "* boss,^05 take off your boots.", "WHAT?!?!?!?!^05\nYOU WANT <color=#FFFF00FF>ANOTHER \nREDESIGN</color>!?!?!?!?!?", "OH,^05 WAIT,^05 A TRAIL...\n^10NICE CATCH.", "* (What are these morons\n  even talking about???)" }, new string[4] { "snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtsus" }, new int[1], new string[4] { "ufsans_neutral", "ufpap_mad", "ufpap_side", "su_smirk_sweat" });
 			}
 			else if (curPapPos == pos.Length - 1)
 			{
@@ -402,7 +402,7 @@ public class ElecMazeStartCutscene : CutsceneBase
 			{
 				if (MoveTo(papyrus, pos[curPapPos - 1], 10f))
 				{
-					SetMoveAnim(papyrus, true);
+					SetMoveAnim(papyrus, isMoving: true);
 					ChangeDirection(papyrus, -dir[curPapPos - 1]);
 					return;
 				}
@@ -416,7 +416,7 @@ public class ElecMazeStartCutscene : CutsceneBase
 				else if (curPapPos == 0)
 				{
 					ChangeDirection(papyrus, Vector2.left);
-					SetMoveAnim(papyrus, false);
+					SetMoveAnim(papyrus, isMoving: false);
 				}
 			}
 			else
@@ -548,23 +548,23 @@ public class ElecMazeStartCutscene : CutsceneBase
 			}
 			if (flag)
 			{
-				SetMoveAnim(susie, true);
+				SetMoveAnim(susie, isMoving: true);
 				ChangeDirection(susie, Vector2.right);
 			}
 			else
 			{
-				SetMoveAnim(susie, false);
+				SetMoveAnim(susie, isMoving: false);
 				ChangeDirection(susie, Vector2.down);
 				susie.UseHappySprites();
 			}
 			if (flag2)
 			{
-				SetMoveAnim(noelle, true);
+				SetMoveAnim(noelle, isMoving: true);
 				ChangeDirection(noelle, Vector2.up);
 			}
 			else
 			{
-				SetMoveAnim(noelle, false);
+				SetMoveAnim(noelle, isMoving: false);
 				ChangeDirection(noelle, Vector2.down);
 				if (!oblit)
 				{
@@ -592,14 +592,14 @@ public class ElecMazeStartCutscene : CutsceneBase
 					GameObject.Find("NoelleTalk").GetComponent<InteractTextBox>().ModifyContents(new string[1] { "* ..." }, new string[1] { "snd_txtnoe" }, new int[1], new string[1] { "no_depressedx" });
 				}
 				GameObject.Find("NoelleTalk").GetComponent<InteractTextBox>().DisableSecondaryLines();
-				Object.FindObjectOfType<ElectricMazeHandler>().StartLook();
-				kris.SetMovement(true);
-				kris.SetCollision(true);
+				Util.FindObjectOfType<ElectricMazeHandler>().StartLook();
+				kris.SetMovement(newMove: true);
+				kris.SetCollision(onoff: true);
 				kris.ChangeDirection(Vector2.down);
-				kris.SetSelfAnimControl(true);
-				cam.SetFollowPlayer(true);
+				kris.SetSelfAnimControl(setAnimControl: true);
+				cam.SetFollowPlayer(follow: true);
 				gm.DisableMenu();
-				EndCutscene(false);
+				EndCutscene(enablePlayerMovement: false);
 			}
 		}
 	}
@@ -626,26 +626,26 @@ public class ElecMazeStartCutscene : CutsceneBase
 		leave = !Util.GameManager().SusieInParty();
 		niceNoelleVer = oblit && !leave && gm.GetFlagInt(184) == 1;
 		gm.SetCheckpoint();
-		Util.GameManager().SetPartyMembers(false, false);
-		Object.FindObjectOfType<ActionPartyPanels>().UpdatePanels();
+		Util.GameManager().SetPartyMembers(susie: false, noelle: false);
+		Util.FindObjectOfType<ActionPartyPanels>().Reinitialize();
 		gm.PlayMusic("music/mus_papyrus", 0.85f);
 		StartText(new string[5]
 		{
 			"YOUR PRIORITIES \nARE OUT OF WACK!!!",
 			"YOU'RE KILLING \nEVERYTHING IN \nSIGHT...",
 			"YET YOU CANNOT GET \nA SIMPLE TRAP IN \nORDER!!!!!!",
-			"*\tyeah.^10\n*\ttraps are pretty lame.",
+			"* yeah.^10\n* traps are pretty lame.",
 			leave ? "* Okay,^05 they've arrived,^05\n  SHUT UP!!!!!" : "* What the hell are\n  you weirdos talking\n  about???"
 		}, new string[5] { "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtsans", "snd_txtsus" }, new int[1], new string[5] { "ufpap_mad", "ufpap_side", "ufpap_mad", "ufsans_neutral", "su_pissed" });
 		RevokePlayerControl();
-		SetMoveAnim(kris, false);
-		SetMoveAnim(susie, false);
-		SetMoveAnim(noelle, false);
+		SetMoveAnim(kris, isMoving: false);
+		SetMoveAnim(susie, isMoving: false);
+		SetMoveAnim(noelle, isMoving: false);
 		ChangeDirection(kris, Vector2.right);
 		ChangeDirection(susie, Vector2.right);
 		ChangeDirection(noelle, Vector2.right);
 		susie.UseUnhappySprites();
 		noelle.UseUnhappySprites();
-		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(true);
+		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(forceActivationTrigger: true);
 	}
 }

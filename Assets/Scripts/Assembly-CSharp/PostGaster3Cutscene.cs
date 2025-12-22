@@ -13,7 +13,7 @@ public class PostGaster3Cutscene : CutsceneBase
 			frames++;
 			if (frames == 40)
 			{
-				gm.DisablePlayerMovement(true);
+				gm.DisablePlayerMovement(deactivatePartyMembers: true);
 				ChangeDirection(kris, Vector2.down);
 				if (Util.GameManager().GetFlagInt(172) == 0)
 				{

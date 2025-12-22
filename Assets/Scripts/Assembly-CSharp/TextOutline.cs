@@ -30,6 +30,18 @@ public class TextOutline : Outline
 	[SerializeField]
 	private Direction m_Directions = Direction.All;
 
+	public float extent
+	{
+		get
+		{
+			return extent;
+		}
+		set
+		{
+			m_Extent = value;
+		}
+	}
+
 	public override void ModifyMesh(VertexHelper vh)
 	{
 		if (!IsActive())

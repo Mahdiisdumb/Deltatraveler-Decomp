@@ -50,7 +50,7 @@ public class ButterflyHardBullet : BulletBase
 			sr.sprite = sprites[sprite];
 		}
 		float num = Mathf.Lerp(1.5f, 5f, speedVariation);
-		base.transform.position += new Vector3(0f - Mathf.Sin(angle * ((float)Math.PI / 180f)), Mathf.Cos(angle * ((float)Math.PI / 180f))) * num / 48f;
+		base.transform.position += new Vector3(0f - Mathf.Sin(angle * (MathF.PI / 180f)), Mathf.Cos(angle * (MathF.PI / 180f))) * num / 48f;
 		if (base.transform.position.y > 0.14f)
 		{
 			sr.color = new Color(1f, 1f, 1f, (0.86f - base.transform.position.y) / 0.72f);

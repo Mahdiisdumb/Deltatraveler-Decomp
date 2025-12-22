@@ -9,7 +9,7 @@ public class CarPaintbrushAttack : AttackBase
 		base.Awake();
 		maxFrames = 180;
 		bbSize = new Vector2(200f, 140f);
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(0);
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(0);
 		attackAllTargets = false;
 	}
 
@@ -27,12 +27,12 @@ public class CarPaintbrushAttack : AttackBase
 
 	private void OnDestroy()
 	{
-		if ((bool)Object.FindObjectOfType<Carpainter>() && !gottenHit && Object.FindObjectOfType<Carpainter>().LookingForAvoid())
+		if ((bool)Util.FindObjectOfType<Carpainter>() && !gottenHit && Util.FindObjectOfType<Carpainter>().LookingForAvoid())
 		{
-			Object.FindObjectOfType<Carpainter>().AddActPoints(25);
-			if (Object.FindObjectOfType<Carpainter>().GetSatisfactionLevel() >= 100)
+			Util.FindObjectOfType<Carpainter>().AddActPoints(25);
+			if (Util.FindObjectOfType<Carpainter>().GetSatisfactionLevel() >= 100)
 			{
-				Object.FindObjectOfType<Carpainter>().Spare();
+				Util.FindObjectOfType<Carpainter>().Spare();
 			}
 		}
 	}

@@ -44,9 +44,9 @@ public class SansPapUFFirstCutscene : CutsceneBase
 				papyrus.enabled = false;
 				papyrus.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("overworld/npcs/underfell/spr_ufpap_left_mad_0");
 				papyrus.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
-				kris.SetSelfAnimControl(false);
-				susie.SetSelfAnimControl(false);
-				noelle.SetSelfAnimControl(false);
+				kris.SetSelfAnimControl(setAnimControl: false);
+				susie.SetSelfAnimControl(setAnimControl: false);
+				noelle.SetSelfAnimControl(setAnimControl: false);
 				kris.ChangeDirection(Vector2.right);
 				susie.ChangeDirection(Vector2.right);
 				noelle.ChangeDirection(Vector2.right);
@@ -105,11 +105,11 @@ public class SansPapUFFirstCutscene : CutsceneBase
 				if (frames == 1)
 				{
 					papyrus.Play("Write");
-					kris.GetComponent<Animator>().SetBool("isMoving", true);
+					kris.GetComponent<Animator>().SetBool("isMoving", value: true);
 					kris.GetComponent<Animator>().SetFloat("speed", 1f);
-					susie.GetComponent<Animator>().SetBool("isMoving", true);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 					susie.GetComponent<Animator>().SetFloat("speed", 1f);
-					noelle.GetComponent<Animator>().SetBool("isMoving", true);
+					noelle.GetComponent<Animator>().SetBool("isMoving", value: true);
 					noelle.GetComponent<Animator>().SetFloat("speed", 1f);
 					krisFromPos = kris.transform.position;
 					susieFromPos = susie.transform.position;
@@ -142,9 +142,9 @@ public class SansPapUFFirstCutscene : CutsceneBase
 					papyrus.Play("idle");
 					papyrus.SetFloat("dirX", 0f);
 					papyrus.SetFloat("dirY", 1f);
-					kris.GetComponent<Animator>().SetBool("isMoving", false);
-					susie.GetComponent<Animator>().SetBool("isMoving", false);
-					noelle.GetComponent<Animator>().SetBool("isMoving", false);
+					kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
+					noelle.GetComponent<Animator>().SetBool("isMoving", value: false);
 					Util.GameManager().StopMusic(30f);
 					StartText(new string[9]
 					{
@@ -230,18 +230,18 @@ public class SansPapUFFirstCutscene : CutsceneBase
 						sansuf.GetComponent<SpriteRenderer>().enabled = false;
 						papyrus.GetComponent<SpriteRenderer>().enabled = false;
 						GameObject.Find("Sentry").GetComponent<SpriteRenderer>().enabled = false;
-						TilemapRenderer[] array = UnityEngine.Object.FindObjectsOfType<TilemapRenderer>();
+						TilemapRenderer[] array = Util.FindObjectsOfType<TilemapRenderer>();
 						for (int i = 0; i < array.Length; i++)
 						{
 							array[i].enabled = false;
 						}
 						kris.DisableAnimator();
 						kris.SetSprite("spr_kr_grabbed_sans_0");
-						cam.SetFollowPlayer(false);
+						cam.SetFollowPlayer(follow: false);
 					}
 					if (frames <= 35)
 					{
-						float t = Mathf.Sin((float)(frames - 25) / 10f * (float)Math.PI * 0.5f);
+						float t = Mathf.Sin((float)(frames - 25) / 10f * MathF.PI * 0.5f);
 						kris.transform.position = new Vector3(Mathf.Lerp(10.94f, 10.44f, t), kris.transform.position.y);
 					}
 					else
@@ -282,7 +282,7 @@ public class SansPapUFFirstCutscene : CutsceneBase
 						sansuf.GetComponent<SpriteRenderer>().enabled = true;
 						papyrus.GetComponent<SpriteRenderer>().enabled = true;
 						GameObject.Find("Sentry").GetComponent<SpriteRenderer>().enabled = true;
-						TilemapRenderer[] array = UnityEngine.Object.FindObjectsOfType<TilemapRenderer>();
+						TilemapRenderer[] array = Util.FindObjectsOfType<TilemapRenderer>();
 						for (int i = 0; i < array.Length; i++)
 						{
 							array[i].enabled = true;
@@ -318,13 +318,13 @@ public class SansPapUFFirstCutscene : CutsceneBase
 					}
 					else
 					{
-						num5 = Mathf.Sin(num5 * (float)Math.PI * 0.5f);
+						num5 = Mathf.Sin(num5 * MathF.PI * 0.5f);
 					}
 					sansuf.transform.position = new Vector3(Mathf.Lerp(10.94f, 13.01f, num5), krisOrigY - 0.137f);
 					float num6 = (float)(frames - 65) / 25f;
 					if (num6 < 1f)
 					{
-						num6 = Mathf.Sin(num6 * (float)Math.PI * 0.5f);
+						num6 = Mathf.Sin(num6 * MathF.PI * 0.5f);
 					}
 					kris.transform.position = Vector3.Lerp(new Vector3(10.44f, krisOrigY), new Vector3(9.45f, krisOrigY - 1.02f), num6);
 				}
@@ -332,7 +332,7 @@ public class SansPapUFFirstCutscene : CutsceneBase
 				{
 					papyrus.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("overworld/npcs/underfell/spr_ufpap_right_mad_0");
 					sansuf.GetComponent<AudioSource>().Stop();
-					StartText(new string[4] { "SANS!!!^15\nWHAT THE HELL ARE \nYOU DOING?!?!", "YOU ARE SO \nUNREFINED AND \nBARBARIC!!!", "*\t...but boss,^05 it was just\n\tstanding there...", "OH MY GOD,^05 DO NOT \nCALL ME THAT!!!" }, new string[4] { "snd_txtpap", "snd_txtpap", "snd_txtsans", "snd_txtpap" }, new int[1], new string[4] { "ufpap_mad", "ufpap_mad", "ufsans_neutral", "ufpap_mad" });
+					StartText(new string[4] { "SANS!!!^15\nWHAT THE HELL ARE \nYOU DOING?!?!", "YOU ARE SO \nUNREFINED AND \nBARBARIC!!!", "* ...but boss,^05 it was just\n  standing there...", "OH MY GOD,^05 DO NOT \nCALL ME THAT!!!" }, new string[4] { "snd_txtpap", "snd_txtpap", "snd_txtsans", "snd_txtpap" }, new int[1], new string[4] { "ufpap_mad", "ufpap_mad", "ufsans_neutral", "ufpap_mad" });
 					state = 3;
 				}
 			}
@@ -415,7 +415,7 @@ public class SansPapUFFirstCutscene : CutsceneBase
 			}
 			else
 			{
-				sansuf.SetBool("isMoving", true);
+				sansuf.SetBool("isMoving", value: true);
 				sansuf.SetFloat("speed", 0.35f);
 				frames = 0;
 				state = 6;
@@ -441,9 +441,9 @@ public class SansPapUFFirstCutscene : CutsceneBase
 			}
 			if (frames == 40)
 			{
-				StartText(new string[9] { "SANS!!!", "*\tc'mon boss, gimme some\n\tslack.", "*\ti deal with my\n\tvictims to the point.", "WE ARE NOT \nDISCUSSING THIS \nMATTER RIGHT NOW!!!", "YOU WILL ACCOMPANY \nME THIS VERY \nINSTANT!", "THERE IS A TRAP \nTHAT I NEED TO \nFINE-TUNE.", "AS FOR YOU THREE...", "COME FORTH...^10\nIF YOU DARE!", "NYEHEHEHEHEHE\nHEHEHEHEH!!!" }, new string[9] { "snd_txtpap", "snd_txtsans", "snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap" }, new int[1], new string[9] { "ufpap_mad", "ufsans_neutral", "ufsans_empty", "ufpap_mad", "ufpap_mad", "ufpap_side", "ufpap_side", "ufpap_evil", "ufpap_evil" });
+				StartText(new string[9] { "SANS!!!", "* c'mon boss, gimme some\n  slack.", "* i deal with my\n  victims to the point.", "WE ARE NOT \nDISCUSSING THIS \nMATTER RIGHT NOW!!!", "YOU WILL ACCOMPANY \nME THIS VERY \nINSTANT!", "THERE IS A TRAP \nTHAT I NEED TO \nFINE-TUNE.", "AS FOR YOU THREE...", "COME FORTH...^10\nIF YOU DARE!", "NYEHEHEHEHEHE\nHEHEHEHEH!!!" }, new string[9] { "snd_txtpap", "snd_txtsans", "snd_txtsans", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap", "snd_txtpap" }, new int[1], new string[9] { "ufpap_mad", "ufsans_neutral", "ufsans_empty", "ufpap_mad", "ufpap_mad", "ufpap_side", "ufpap_side", "ufpap_evil", "ufpap_evil" });
 				papyrus.Play("Pissed");
-				sansuf.SetBool("isMoving", false);
+				sansuf.SetBool("isMoving", value: false);
 				frames = 0;
 				state = 7;
 			}
@@ -475,10 +475,10 @@ public class SansPapUFFirstCutscene : CutsceneBase
 				frames++;
 				if (frames == 1)
 				{
-					papyrus.SetBool("isMoving", true);
+					papyrus.SetBool("isMoving", value: true);
 					papyrus.SetFloat("speed", 1f);
 					papyrus.SetFloat("dirX", 1f);
-					sansuf.SetBool("isMoving", true);
+					sansuf.SetBool("isMoving", value: true);
 					sansuf.SetFloat("dirX", 1f);
 					sansuf.SetFloat("dirY", 0f);
 					sansuf.SetFloat("speed", 1f);
@@ -640,7 +640,7 @@ public class SansPapUFFirstCutscene : CutsceneBase
 				snowy.position = new Vector3(0f, 10f);
 				snowy.GetComponent<OverworldSnowy>().ForceDisable();
 				kris.InitiateBattle(56);
-				EndCutscene(false);
+				EndCutscene(enablePlayerMovement: false);
 			}
 		}
 		if ((state == 7 && !txt) || state > 7)
@@ -663,7 +663,7 @@ public class SansPapUFFirstCutscene : CutsceneBase
 		papyrus = GameObject.Find("Papyrus").GetComponent<Animator>();
 		papyrus.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
 		papyrus.SetFloat("speed", 0f);
-		gm.SetMiniPartyMember(0);
+		gm.SetPartyMember(3, -1);
 		noelleDepressed = (int)gm.GetFlag(172) != 0;
 		gm.SetFlag(64, 2);
 		gm.SetFlag(155, 1);
@@ -675,7 +675,7 @@ public class SansPapUFFirstCutscene : CutsceneBase
 		}
 		sansuf = GameObject.Find("SansUF").GetComponent<Animator>();
 		sansuf.Play("AttackLeft");
-		snowy = UnityEngine.Object.FindObjectOfType<OverworldSnowy>().transform;
+		snowy = Util.FindObjectOfType<OverworldSnowy>().transform;
 		UnityEngine.Object.Destroy(GameObject.Find("CutsceneColliders"));
 		susie.UseUnhappySprites();
 		noelle.UseUnhappySprites();

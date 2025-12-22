@@ -63,7 +63,7 @@ public class FloweyDefeatHardmode : CutsceneBase
 				if (susie.transform.position.y != 0.85f)
 				{
 					susie.EnableAnimator();
-					susie.GetComponent<Animator>().SetBool("isMoving", true);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 					susie.GetComponent<Animator>().SetFloat("speed", 2f);
 					susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(1f, 0.85f), 5f / 24f);
 				}
@@ -78,7 +78,7 @@ public class FloweyDefeatHardmode : CutsceneBase
 					frames++;
 					if (frames == 1)
 					{
-						susie.GetComponent<Animator>().SetBool("isMoving", false);
+						susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 						susie.GetComponent<Animator>().SetFloat("speed", 1f);
 						susie.DisableAnimator();
 						susie.SetSprite("spr_su_kneel_front");
@@ -118,12 +118,12 @@ public class FloweyDefeatHardmode : CutsceneBase
 			{
 				if (susie.transform.position != new Vector3(0f, -0.65f))
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", true);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 					susie.transform.position = Vector3.MoveTowards(susie.transform.position, new Vector3(0f, -0.65f), 1f / 12f);
 				}
 				else
 				{
-					susie.GetComponent<Animator>().SetBool("isMoving", false);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 					if (geno)
 					{
 						StartText(new string[2] { "* ...^05 Can you quit\n  looking at me like\n  that?", "* Let's just go." }, new string[9] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[18], new string[2] { "su_annoyed", "su_annoyed" });
@@ -138,10 +138,10 @@ public class FloweyDefeatHardmode : CutsceneBase
 		}
 		if (state == 3 && !txt)
 		{
-			cam.SetFollowPlayer(true);
+			cam.SetFollowPlayer(follow: true);
 			kris.ChangeDirection(Vector2.down);
-			kris.SetSelfAnimControl(true);
-			susie.SetSelfAnimControl(true);
+			kris.SetSelfAnimControl(setAnimControl: true);
+			susie.SetSelfAnimControl(setAnimControl: true);
 			EndCutscene();
 		}
 	}
@@ -156,17 +156,17 @@ public class FloweyDefeatHardmode : CutsceneBase
 		{
 			GameObject.Find("DeadFlowey").transform.position = new Vector3(0f, 0.172f);
 		}
-		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(true);
+		GameObject.Find("LoadingZone").GetComponent<LoadingZone>().SetForceActivationTrigger(forceActivationTrigger: true);
 		geno = (int)gm.GetFlag(13) == 3;
 		if (endState == 2 && geno)
 		{
 			WeirdChecker.Abort(gm);
 		}
 		susie.EnableAnimator();
-		kris.SetSelfAnimControl(false);
-		susie.SetSelfAnimControl(false);
-		kris.GetComponent<Animator>().SetBool("isMoving", false);
-		susie.GetComponent<Animator>().SetBool("isMoving", false);
+		kris.SetSelfAnimControl(setAnimControl: false);
+		susie.SetSelfAnimControl(setAnimControl: false);
+		kris.GetComponent<Animator>().SetBool("isMoving", value: false);
+		susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 		kris.GetComponent<Animator>().Play("idle");
 		susie.GetComponent<Animator>().Play("idle");
 		kris.ChangeDirection(Vector2.up);

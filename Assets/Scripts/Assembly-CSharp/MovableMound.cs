@@ -5,7 +5,7 @@ public class MovableMound : Interactable
 {
 	private void Awake()
 	{
-		if ((int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(14) == 1)
+		if ((int)Util.GameManager().GetFlag(14) == 1)
 		{
 			base.transform.parent.position = new Vector2(3.584f, -0.53f);
 			base.transform.parent.GetComponent<SpriteRenderer>().sortingOrder = 2;
@@ -14,7 +14,7 @@ public class MovableMound : Interactable
 
 	public override void DoInteract()
 	{
-		if ((int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(14) != 1)
+		if ((int)Util.GameManager().GetFlag(14) != 1)
 		{
 			base.transform.parent.GetComponent<SpriteRenderer>().sortingOrder = 2;
 			CutsceneHandler.GetCutscene(7).StartCutscene();

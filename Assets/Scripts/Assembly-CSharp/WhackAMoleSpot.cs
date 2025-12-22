@@ -20,10 +20,10 @@ public class WhackAMoleSpot : BulletBase
 	{
 		base.Awake();
 		baseDmg = 10;
-		if ((bool)Object.FindObjectOfType<MondoMole>())
+		if ((bool)Util.FindObjectOfType<MondoMole>())
 		{
 			baseDmg = 7;
-			if (!Object.FindObjectOfType<MondoMole>().IsLectured())
+			if (!Util.FindObjectOfType<MondoMole>().IsLectured())
 			{
 				baseDmg = 9;
 			}
@@ -112,7 +112,7 @@ public class WhackAMoleSpot : BulletBase
 
 	public override void PreSOULHit()
 	{
-		if ((bool)Object.FindObjectOfType<RoughMole>())
+		if ((bool)Util.FindObjectOfType<RoughMole>() && !SOUL.FindPlayerSOUL().IsInvincible())
 		{
 			baseDmg = ((Random.Range(0, 8) == 0) ? 14 : 9);
 			if (baseDmg > 9)

@@ -27,8 +27,8 @@ public class StalkerFlowey : MonoBehaviour
 	{
 		if (!sighted)
 		{
-			Transform transform = Object.FindObjectOfType<CameraController>().transform;
-			Torch torch = Object.FindObjectOfType<Torch>();
+			Transform transform = Util.FindObjectOfType<CameraController>().transform;
+			Torch torch = Util.FindObjectOfType<Torch>();
 			if ((bool)torch && torch.transform.childCount == 1 && torch.transform.GetChild(0).GetComponent<SpriteRenderer>().color.a == 1f && Vector3.Distance(torch.transform.GetChild(0).position, base.transform.position) <= 4.84f)
 			{
 				sighted = true;
@@ -68,7 +68,7 @@ public class StalkerFlowey : MonoBehaviour
 					"snd_txtsus",
 					"snd_txtsus",
 					"snd_txtsus"
-				}, new int[1], true, new string[8]
+				}, new int[1], giveBackControl: true, new string[8]
 				{
 					"su_side",
 					"su_neutral",
@@ -79,20 +79,20 @@ public class StalkerFlowey : MonoBehaviour
 					"su_smirk_sweat",
 					"su_annoyed"
 				});
-				Util.GameManager().DisablePlayerMovement(false);
+				Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 			}
 			else if (num2 >= 9 && (int)Util.GameManager().GetFlag(249) == 1 && Util.GameManager().SusieInParty())
 			{
 				Util.GameManager().SetFlag(249, 2);
 				if (Util.GameManager().NoelleInParty())
 				{
-					new GameObject("TxtStalkerFlowey").AddComponent<TextBox>().CreateBox(new string[10] { "* ...^05 Okay,^05 there's no\n  way you aren't seeing\n  these.", "* I keep seeing that\n  damn flower we fought\n  watching us!", "* Flower...?", "* Stupid dude tried to\n  kill us before we\n  found you.", "* HEY!!!^05\n* STUPID FLOWERY GUY!!!", "* IF YOU WANNA FIGHT\n  US,^05 THEN STOP HIDING\n  LIKE A COWARD!!!", "* If he's hiding from\n  us,^05 then I don't\n  think he'll fight.", "* Well I'll kick his\n  ass anyway!!!", "* Just like last time.", "* Right,^05 Kris?" }, new string[10] { "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[1], true, new string[10] { "su_annoyed", "su_pissed", "no_thinking", "su_annoyed", "su_wtf", "su_angry", "no_confused", "su_angry", "su_confident", "su_smile" });
+					new GameObject("TxtStalkerFlowey").AddComponent<TextBox>().CreateBox(new string[10] { "* ...^05 Okay,^05 there's no\n  way you aren't seeing\n  these.", "* I keep seeing that\n  damn flower we fought\n  watching us!", "* Flower...?", "* Stupid dude tried to\n  kill us before we\n  found you.", "* HEY!!!^05\n* STUPID FLOWERY GUY!!!", "* IF YOU WANNA FIGHT\n  US,^05 THEN STOP HIDING\n  LIKE A COWARD!!!", "* If he's hiding from\n  us,^05 then I don't\n  think he'll fight.", "* Well I'll kick his\n  ass anyway!!!", "* Just like last time.", "* Right,^05 Kris?" }, new string[10] { "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[1], giveBackControl: true, new string[10] { "su_annoyed", "su_pissed", "no_thinking", "su_annoyed", "su_wtf", "su_angry", "no_confused", "su_angry", "su_confident", "su_smile" });
 				}
 				else
 				{
-					new GameObject("TxtStalkerFlowey").AddComponent<TextBox>().CreateBox(new string[5] { "* ...^05 Okay,^05 there's no\n  way you aren't seeing\n  these.", "* I keep seeing that\n  damn flower we fought\n  watching us!", "* HEY!!!^05\n* STUPID FLOWERY GUY!!!", "* IF YOU WANNA FIGHT\n  US,^05 THEN STOP HIDING\n  LIKE A COWARD!!!", "* WE'LL KICK YOUR ASS\n  AGAIN!!!" }, new string[1] { "snd_txtsus" }, new int[1], true, new string[5] { "su_annoyed", "su_pissed", "su_wtf", "su_angry", "su_angry" });
+					new GameObject("TxtStalkerFlowey").AddComponent<TextBox>().CreateBox(new string[5] { "* ...^05 Okay,^05 there's no\n  way you aren't seeing\n  these.", "* I keep seeing that\n  damn flower we fought\n  watching us!", "* HEY!!!^05\n* STUPID FLOWERY GUY!!!", "* IF YOU WANNA FIGHT\n  US,^05 THEN STOP HIDING\n  LIKE A COWARD!!!", "* WE'LL KICK YOUR ASS\n  AGAIN!!!" }, new string[1] { "snd_txtsus" }, new int[1], giveBackControl: true, new string[5] { "su_annoyed", "su_pissed", "su_wtf", "su_angry", "su_angry" });
 				}
-				Util.GameManager().DisablePlayerMovement(false);
+				Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 			}
 			Object.Destroy(base.gameObject);
 		}

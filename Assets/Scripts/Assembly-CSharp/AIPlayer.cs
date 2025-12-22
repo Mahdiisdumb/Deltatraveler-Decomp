@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +27,7 @@ public class AIPlayer : UnoPlayer
 	protected override void Awake()
 	{
 		base.Awake();
-		SetReady(true);
+		SetReady(val: true);
 	}
 
 	protected override void Update()
@@ -66,7 +65,7 @@ public class AIPlayer : UnoPlayer
 		return aiDifficulty;
 	}
 
-	public ValueTuple<AIAction, int> AITurn(bool stackingOverride = false)
+	public (AIAction, int) AITurn(bool stackingOverride = false)
 	{
 		UnoGame unoGame = UnoGameManager.instance.GetUnoGame();
 		int num = -1;
@@ -86,7 +85,7 @@ public class AIPlayer : UnoPlayer
 			}
 			if (flag)
 			{
-				return new ValueTuple<AIAction, int>(AIAction.ChallengePlusFour, unoGame.GetPreviousPlayerTurn());
+				return (AIAction.ChallengePlusFour, unoGame.GetPreviousPlayerTurn());
 			}
 			int count = cards.Count;
 			int count2 = unoGame.GetPlayerHand(unoGame.GetPreviousPlayerTurn()).Count;
@@ -125,13 +124,13 @@ public class AIPlayer : UnoPlayer
 				{
 					if (CardIsPlayableOnBeforeCard(item2))
 					{
-						return new ValueTuple<AIAction, int>(AIAction.ChallengePlusFour, unoGame.GetPreviousPlayerTurn());
+						return (AIAction.ChallengePlusFour, unoGame.GetPreviousPlayerTurn());
 					}
 				}
 			}
-			if (Mathf.RoundToInt(UnityEngine.Random.Range(0f, num2)) == 1 || FORCE_CHALLENGE)
+			if (Mathf.RoundToInt(Random.Range(0f, num2)) == 1 || FORCE_CHALLENGE)
 			{
-				return new ValueTuple<AIAction, int>(AIAction.ChallengePlusFour, unoGame.GetPreviousPlayerTurn());
+				return (AIAction.ChallengePlusFour, unoGame.GetPreviousPlayerTurn());
 			}
 		}
 		List<int> playableCards = GetPlayableCards();
@@ -142,7 +141,7 @@ public class AIPlayer : UnoPlayer
 			{
 				UnoPlayer[] players = UnoGameManager.instance.GetPlayers();
 				int num5 = -1;
-				int nextPlayerTurn = UnoGameManager.instance.GetUnoGame().GetNextPlayerTurn(false);
+				int nextPlayerTurn = UnoGameManager.instance.GetUnoGame().GetNextPlayerTurn(set: false);
 				int count3 = UnoGameManager.instance.GetUnoGame().GetPlayerHand(nextPlayerTurn).Count;
 				int previousPlayerTurn = UnoGameManager.instance.GetUnoGame().GetPreviousPlayerTurn();
 				int count4 = UnoGameManager.instance.GetUnoGame().GetPlayerHand(previousPlayerTurn).Count;
@@ -274,19 +273,19 @@ public class AIPlayer : UnoPlayer
 				}
 				if (num == -1 && !flag3)
 				{
-					num = playableCards[UnityEngine.Random.Range(0, playableCards.Count)];
+					num = playableCards[Random.Range(0, playableCards.Count)];
 				}
 			}
 		}
 		if (((num >= 0) ? cards[num] : null) != null && unoGame.GetCurrentDrawCardAmount() <= 1)
 		{
-			return new ValueTuple<AIAction, int>(AIAction.Play, num);
+			return (AIAction.Play, num);
 		}
-		if (CardIsPlayable(unoGame.GetTopDrawCard()) && (UnityEngine.Random.Range(0, 4) > 0 || aiDifficulty == 4) && unoGame.GetCurrentDrawCardAmount() <= 1)
+		if (CardIsPlayable(unoGame.GetTopDrawCard()) && (Random.Range(0, 4) > 0 || aiDifficulty == 4) && unoGame.GetCurrentDrawCardAmount() <= 1)
 		{
-			return new ValueTuple<AIAction, int>(AIAction.DrawAndPlay, -1);
+			return (AIAction.DrawAndPlay, -1);
 		}
-		return new ValueTuple<AIAction, int>(AIAction.Draw, -1);
+		return (AIAction.Draw, -1);
 	}
 
 	public void AddCardsToRemember(int playerId, List<UnoCard> cards)
@@ -329,7 +328,7 @@ public class AIPlayer : UnoPlayer
 		int num = chosenColor;
 		if (num < 0)
 		{
-			num = UnityEngine.Random.Range(0, 4);
+			num = Random.Range(0, 4);
 			if (RollChance(10, 50, 80))
 			{
 				num = GetColorNeededMost();
@@ -348,28 +347,28 @@ public class AIPlayer : UnoPlayer
 		case 1:
 			if (!forceUnfocus)
 			{
-				num = UnityEngine.Random.Range(0, 3);
+				num = Random.Range(0, 3);
 			}
 			unoCallMaxWait = ((num == 0) ? 40 : 12);
 			break;
 		case 2:
 			if (!forceUnfocus)
 			{
-				num = UnityEngine.Random.Range(0, 8);
+				num = Random.Range(0, 8);
 			}
 			unoCallMaxWait = ((num == 0) ? 30 : 10);
 			break;
 		case 3:
 			if (!forceUnfocus)
 			{
-				num = UnityEngine.Random.Range(0, 20);
+				num = Random.Range(0, 20);
 			}
-			unoCallMaxWait = ((num == 0) ? 20 : UnityEngine.Random.Range(5, 9));
+			unoCallMaxWait = ((num == 0) ? 20 : Random.Range(5, 9));
 			break;
 		case 4:
 			if (!forceUnfocus)
 			{
-				num = UnityEngine.Random.Range(0, 2);
+				num = Random.Range(0, 2);
 			}
 			unoCallMaxWait = 2;
 			if (UnoGameManager.instance.GetUnoGame().GetCurrentPlayerTurn() == playerID)
@@ -382,7 +381,7 @@ public class AIPlayer : UnoPlayer
 			}
 			else
 			{
-				unoCallMaxWait = ((num == 0) ? 15 : UnityEngine.Random.Range(3, 7));
+				unoCallMaxWait = ((num == 0) ? 15 : Random.Range(3, 7));
 			}
 			break;
 		}
@@ -413,7 +412,7 @@ public class AIPlayer : UnoPlayer
 			num = max;
 			break;
 		}
-		return UnityEngine.Random.Range(0, max) < num;
+		return Random.Range(0, max) < num;
 	}
 
 	private int GetColorNeededMost()
@@ -456,7 +455,7 @@ public class AIPlayer : UnoPlayer
 		}
 		if (num3 == -1)
 		{
-			num3 = UnityEngine.Random.Range(0, 4);
+			num3 = Random.Range(0, 4);
 		}
 		return num3;
 	}
@@ -593,21 +592,13 @@ public class AIPlayer : UnoPlayer
 	private bool CardIsPlayable(UnoCard card)
 	{
 		UnoGameManager instance = UnoGameManager.instance;
-		if (card != null)
-		{
-			return card.CanBePlacedOn(instance.GetUnoGame().GetTopCard(), instance, stackingOverride);
-		}
-		return false;
+		return card?.CanBePlacedOn(instance.GetUnoGame().GetTopCard(), instance, stackingOverride) ?? false;
 	}
 
 	private bool CardIsPlayableOnBeforeCard(UnoCard card)
 	{
 		UnoGameManager instance = UnoGameManager.instance;
-		if (card != null)
-		{
-			return card.CanBePlacedOn(instance.GetUnoGame().GetSecondToLastPlayedCard(), instance, stackingOverride);
-		}
-		return false;
+		return card?.CanBePlacedOn(instance.GetUnoGame().GetSecondToLastPlayedCard(), instance, stackingOverride) ?? false;
 	}
 
 	private bool CardIsPlayable(int card)

@@ -8,14 +8,12 @@ public class PaulaPartyActivationInteractDebug : InteractSelectionBase
 		txt = new GameObject("InteractTextBoxItem", typeof(TextBox)).GetComponent<TextBox>();
 		if (index == Vector2.left)
 		{
-			Object.FindObjectOfType<GameManager>().SetMiniPartyMember(1);
-			Object.FindObjectOfType<GameManager>().HealAll(999);
+			Util.GameManager().SetPartyMember(3, 3);
 			txt.CreateBox(new string[1] { "* Paula joins you." });
 		}
 		else if (index == Vector2.right)
 		{
-			Object.FindObjectOfType<GameManager>().SetMiniPartyMember(0);
-			Object.FindObjectOfType<GameManager>().HealAll(999);
+			Util.GameManager().SetPartyMember(3, -1);
 			txt.CreateBox(new string[1] { "* Paula doesn't join you." });
 		}
 	}

@@ -171,7 +171,7 @@ public class TextBoxEB : UIComponent
 		{
 			if (isControllable)
 			{
-				Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
+				Util.GameManager().EnablePlayerMovement();
 			}
 			Object.Destroy(base.gameObject);
 		}
@@ -217,7 +217,7 @@ public class TextBoxEB : UIComponent
 
 	public void StartTextBox(string[] newDialog, bool allowMovementOnDestroy)
 	{
-		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 		dialog = newDialog;
 		currentText = "";
 		txt = base.transform.GetComponentInChildren<Text>();
@@ -287,7 +287,7 @@ public class TextBoxEB : UIComponent
 	private void SetTheme()
 	{
 		string text = "";
-		switch ((int)Object.FindObjectOfType<GameManager>().GetFlag(223))
+		switch ((int)Util.GameManager().GetFlag(223))
 		{
 		case 1:
 			text = "_mint";

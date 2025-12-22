@@ -200,7 +200,7 @@ public class TextZelda : MonoBehaviour
 			if (frames >= 30)
 			{
 				as1.clip = soundDone;
-				Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/zelda/snd_text_done");
+				Util.GameManager().PlayGlobalSFX("sounds/zelda/snd_text_done");
 				frames = 0;
 			}
 		}
@@ -213,7 +213,7 @@ public class TextZelda : MonoBehaviour
 		{
 			if (isControllable)
 			{
-				Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
+				Util.GameManager().EnablePlayerMovement();
 			}
 			Object.Destroy(base.gameObject);
 		}

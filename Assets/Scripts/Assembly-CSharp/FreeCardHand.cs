@@ -31,7 +31,7 @@ public class FreeCardHand : CardHand
 	{
 		for (int i = 0; i < cards.Count; i++)
 		{
-			cards[i].transform.localPosition = new Vector3(CalculateXValue(i, true), 0f);
+			cards[i].transform.localPosition = new Vector3(CalculateXValue(i, center: true), 0f);
 		}
 	}
 }

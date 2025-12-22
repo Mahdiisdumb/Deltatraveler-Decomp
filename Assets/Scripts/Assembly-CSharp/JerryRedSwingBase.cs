@@ -34,8 +34,8 @@ public class JerryRedSwingBase : AttackBase
 		base.Awake();
 		bbSize = new Vector3(185f, 140f);
 		state = -1;
-		jerry = UnityEngine.Object.FindObjectOfType<Jerry>();
-		UnityEngine.Object.FindObjectOfType<SOUL>().ChangeSOULMode(0);
+		jerry = Util.FindObjectOfType<Jerry>();
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(0);
 		jerry.GetPart("sword").GetComponent<SpriteRenderer>().color = Color.red;
 		for (int i = 0; i < 5; i++)
 		{
@@ -133,7 +133,7 @@ public class JerryRedSwingBase : AttackBase
 			frames++;
 			if (frames <= 10)
 			{
-				float num6 = Mathf.Sin((float)(frames * 18) * ((float)Math.PI / 180f));
+				float num6 = Mathf.Sin((float)(frames * 18) * (MathF.PI / 180f));
 				jerry.GetPart("sword").GetComponent<SpriteRenderer>().color = new Color(1f, num6, num6);
 			}
 			if (frames == 1)
@@ -190,7 +190,7 @@ public class JerryRedSwingBase : AttackBase
 					float num10 = (float)bulletsSpawnedThisTime / ((float)bulletNumberPerSwing - 1f);
 					float startAngle2 = Mathf.Lerp(60f, 0f, num10) + UnityEngine.Random.Range(-3f, 3f);
 					float num11 = 1f - num10;
-					UnityEngine.Object.Instantiate(prefab, Vector3.Lerp(new Vector3(-1.68f, 4.78f), new Vector3(-4.23f, 1.21f), 1f - num11 * num11), Quaternion.identity).GetComponent<JerrySlashRed>().Activate(true, startAngle2, UnityEngine.Random.Range(2.5f, 3.5f) + num10, (int)Mathf.Lerp(60f, 30f, num10), bulletSpeed);
+					UnityEngine.Object.Instantiate(prefab, Vector3.Lerp(new Vector3(-1.68f, 4.78f), new Vector3(-4.23f, 1.21f), 1f - num11 * num11), Quaternion.identity).GetComponent<JerrySlashRed>().Activate(onLeft: true, startAngle2, UnityEngine.Random.Range(2.5f, 3.5f) + num10, (int)Mathf.Lerp(60f, 30f, num10), bulletSpeed);
 					bulletsSpawnedThisTime++;
 				}
 				if (frames == 15)
@@ -213,7 +213,7 @@ public class JerryRedSwingBase : AttackBase
 					num15 = 1f - num15;
 					float startAngle3 = Mathf.Lerp(60f, 0f, num15) + UnityEngine.Random.Range(-3f, 3f);
 					float num16 = 1f - num15;
-					UnityEngine.Object.Instantiate(prefab, Vector3.Lerp(new Vector3(1.68f, 4.78f), new Vector3(4.23f, 1.21f), 1f - num16 * num16), Quaternion.identity).GetComponent<JerrySlashRed>().Activate(false, startAngle3, UnityEngine.Random.Range(2.5f, 3.5f) + num15, (int)Mathf.Lerp(60f, 30f, num15), bulletSpeed);
+					UnityEngine.Object.Instantiate(prefab, Vector3.Lerp(new Vector3(1.68f, 4.78f), new Vector3(4.23f, 1.21f), 1f - num16 * num16), Quaternion.identity).GetComponent<JerrySlashRed>().Activate(onLeft: false, startAngle3, UnityEngine.Random.Range(2.5f, 3.5f) + num15, (int)Mathf.Lerp(60f, 30f, num15), bulletSpeed);
 					bulletsSpawnedThisTime++;
 				}
 			}
@@ -242,9 +242,9 @@ public class JerryRedSwingBase : AttackBase
 			if (frames <= 20)
 			{
 				float num17 = (float)frames / 20f;
-				num17 = Mathf.Sin(num17 * (float)Math.PI * 0.5f);
+				num17 = Mathf.Sin(num17 * MathF.PI * 0.5f);
 				jerry.GetPart("body").parent.localPosition = new Vector3(0f, Mathf.Lerp(-0.5f, 2.25f, num17));
-				jerry.GetPart("sword").up = UnityEngine.Object.FindObjectOfType<SOUL>().transform.position - jerry.GetPart("sword").position;
+				jerry.GetPart("sword").up = Util.FindObjectOfType<SOUL>().transform.position - jerry.GetPart("sword").position;
 				if (frames == 20)
 				{
 					Util.GameManager().PlayGlobalSFX("sounds/snd_bigcut");
@@ -279,7 +279,7 @@ public class JerryRedSwingBase : AttackBase
 			}
 			if (frames >= 50 && frames <= 60)
 			{
-				float t = (Mathf.Cos((float)((frames - 50) * 18) * ((float)Math.PI / 180f)) + 1f) / 2f;
+				float t = (Mathf.Cos((float)((frames - 50) * 18) * (MathF.PI / 180f)) + 1f) / 2f;
 				jerry.GetEnemyObject().transform.localScale = new Vector3(Mathf.Lerp(1f, 1.1f, t), Mathf.Lerp(1f, 0.9f, t), 1f);
 			}
 			if (frames >= 60)

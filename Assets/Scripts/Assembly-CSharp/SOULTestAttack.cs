@@ -11,7 +11,7 @@ public class SOULTestAttack : AttackBase
 	protected override void Update()
 	{
 		base.Update();
-		if (UTInput.GetButtonDown("C"))
+		if (Input.GetKeyDown(KeyCode.V))
 		{
 			Object.Destroy(base.gameObject);
 		}
@@ -20,7 +20,7 @@ public class SOULTestAttack : AttackBase
 	public override void StartAttack()
 	{
 		base.StartAttack();
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(SOUL.SoulMode.Shoot);
-		Object.FindObjectOfType<SOUL>().EnableYDash();
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(SOUL.SoulMode.Shoot);
+		Util.FindObjectOfType<SOUL>().EnableYDash();
 	}
 }

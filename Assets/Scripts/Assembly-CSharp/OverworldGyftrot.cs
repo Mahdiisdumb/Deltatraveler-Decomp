@@ -108,7 +108,7 @@ public class OverworldGyftrot : OverworldEnemyBase
 		maxHangFrames = UnityEngine.Random.Range(4, 12);
 		maxWaitFrames = UnityEngine.Random.Range(5, 20);
 		float num = UnityEngine.Random.Range(0f, 360f);
-		tradjectory = new Vector3(Mathf.Cos(num * ((float)Math.PI / 180f)), Mathf.Sin(num * ((float)Math.PI / 180f)));
+		tradjectory = new Vector3(Mathf.Cos(num * (MathF.PI / 180f)), Mathf.Sin(num * (MathF.PI / 180f)));
 		if ((tradjectory.x > 0f && base.transform.position.x >= maxBounds.x) || (tradjectory.x < 0f && base.transform.position.x <= minBounds.x))
 		{
 			tradjectory.x *= -1f;

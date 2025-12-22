@@ -36,14 +36,14 @@ public class DamageNumber : MonoBehaviour
 		else if (frames <= 12)
 		{
 			float num = (float)(frames - 3) / 4f;
-			float y = Mathf.Lerp(0.056f, 0.202f, Mathf.Sin(num * (float)Math.PI * 0.5f));
+			float y = Mathf.Lerp(0.056f, 0.202f, Mathf.Sin(num * MathF.PI * 0.5f));
 			if (frames >= 7)
 			{
 				num = (float)(frames - 7) / 5f;
 				y = Mathf.Lerp(0.202f, -0.225f, num * num);
 			}
 			num = (float)(frames - 3) / 7f;
-			num = Mathf.Sin(num * (float)Math.PI * 0.5f);
+			num = Mathf.Sin(num * MathF.PI * 0.5f);
 			if (frames > 10)
 			{
 				num = 1f;
@@ -53,7 +53,7 @@ public class DamageNumber : MonoBehaviour
 		}
 		else if (frames <= 20)
 		{
-			float y2 = -0.225f + Mathf.Sin(25.714285f * (float)(frames - 12) * ((float)Math.PI / 180f)) * 0.225f;
+			float y2 = -0.225f + Mathf.Sin(25.714285f * (float)(frames - 12) * (MathF.PI / 180f)) * 0.225f;
 			if (frames == 20)
 			{
 				y2 = -0.2f;
@@ -99,21 +99,53 @@ public class DamageNumber : MonoBehaviour
 			number = 9999;
 			array = new int[4] { 9, 9, 9, 9 };
 		}
-		Sprite[] array2 = Resources.LoadAll<Sprite>("battle/dr/spr_btdr_numbers");
-		for (int i = 0; i < base.transform.childCount; i++)
-		{
-			if (i < num2)
-			{
-				base.transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = true;
-				base.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite = array2[array[i]];
-				base.transform.GetChild(i).GetComponent<SpriteRenderer>().color = color;
-			}
-			else
-			{
-				base.transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;
-			}
-		}
-		this.color = color;
+        Sprite[] array2 = Resources.LoadAll<Sprite>("battle/dr/stats/spr_btdr_numbers");
+
+        // Guard: if sprites couldn't be loaded, don't attempt array access (prevents IndexOutOfRangeException)
+        if (array2 == null || array2.Length == 0)
+        {
+            Debug.LogWarning("DamageNumber: failed to load digit sprites at 'battle/dr/stats/spr_btdr_numbers'. Disabling digit renderers.");
+            // Disable digit sprite renderers to avoid using missing resources
+            for (int i = 0; i < base.transform.childCount; i++)
+            {
+                var srFail = base.transform.GetChild(i).GetComponent<SpriteRenderer>();
+                if (srFail != null)
+                {
+                    srFail.enabled = false;
+                }
+            }
+            this.color = color;
+            this.position = position;
+            isPlaying = true;
+            this.endOffset = endOffset;
+            return;
+        }
+
+        for (int i = 0; i < Mathf.Min(base.transform.childCount, num2); i++)
+        {
+            var sr = base.transform.GetChild(i).GetComponent<SpriteRenderer>();
+            if (sr == null)
+            {
+                continue;
+            }
+            sr.enabled = true;
+
+            // clamp the digit index to avoid going out of bounds
+            int spriteIndex = Mathf.Clamp(array[i], 0, array2.Length - 1);
+            sr.sprite = array2[spriteIndex];
+            sr.color = color;
+        }
+
+        // disable the rest of the children
+        for (int i = num2; i < base.transform.childCount; i++)
+        {
+            var childSr = base.transform.GetChild(i).GetComponent<SpriteRenderer>();
+            if (childSr != null)
+            {
+                childSr.enabled = false;
+            }
+        }
+        this.color = color;
 		this.position = position;
 		isPlaying = true;
 		this.endOffset = endOffset;
@@ -121,9 +153,8 @@ public class DamageNumber : MonoBehaviour
 
 	public void StartWord(string word, Color color, Vector3 position)
 	{
-		string text = "battle/dr/spr_btdr_" + word;
 		base.transform.Find("Word").GetComponent<SpriteRenderer>().enabled = true;
-		base.transform.Find("Word").GetComponent<SpriteRenderer>().sprite = Util.PackManager().GetTranslatedSprite(Resources.Load<Sprite>(text), text);
+		base.transform.Find("Word").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/dr/stats/spr_btdr_" + word);
 		base.transform.Find("Word").GetComponent<SpriteRenderer>().color = color;
 		this.color = color;
 		this.position = position;

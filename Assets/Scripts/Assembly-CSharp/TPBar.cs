@@ -3,34 +3,30 @@ using UnityEngine.UI;
 
 public class TPBar : MonoBehaviour
 {
-	private int tp;
+	protected int tp;
 
-	private int[] tpToUse = new int[3];
+	protected int[] tpToUse = new int[3];
 
-	private bool[] tpToGain = new bool[3];
+	protected bool[] tpToGain = new bool[3];
 
-	private int tpPreview;
+	protected int tpPreview;
 
-	private RectTransform tpBar;
+	protected RectTransform tpBar;
 
-	private RectTransform useBar;
+	protected RectTransform useBar;
 
-	private Text tpText;
+	protected Text tpText;
 
-	private Text tpTextShadow;
+	protected bool disabled;
 
-	private bool disabled;
-
-	private void Awake()
+	protected virtual void Awake()
 	{
 		tpBar = base.transform.Find("TPFG").GetComponent<RectTransform>();
 		useBar = tpBar.Find("TPUSE").GetComponent<RectTransform>();
 		tpText = base.transform.Find("TPTEXT").GetComponent<Text>();
-		tpTextShadow = base.transform.Find("TPTEXT-Shadow").GetComponent<Text>();
 		tpBar.sizeDelta = new Vector2(20f, 0f);
 		tpText.text = "0%";
-		tpTextShadow.text = "0%";
-		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(94) == 1)
+		if ((int)Util.GameManager().GetFlag(94) == 1)
 		{
 			Image[] componentsInChildren = base.transform.Find("roundcorners").GetComponentsInChildren<Image>();
 			for (int i = 0; i < componentsInChildren.Length; i++)
@@ -40,7 +36,7 @@ public class TPBar : MonoBehaviour
 		}
 	}
 
-	private void Update()
+	protected virtual void Update()
 	{
 		if (!disabled)
 		{
@@ -50,14 +46,12 @@ public class TPBar : MonoBehaviour
 			{
 				tpBar.GetComponent<Image>().color = new Color(1f, 1f, 0f);
 				tpText.text = "MAX";
-				tpTextShadow.text = "MAX";
 				tpText.color = new Color(1f, 1f, 0f);
 			}
 			else if (calculatedTP < 100 && tpText.text != calculatedTP + "%")
 			{
 				tpBar.GetComponent<Image>().color = new Color32(byte.MaxValue, 160, 64, byte.MaxValue);
 				tpText.text = calculatedTP + "%";
-				tpTextShadow.text = calculatedTP + "%";
 				tpText.color = Color.white;
 			}
 		}
@@ -68,7 +62,7 @@ public class TPBar : MonoBehaviour
 		disabled = true;
 	}
 
-	public void UpdateTPPreviewBar(int tpPreview)
+	public virtual void UpdateTPPreviewBar(int tpPreview)
 	{
 		int calculatedTP = GetCalculatedTP();
 		this.tpPreview = tpPreview;
@@ -96,7 +90,7 @@ public class TPBar : MonoBehaviour
 		for (int i = 0; i < 3; i++)
 		{
 			int num = 16;
-			if (i == 0 && Object.FindObjectOfType<GameManager>().GetMiniPartyMember() > 0 && Object.FindObjectOfType<GameManager>().KrisInControl())
+			if (IsSuperDefend(i))
 			{
 				num = 24;
 			}
@@ -145,7 +139,7 @@ public class TPBar : MonoBehaviour
 			if (tpToGain[i])
 			{
 				int num2 = 16;
-				if (i == 0 && Object.FindObjectOfType<GameManager>().GetMiniPartyMember() > 0 && Object.FindObjectOfType<GameManager>().KrisInControl())
+				if (IsSuperDefend(i))
 				{
 					num2 = 24;
 				}
@@ -166,5 +160,14 @@ public class TPBar : MonoBehaviour
 	public int GetCurrentTP()
 	{
 		return tp;
+	}
+
+	private bool IsSuperDefend(int i)
+	{
+		if (Util.GameManager().GetHP(i) > 0 && Util.GameManager().PartySlotFilled(i + 3))
+		{
+			return Util.GameManager().GetHP(i + 3) > 0;
+		}
+		return false;
 	}
 }

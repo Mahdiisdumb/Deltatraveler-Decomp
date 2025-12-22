@@ -28,7 +28,7 @@ public class LightningBullet : BulletBase
 			base.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = warningSprites[frames / 4 % 2];
 			if (frames == 20)
 			{
-				UnityEngine.Object.FindObjectOfType<BattleCamera>().BlastShake();
+				Util.FindObjectOfType<BattleCamera>().BlastShake();
 				base.transform.GetChild(1).GetComponent<SpriteRenderer>().enabled = false;
 				base.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
 				base.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>()
@@ -43,7 +43,7 @@ public class LightningBullet : BulletBase
 		{
 			frames++;
 			angleOffset += 12f;
-			Color color = Color.Lerp(new Color(1f, 1f, 0f), new Color(0f, 1f, 1f), (Mathf.Sin(angleOffset * ((float)Math.PI / 180f)) + 1f) / 2f);
+			Color color = Color.Lerp(new Color(1f, 1f, 0f), new Color(0f, 1f, 1f), (Mathf.Sin(angleOffset * (MathF.PI / 180f)) + 1f) / 2f);
 			color.a = Mathf.Lerp(182f, 0f, (float)(frames - 10) / 8f) / 255f;
 			base.transform.GetChild(0).GetComponent<SpriteRenderer>().color = color;
 			base.transform.GetChild(0).localPosition = new Vector3(UnityEngine.Random.Range(-0.125f, 0.125f), UnityEngine.Random.Range(-0.125f, 0.125f));

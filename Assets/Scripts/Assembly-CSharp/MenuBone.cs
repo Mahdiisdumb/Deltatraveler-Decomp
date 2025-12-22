@@ -16,7 +16,7 @@ public class MenuBone : MonoBehaviour
 	{
 		base.transform.GetChild(0).GetComponent<BoneBullet>().SetBaseDamage(4);
 		base.transform.GetChild(0).GetComponent<BoneBullet>().SetTPGrazeValue(2f);
-		base.transform.GetChild(0).GetComponent<BoneBullet>().SetTPGrazeValue(0f, true);
+		base.transform.GetChild(0).GetComponent<BoneBullet>().SetTPGrazeValue(0f, setReuse: true);
 		base.transform.GetChild(0).GetComponent<BoneBullet>().SetTPBuildRate(0f);
 	}
 
@@ -61,7 +61,7 @@ public class MenuBone : MonoBehaviour
 			firstRaise = true;
 			activated = true;
 			this.speed = speed;
-			base.transform.GetChild(0).GetComponent<BoneBullet>().SetGrazed(false);
+			base.transform.GetChild(0).GetComponent<BoneBullet>().SetGrazed(grazed: false);
 		}
 	}
 

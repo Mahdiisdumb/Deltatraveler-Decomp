@@ -46,12 +46,12 @@ public class FirstCutscene : CutsceneBase
 			frames++;
 			if (frames == 10)
 			{
-				susie.SetSprite("spr_su_down_unhappy_0");
+				susie.SetSprite("unhappy/spr_su_down_0_unhappy");
 				PlaySFX("sounds/snd_wing");
 			}
 			if (frames == 40)
 			{
-				susie.SetSprite("spr_su_right_unhappy_0");
+				susie.SetSprite("unhappy/spr_su_right_0_unhappy");
 			}
 			if (frames == 60)
 			{
@@ -138,7 +138,7 @@ public class FirstCutscene : CutsceneBase
 			cam.transform.position = Vector3.Lerp(new Vector3(0f, camOrigPos.y, -10f), camOrigPos, (float)frames / 15f);
 			if (frames == 15)
 			{
-				cam.SetFollowPlayer(true);
+				cam.SetFollowPlayer(follow: true);
 				gm.SetFlag(3, 1);
 				EndCutscene();
 			}
@@ -152,7 +152,7 @@ public class FirstCutscene : CutsceneBase
 		{
 			hardMode = true;
 		}
-		gm.SetPartyMembers(true, false);
+		gm.SetPartyMembers(susie: true, noelle: false);
 		kris.DisableAnimator();
 		if (hardMode)
 		{
@@ -168,7 +168,7 @@ public class FirstCutscene : CutsceneBase
 		susie.transform.position = new Vector3(-1.109f, 0.624f);
 		krisBasePos = kris.transform.position;
 		susieBasePos = susie.transform.position;
-		cam.SetFollowPlayer(false);
+		cam.SetFollowPlayer(follow: false);
 		camOrigPos = cam.GetClampedPos();
 		cam.transform.position = new Vector3(0f, camOrigPos.y, -10f);
 	}

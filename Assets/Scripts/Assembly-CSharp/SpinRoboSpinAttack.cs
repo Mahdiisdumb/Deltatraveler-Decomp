@@ -5,7 +5,7 @@ public class SpinRoboSpinAttack : ShieldAttackBase
 	protected override void Awake()
 	{
 		base.Awake();
-		Object.FindObjectOfType<SOUL>().ChangeSOULMode(2);
+		Util.FindObjectOfType<SOUL>().ChangeSOULMode(2);
 		int num = ((Random.Range(0, 2) == 0) ? 1 : (-1));
 		int num2 = ((Random.Range(0, 2) == 0) ? 1 : (-1));
 		spawnRate = 4;
@@ -153,19 +153,19 @@ public class SpinRoboSpinAttack : ShieldAttackBase
 	protected override void OnDestroy()
 	{
 		base.OnDestroy();
-		if ((bool)Object.FindObjectOfType<SpinRobo>())
+		if ((bool)Util.FindObjectOfType<SpinRobo>())
 		{
-			Object.FindObjectOfType<SpinRobo>().Unspin();
-			Object.FindObjectOfType<SOUL>().ChangeSOULMode(0);
+			Util.FindObjectOfType<SpinRobo>().Unspin();
+			Util.FindObjectOfType<SOUL>().ChangeSOULMode(0);
 		}
 	}
 
 	public override void StartAttack()
 	{
 		base.StartAttack();
-		if ((bool)Object.FindObjectOfType<ExplosiveOak>() && Object.FindObjectOfType<ExplosiveOak>().IsGonnaExplode())
+		if ((bool)Util.FindObjectOfType<ExplosiveOak>() && Util.FindObjectOfType<ExplosiveOak>().IsGonnaExplode())
 		{
-			Object.FindObjectOfType<ExplosiveOak>().Explode();
+			Util.FindObjectOfType<ExplosiveOak>().Explode();
 		}
 	}
 }

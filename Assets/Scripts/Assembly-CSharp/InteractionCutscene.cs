@@ -16,7 +16,7 @@ public class InteractionCutscene : Interactable
 
 	private void Awake()
 	{
-		if (flag > -1 && (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(flag) >= 1)
+		if (flag > -1 && (int)Util.GameManager().GetFlag(flag) >= 1)
 		{
 			UnityEngine.Object.Destroy(base.gameObject);
 		}

@@ -68,7 +68,7 @@ public class Parsnik : EnemyBase
 		}
 		frames++;
 		GetPart("body").GetComponent<SpriteRenderer>().sprite = sprites[frames / 12 % 4];
-		GetPart("hair").transform.localPosition = new Vector3(-0.025f, Mathf.Lerp(1.56f, 1.626f, (Mathf.Cos((float)(frames * 12) * ((float)Math.PI / 180f)) + 1f) / 2f));
+		GetPart("hair").transform.localPosition = new Vector3(-0.025f, Mathf.Lerp(1.56f, 1.626f, (Mathf.Cos((float)(frames * 12) * (MathF.PI / 180f)) + 1f) / 2f));
 		for (int i = 0; i < 5; i++)
 		{
 			Transform transform = GetPart("hair").transform.Find("snake" + i);
@@ -77,7 +77,7 @@ public class Parsnik : EnemyBase
 			if (i != 2)
 			{
 				bool flag = i > 0 && i < 4;
-				float num3 = Mathf.Sin((float)(num * (flag ? 12 : 9)) * ((float)Math.PI / 180f));
+				float num3 = Mathf.Sin((float)(num * (flag ? 12 : 9)) * (MathF.PI / 180f));
 				float z = (flag ? 2.6f : 6f) * num3;
 				transform.localEulerAngles = new Vector3(0f, 0f, z);
 			}
@@ -97,7 +97,7 @@ public class Parsnik : EnemyBase
 	public override string[] PerformAct(int i)
 	{
 		lastAct = i - 1;
-		if (GetActNames()[i] == "Check")
+		if (GetActNames()[i] == EnemyBase.CHECK_NAME)
 		{
 			return new string[1] { "* PARSNIK - 30 ATK 28 DEF\n" + checkDesc };
 		}
@@ -110,10 +110,10 @@ public class Parsnik : EnemyBase
 			if (satisfied >= 100 || IsTired())
 			{
 				Spare();
-				UnityEngine.Object.FindObjectOfType<GameManager>().Heal(0, 5);
-				UnityEngine.Object.FindObjectOfType<GameManager>().Heal(1, 5);
-				UnityEngine.Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_swallow");
-				UnityEngine.Object.FindObjectOfType<GameManager>().PlayTimedHealSound();
+				Util.GameManager().Heal(0, 5);
+				Util.GameManager().Heal(1, 5);
+				Util.GameManager().PlayGlobalSFX("sounds/snd_swallow");
+				Util.GameManager().PlayTimedHealSound();
 				return new string[1] { "* You and Susie start eating\n  snakes like spaghetti.\n* You each recovered 5 HP!" };
 			}
 			return new string[1] { "* You and Susie tried to\n  eat Parsnik,^10 but it wasn't\n  weakened enough." };
@@ -126,11 +126,11 @@ public class Parsnik : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		if (spared)
 		{
-			return base.PerformAssistAct(i);
+			return base.PerformAssistAct_Old(i);
 		}
 		if (i == 1)
 		{
@@ -141,7 +141,7 @@ public class Parsnik : EnemyBase
 			}
 			return new string[1] { "* Parsnik is already\n  sufficiently weakened.\n* The snakes quiver in fear." };
 		}
-		return base.PerformAssistAct(i);
+		return base.PerformAssistAct_Old(i);
 	}
 
 	public override void Chat(string[] text, string type, string sound, Vector2 pos, bool canSkip, int speed)

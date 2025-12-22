@@ -209,7 +209,7 @@ public class MusicPlayer : MonoBehaviour
 	public void ChangeMusic(string name, bool intro, bool playImmediately)
 	{
 		StopAllCoroutines();
-		ChangeMusic(name, intro, playImmediately, false, 0);
+		ChangeMusic(name, intro, playImmediately, overlap: false, 0);
 	}
 
 	public string CurrentMusic()

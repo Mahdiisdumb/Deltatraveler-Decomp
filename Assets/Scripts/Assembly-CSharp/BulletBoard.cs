@@ -61,7 +61,7 @@ public class BulletBoard : MonoBehaviour
 		right = base.transform.Find("Wall_RIGHT");
 		down = base.transform.Find("Wall_DOWN");
 		bg = base.transform.Find("Background");
-		if (!Object.FindObjectOfType<UnoBattleManager>())
+		if (!Util.FindObjectOfType<UnoBattleManager>())
 		{
 			fakeup = base.transform.Find("FakeWalls").Find("Wall_UP");
 			fakeleft = base.transform.Find("FakeWalls").Find("Wall_LEFT");
@@ -73,7 +73,7 @@ public class BulletBoard : MonoBehaviour
 			fakeCornerBL = base.transform.Find("FakeWalls").Find("Corner_BL");
 		}
 		SpriteRenderer[] componentsInChildren;
-		if ((int)Object.FindObjectOfType<GameManager>().GetFlag(94) == 1)
+		if ((int)Util.GameManager().GetFlag(94) == 1)
 		{
 			up.GetComponent<SpriteRenderer>().enabled = false;
 			down.GetComponent<SpriteRenderer>().enabled = false;
@@ -112,7 +112,7 @@ public class BulletBoard : MonoBehaviour
 			right.localPosition = Vector2.Lerp(oldSizeX / 2f / 48f, newSizeX / 2f / 48f, (float)frames * rateX) + Vector2.Lerp(oldSizeY / 2f / 48f, newSizeY / 2f / 48f, (float)frames * rateY) + new Vector2(-5f / 96f, -1.4583334f);
 			down.localScale = Vector2.Lerp(oldSizeX, newSizeX, (float)frames * rateX) + new Vector2(0f, 5f);
 			base.transform.position = Vector2.Lerp(oldTPos, newTPos, (float)frames * rateY);
-			if (!Object.FindObjectOfType<UnoBattleManager>())
+			if (!Util.FindObjectOfType<UnoBattleManager>())
 			{
 				fakeup.localScale = up.localScale - new Vector3(10f, 0f);
 				fakeup.localPosition = up.localPosition;

@@ -47,7 +47,7 @@ public class MondoMole : EnemyBase
 		defaultChatSize = "RightSmall";
 		exp = 3;
 		gold = 30;
-		geno = (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(13) >= 6;
+		geno = (int)Util.GameManager().GetFlag(13) >= 6;
 		attacks = new int[4] { 54, 55, 56, 56 };
 	}
 
@@ -65,8 +65,8 @@ public class MondoMole : EnemyBase
 			if (!gotHit && (bool)obj)
 			{
 				animFrames++;
-				float num = Mathf.Sin((float)(animFrames * 8) * ((float)Math.PI / 180f));
-				float num2 = Mathf.Sin((float)(animFrames * 4) * ((float)Math.PI / 180f));
+				float num = Mathf.Sin((float)(animFrames * 8) * (MathF.PI / 180f));
+				float num2 = Mathf.Sin((float)(animFrames * 4) * (MathF.PI / 180f));
 				GetPart("body").localScale = new Vector3(1f + num * 0.02f, 1f - num * 0.02f);
 				GetPart("left").localPosition = new Vector3(-0.937f, 3f) + new Vector3(num * -0.05f, 0f - Mathf.Abs(num2 * 0.05f));
 				GetPart("right").localPosition = new Vector3(0.937f, 2.583f) + new Vector3(num * 0.05f, 0f - Mathf.Abs(num2 * 0.05f));
@@ -110,7 +110,7 @@ public class MondoMole : EnemyBase
 		lastAct = i - 1;
 		if (GetActNames()[i] == "Play Rough")
 		{
-			int points = ((Util.GameManager().GetMiniPartyMember() == 1) ? 10 : 5);
+			int points = ((Util.GameManager().GetPartyMember(3) == 3) ? 10 : 5);
 			extremeAddition += 2;
 			AddActPoints(points);
 			if (satisfied >= 100)
@@ -148,7 +148,7 @@ public class MondoMole : EnemyBase
 		return base.PerformAct(i);
 	}
 
-	public override string[] PerformAssistAct(int i)
+	public override string[] PerformAssistAct_Old(int i)
 	{
 		switch (i)
 		{
@@ -171,7 +171,7 @@ public class MondoMole : EnemyBase
 		case 2:
 			return new string[1] { "no_confused`snd_txtnoe`* Okay,^05 there is\n  NO WAY I'm going\n  up to that thing." };
 		default:
-			return base.PerformAssistAct(i);
+			return base.PerformAssistAct_Old(i);
 		}
 	}
 
@@ -197,10 +197,10 @@ public class MondoMole : EnemyBase
 		{
 			exp = 250;
 			killed = false;
-			UnityEngine.Object.FindObjectOfType<BattleManager>().StopMusic();
-			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
-			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
-			UnityEngine.Object.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
+			Util.FindObjectOfType<BattleManager>().StopMusic();
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(0);
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(1);
+			Util.FindObjectOfType<BattleManager>().SkipPartyMemberTurn(2);
 			obj.transform.Find("mainbody").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("battle/enemies/Mondo Mole/spr_b_mondo_die_0");
 		}
 	}
@@ -214,11 +214,11 @@ public class MondoMole : EnemyBase
 		if (hp < maxHp)
 		{
 			Util.GameManager().PlayGlobalSFX("sounds/snd_enemy_psi");
-			if ((bool)UnityEngine.Object.FindObjectOfType<EnemyHPBar>())
+			if ((bool)Util.FindObjectOfType<EnemyHPBar>())
 			{
-				UnityEngine.Object.DestroyImmediate(UnityEngine.Object.FindObjectOfType<EnemyHPBar>().gameObject);
+				UnityEngine.Object.DestroyImmediate(Util.FindObjectOfType<EnemyHPBar>().gameObject);
 			}
-			Hit(0, -(75 - psiDisruptLevel * 18), false);
+			Hit(0, -(75 - psiDisruptLevel * 18), playSound: false);
 		}
 		return base.GetNextAttack();
 	}

@@ -8,12 +8,12 @@ public class VegCarrotBullet : BulletBase
 	{
 		base.Awake();
 		baseDmg = 5;
-		if ((bool)Object.FindObjectOfType<Parsnik>())
+		if ((bool)Util.FindObjectOfType<Parsnik>())
 		{
 			sr.sprite = Resources.Load<Sprite>("battle/attacks/bullets/hardmode/spr_snakebullet_fall");
 			baseDmg = 6;
 		}
-		if ((bool)Object.FindObjectOfType<CoilSnake>())
+		if ((bool)Util.FindObjectOfType<CoilSnake>())
 		{
 			sr.sprite = Resources.Load<Sprite>("battle/attacks/bullets/hardmode/spr_snakebullet_fall");
 			baseDmg = 4;
@@ -41,7 +41,7 @@ public class VegCarrotBullet : BulletBase
 
 	public override void SOULHit()
 	{
-		Vegetoid[] array = Object.FindObjectsOfType<Vegetoid>();
+		Vegetoid[] array = Util.FindObjectsOfType<Vegetoid>();
 		foreach (Vegetoid vegetoid in array)
 		{
 			if (vegetoid.ExpectingGreensEaten() && base.gameObject.tag == "GreenBullet")
@@ -49,7 +49,7 @@ public class VegCarrotBullet : BulletBase
 				vegetoid.EatGreens();
 			}
 		}
-		Parsnik[] array2 = Object.FindObjectsOfType<Parsnik>();
+		Parsnik[] array2 = Util.FindObjectsOfType<Parsnik>();
 		foreach (Parsnik parsnik in array2)
 		{
 			if (parsnik.ExpectingGreensEaten() && base.gameObject.tag == "GreenBullet")

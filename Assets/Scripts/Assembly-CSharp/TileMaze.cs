@@ -46,6 +46,10 @@ public class TileMaze : MonoBehaviour
 
 	private List<int[][]> presets = new List<int[][]> { PRESET_DEBUG, PRESET_Z, PRESET_X, PRESET_C };
 
+	private Dictionary<TileMazeTile.TileColor, Sprite[]> spriteDictionary = new Dictionary<TileMazeTile.TileColor, Sprite[]>();
+
+	private Dictionary<TileMazeTile.TileColor, Sprite[]> zapSpriteDictionary = new Dictionary<TileMazeTile.TileColor, Sprite[]>();
+
 	[SerializeField]
 	private Vector2Int dimensions;
 
@@ -90,6 +94,7 @@ public class TileMaze : MonoBehaviour
 
 	private void Awake()
 	{
+		GenerateSpriteDictionary();
 		for (int i = 0; i < dimensions.y; i++)
 		{
 			Transform transform = new GameObject("Row" + i).transform;
@@ -113,7 +118,7 @@ public class TileMaze : MonoBehaviour
 			return;
 		}
 		bool flag = false;
-		if ((bool)Object.FindObjectOfType<InteractPapyrusTextbox>())
+		if ((bool)Util.FindObjectOfType<InteractPapyrusTextbox>())
 		{
 			flag = true;
 			GameObject.Find("Sans").GetComponent<Animator>().SetFloat("dirX", -1f);
@@ -150,7 +155,7 @@ public class TileMaze : MonoBehaviour
 			if (moveFrames >= maxMoveFrames)
 			{
 				moving = false;
-				player.GetComponent<Animator>().SetBool("isMoving", false);
+				player.GetComponent<Animator>().SetBool("isMoving", value: false);
 				if (GetTile(curTile).GetTileColor() == TileMazeTile.TileColor.Purple)
 				{
 					SetNewFlavor(1);
@@ -206,16 +211,16 @@ public class TileMaze : MonoBehaviour
 					else
 					{
 						Util.GameManager().EnablePlayerMovement();
-						player.SetSelfAnimControl(true);
-						susie.SetSelfAnimControl(true);
-						noelle.SetSelfAnimControl(true);
+						player.SetSelfAnimControl(setAnimControl: true);
+						susie.SetSelfAnimControl(setAnimControl: true);
+						noelle.SetSelfAnimControl(setAnimControl: true);
 						susie.Activate();
 						noelle.Activate();
 						susie = null;
 						noelle = null;
 					}
-					Util.GameManager().SetPartyMembers(true, true);
-					Object.FindObjectOfType<ActionPartyPanels>().Lower();
+					Util.GameManager().SetPartyMembers(susie: true, noelle: true);
+					Util.FindObjectOfType<ActionPartyPanels>().Lower();
 					Util.GameManager().UnlockMenu();
 					GetTile(curTile).PlaySFX("sounds/snd_won");
 					player.GetComponent<SpriteRenderer>().color = Color.white;
@@ -284,7 +289,7 @@ public class TileMaze : MonoBehaviour
 				maxMoveFrames = 16;
 			}
 			moving = true;
-			player.GetComponent<Animator>().SetBool("isMoving", true);
+			player.GetComponent<Animator>().SetBool("isMoving", value: true);
 		}
 	}
 
@@ -371,6 +376,23 @@ public class TileMaze : MonoBehaviour
 		}
 	}
 
+	private void GenerateSpriteDictionary()
+	{
+		string[] array = new string[8] { "pink", "green", "red", "yellow", "orange", "purple", "blue", "white" };
+		for (int i = 0; i <= 7; i++)
+		{
+			TileMazeTile.TileColor tileColor = (TileMazeTile.TileColor)i;
+			string text = array[i];
+			Sprite[] value = Resources.LoadAll<Sprite>("overworld/snow_objects/tilemaze/spr_colortile_" + text);
+			spriteDictionary.Add(tileColor, value);
+			if (tileColor == TileMazeTile.TileColor.Blue || tileColor == TileMazeTile.TileColor.Yellow)
+			{
+				Sprite[] value2 = Resources.LoadAll<Sprite>("overworld/snow_objects/tilemaze/spr_colortile_zap_" + text);
+				zapSpriteDictionary.Add(tileColor, value2);
+			}
+		}
+	}
+
 	public TileMazeTile GetTile(int x, int y)
 	{
 		if (x >= 0 && x < dimensions.x && y >= 0 && y < dimensions.y)
@@ -416,27 +438,37 @@ public class TileMaze : MonoBehaviour
 		return false;
 	}
 
+	public Sprite[] GetTileSprites(TileMazeTile.TileColor color)
+	{
+		return spriteDictionary[color];
+	}
+
+	public Sprite[] GetZapTileSprites(TileMazeTile.TileColor color)
+	{
+		return zapSpriteDictionary[color];
+	}
+
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((bool)collision.GetComponent<OverworldPlayer>() && !player)
+		if ((bool)collision && (bool)collision.GetComponent<OverworldPlayer>() && !player)
 		{
 			player = collision.GetComponent<OverworldPlayer>();
 			Util.GameManager().LockMenu();
-			Util.GameManager().DisablePlayerMovement(true);
-			player.SetSelfAnimControl(false);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
+			player.SetSelfAnimControl(setAnimControl: false);
 			player.ChangeDirection(Vector2.right);
 			player.GetComponent<Animator>().SetFloat("speed", 1.5f);
-			MoveToNewTile(entranceTile, true);
+			MoveToNewTile(entranceTile, useOldPlayerPos: true);
 			susie = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
 			noelle = GameObject.Find("Noelle").GetComponent<OverworldPartyMember>();
-			susie.SetSelfAnimControl(false);
+			susie.SetSelfAnimControl(setAnimControl: false);
 			susie.DisableAnimator();
 			susie.SetSprite("spr_su_lemon_sign_0");
-			noelle.SetSelfAnimControl(false);
+			noelle.SetSelfAnimControl(setAnimControl: false);
 			noelle.DisableAnimator();
 			noelle.SetSprite("spr_no_orange_sign_0");
-			Util.GameManager().SetPartyMembers(false, false);
-			Object.FindObjectOfType<ActionPartyPanels>().UpdatePanels();
+			Util.GameManager().SetPartyMembers(susie: false, noelle: false);
+			Util.FindObjectOfType<ActionPartyPanels>().Reinitialize();
 			timerGoing = true;
 			timer = 0;
 		}

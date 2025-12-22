@@ -28,7 +28,7 @@ public class HoleFallTrigger : MonoBehaviour
 
 	private void Awake()
 	{
-		susieFallMode = (int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(15);
+		susieFallMode = (int)Util.GameManager().GetFlag(15);
 	}
 
 	private void Update()
@@ -40,8 +40,8 @@ public class HoleFallTrigger : MonoBehaviour
 			{
 				if (frames == 10)
 				{
-					UnityEngine.Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_fall");
-					UnityEngine.Object.FindObjectOfType<OverworldPlayer>().GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
+					Util.GameManager().PlayGlobalSFX("sounds/snd_fall");
+					Util.OverworldPlayer().GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
 				}
 				Vector2[] array = new Vector2[4]
 				{
@@ -50,26 +50,26 @@ public class HoleFallTrigger : MonoBehaviour
 					Vector2.up,
 					Vector2.left
 				};
-				UnityEngine.Object.FindObjectOfType<OverworldPlayer>().transform.position = Vector3.Lerp(origPos, newPos, (float)(frames - 10) / 80f);
-				UnityEngine.Object.FindObjectOfType<OverworldPlayer>().ChangeDirection(array[(frames - 10) / 4 % 4]);
+				Util.OverworldPlayer().transform.position = Vector3.Lerp(origPos, newPos, (float)(frames - 10) / 80f);
+				Util.OverworldPlayer().ChangeDirection(array[(frames - 10) / 4 % 4]);
 				if (frames == 90)
 				{
-					UnityEngine.Object.FindObjectOfType<OverworldPlayer>().GetComponent<SpriteRenderer>().color = Color.white;
+					Util.OverworldPlayer().GetComponent<SpriteRenderer>().color = Color.white;
 				}
 			}
 			if (susieFallMode == 0)
 			{
 				if (frames == 1)
 				{
-					susie.SetSelfAnimControl(false);
-					susie.GetComponent<Animator>().SetBool("isMoving", true);
+					susie.SetSelfAnimControl(setAnimControl: false);
+					susie.GetComponent<Animator>().SetBool("isMoving", value: true);
 				}
 				if (frames <= 10)
 				{
 					susie.transform.position = Vector3.Lerp(susieOrigPos, origPos + susie.GetPositionOffset(), (float)frames / 10f);
 					if (frames == 10)
 					{
-						susie.GetComponent<Animator>().SetBool("isMoving", false);
+						susie.GetComponent<Animator>().SetBool("isMoving", value: false);
 					}
 				}
 				if (frames == 20)
@@ -81,7 +81,7 @@ public class HoleFallTrigger : MonoBehaviour
 				{
 					if (frames == 30)
 					{
-						UnityEngine.Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_fall");
+						Util.GameManager().PlayGlobalSFX("sounds/snd_fall");
 						susie.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
 						susie.SetSprite("spr_su_freaked");
 					}
@@ -96,18 +96,18 @@ public class HoleFallTrigger : MonoBehaviour
 				{
 					susie.ChangeDirection(Vector2.up);
 					susie.EnableAnimator();
-					susie.SetSelfAnimControl(true);
+					susie.SetSelfAnimControl(setAnimControl: true);
 					susie.GetComponent<SpriteRenderer>().flipX = false;
-					UnityEngine.Object.FindObjectOfType<OverworldPlayer>().SetCollision(true);
-					UnityEngine.Object.FindObjectOfType<GameManager>().SetFlag(15, 1);
+					Util.OverworldPlayer().SetCollision(onoff: true);
+					Util.GameManager().SetFlag(15, 1);
 					TextBox component = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-					if (UnityEngine.Object.FindObjectOfType<OverworldPlayer>().cellphoneCall && (int)Util.GameManager().GetFlag(107) == 0)
+					if (Util.OverworldPlayer().cellphoneCall && Util.GameManager().GetPartyMember(0) == 0)
 					{
-						component.CreateBox(new string[4] { "* So those cracks in the\n  ground will make us\n  fall?", "* Uhh... got it.", "* ...", "* WHAT THE HELL ARE YOU\n  LAUGHING ABOUT,^05 KRIS?" }, new string[4] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[4], true, new string[4] { "su_side_sweat", "su_smile_side", "su_side_sweat", "su_wtf" });
+						component.CreateBox(new string[4] { "* So those cracks in the\n  ground will make us\n  fall?", "* Uhh... got it.", "* ...", "* WHAT THE HELL ARE YOU\n  LAUGHING ABOUT,^05 KRIS?" }, new string[4] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[4], giveBackControl: true, new string[4] { "su_side_sweat", "su_smile_side", "su_side_sweat", "su_wtf" });
 					}
 					else
 					{
-						component.CreateBox(new string[3] { "* So those cracks in the\n  ground will make us\n  fall?", "* Uhh... got it.", "* Susie is now immune to cracks." }, new string[3] { "snd_txtsus", "snd_txtsus", "snd_text" }, new int[3], true, new string[3] { "su_side_sweat", "su_smile_side", "" });
+						component.CreateBox(new string[3] { "* So those cracks in the\n  ground will make us\n  fall?", "* Uhh... got it.", "* Susie is now immune to cracks." }, new string[3] { "snd_txtsus", "snd_txtsus", "snd_text" }, new int[3], giveBackControl: true, new string[3] { "su_side_sweat", "su_smile_side", "" });
 					}
 					isPlaying = false;
 					timesFallen++;
@@ -125,7 +125,7 @@ public class HoleFallTrigger : MonoBehaviour
 				float num2 = Mathf.Abs(susieOrigPos.x - newPos.x) * susieJumpDir.x * 1.5f;
 				float x = Mathf.Lerp(susieOrigPos.x, newPos.x + num2, (float)num / 60f);
 				float num3 = ((num < 10) ? ((float)num / 10f) : ((float)(num - 10) / 50f));
-				num3 = ((num >= 10) ? (num3 * num3) : Mathf.Sin(num3 * (float)Math.PI * 0.5f));
+				num3 = ((num >= 10) ? (num3 * num3) : Mathf.Sin(num3 * MathF.PI * 0.5f));
 				float y = ((num < 10) ? Mathf.Lerp(susieOrigPos.y, origPos.y + susie.GetPositionOffset().y + 1f, num3) : Mathf.Lerp(origPos.y + susie.GetPositionOffset().y + 1f, newPos.y + susieJumpDir.y * 1.5f, num3));
 				if (num >= 0 && num <= 60)
 				{
@@ -133,7 +133,7 @@ public class HoleFallTrigger : MonoBehaviour
 				}
 				if (num == 0)
 				{
-					susie.SetSelfAnimControl(false);
+					susie.SetSelfAnimControl(setAnimControl: false);
 					if (susieJumpDir == Vector2.up)
 					{
 						susie.GetComponent<Animator>().Play("FallBack");
@@ -155,13 +155,13 @@ public class HoleFallTrigger : MonoBehaviour
 				{
 					susie.GetComponent<SpriteRenderer>().flipX = false;
 					susie.GetComponent<SpriteRenderer>().color = Color.white;
-					susie.SetSelfAnimControl(true);
+					susie.SetSelfAnimControl(setAnimControl: true);
 					susie.ChangeDirection(susieJumpDir * -1f);
 				}
 				if (frames == 90)
 				{
-					UnityEngine.Object.FindObjectOfType<GameManager>().EnablePlayerMovement();
-					UnityEngine.Object.FindObjectOfType<OverworldPlayer>().SetCollision(true);
+					Util.GameManager().EnablePlayerMovement();
+					Util.OverworldPlayer().SetCollision(onoff: true);
 					timesFallen++;
 					isPlaying = false;
 					frames = 0;
@@ -179,22 +179,22 @@ public class HoleFallTrigger : MonoBehaviour
 			{
 				return;
 			}
-			if ((int)UnityEngine.Object.FindObjectOfType<GameManager>().GetFlag(62) == 0)
+			if ((int)Util.GameManager().GetFlag(62) == 0)
 			{
 				TextBox component2 = new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>();
-				if ((int)Util.GameManager().GetFlag(107) == 1)
+				if (Util.GameManager().GetPartyMember(0) == 6)
 				{
-					component2.CreateBox(new string[2] { "* Huh...^10\n* It stopped making\n  us fall.", "* Man,^05 you kinda suck\n  ass at this puzzle." }, new string[4] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[4], true, new string[2] { "su_side", "su_smirk_sweat" });
+					component2.CreateBox(new string[2] { "* Huh...^10\n* It stopped making\n  us fall.", "* Man,^05 you kinda suck\n  ass at this puzzle." }, new string[4] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[4], giveBackControl: true, new string[2] { "su_side", "su_smirk_sweat" });
 				}
 				else
 				{
-					component2.CreateBox(new string[3] { "* Huh...^10\n* It stopped making\n  us fall.", "* Man,^05 Kris,^05 you usually\n  don't suck THIS much\n  ass at puzzles.", "* ... What's with the\n  pissed off look???" }, new string[4] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[4], true, new string[3] { "su_side", "su_smile", "su_smirk_sweat" });
+					component2.CreateBox(new string[3] { "* Huh...^10\n* It stopped making\n  us fall.", "* Man,^05 Kris,^05 you usually\n  don't suck THIS much\n  ass at puzzles.", "* ... What's with the\n  pissed off look???" }, new string[4] { "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[4], giveBackControl: true, new string[3] { "su_side", "su_smile", "su_smirk_sweat" });
 				}
-				UnityEngine.Object.FindObjectOfType<GameManager>().SetFlag(62, 1);
+				Util.GameManager().SetFlag(62, 1);
 			}
 			else
 			{
-				new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>().CreateBox(new string[1] { "* ..." }, new string[1] { "snd_txtsus" }, new int[1], true, new string[1] { "su_inquisitive" });
+				new GameObject("InteractTextBoxSelection", typeof(TextBox)).GetComponent<TextBox>().CreateBox(new string[1] { "* ..." }, new string[1] { "snd_txtsus" }, new int[1], giveBackControl: true, new string[1] { "su_inquisitive" });
 			}
 			puzzleJustDisabled = false;
 		}
@@ -202,7 +202,7 @@ public class HoleFallTrigger : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (!collision.GetComponent<OverworldPlayer>() || !collision.GetComponent<OverworldPlayer>().CanMove())
+		if (!collision || !collision.GetComponent<OverworldPlayer>() || !collision.GetComponent<OverworldPlayer>().CanMove())
 		{
 			return;
 		}
@@ -219,19 +219,19 @@ public class HoleFallTrigger : MonoBehaviour
 			{
 				UnityEngine.Object.Destroy(array[i]);
 			}
-			UnityEngine.Object.FindObjectOfType<GameManager>().PlayGlobalSFX("sounds/snd_hero");
-			UnityEngine.Object.FindObjectOfType<GameManager>().DisablePlayerMovement(true);
+			Util.GameManager().PlayGlobalSFX("sounds/snd_hero");
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
 		}
 		else if (!isPlaying)
 		{
 			origPos = collision.transform.position;
 			newPos = origPos + new Vector3(0f, -16.68f);
 			UnityEngine.Object.Instantiate(Resources.Load<GameObject>("overworld/ruins_objects/Hole"), origPos, Quaternion.identity, base.transform.parent);
-			UnityEngine.Object.FindObjectOfType<GameManager>().DisablePlayerMovement(true);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
 			isPlaying = true;
 			frames = 0;
 			collision.GetComponent<BoxCollider2D>().enabled = false;
-			susie = GameObject.Find("Susie").GetComponent<OverworldPartyMember>();
+			susie = Util.OverworldPlayer().GetPartyMemberByID(1);
 			susieOrigPos = susie.transform.position;
 			susieJumpDir = collision.GetComponent<OverworldPlayer>().GetDirection();
 		}

@@ -8,6 +8,10 @@ using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
+	public static readonly int FULL_COMPLETION = 3;
+
+	public static readonly int FULL_MURDER_LEVEL = 10;
+
 	public static GameManager instance = null;
 
 	private bool menuDisabled;
@@ -22,13 +26,13 @@ public class GameManager : MonoBehaviour
 
 	private string playerName;
 
+	private int[] party = new int[6] { 0, 1, -1, -1, -1, -1 };
+
 	private List<int> items;
 
-	private int[] weapon;
+	private List<int> equipItems;
 
-	private int[] armor;
-
-	private int[] hp;
+	private List<int> boxItems;
 
 	private int deaths;
 
@@ -45,12 +49,6 @@ public class GameManager : MonoBehaviour
 	private int[] atBuffs = new int[3];
 
 	private int[] dfBuffs = new int[3];
-
-	private bool susieActive = true;
-
-	private bool noelleActive = true;
-
-	private int miniPartyMember = -1;
 
 	private int zone;
 
@@ -84,13 +82,13 @@ public class GameManager : MonoBehaviour
 
 	private int playTimeFrames;
 
-	private PackManager packManager;
-
-	private MiscellaneousStrings miscStrings;
-
 	private bool forcedBattleEnd;
 
 	private int ending = -1;
+
+	private MonitorInfo monitorInfo;
+
+	private bool monitorInfoEnabled;
 
 	private object[] flags;
 
@@ -116,28 +114,27 @@ public class GameManager : MonoBehaviour
 
 	public Config config;
 
-	private bool fullscreen;
-
 	private static Options options = new Options();
-
-	private static bool allowZoneChange = true;
 
 	private UnoGameManager unoGm;
 
 	private bool inSingleBattle;
 
-	private List<int> invalidPreviousZones = new List<int> { 0, 1, 2, 77, 78 };
+	private bool onPrimaryDisplay;
 
 	public static bool autoLowGraphics = false;
 
-	private int framesBeforeClipReset;
+	private int curFps = 30;
+
+	private int refreshRate = 60;
+
+	private List<DisplayInfo> displayInfo = new List<DisplayInfo>();
 
 	private void Awake()
 	{
 		UnityEngine.Object.DontDestroyOnLoad(base.gameObject);
-		if (instance == null)
+		if (!instance)
 		{
-			SetFramerate(30);
 			instance = this;
 			zone = SceneManager.GetActiveScene().buildIndex;
 			GameObject gameObject = new GameObject("FadeCanvas", typeof(Canvas));
@@ -151,42 +148,18 @@ public class GameManager : MonoBehaviour
 			GameObject obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("ui/QuitFunction"));
 			obj.name = "QuitFunction";
 			UnityEngine.Object.DontDestroyOnLoad(obj);
+			PersistentSAVE.Load();
 			SetDefaultValues();
 			ConvertOldFile();
 			save = new SAVEFile();
-			Shader shader = Shader.Find("Custom/BackgroundShader");
-			autoLowGraphics = (bool)shader && !shader.isSupported;
-			if (PlayerPrefs.GetInt("fullscreen") == 1)
-			{
-				Resolution currentResolution = Screen.currentResolution;
-				Screen.SetResolution(currentResolution.width, currentResolution.height, FullScreenMode.FullScreenWindow);
-				fullscreen = true;
-			}
-			else
-			{
-				int num = 1;
-				Resolution currentResolution2 = Screen.currentResolution;
-				if (PlayerPrefs.HasKey("WindowScale"))
-				{
-					num = PlayerPrefs.GetInt("WindowScale");
-					if (num < 1 || num * 640 > currentResolution2.width || num * 480 > currentResolution2.height)
-					{
-						num = 1;
-						PlayerPrefs.SetInt("WindowScale", 1);
-					}
-				}
-				else
-				{
-					PlayerPrefs.SetInt("WindowScale", 1);
-				}
-				Screen.SetResolution(640 * num, 480 * num, false);
-				fullscreen = false;
-			}
-			packManager = base.gameObject.AddComponent<PackManager>();
 			config = new Config("config.ini");
 			LoadConfigData();
+			UpdateWindow();
 			base.gameObject.AddComponent<UTInput>();
-			miscStrings = base.gameObject.AddComponent<MiscellaneousStrings>();
+			Screen.GetDisplayLayout(displayInfo);
+			refreshRate = Mathf.RoundToInt((float)displayInfo[0].refreshRate.value);
+			SetFramerate(curFps);
+			ExceptionHandler.Init();
 		}
 		else if (instance != this)
 		{
@@ -204,7 +177,6 @@ public class GameManager : MonoBehaviour
 		mp = base.gameObject.AddComponent<MusicPlayer>();
 		aud = base.gameObject.AddComponent<AudioSource>();
 		healAudFrames = 0;
-		base.gameObject.AddComponent<ExceptionHandler>();
 		dev = false;
 		string[] commandLineArgs = Environment.GetCommandLineArgs();
 		for (int i = 0; i < commandLineArgs.Length; i++)
@@ -218,7 +190,7 @@ public class GameManager : MonoBehaviour
 
 	private void Start()
 	{
-		if (UnityEngine.Object.FindObjectOfType<OverworldPlayer>() != null)
+		if (Util.OverworldPlayer() != null)
 		{
 			if (IsTestMode() && save.name == null)
 			{
@@ -229,7 +201,7 @@ public class GameManager : MonoBehaviour
 				}
 			}
 			SetDefaultValues();
-			PlayMusic(UnityEngine.Object.FindObjectOfType<CameraController>().GetZoneMusic(), UnityEngine.Object.FindObjectOfType<CameraController>().GetZoneMusicPitch());
+			PlayMusic(Util.FindObjectOfType<CameraController>().GetZoneMusic(), Util.FindObjectOfType<CameraController>().GetZoneMusicPitch());
 			StartTime();
 		}
 		Font[] array = Resources.LoadAll<Font>("fonts");
@@ -241,10 +213,42 @@ public class GameManager : MonoBehaviour
 
 	private void Update()
 	{
-		if (UTInput.GetButtonDown("C") && (bool)UnityEngine.Object.FindObjectOfType<OverworldPlayer>() && !menuIsOpen && !menuDisabled && !menuLocked)
+		Screen.GetDisplayLayout(displayInfo);
+		if (displayInfo[0].refreshRate.value != Screen.mainWindowDisplayInfo.refreshRate.value)
 		{
-			menu = new GameObject();
-			menu.AddComponent<MainMenu>().CreateMainMenu();
+			onPrimaryDisplay = false;
+			QualitySettings.vSyncCount = 0;
+		}
+		else
+		{
+			int num = Mathf.RoundToInt((float)displayInfo[0].refreshRate.value);
+			if (refreshRate != num || !onPrimaryDisplay)
+			{
+				onPrimaryDisplay = true;
+				refreshRate = num;
+				SetFramerate(curFps);
+			}
+		}
+		if (monitorInfoEnabled && !monitorInfo)
+		{
+			monitorInfo = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("ui/debug/MonitorInfoCanvas")).GetComponentInChildren<MonitorInfo>();
+			UnityEngine.Object.DontDestroyOnLoad(monitorInfo.transform.parent.gameObject);
+		}
+		else if (!monitorInfoEnabled && (bool)monitorInfo)
+		{
+			UnityEngine.Object.Destroy(monitorInfo.gameObject);
+		}
+		if (UTInput.GetButtonDown("C") && (bool)Util.OverworldPlayer() && !menuIsOpen && !menuDisabled && !menuLocked)
+		{
+			if (SceneManager.GetActiveScene().buildIndex == 123)
+			{
+				menu = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("ui/OverworldMenuHD"), GameObject.Find("Canvas").transform);
+			}
+			else
+			{
+				menu = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("ui/OverworldMenu"), GameObject.Find("Canvas").transform);
+			}
+			DisablePlayerMovement(deactivatePartyMembers: false);
 		}
 		if (healAudFrames > 0)
 		{
@@ -268,19 +272,19 @@ public class GameManager : MonoBehaviour
 		{
 			if (Input.GetKeyDown(KeyCode.F12))
 			{
-				SpawnFromLastSave(false);
+				SpawnFromLastSave(respawn: false);
 			}
 			KeyCode[] keys = DebugTools.GetKeys();
 			foreach (KeyCode keyCode in keys)
 			{
 				if (Input.GetKeyDown(keyCode))
 				{
-					if (!UnityEngine.Object.FindObjectOfType<OverworldPlayer>())
+					if (!Util.OverworldPlayer())
 					{
 						DebugTools.UseTool(keyCode);
 						break;
 					}
-					if (keyCode == KeyCode.F6 || UnityEngine.Object.FindObjectOfType<OverworldPlayer>().CanMove() || (bool)UnityEngine.Object.FindObjectOfType<BattleManager>())
+					if (keyCode == KeyCode.F6 || Util.OverworldPlayer().CanMove() || (bool)Util.FindObjectOfType<BattleManager>())
 					{
 						DebugTools.UseTool(keyCode);
 						break;
@@ -290,20 +294,58 @@ public class GameManager : MonoBehaviour
 		}
 		if (Input.GetKeyDown(KeyCode.F4))
 		{
-			fullscreen = !fullscreen;
-			if (fullscreen)
+			SetFullscreen(!GetFullscreen());
+			UpdateWindow();
+		}
+	}
+
+	private void OnDestroy()
+	{
+		if (instance == this)
+		{
+			if ((bool)UnityEngine.Object.FindAnyObjectByType<Fade>())
 			{
-				Resolution currentResolution = Screen.currentResolution;
-				Screen.SetResolution(currentResolution.width, currentResolution.height, FullScreenMode.FullScreenWindow);
-				PlayerPrefs.SetInt("fullscreen", 1);
+				UnityEngine.Object.Destroy(UnityEngine.Object.FindAnyObjectByType<Fade>().gameObject);
 			}
-			else
+			if ((bool)GameObject.Find("FadeCanvas"))
 			{
-				Screen.SetResolution(640 * PlayerPrefs.GetInt("WindowScale"), 480 * PlayerPrefs.GetInt("WindowScale"), false);
-				PlayerPrefs.SetInt("fullscreen", 0);
+				UnityEngine.Object.Destroy(GameObject.Find("FadeCanvas"));
+			}
+			if ((bool)UnityEngine.Object.FindAnyObjectByType<QuitFunction>())
+			{
+				UnityEngine.Object.Destroy(UnityEngine.Object.FindAnyObjectByType<QuitFunction>().gameObject);
 			}
 		}
-		allowZoneChange = SceneManager.sceneCount == 1;
+	}
+
+	public void Disable()
+	{
+		StopMusic();
+		GetComponent<UTInput>().enabled = false;
+		if ((bool)UnityEngine.Object.FindAnyObjectByType<Fade>())
+		{
+			UnityEngine.Object.FindAnyObjectByType<Fade>().FadeIn(0);
+			UnityEngine.Object.FindAnyObjectByType<Fade>().enabled = false;
+		}
+		if ((bool)UnityEngine.Object.FindAnyObjectByType<QuitFunction>())
+		{
+			UnityEngine.Object.FindAnyObjectByType<QuitFunction>().enabled = false;
+		}
+		base.enabled = false;
+	}
+
+	public void Enable()
+	{
+		GetComponent<UTInput>().enabled = true;
+		if ((bool)UnityEngine.Object.FindAnyObjectByType<Fade>())
+		{
+			UnityEngine.Object.FindAnyObjectByType<Fade>().enabled = true;
+		}
+		if ((bool)UnityEngine.Object.FindAnyObjectByType<QuitFunction>())
+		{
+			UnityEngine.Object.FindAnyObjectByType<QuitFunction>().enabled = true;
+		}
+		base.enabled = true;
 	}
 
 	public void textboxtest()
@@ -350,17 +392,9 @@ public class GameManager : MonoBehaviour
 
 	public void DisablePlayerMovement(bool deactivatePartyMembers)
 	{
-		if (UnityEngine.Object.FindObjectOfType<OverworldPlayer>() != null)
+		if (Util.OverworldPlayer() != null)
 		{
-			UnityEngine.Object.FindObjectOfType<OverworldPlayer>().SetMovement(false);
-		}
-		if (deactivatePartyMembers)
-		{
-			OverworldPartyMember[] array = UnityEngine.Object.FindObjectsOfType<OverworldPartyMember>();
-			for (int i = 0; i < array.Length; i++)
-			{
-				array[i].Deactivate();
-			}
+			Util.OverworldPlayer().SetMovement(newMove: false, !deactivatePartyMembers);
 		}
 		menuIsOpen = true;
 	}
@@ -368,29 +402,13 @@ public class GameManager : MonoBehaviour
 	public void EnablePlayerMovement()
 	{
 		bool flag = true;
-		if (UnityEngine.Object.FindObjectOfType<OverworldPlayer>() != null)
+		if (Util.OverworldPlayer() != null)
 		{
-			if (UnityEngine.Object.FindObjectOfType<OverworldPlayer>().CannotMoveBattleSpecial())
+			if (Util.OverworldPlayer().CannotMoveBattleSpecial())
 			{
 				flag = false;
 			}
-			UnityEngine.Object.FindObjectOfType<OverworldPlayer>().SetMovement(true);
-		}
-		if ((bool)GameObject.Find("Susie") && susieActive && (bool)GameObject.Find("Susie").GetComponent<OverworldPartyMember>())
-		{
-			GameObject.Find("Susie").GetComponent<OverworldPartyMember>().Activate();
-		}
-		if ((bool)GameObject.Find("Noelle") && noelleActive && (bool)GameObject.Find("Noelle").GetComponent<OverworldPartyMember>())
-		{
-			GameObject.Find("Noelle").GetComponent<OverworldPartyMember>().Activate();
-		}
-		if ((bool)UnityEngine.Object.FindObjectOfType<MoleFriend>())
-		{
-			UnityEngine.Object.FindObjectOfType<MoleFriend>().Activate();
-		}
-		if ((bool)UnityEngine.Object.FindObjectOfType<CreepyLady>() && UnityEngine.Object.FindObjectOfType<CreepyLady>().IsFollowing())
-		{
-			UnityEngine.Object.FindObjectOfType<CreepyLady>().Activate();
+			Util.OverworldPlayer().SetMovement(newMove: true);
 		}
 		if (flag)
 		{
@@ -424,9 +442,9 @@ public class GameManager : MonoBehaviour
 
 	public void LoadArea(int sceneName, bool fadeIn, Vector2 pos, Vector2 dir)
 	{
-		if ((bool)UnityEngine.Object.FindObjectOfType<OverworldPlayer>())
+		if ((bool)Util.OverworldPlayer())
 		{
-			UnityEngine.Object.FindObjectOfType<OverworldPlayer>().SetCollision(true);
+			Util.OverworldPlayer().SetCollision(onoff: true);
 		}
 		if (sceneName != 97 && (int)GetSessionFlag(10) == 1)
 		{
@@ -446,16 +464,7 @@ public class GameManager : MonoBehaviour
 	public void LoadBunnyCheck()
 	{
 		UnityEngine.Debug.Log("GET BUNNY'D");
-		if ((bool)UnityEngine.Object.FindObjectOfType<Fade>())
-		{
-			UnityEngine.Object.Destroy(UnityEngine.Object.FindObjectOfType<Fade>().gameObject);
-		}
-		if ((bool)UnityEngine.Object.FindObjectOfType<QuitFunction>())
-		{
-			UnityEngine.Object.Destroy(UnityEngine.Object.FindObjectOfType<QuitFunction>().gameObject);
-		}
-		StopMusic();
-		ForceLoadArea(78);
+		SceneManager.LoadScene(78, LoadSceneMode.Single);
 	}
 
 	public void LoadArea(int sceneName, bool fadeIn, Vector2 pos, Vector2 dir, string music)
@@ -474,7 +483,7 @@ public class GameManager : MonoBehaviour
 	{
 		SceneManager.sceneLoaded -= OnAreaLoaded;
 		SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(zone));
-		if (!UnityEngine.Object.FindObjectOfType<BattleManager>())
+		if (!Util.FindObjectOfType<BattleManager>())
 		{
 			GameObject.Find("Canvas").GetComponent<Canvas>().pixelPerfect = true;
 			EnableMenu();
@@ -487,7 +496,7 @@ public class GameManager : MonoBehaviour
 			{
 				if (savePointSpawn && !checkpointEnabled)
 				{
-					spawnPos = UnityEngine.Object.FindObjectOfType<SAVEPoint>().GetSpawnPosition();
+					spawnPos = Util.FindObjectOfType<SAVEPoint>().GetSpawnPosition();
 				}
 				else if (savePointSpawn && checkpointEnabled)
 				{
@@ -557,11 +566,11 @@ public class GameManager : MonoBehaviour
 		GameObject obj = GameObject.Find("BattleFadeObj");
 		GameObject obj2 = new GameObject("SOUL");
 		obj2.AddComponent<SOUL>();
-		obj2.GetComponent<SOUL>().CreateSOUL(new Color(1f, 0f, 0f), false, true);
+		obj2.GetComponent<SOUL>().CreateSOUL(new Color(1f, 0f, 0f), monster: false, player: true);
 		obj2.GetComponent<SpriteRenderer>().sortingOrder = 500;
 		unoGm = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("uno/UnoGameManager")).GetComponent<UnoGameManager>();
 		unoGm.SetupPlayers();
-		unoGm.StartGame(MusicChooser.musicID, false, true, true, false);
+		unoGm.StartGame(MusicChooser.musicID, apointSystem: false, astackableDraw: true, achallengableFour: true, adrawCard: false);
 		obj.GetComponent<Fade>().FadeIn(5);
 		UnityEngine.Object.Instantiate(Resources.Load<GameObject>("uno/UnoBattleManager")).GetComponent<UnoBattleManager>().StartBattle(battleId);
 	}
@@ -573,7 +582,7 @@ public class GameManager : MonoBehaviour
 		GameObject obj = GameObject.Find("BattleFadeObj");
 		GameObject obj2 = new GameObject("SOUL");
 		obj2.AddComponent<SOUL>();
-		obj2.GetComponent<SOUL>().CreateSOUL(new Color(1f, 0f, 0f), false, true);
+		obj2.GetComponent<SOUL>().CreateSOUL(new Color(1f, 0f, 0f), monster: false, player: true);
 		obj2.GetComponent<SpriteRenderer>().sortingOrder = 500;
 		obj.GetComponent<Fade>().FadeIn(5);
 		UnityEngine.Object.Instantiate(Resources.Load<GameObject>("battle/BattleManager")).GetComponent<BattleManager>().StartBattle(battleId);
@@ -583,9 +592,9 @@ public class GameManager : MonoBehaviour
 	{
 		forcedBattleEnd = force;
 		ResetAllBuffs();
-		if ((bool)UnityEngine.Object.FindObjectOfType<TouchPad>())
+		if ((bool)Util.FindObjectOfType<TouchPad>())
 		{
-			UnityEngine.Object.FindObjectOfType<TouchPad>().SetSoulColor(SOUL.GetSOULColorByID(GetFlagInt(312), true));
+			Util.FindObjectOfType<TouchPad>().SetSoulColor(SOUL.GetSOULColorByID(GetFlagInt(312), forceNormal: true));
 		}
 		this.battleEndState = battleEndState;
 		if (battleId == 75)
@@ -625,7 +634,7 @@ public class GameManager : MonoBehaviour
 		TilemapRenderer[] componentsInChildren4 = GameObject.Find("MAP").GetComponentsInChildren<TilemapRenderer>();
 		foreach (TilemapRenderer tilemapRenderer in componentsInChildren4)
 		{
-			if (tilemapRenderer.GetComponent<Tilemap>().enabled)
+			if (((Behaviour)(object)tilemapRenderer.GetComponent<Tilemap>()).enabled)
 			{
 				tilemapRenderer.enabled = true;
 			}
@@ -635,21 +644,21 @@ public class GameManager : MonoBehaviour
 		{
 			componentsInChildren5[i].enabled = true;
 		}
-		UnityEngine.Object.FindObjectOfType<OverworldPlayer>().GetComponent<SpriteRenderer>().enabled = true;
-		UnityEngine.Object.FindObjectOfType<OverworldPlayer>().SetCollision(true);
-		OverworldPartyMember[] array = UnityEngine.Object.FindObjectsOfType<OverworldPartyMember>();
+		Util.OverworldPlayer().GetComponent<SpriteRenderer>().enabled = true;
+		Util.OverworldPlayer().SetCollision(onoff: true);
+		OverworldPartyMember[] array = Util.FindObjectsOfType<OverworldPartyMember>();
 		for (int i = 0; i < array.Length; i++)
 		{
-			array[i].GetComponent<SpriteRenderer>().enabled = true;
+			array[i].ShowSprite();
 		}
-		ForceTogglePlayers(true);
+		ForceTogglePlayers(tog: true);
 		EnablePlayerMovement();
 		ResumeMusic(12);
-		if ((bool)UnityEngine.Object.FindObjectOfType<LostCoreMusic>())
+		if ((bool)Util.FindObjectOfType<LostCoreMusic>())
 		{
-			UnityEngine.Object.FindObjectOfType<LostCoreMusic>().SetDanger(false);
+			Util.FindObjectOfType<LostCoreMusic>().SetDanger(danger: false);
 		}
-		UnityEngine.Object.FindObjectOfType<Fade>().FadeIn(12);
+		Util.FindObjectOfType<Fade>().FadeIn(12);
 		if (!forcedBattleEnd)
 		{
 			EndBattleHandler.DoEndBattle(battleId, battleEndState);
@@ -664,17 +673,17 @@ public class GameManager : MonoBehaviour
 
 	public void ForceTogglePlayers(bool tog)
 	{
-		OverworldPlayer overworldPlayer = UnityEngine.Object.FindObjectOfType<OverworldPlayer>();
-		GameObject gameObject = GameObject.Find("Susie");
-		GameObject gameObject2 = GameObject.Find("Noelle");
+		OverworldPlayer overworldPlayer = Util.OverworldPlayer();
 		if ((bool)overworldPlayer)
 		{
 			overworldPlayer.GetComponent<OverworldPlayer>().enabled = tog;
 			overworldPlayer.GetComponent<SpriteRenderer>().enabled = tog;
-			gameObject.GetComponent<OverworldPartyMember>().enabled = tog;
-			gameObject.GetComponent<SpriteRenderer>().enabled = tog;
-			gameObject2.GetComponent<OverworldPartyMember>().enabled = tog;
-			gameObject2.GetComponent<SpriteRenderer>().enabled = tog;
+			OverworldPartyMember[] array = Util.FindObjectsOfType<OverworldPartyMember>();
+			foreach (OverworldPartyMember obj in array)
+			{
+				obj.GetComponent<OverworldPartyMember>().enabled = tog;
+				obj.GetComponent<SpriteRenderer>().enabled = tog;
+			}
 		}
 	}
 
@@ -684,36 +693,36 @@ public class GameManager : MonoBehaviour
 		SetSessionFlag(7, specialText);
 		if (!inSingleBattle && FileExists())
 		{
-			SaveFile(false);
+			SaveFile(savepoint: false);
 		}
 		inSingleBattle = false;
 		SceneManager.LoadScene(3, LoadSceneMode.Single);
 		spawnPos = Vector2.zero;
-		if (UnityEngine.Object.FindObjectOfType<SOUL>() != null)
+		if (Util.FindObjectOfType<SOUL>() != null)
 		{
-			spawnPos = UnityEngine.Object.FindObjectOfType<SOUL>().transform.position - GameObject.Find("BattleCamera").transform.position;
+			spawnPos = Util.FindObjectOfType<SOUL>().transform.position - GameObject.Find("BattleCamera").transform.position;
 		}
-		else if (UnityEngine.Object.FindObjectOfType<ActionSOUL>() != null)
+		else if (Util.FindObjectOfType<ActionSOUL>() != null)
 		{
-			if (UnityEngine.Object.FindObjectOfType<ActionSOUL>().transform.childCount > 0)
+			if (Util.FindObjectOfType<ActionSOUL>().transform.childCount > 0)
 			{
-				spawnPos = UnityEngine.Object.FindObjectOfType<ActionSOUL>().transform.GetChild(0).position - UnityEngine.Object.FindObjectOfType<CameraController>().transform.position;
+				spawnPos = Util.FindObjectOfType<ActionSOUL>().transform.GetChild(0).position - Util.FindObjectOfType<CameraController>().transform.position;
 			}
 			else
 			{
-				spawnPos = UnityEngine.Object.FindObjectOfType<ActionSOUL>().transform.position - UnityEngine.Object.FindObjectOfType<CameraController>().transform.position;
+				spawnPos = Util.FindObjectOfType<ActionSOUL>().transform.position - Util.FindObjectOfType<CameraController>().transform.position;
 			}
 		}
-		else if (UnityEngine.Object.FindObjectOfType<OverworldPlayer>() != null)
+		else if (Util.OverworldPlayer() != null)
 		{
-			spawnPos = UnityEngine.Object.FindObjectOfType<OverworldPlayer>().transform.position - UnityEngine.Object.FindObjectOfType<CameraController>().transform.position;
+			spawnPos = Util.OverworldPlayer().transform.position - Util.FindObjectOfType<CameraController>().transform.position;
 		}
 		SceneManager.sceneLoaded += OnDeathScreenLoaded;
 	}
 
 	public void OnDeathScreenLoaded(Scene ascene, LoadSceneMode aMode)
 	{
-		DisablePlayerMovement(true);
+		DisablePlayerMovement(deactivatePartyMembers: true);
 		aud.Stop();
 		mp.Stop();
 		SceneManager.sceneLoaded -= OnDeathScreenLoaded;
@@ -734,28 +743,27 @@ public class GameManager : MonoBehaviour
 		return items;
 	}
 
-	public List<int> GetBoxList()
+	public List<int> GetEquipmentItemList()
 	{
-		List<int> list = new List<int>();
-		if (GetFlagInt(156) == 1)
-		{
-			for (int i = 0; i < 10; i++)
-			{
-				int flagInt = GetFlagInt(157 + i);
-				if (flagInt > -1)
-				{
-					list.Add(flagInt);
-				}
-			}
-		}
-		return list;
+		return equipItems;
 	}
 
-	public int FirstFreeItemSpace()
+	public List<int> GetBoxList()
 	{
-		for (int i = 0; i < items.Count; i++)
+		return boxItems;
+	}
+
+	public void SetBoxList(List<int> boxItems)
+	{
+		this.boxItems = boxItems;
+	}
+
+	public int FirstFreeItemSpace(bool equipment)
+	{
+		int[] array = (equipment ? equipItems.ToArray() : items.ToArray());
+		for (int i = 0; i < array.Length; i++)
 		{
-			if (items[i] == -1)
+			if (array[i] == -1)
 			{
 				return i;
 			}
@@ -763,12 +771,18 @@ public class GameManager : MonoBehaviour
 		return -1;
 	}
 
-	public int NumItemFreeSpace()
+	public int FirstFreeItemSpace(int item)
 	{
+		return FirstFreeItemSpace(Items.IsEquipment(item));
+	}
+
+	public int NumItemFreeSpace(bool equipment)
+	{
+		int[] array = (equipment ? equipItems.ToArray() : items.ToArray());
 		int num = 0;
-		for (int i = 0; i < items.Count; i++)
+		for (int i = 0; i < array.Length; i++)
 		{
-			if (items[i] == -1)
+			if (array[i] == -1)
 			{
 				num++;
 			}
@@ -776,11 +790,20 @@ public class GameManager : MonoBehaviour
 		return num;
 	}
 
-	public void AddItem(int id)
+	public int NumItemFreeSpace(int item)
 	{
-		if (id > -1)
+		return NumItemFreeSpace(Items.IsEquipment(item));
+	}
+
+	public void AddItem(int item)
+	{
+		if (item == 16)
 		{
-			items[FirstFreeItemSpace()] = id;
+			SetFlag(286, 1);
+		}
+		else if (item > -1)
+		{
+			items[FirstFreeItemSpace(equipment: false)] = item;
 		}
 	}
 
@@ -789,13 +812,13 @@ public class GameManager : MonoBehaviour
 		if (GetItem(index) == 45)
 		{
 			SetFlag(312, 0);
-			if ((bool)UnityEngine.Object.FindObjectOfType<SOUL>())
+			if ((bool)Util.FindObjectOfType<SOUL>())
 			{
-				UnityEngine.Object.FindObjectOfType<SOUL>().AdjustSOULColor();
+				Util.FindObjectOfType<SOUL>().AdjustSOULColor();
 			}
-			if ((bool)UnityEngine.Object.FindObjectOfType<TouchPad>())
+			if ((bool)Util.FindObjectOfType<TouchPad>())
 			{
-				UnityEngine.Object.FindObjectOfType<TouchPad>().SetSoulColor(Color.red);
+				Util.FindObjectOfType<TouchPad>().SetSoulColor(Color.red);
 			}
 		}
 		items.RemoveAt(index);
@@ -814,95 +837,199 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	public int GetItem(int id)
+	public void MoveItemToBack(int index)
 	{
-		return items[id];
+		int item = items[index];
+		items.RemoveAt(index);
+		items.Add(item);
 	}
 
-	public int GetWeapon(int partyMember)
+	public int GetItem(int index)
 	{
-		if (partyMember > 2)
+		return items[index];
+	}
+
+	public void AddEquipment(int item)
+	{
+		if (item > -1)
 		{
-			if (partyMember == 3)
+			equipItems[FirstFreeItemSpace(equipment: true)] = item;
+		}
+	}
+
+	public void RemoveEquipment(int index)
+	{
+		equipItems.RemoveAt(index);
+		equipItems.Add(-1);
+	}
+
+	public void RemoveEquipmentByID(int item)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			if (equipItems[i] == item)
 			{
-				return 20;
+				RemoveEquipment(i);
+				break;
 			}
-			return 0;
 		}
-		return weapon[partyMember];
 	}
 
-	public int GetArmor(int partyMember)
+	public int GetEquipment(int index)
 	{
-		if (partyMember > 2)
+		return equipItems[index];
+	}
+
+	public void AddAmbiguousItem(int item)
+	{
+		if (Items.IsEquipment(item))
 		{
-			return 0;
+			AddEquipment(item);
 		}
-		return armor[partyMember];
+		else
+		{
+			AddItem(item);
+		}
 	}
 
-	public void ForceWeapon(int partyMember, int i)
+	public int GetWeapon(int slot)
 	{
-		weapon[partyMember] = i;
+		return PartyMembers.GetWeapon(party[slot]);
 	}
 
-	public void ForceArmor(int partyMember, int i)
+	public int GetArmor(int slot)
 	{
-		armor[partyMember] = i;
+		return PartyMembers.GetArmor(party[slot]);
 	}
 
-	public void ChangeWeapon(int partyMember, int index)
+	public void ForceWeapon(int slot, int i)
 	{
-		int id = weapon[partyMember];
-		weapon[partyMember] = items[index];
-		RemoveItem(index);
-		AddItem(id);
+		PartyMembers.SetWeapon(party[slot], i);
 	}
 
-	public void ChangeArmor(int partyMember, int index)
+	public void ForceArmor(int slot, int i)
 	{
-		int num = armor[partyMember];
-		armor[partyMember] = items[index];
-		RemoveItem(index);
+		PartyMembers.SetArmor(party[slot], i);
+	}
+
+	public void ChangeWeapon(int slot, int index)
+	{
+		int weapon = PartyMembers.GetWeapon(party[slot]);
+		PartyMembers.SetWeapon(party[slot], equipItems[index]);
+		RemoveEquipment(index);
+		AddAmbiguousItem(weapon);
+	}
+
+	public void ChangeArmor(int slot, int index)
+	{
+		int num = PartyMembers.GetArmor(party[slot]);
+		PartyMembers.SetArmor(party[slot], equipItems[index]);
+		RemoveEquipment(index);
 		if (num == 4)
 		{
 			num = 7;
 		}
-		AddItem(num);
+		if (num == 7 && NumItemFreeSpace(equipment: false) == 0)
+		{
+			AddEquipment(7);
+		}
+		else
+		{
+			AddAmbiguousItem(num);
+		}
 	}
 
-	public void EatItem(int partyMember, int index)
+	public void EatItem(int slot, int index, bool useEquipmentInventory = false)
 	{
-		int item = GetItem(index);
-		if (item == 28)
+		int num = GetItem(index);
+		if (useEquipmentInventory)
 		{
-			if (partyMember == 1)
+			num = GetEquipment(index);
+		}
+		if (num == 17 && party[slot] == 0)
+		{
+			int num2 = Items.ItemValue(num, slot);
+			int num3 = GetHP(slot) + num2;
+			int num4 = GetMaxHP(slot) + 16;
+			if (num3 < num4)
 			{
-				SetHP(1, GetMaxHP(1) + 10, true);
+				SetHP(slot, num3, forceOverheal: true);
 			}
 			else
 			{
-				SetHP(partyMember, GetMaxHP(partyMember) - 1);
+				SetHP(slot, num4, forceOverheal: true);
 			}
 		}
-		else if (item == 39 && partyMember == 2)
+		else if (num == 28)
 		{
-			if (GetHP(2) - GetMaxHP(2) < 5)
+			if (party[slot] == 1)
 			{
-				SetHP(2, GetMaxHP(2) + 5, true);
+				SetHP(slot, GetMaxHP(slot) + 10, forceOverheal: true);
+			}
+			else if (GetHP(slot) < GetMaxHP(slot) - 1)
+			{
+				SetHP(slot, GetMaxHP(slot) - 1);
+			}
+		}
+		else if (num == 39 && party[slot] == 2)
+		{
+			if (GetHP(slot) - GetMaxHP(slot) < 5)
+			{
+				SetHP(slot, GetMaxHP(slot) + 5, forceOverheal: true);
 			}
 		}
 		else
 		{
-			int heal = Items.ItemValue(item, partyMember);
-			Heal(partyMember, heal);
+			int num5 = Items.ItemValue(num, slot);
+			if (num5 > 0)
+			{
+				Heal(slot, num5);
+			}
+			else if (num5 < 0)
+			{
+				Damage(slot, -num5);
+			}
 		}
-		RemoveItem(index);
+		if (useEquipmentInventory)
+		{
+			RemoveEquipment(index);
+		}
+		else
+		{
+			RemoveItem(index);
+		}
 	}
 
-	public void UseItem(int partyMember, int index)
+	public void UseItem(int slot, int index, bool equipment)
 	{
-		if (Items.ItemType(GetItem(index)) == 0)
+		if (equipment)
+		{
+			if (!Items.CanEquipItem((PartyMembers.ID)party[slot], GetEquipment(index)))
+			{
+				return;
+			}
+			if (Items.ItemType(GetEquipment(index)) == 1)
+			{
+				PlayGlobalSFX("sounds/snd_item");
+				aud.Play();
+				ChangeWeapon(slot, index);
+			}
+			else if (Items.ItemType(GetEquipment(index)) == 2)
+			{
+				PlayGlobalSFX("sounds/snd_item");
+				ChangeArmor(slot, index);
+				if ((bool)Util.FindObjectOfType<SOULGraze>())
+				{
+					Util.FindObjectOfType<SOULGraze>().UpdateGrazeSize();
+				}
+			}
+			else if (GetEquipment(index) == 7)
+			{
+				PlayGlobalSFX("sounds/snd_heal");
+				EatItem(slot, index, useEquipmentInventory: true);
+			}
+		}
+		else if (Items.ItemType(GetItem(index)) == 0)
 		{
 			int item = GetItem(index);
 			if (item == 7)
@@ -916,9 +1043,9 @@ public class GameManager : MonoBehaviour
 				if (item == 22)
 				{
 					healAudSound = "sounds/snd_speedup";
-					if (!UnityEngine.Object.FindObjectOfType<BattleManager>() && GetItem(index) == 22)
+					if (!Util.FindObjectOfType<BattleManager>() && GetItem(index) == 22)
 					{
-						UnityEngine.Object.FindObjectOfType<OverworldPlayer>().SetSpeedMultiplier(1.5f);
+						Util.OverworldPlayer().SetSpeedMultiplier(1.5f);
 					}
 				}
 				else
@@ -926,25 +1053,10 @@ public class GameManager : MonoBehaviour
 					healAudSound = "sounds/snd_heal";
 				}
 			}
-			EatItem(partyMember, index);
+			EatItem(slot, index);
 			if (item == 35)
 			{
 				AddItem(36);
-			}
-		}
-		else if (Items.ItemType(GetItem(index)) == 1 && partyMember != 1 && (partyMember != 2 || GetItem(index) != 41))
-		{
-			PlayGlobalSFX("sounds/snd_item");
-			aud.Play();
-			ChangeWeapon(partyMember, index);
-		}
-		else if (Items.ItemType(GetItem(index)) == 2 && (partyMember != 1 || (GetItem(index) != 14 && GetItem(index) != 43)))
-		{
-			PlayGlobalSFX("sounds/snd_item");
-			ChangeArmor(partyMember, index);
-			if ((bool)UnityEngine.Object.FindObjectOfType<SOULGraze>())
-			{
-				UnityEngine.Object.FindObjectOfType<SOULGraze>().UpdateGrazeSize();
 			}
 		}
 		else if (Items.ItemType(GetItem(index)) == 4)
@@ -952,8 +1064,20 @@ public class GameManager : MonoBehaviour
 			PlayGlobalSFX("sounds/snd_swallow");
 			healAudFrames = 1;
 			healAudSound = "sounds/snd_heal";
-			int heal = Items.ItemValue(GetItem(index));
-			HealAll(heal, false);
+			int num = Items.ItemValue(GetItem(index));
+			if (num > 0)
+			{
+				HealAll(num, includeOutOfParty: false);
+			}
+			else if (num < 0)
+			{
+				Damage(0, -num);
+				Damage(1, -num);
+				Damage(2, -num);
+				Damage(3, -num);
+				Damage(4, -num);
+				Damage(5, -num);
+			}
 			RemoveItem(index);
 		}
 		else if (GetItem(index) == 16)
@@ -985,9 +1109,9 @@ public class GameManager : MonoBehaviour
 
 	public void PlayMusic(string music, float pitch, float volume)
 	{
-		if (music == "zoneMusic" && (bool)UnityEngine.Object.FindObjectOfType<CameraController>())
+		if (music == "zoneMusic" && (bool)Util.FindObjectOfType<CameraController>())
 		{
-			music = UnityEngine.Object.FindObjectOfType<CameraController>().GetZoneMusic();
+			music = Util.FindObjectOfType<CameraController>().GetZoneMusic();
 			if (music.EndsWith("mus_mysteriousroom2"))
 			{
 				if ((int)GetFlag(209) != 0 && (int)GetFlag(229) == 0 && (int)GetFlag(230) == 0)
@@ -1027,7 +1151,7 @@ public class GameManager : MonoBehaviour
 					music = "music/mus_toomuch";
 				}
 			}
-			pitch = UnityEngine.Object.FindObjectOfType<CameraController>().GetZoneMusicPitch();
+			pitch = Util.FindObjectOfType<CameraController>().GetZoneMusicPitch();
 			if ((int)GetFlag(87) >= 5 && music == "music/mus_happyhappy")
 			{
 				pitch = 0.3f;
@@ -1041,6 +1165,10 @@ public class GameManager : MonoBehaviour
 		{
 			pitch = ((zone >= 50 && zone < 110) ? 0.475f : (((int)GetFlag(13) >= 3) ? 0.6f : 0.95f));
 		}
+		if (music.EndsWith("mus_muscle") && playerName == "SHAYY" && (zone != 115 || GetFlagInt(291) == 0))
+		{
+			music = "music/mus_muscle_improved";
+		}
 		bool intro = false;
 		if (music.EndsWith("_intro"))
 		{
@@ -1050,7 +1178,7 @@ public class GameManager : MonoBehaviour
 		mp.SetVolume(volume);
 		if ((mp.CurrentMusic() != music || !mp.IsPlaying()) && music != "" && music != "music/")
 		{
-			mp.ChangeMusic(music, intro, true);
+			mp.ChangeMusic(music, intro, playImmediately: true);
 			mp.GetSource().pitch = pitch;
 		}
 		else if (music == "")
@@ -1135,95 +1263,74 @@ public class GameManager : MonoBehaviour
 		return mp;
 	}
 
-	public int GetHP(int partyMember)
+	public int GetHP(int slot)
 	{
-		if (partyMember > 2)
-		{
-			return hp[0];
-		}
-		return hp[partyMember];
+		return PartyMembers.GetHP(party[slot]);
 	}
 
 	public int[] GetHPArray()
 	{
-		return hp;
+		return new int[6]
+		{
+			PartyMembers.GetHP(party[0]),
+			PartyMembers.GetHP(party[1]),
+			PartyMembers.GetHP(party[2]),
+			PartyMembers.GetHP(party[3]),
+			PartyMembers.GetHP(party[4]),
+			PartyMembers.GetHP(party[5])
+		};
 	}
 
 	public int GetCombinedHP()
 	{
-		int num = hp[0];
-		if (SusieInParty())
+		int num = 0;
+		for (int i = 0; i < 6; i++)
 		{
-			num += hp[1];
-		}
-		if (NoelleInParty())
-		{
-			num += hp[2];
+			num += GetHP(i);
 		}
 		return num;
 	}
 
-	public int GetMaxHP(int partyMember)
+	public int GetCombinedHPNoOverheal()
 	{
-		return GetMaxHP(partyMember, exp);
+		int num = 0;
+		for (int i = 0; i < 6; i++)
+		{
+			num = ((GetHP(i) <= GetMaxHP(i)) ? (num + GetHP(i)) : (num + GetMaxHP(i)));
+		}
+		return num;
 	}
 
-	public int GetMaxHP(int partyMember, int exp)
+	public int GetCombinedMaxHP()
 	{
-		if (partyMember > 2)
+		int num = 0;
+		for (int i = 0; i < 6; i++)
 		{
-			return GetMiniMemberMaxHP();
+			num += GetMaxHP(i);
 		}
-		float num = ((partyMember == 1) ? 1.5f : 1f);
-		float num2 = ((partyMember == 1) ? 1.25f : 1f);
-		int num3 = Mathf.RoundToInt(20f * num + (float)(4 * (GetLV(exp) - 1)) * num2);
-		if (GetLV(exp) == 20)
-		{
-			num3 = ((partyMember == 1) ? 150 : 100);
-		}
-		if (partyMember == 0 && GetMiniPartyMember() > 0)
-		{
-			num3 += GetMiniMemberMaxHP();
-		}
-		return num3;
+		return num;
+	}
+
+	public int GetMaxHP(int slot)
+	{
+		return GetMaxHP(slot, exp);
+	}
+
+	public int GetMaxHP(int slot, int exp)
+	{
+		return PartyMembers.GetMaxHP(party[slot], exp);
 	}
 
 	public int GetMiniMemberMaxHP()
 	{
-		if (miniPartyMember == 0)
-		{
-			return 0;
-		}
-		if (miniPartyMember == 3)
-		{
-			return 10;
-		}
-		return 20;
-	}
-
-	public int GetMiniMemberATK()
-	{
-		if (miniPartyMember == 3)
-		{
-			return 1;
-		}
-		return 15;
-	}
-
-	public int GetMiniMemberDEF()
-	{
-		if (miniPartyMember == 3)
-		{
-			return 0;
-		}
-		return 7;
+		return PartyMembers.GetMaxHP(party[3], exp);
 	}
 
 	public bool KrisInControl()
 	{
-		if (miniPartyMember > 0 && hp[0] - GetMiniMemberMaxHP() <= 0)
+		if (PartyMembers.GetHP(0) > 0)
 		{
-			return false;
+			return party[0] != 0;
 		}
 		return true;
 	}
@@ -1302,253 +1409,217 @@ public class GameManager : MonoBehaviour
 		this.gold = gold;
 	}
 
-	public void Heal(int partyMember, int heal)
+	public void Heal(int slot, int heal)
 	{
-		if (hp[partyMember] <= GetMaxHP(partyMember))
-		{
-			hp[partyMember] += heal;
-			if (hp[partyMember] > GetMaxHP(partyMember))
-			{
-				hp[partyMember] = GetMaxHP(partyMember);
-			}
-		}
+		PartyMembers.Heal(party[slot], heal);
 	}
 
 	public void HealAll(int heal, bool includeOutOfParty = true)
 	{
-		Heal(0, heal);
-		if (includeOutOfParty || (!includeOutOfParty && SusieInParty()))
-		{
-			Heal(1, heal);
-		}
-		if (includeOutOfParty || (!includeOutOfParty && NoelleInParty()))
-		{
-			Heal(2, heal);
-		}
+		PartyMembers.HealAll(heal, includeOutOfParty);
 	}
 
-	public void Damage(int partyMember, int dmg)
+	public void Damage(int slot, int dmg)
 	{
-		int num = hp[partyMember];
-		hp[partyMember] -= dmg;
-		if ((bool)UnityEngine.Object.FindObjectOfType<BattleManager>() && num > 0 && ((UnityEngine.Object.FindObjectOfType<BattleManager>().IsSeriousMode() && hp[partyMember] <= 0 && partyMember == 0 && num > 1) || (UnityEngine.Object.FindObjectOfType<BattleManager>().GetState() < 3 && hp[partyMember] <= 0)))
-		{
-			hp[partyMember] = 1;
-		}
-		if (hp[partyMember] <= 0)
-		{
-			hp[partyMember] = 0;
-		}
+		PartyMembers.Damage(party[slot], dmg);
+	}
+
+	public void DetermineDeath()
+	{
 		if (GetCombinedHP() == 0)
 		{
 			Death();
 		}
 	}
 
-	public int[] HandleDamageCalculations(int hp, float damageMulti, bool applyDamageImmediately = true)
+	public int[] HandleDamageCalculations(int hp, float damageMulti, bool applyDamageImmediately = true, bool[] forceAttackMinis = null)
 	{
-		PartyPanels partyPanels = UnityEngine.Object.FindObjectOfType<PartyPanels>();
-		SOUL sOUL = UnityEngine.Object.FindObjectOfType<SOUL>();
-		KarmaHandler karmaHandler = UnityEngine.Object.FindObjectOfType<KarmaHandler>();
-		int[] array = new int[3]
+		PartyPanels partyPanels = Util.FindObjectOfType<PartyPanels>();
+		SOUL sOUL = Util.FindObjectOfType<SOUL>();
+		KarmaHandler karmaHandler = Util.FindObjectOfType<KarmaHandler>();
+		int[] array = new int[6]
 		{
-			this.hp[0],
-			this.hp[1],
-			this.hp[2]
+			PartyMembers.GetHP(party[0]),
+			PartyMembers.GetHP(party[1]),
+			PartyMembers.GetHP(party[2]),
+			PartyMembers.GetHP(party[3]),
+			PartyMembers.GetHP(party[4]),
+			PartyMembers.GetHP(party[5])
 		};
 		float num = hp;
 		int num2 = -1;
 		if ((bool)partyPanels)
 		{
-			AttackBase attackBase = UnityEngine.Object.FindObjectOfType<AttackBase>();
+			AttackBase attackBase = Util.FindObjectOfType<AttackBase>();
 			if ((object)attackBase != null && !attackBase.AttackingAllTargets())
 			{
-				num2 = UnityEngine.Random.Range(0, partyPanels.NumTargettedMembers());
-				if (partyPanels.NumTargettedMembers() == 2 && num2 == 1)
+				bool flag = false;
+				bool flag2 = false;
+				List<PartyMembers.ID> list = new List<PartyMembers.ID>
 				{
-					num2 = (SusieInParty() ? 1 : 2);
-				}
-				if (GetHP(num2) <= 0 || !partyPanels.GetTargettedMembers()[num2])
+					PartyMembers.ID.Kris,
+					PartyMembers.ID.Frisk,
+					PartyMembers.ID.Chara,
+					PartyMembers.ID.Paula
+				};
+				do
 				{
-					switch (num2)
+					if (flag2)
 					{
-					case 2:
-						num2 -= ((GetHP(1) > 0 && partyPanels.GetTargettedMembers()[1]) ? 1 : 2);
-						break;
-					case 1:
-						num2 += ((GetHP(2) > 0 && partyPanels.GetTargettedMembers()[2]) ? 1 : (-1));
-						break;
-					case 0:
-						num2 += ((GetHP(1) > 0 && partyPanels.GetTargettedMembers()[1]) ? 1 : 2);
-						break;
+						flag = true;
+					}
+					num2 = UnityEngine.Random.Range(0, partyPanels.NumTargettedMembers());
+					if (partyPanels.NumTargettedMembers() == 2 && num2 == 1)
+					{
+						num2 = (PartySlotFilled(1) ? 1 : 2);
+					}
+					if ((GetHP(num2) <= 0 && GetHP(num2 + 3) <= 0) || !partyPanels.GetTargettedMembers()[num2])
+					{
+						switch (num2)
+						{
+						case 2:
+							num2 -= (((GetHP(1) > 0 || GetHP(4) > 0) && partyPanels.GetTargettedMembers()[1]) ? 1 : 2);
+							break;
+						case 1:
+							num2 += (((GetHP(2) > 0 || GetHP(5) > 0) && partyPanels.GetTargettedMembers()[2]) ? 1 : (-1));
+							break;
+						case 0:
+							num2 += (((GetHP(1) > 0 || GetHP(4) > 0) && partyPanels.GetTargettedMembers()[1]) ? 1 : 2);
+							break;
+						}
+					}
+					int num3 = ((GetHP(num2) > 0) ? num2 : (num2 + 3));
+					PartyMembers.ID partyMember = (PartyMembers.ID)GetPartyMember(num3);
+					if ((float)GetHP(num3) / (float)GetMaxHP(num3) <= 0.25f && !flag2 && list.Contains(partyMember))
+					{
+						flag2 = true;
 					}
 				}
+				while (!flag && flag2);
 			}
 		}
+		bool[] array2 = new bool[3];
 		for (int i = 0; i < 3; i++)
 		{
-			if ((num2 != -1 && num2 != i) || ((bool)sOUL && sOUL.PapCharmWasHit(i)))
+			if (num2 == -1 || num2 == i)
 			{
-				continue;
-			}
-			float num3 = num;
-			float num4 = GetDEF(i);
-			if (i == 0 && !KrisInControl())
-			{
-				num4 = GetMiniMemberDEF();
-			}
-			float num5 = num4 / 3f;
-			num3 -= num5;
-			float num6 = 1f + (float)(GetLV() / 2) / 10f;
-			if ((bool)karmaHandler)
-			{
-				int num7 = Mathf.RoundToInt((num3 * num6 - num3) * 2f);
-				karmaHandler.AddKarma(i, (num7 <= 1) ? 1 : num7);
-			}
-			else
-			{
-				num3 *= num6;
-			}
-			if ((bool)partyPanels && UnityEngine.Object.FindObjectOfType<BattleManager>().GetDefendingMembers()[i])
-			{
-				num3 *= 2f / 3f;
-			}
-			if ((bool)sOUL && sOUL.IsShieldActive())
-			{
-				num3 *= 2f / 3f;
-			}
-			if (IsEasyMode())
-			{
-				num3 *= 2f / 3f;
-			}
-			num3 *= damageMulti;
-			if (num3 < 1f)
-			{
-				num3 = 1f;
-			}
-			if ((bool)partyPanels && num2 == -1)
-			{
-				if (partyPanels.NumTargettedMembers() == 2)
+				int num4 = ((GetHP(i) > 0) ? i : (i + 3));
+				if (array2[i])
 				{
-					num3 *= 0.8f;
+					num4 = i + 3;
 				}
-				else if (partyPanels.NumTargettedMembers() == 3)
+				if ((bool)sOUL && sOUL.PapCharmWasHit(num4))
 				{
-					num3 *= 0.65f;
+					continue;
+				}
+				float num5 = num;
+				float num6 = (float)GetDEF(num4) / 3f;
+				num5 -= num6;
+				float num7 = 1f + (float)(GetLV() / 2) / 10f;
+				if ((bool)karmaHandler)
+				{
+					int num8 = Mathf.RoundToInt((num5 * num7 - num5) * 2f);
+					karmaHandler.AddKarma(i, (num8 <= 1) ? 1 : num8);
+				}
+				else
+				{
+					num5 *= num7;
+				}
+				if ((bool)partyPanels && Util.FindObjectOfType<BattleManager>().GetDefendingMembers()[i])
+				{
+					num5 *= 2f / 3f;
+				}
+				if ((bool)sOUL && sOUL.IsShieldActive())
+				{
+					num5 *= 2f / 3f;
+				}
+				if (IsEasyMode())
+				{
+					num5 *= 2f / 3f;
+				}
+				num5 *= damageMulti;
+				if (num5 < 1f)
+				{
+					num5 = 1f;
+				}
+				if ((bool)partyPanels && num2 == -1)
+				{
+					if (partyPanels.NumTargettedMembers() == 2)
+					{
+						num5 *= 0.8f;
+					}
+					else if (partyPanels.NumTargettedMembers() == 3)
+					{
+						num5 *= 0.65f;
+					}
+				}
+				if (((bool)partyPanels && partyPanels.GetTargettedMembers()[i]) || !partyPanels)
+				{
+					int num9 = Mathf.RoundToInt(num5);
+					if (applyDamageImmediately)
+					{
+						Damage(num4, num9);
+					}
+					array[num4] -= num9;
 				}
 			}
-			if (((bool)partyPanels && partyPanels.GetTargettedMembers()[i]) || !partyPanels)
+			if (forceAttackMinis != null && forceAttackMinis[i] && !array2[i])
 			{
-				int num8 = Mathf.RoundToInt(num3);
-				if (applyDamageImmediately)
-				{
-					Damage(i, num8);
-				}
-				array[i] -= num8;
+				array2[i] = true;
+				i--;
 			}
 		}
 		return array;
 	}
 
-	public void SetHP(int partyMember, int newHP, bool forceOverheal = false)
+	public void SetHP(int slot, int newHP, bool forceOverheal = false)
 	{
-		hp[partyMember] = newHP;
-		if (hp[partyMember] > GetMaxHP(partyMember) && !forceOverheal)
-		{
-			hp[partyMember] = GetMaxHP(partyMember);
-		}
-		if (hp[partyMember] <= 0)
-		{
-			hp[partyMember] = 0;
-		}
-		if (GetCombinedHP() == 0)
-		{
-			Death();
-		}
+		PartyMembers.SetHP(party[slot], newHP, forceOverheal);
 	}
 
-	public int GetATK(int partyMember)
+	public int GetATK(int slot)
 	{
-		if (partyMember > 2)
-		{
-			return GetMiniMemberATK();
-		}
-		int num = Items.ItemValue(GetWeapon(partyMember), partyMember);
-		return GetATKRaw(partyMember) + num;
+		return PartyMembers.GetATK(party[slot]);
 	}
 
-	public int GetATKRaw(int partyMember)
+	public int GetATKRaw(int slot)
 	{
-		int num = (GetLV() - 1) * 2;
-		if (partyMember == 1)
-		{
-			num += 2 + Mathf.FloorToInt((float)GetLV() / 4f);
-		}
-		if (partyMember == 2)
-		{
-			num = Mathf.RoundToInt((float)(num * 2) / 3f);
-		}
-		if (partyMember == 0 && (int)GetFlag(102) == 1)
-		{
-			num -= 6;
-		}
-		if (partyMember <= 2)
-		{
-			num += atBuffs[partyMember];
-		}
-		return num;
+		return PartyMembers.GetATKRaw(party[slot]);
 	}
 
-	public int GetDEF(int partyMember)
+	public int GetDEF(int slot)
 	{
-		return GetDEFRaw(partyMember) + Items.ItemValue(GetArmor(partyMember));
+		return PartyMembers.GetDEF(party[slot]);
 	}
 
-	public int GetDEFRaw(int partyMember)
+	public int GetDEFRaw(int slot)
 	{
-		int num = Mathf.FloorToInt((float)GetLV() / 5f);
-		if (partyMember == 0 && (int)GetFlag(102) == 1)
-		{
-			num -= 3;
-		}
-		if (partyMember <= 2)
-		{
-			num += dfBuffs[partyMember];
-		}
-		return num;
+		return PartyMembers.GetDEFRaw(party[slot]);
 	}
 
-	public float GetMagic(int partyMember)
+	public float GetMagic(int slot)
 	{
-		return GetMagicRaw(partyMember) + (float)GetMagicEquipment(partyMember);
+		return PartyMembers.GetMagic(party[slot]);
 	}
 
-	public int GetMagicEquipment(int partyMember)
+	public int GetMagicEquipment(int slot)
 	{
-		return Items.GetItemMagic(GetWeapon(partyMember)) + Items.GetItemMagic(GetArmor(partyMember));
+		return PartyMembers.GetMagicEquipment(party[slot]);
 	}
 
-	public float GetMagicRaw(int partyMember)
+	public float GetMagicRaw(int slot)
 	{
-		switch (partyMember)
-		{
-		case 1:
-			return 1f + (float)GetLV() / 5f;
-		case 2:
-			return GetLV();
-		default:
-			return 0f;
-		}
+		return PartyMembers.GetMagicRaw(party[slot]);
 	}
 
-	public void SetATKBuff(int partyMember, int buff)
+	public void SetATKBuff(int slot, int buff)
 	{
-		atBuffs[partyMember] = buff;
+		atBuffs[slot] = buff;
 	}
 
-	public void SetDEFBuff(int partyMember, int buff)
+	public void SetDEFBuff(int slot, int buff)
 	{
-		dfBuffs[partyMember] = buff;
+		dfBuffs[slot] = buff;
 	}
 
 	public void ResetAllBuffs()
@@ -1563,31 +1634,109 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	public int GetPartyMember(int slotID)
+	{
+		int num = party[slotID];
+		if (!PartyMembers.IsMemberAllowedInSlot(num, slotID))
+		{
+			UnityEngine.Debug.LogError(PartyMembers.GetMemberName(num) + " is not allowed to occupy slot " + slotID + "... fix this.");
+		}
+		return num;
+	}
+
+	public void SetPartyMember(int slotID, int member)
+	{
+		if (!PartyMembers.IsMemberAllowedInSlot(member, slotID))
+		{
+			UnityEngine.Debug.LogError(PartyMembers.GetMemberName(member) + " is not allowed to occupy slot " + slotID + "... fix this.");
+		}
+		party[slotID] = member;
+		if ((bool)Util.OverworldPlayer())
+		{
+			Util.OverworldPlayer().ResetPartyMemberList();
+		}
+	}
+
 	public void SetPartyMembers(bool susie, bool noelle)
 	{
-		susieActive = susie;
-		noelleActive = noelle;
+		party[1] = -1;
+		party[2] = -1;
+		if (susie && noelle)
+		{
+			party[1] = 1;
+			party[2] = 2;
+		}
+		else if (susie)
+		{
+			party[1] = 1;
+		}
+		else if (noelle)
+		{
+			party[1] = 2;
+		}
+		if ((bool)Util.OverworldPlayer())
+		{
+			Util.OverworldPlayer().ResetPartyMemberList();
+		}
+	}
+
+	public void SetPartyMembers(int[] party)
+	{
+		this.party = party;
+		if ((bool)Util.OverworldPlayer())
+		{
+			Util.OverworldPlayer().ResetPartyMemberList();
+		}
+	}
+
+	public int[] GetParty()
+	{
+		return party;
+	}
+
+	public bool PartySlotFilled(int slot)
+	{
+		return party[slot] != -1;
 	}
 
 	public bool SusieInParty()
 	{
-		return susieActive;
+		return party[1] == 1;
 	}
 
 	public bool NoelleInParty()
 	{
-		return noelleActive;
+		if (party[1] != 2)
+		{
+			return party[2] == 2;
+		}
+		return true;
 	}
 
-	public void SetMiniPartyMember(int id)
+	public int NumActivePartyMembers(bool includeMinis = false)
 	{
-		miniPartyMember = id;
-		SetFlag(86, id);
+		int num = 0;
+		for (int i = 0; i < (includeMinis ? 6 : 3); i++)
+		{
+			if (party[i] > -1)
+			{
+				num++;
+			}
+		}
+		return num;
 	}
 
-	public int GetMiniPartyMember()
+	public int[] GetActivePartySlots(bool includeMinis = false)
 	{
-		return miniPartyMember;
+		List<int> list = new List<int>();
+		for (int i = 0; i < (includeMinis ? 6 : 3); i++)
+		{
+			if (party[i] > -1)
+			{
+				list.Add(i);
+			}
+		}
+		return list.ToArray();
 	}
 
 	public void StopTime()
@@ -1648,7 +1797,7 @@ public class GameManager : MonoBehaviour
 		if (i >= 0 && i <= persFlags.Length)
 		{
 			persFlags[i] = state;
-			SaveFile(false);
+			SaveFile(savepoint: false);
 		}
 	}
 
@@ -1735,22 +1884,20 @@ public class GameManager : MonoBehaviour
 		if (savepoint)
 		{
 			DeactivateCheckpoint();
-			save.UpdateCharacterInfo(playerName, exp, items, weapon, armor, susieActive, noelleActive, playTime, zone, gold, "[???]", flags);
+			save.UpdateCharacterInfo(playerName, exp, items, equipItems, boxItems, party, PartyMembers.GetAllHP(), PartyMembers.GetAllWeapon(), PartyMembers.GetAllArmor(), playTime, zone, gold, flags);
 		}
 		save.UpdatePersistentFlags(persFlags);
 		save.UpdateDeathCount(deaths);
 		string path = "SAVE" + fileID + ".sav";
-		using (FileStream stream = File.Open(Path.Combine(Application.persistentDataPath, path), FileMode.OpenOrCreate))
-		{
-			SAVEFileIO.WriteFile(ref save, stream);
-		}
+		using FileStream stream = File.Open(Path.Combine(Application.persistentDataPath, path), FileMode.OpenOrCreate);
+		SAVEFileIO.WriteFile(ref save, stream);
 	}
 
 	public void SetCheckpoint(int respawnZone)
 	{
 		checkpointEnabled = true;
 		checkpointSave = new SAVEFile();
-		checkpointSave.UpdateCharacterInfo(playerName, exp, items, weapon, armor, susieActive, noelleActive, playTime, respawnZone, gold, "[???]", flags);
+		checkpointSave.UpdateCharacterInfo(playerName, exp, items, equipItems, boxItems, party, PartyMembers.GetAllHP(), PartyMembers.GetAllWeapon(), PartyMembers.GetAllArmor(), playTime, respawnZone, gold, flags);
 		checkpointSave.UpdatePersistentFlags(persFlags);
 		checkpointSave.UpdateDeathCount(deaths);
 		checkpointPos = Vector3.zero;
@@ -1794,10 +1941,8 @@ public class GameManager : MonoBehaviour
 	public void LoadFile()
 	{
 		string path = "SAVE" + fileID + ".sav";
-		using (FileStream fs = File.Open(Path.Combine(Application.persistentDataPath, path), FileMode.Open))
-		{
-			SAVEFileIO.ReadFile(ref save, fs);
-		}
+		using FileStream fs = File.Open(Path.Combine(Application.persistentDataPath, path), FileMode.Open);
+		SAVEFileIO.ReadFile(ref save, fs);
 	}
 
 	public void ConvertOldFile()
@@ -1808,11 +1953,25 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	public void NewGame(string playerName)
+	{
+		SetPlayerName(playerName);
+		if (GetPlayerName() == "FRISK")
+		{
+			SetPartyMember(0, 6);
+			SetFlag(108, 1);
+			ForceWeapon(0, 25);
+		}
+		SetFlag(223, options.startingFlavor.value);
+		SetPartyMembers(susie: true, noelle: false);
+	}
+
 	public void SpawnFromLastSave(bool respawn)
 	{
 		ResetAllBuffs();
 		if (!respawn)
 		{
+			SetDefaultValues(ignoreDebug: true);
 			sessionFlags = new object[100];
 		}
 		if (!FileExists() && !(checkpointEnabled && respawn))
@@ -1822,20 +1981,15 @@ public class GameManager : MonoBehaviour
 		if (checkpointEnabled && respawn)
 		{
 			flags = (object[])checkpointSave.flags.Clone();
-			exp = checkpointSave.exp;
-			miniPartyMember = (int)GetFlag(86);
-			hp = new int[3]
-			{
-				GetMaxHP(0),
-				GetMaxHP(1),
-				GetMaxHP(2)
-			};
 			playerName = checkpointSave.name;
+			exp = checkpointSave.exp;
 			items = new List<int>(checkpointSave.items);
-			weapon = (int[])checkpointSave.weapon.Clone();
-			armor = (int[])checkpointSave.armor.Clone();
-			susieActive = checkpointSave.susieActive;
-			noelleActive = checkpointSave.noelleActive;
+			equipItems = new List<int>(checkpointSave.equipItems);
+			boxItems = new List<int>(checkpointSave.boxItems);
+			party = (int[])checkpointSave.party.Clone();
+			PartyMembers.SetAllHP((int[])checkpointSave.hp.Clone(), maxPartyMembers: true);
+			PartyMembers.SetAllWeapon((int[])checkpointSave.weapon.Clone());
+			PartyMembers.SetAllArmor((int[])checkpointSave.armor.Clone());
 			playTime = checkpointSave.playTime;
 			zone = checkpointSave.zone;
 			gold = checkpointSave.gold;
@@ -1845,24 +1999,19 @@ public class GameManager : MonoBehaviour
 				forceRespawnZone = -1;
 			}
 			StartTime();
-			LoadArea(zone, true, Vector2.zero, Vector2.down, true);
+			LoadArea(zone, fadeIn: true, Vector2.zero, Vector2.down, fromSavePoint: true);
 			return;
 		}
 		flags = (object[])save.flags.Clone();
-		exp = save.exp;
-		miniPartyMember = (int)GetFlag(86);
-		hp = new int[3]
-		{
-			GetMaxHP(0),
-			GetMaxHP(1),
-			GetMaxHP(2)
-		};
 		playerName = save.name;
+		exp = save.exp;
 		items = new List<int>(save.items);
-		weapon = (int[])save.weapon.Clone();
-		armor = (int[])save.armor.Clone();
-		susieActive = save.susieActive;
-		noelleActive = save.noelleActive;
+		equipItems = new List<int>(save.equipItems);
+		boxItems = new List<int>(save.boxItems);
+		party = (int[])save.party.Clone();
+		PartyMembers.SetAllHP((int[])save.hp.Clone());
+		PartyMembers.SetAllWeapon((int[])save.weapon.Clone());
+		PartyMembers.SetAllArmor((int[])save.armor.Clone());
 		playTime = save.playTime;
 		zone = save.zone;
 		gold = save.gold;
@@ -1878,7 +2027,7 @@ public class GameManager : MonoBehaviour
 		}
 		else
 		{
-			LoadArea(zone, respawn, Vector2.zero, Vector2.down, true);
+			LoadArea(zone, respawn, Vector2.zero, Vector2.down, fromSavePoint: true);
 		}
 	}
 
@@ -1907,7 +2056,7 @@ public class GameManager : MonoBehaviour
 		{
 			if (GetFlagInt(176) == 0)
 			{
-				WeirdChecker.AdvanceTo(this, GetFlagInt(13), false);
+				WeirdChecker.AdvanceTo(this, GetFlagInt(13), sound: false);
 			}
 			else
 			{
@@ -1940,7 +2089,7 @@ public class GameManager : MonoBehaviour
 		}
 		int num = GetFlagInt(64) + 1;
 		UnityEngine.Debug.Log("Section: " + num);
-		if ((GetFlagInt(108) == 1 || GetFlagInt(107) == 1) && (num > 1 || GetMiniPartyMember() > 0 || NoelleInParty()))
+		if ((GetFlagInt(108) == 1 || party[0] == 6) && (num > 1 || Util.GameManager().PartySlotFilled(3) || NoelleInParty()))
 		{
 			result = true;
 			UnityEngine.Debug.Log("Hard Mode Section 2+?  No thanks!!!!!!!!");
@@ -1963,18 +2112,11 @@ public class GameManager : MonoBehaviour
 		{
 			exp = num2;
 		}
-		for (int i = 0; i < hp.Length; i++)
+		int num3 = party[3];
+		UnityEngine.Debug.Log("Party Member: " + PartyMembers.GetMemberName(num3));
+		if (num3 == 3)
 		{
-			if (hp[i] > GetMaxHP(i))
-			{
-				hp[i] = GetMaxHP(i);
-			}
-		}
-		int flagInt = GetFlagInt(86);
-		UnityEngine.Debug.Log("Party Member: " + flagInt);
-		if (flagInt == 1)
-		{
-			UnityEngine.Debug.Log(string.Concat("Oblit Progress: ", GetFlag(87), ", Seen Paula: ", GetFlag(103), ", Section: ", num));
+			UnityEngine.Debug.Log("Oblit Progress: " + GetFlag(87)?.ToString() + ", Seen Paula: " + GetFlag(103)?.ToString() + ", Section: " + num);
 			if (num != 2 || GetFlagInt(87) >= 5 || GetFlagInt(103) == 0)
 			{
 				result = true;
@@ -1985,70 +2127,58 @@ public class GameManager : MonoBehaviour
 		return result;
 	}
 
-	public void SetDefaultValues()
+	public void SetDefaultValues(bool ignoreDebug = false)
 	{
 		playerName = "PLAYER";
+		exp = 0;
 		items = new List<int> { -1, -1, -1, -1, -1, -1, -1, -1 };
-		weapon = new int[3] { 3, 6, 8 };
-		armor = new int[3] { 4, 4, 9 };
-		hp = new int[3] { 20, 30, 20 };
+		equipItems = new List<int> { -1, -1, -1, -1, -1, -1, -1, -1 };
+		boxItems = new List<int>();
+		party = new int[6] { 0, 1, -1, -1, -1, -1 };
 		deaths = 0;
 		gold = 0;
 		atBuffs = new int[3];
 		dfBuffs = new int[3];
-		miniPartyMember = 0;
-		exp = 0;
 		playTime = 0;
 		playTimeFrames = 0;
 		flags = new object[1000];
 		persFlags = new object[1000];
 		sessionFlags = new object[100];
-		SetFlag(0, "neutral");
-		SetFlag(1, "neutral");
-		SetFlag(2, "neutral");
+		PartyMembers.SetDefaultValues();
 		SetFlag(12, 1);
+		SetFlag(322, 2);
+		SetFlag(325, 2);
 		SetSessionFlag(11, 2);
 		menuLocked = false;
 		ending = -1;
-		if (dev && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.OSXEditor))
+		if (dev && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.OSXEditor) && !ignoreDebug)
 		{
-			SetFlag(168, 1);
-			SetFlag(180, 1);
-			SetFlag(181, 2);
-			SetFlag(182, 1);
-			SetFlag(190, 2);
-			SetFlag(191, 1);
-			SetFlag(203, 1);
-			SetFlag(205, 2);
 			SetFlag(204, 1);
-			SetFlag(210, 1);
-			SetFlag(206, 2);
-			SetFlag(207, 2);
-			SetFlag(212, 1);
-			SetFlag(221, 1);
-			SetFlag(222, 1);
-			SetFlag(227, 1);
-			SetFlag(228, 1);
-			SetFlag(234, 1);
-			SetFlag(236, 1);
-			SetFlag(253, 2);
-			SetFlag(245, 2);
-			SetFlag(262, 1);
-			SetFlag(318, 1);
-			SetPartyMembers(true, true);
+			SetFlag(223, 5);
+			SetPartyMembers(susie: true, noelle: true);
 			HealAll(99);
 			SetFlag(84, 11);
 			SetFlag(293, 1);
-			weapon = new int[3] { 13, 15, 8 };
-			armor = new int[3] { 19, 19, 19 };
-			items[0] = 24;
-			items[1] = 44;
-			items[2] = 45;
-			items[3] = 23;
-			items[4] = 23;
-			items[5] = 23;
-			items[6] = 23;
-			items[7] = 16;
+			PartyMembers.SetWeapon(0, 13);
+			PartyMembers.SetWeapon(1, 15);
+			PartyMembers.SetArmor(0, 19);
+			PartyMembers.SetArmor(1, 19);
+			PartyMembers.SetArmor(2, 19);
+			AddAmbiguousItem(24);
+			AddAmbiguousItem(44);
+			AddAmbiguousItem(45);
+			AddAmbiguousItem(23);
+			AddAmbiguousItem(23);
+			AddAmbiguousItem(23);
+			AddAmbiguousItem(13);
+			AddAmbiguousItem(8);
+			AddAmbiguousItem(19);
+			AddAmbiguousItem(42);
+			AddAmbiguousItem(28);
+			AddAmbiguousItem(14);
+			SetFlag(286, 1);
+			SetFlag(116, 2);
+			SetFlag(332, 1);
 			gold = 150;
 		}
 	}
@@ -2056,7 +2186,7 @@ public class GameManager : MonoBehaviour
 	public SAVEFile GetFile()
 	{
 		SAVEFile sAVEFile = new SAVEFile();
-		sAVEFile.UpdateCharacterInfo(playerName, exp, items, weapon, armor, susieActive, noelleActive, playTime, zone, gold, "[???]", flags);
+		sAVEFile.UpdateCharacterInfo(playerName, exp, items, equipItems, boxItems, party, PartyMembers.GetAllHP(), PartyMembers.GetAllWeapon(), PartyMembers.GetAllArmor(), playTime, zone, gold, flags);
 		sAVEFile.UpdatePersistentFlags(persFlags);
 		sAVEFile.UpdateDeathCount(deaths);
 		return sAVEFile;
@@ -2085,8 +2215,8 @@ public class GameManager : MonoBehaviour
 	{
 		if (FileExists())
 		{
-			string text = Mathf.FloorToInt((float)playTime / 3600f).ToString();
-			string text2 = Mathf.FloorToInt((float)playTime % 3600f / 60f).ToString();
+			string text = Mathf.FloorToInt((float)save.playTime / 3600f).ToString();
+			string text2 = Mathf.FloorToInt((float)save.playTime % 3600f / 60f).ToString();
 			string text3 = (save.playTime % 60).ToString();
 			if (text3.Length == 1)
 			{
@@ -2158,7 +2288,7 @@ public class GameManager : MonoBehaviour
 
 	public bool IsEasyMode()
 	{
-		if ((GetFlagInt(13) > 1 && GetFlagInt(127) == 1) || GetFlagInt(13) > 2)
+		if (GetFlagInt(108) == 1 || (GetFlagInt(13) > 1 && GetFlagInt(127) == 1) || GetFlagInt(13) > 2)
 		{
 			return false;
 		}
@@ -2169,7 +2299,7 @@ public class GameManager : MonoBehaviour
 	{
 		string path = "SAVE" + from + ".sav";
 		string path2 = "SAVE" + to + ".sav";
-		File.Copy(Path.Combine(Application.persistentDataPath, path), Path.Combine(Application.persistentDataPath, path2), true);
+		File.Copy(Path.Combine(Application.persistentDataPath, path), Path.Combine(Application.persistentDataPath, path2), overwrite: true);
 	}
 
 	public void DeleteFile(int id)
@@ -2196,7 +2326,7 @@ public class GameManager : MonoBehaviour
 	public string GetVersion()
 	{
 		string[] array = Application.version.Split('.');
-		return string.Format("{0}.{1}.{2}", array[0], array[1], array[2]);
+		return $"{array[0]}.{array[1]}.{array[2]}";
 	}
 
 	public string GetVersionBuild()
@@ -2251,9 +2381,6 @@ public class GameManager : MonoBehaviour
 			return 1;
 		case "SUSIE":
 		case "SUZY":
-		case "SARAH":
-		case "RYNO":
-		case "VYLET":
 			return 2;
 		case "NOELLE":
 		case "NOEL":
@@ -2265,6 +2392,9 @@ public class GameManager : MonoBehaviour
 		case "NESS":
 		case "SCOOT":
 		case "TULIP":
+		case "SARAH":
+		case "RYNO":
+		case "VYLET":
 			return 5;
 		case "PAULA":
 			return 6;
@@ -2276,21 +2406,108 @@ public class GameManager : MonoBehaviour
 		case "MADMEWMEW":
 		case "SOPHIE":
 			return 9;
+		case "SHAYY":
+			return 10;
 		default:
 			return 0;
 		}
 	}
 
+	public void SetFramerate()
+	{
+		SetFramerate(curFps);
+	}
+
 	public void SetFramerate(int fps)
 	{
+		curFps = fps;
+		if (options.vSync.value == 1 && refreshRate % 60 == 0 && refreshRate > 0 && refreshRate <= 120)
+		{
+			QualitySettings.vSyncCount = Mathf.FloorToInt(refreshRate / fps);
+		}
+		else
+		{
+			QualitySettings.vSyncCount = 0;
+		}
 		Application.targetFrameRate = fps;
+	}
+
+	public int GetFramerate()
+	{
+		return curFps;
+	}
+
+	public List<DisplayInfo> GetDisplayInfo()
+	{
+		return displayInfo;
 	}
 
 	public void LoadConfigData()
 	{
-		UpdateVolume(config.GetInt("General", "Volume", 60, true));
-		packManager.SetPack(config.GetString("General", "LanguagePack", "", true));
+		UpdateVolume(config.GetInt("General", "Volume", 60, writeIfNotExist: true));
 		options.LoadFromConfig(ref config);
+		if (PersistentSAVE.HasKey("window-scale"))
+		{
+			SetWindowScale(PersistentSAVE.GetInt("window-scale", 0));
+			PersistentSAVE.RemoveKey("window-scale");
+		}
+		if (PersistentSAVE.HasKey("fullscreen"))
+		{
+			SetFullscreen(PersistentSAVE.GetInt("fullscreen", 0) == 1);
+			PersistentSAVE.RemoveKey("fullscreen");
+		}
+		SetMonitorInfoEnabled(config.GetInt("Debug", "MonitorInfo", 0, writeIfNotExist: true) == 1);
 		config.Write();
+	}
+
+	public void SetFullscreen(bool fullscreen)
+	{
+		config.SetInt("Window", "Fullscreen", fullscreen ? 1 : 0);
+		config.Write();
+	}
+
+	public bool GetFullscreen()
+	{
+		return config.GetInt("Window", "Fullscreen", 0) == 1;
+	}
+
+	public void SetWindowScale(int windowScale)
+	{
+		config.SetInt("Window", "WindowScale", windowScale);
+		config.Write();
+	}
+
+	public int GetWindowScale()
+	{
+		return config.GetInt("Window", "WindowScale", 1);
+	}
+
+	public void UpdateWindow()
+	{
+		Resolution currentResolution = Screen.currentResolution;
+		int num = GetWindowScale();
+		if (num < 1 || num * 640 > currentResolution.width || num * 480 > currentResolution.height)
+		{
+			num = 1;
+			SetWindowScale(num);
+		}
+		if (GetFullscreen())
+		{
+			Screen.SetResolution(currentResolution.width, currentResolution.height, FullScreenMode.FullScreenWindow);
+		}
+		else
+		{
+			Screen.SetResolution(640 * num, 480 * num, fullscreen: false);
+		}
+	}
+
+	public int GetRefreshRate()
+	{
+		return refreshRate;
+	}
+
+	public void SetMonitorInfoEnabled(bool enabled)
+	{
+		monitorInfoEnabled = enabled;
 	}
 }

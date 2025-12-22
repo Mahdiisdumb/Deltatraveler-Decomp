@@ -14,13 +14,13 @@ public class SansDoor : InteractTextBox
 			unlocking = false;
 			enteringRoom = true;
 			Util.GameManager().StopMusic(7f);
-			Object.FindObjectOfType<Fade>().FadeOut(7);
+			Util.FindObjectOfType<Fade>().FadeOut(7);
 		}
-		if (enteringRoom && !Object.FindObjectOfType<Fade>().IsPlaying())
+		if (enteringRoom && !Util.FindObjectOfType<Fade>().IsPlaying())
 		{
 			enteringRoom = false;
-			Util.GameManager().SetPartyMembers(false, false);
-			Util.GameManager().LoadArea(117, true, new Vector2(-4.182f, 0.286f), Vector2.down);
+			Util.GameManager().SetPartyMembers(susie: false, noelle: false);
+			Util.GameManager().LoadArea(117, fadeIn: true, new Vector2(-4.182f, 0.286f), Vector2.down);
 		}
 	}
 
@@ -29,9 +29,9 @@ public class SansDoor : InteractTextBox
 		if (Util.GameManager().GetFlagInt(294) == 1)
 		{
 			enteringRoom = true;
-			Object.FindObjectOfType<Fade>().FadeOut(7);
+			Util.FindObjectOfType<Fade>().FadeOut(7);
 			Util.GameManager().StopMusic(7f);
-			Util.GameManager().DisablePlayerMovement(false);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 		}
 		else if (Util.GameManager().GetFlagInt(292) == 1)
 		{
@@ -51,8 +51,8 @@ public class SansDoor : InteractTextBox
 				"* Kris,^05 why don't you go\n  in alone,^05 since you're\n  really quiet.",
 				"* And me and Noelle will\n  act all nice and proper\n  until you come out.",
 				"* Just don't break\n  anything."
-			}, new string[10] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[1], false, new string[10] { "", "su_side", "su_side", "su_smile", "no_scared", "su_side", "su_smirk_sweat", "su_neutral", "su_smile_sweat", "su_annoyed" });
-			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(false);
+			}, new string[10] { "snd_text", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtnoe", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus", "snd_txtsus" }, new int[1], giveBackControl: false, new string[10] { "", "su_side", "su_side", "su_smile", "no_scared", "su_side", "su_smirk_sweat", "su_neutral", "su_smile_sweat", "su_annoyed" });
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: false);
 			unlocking = true;
 		}
 		else

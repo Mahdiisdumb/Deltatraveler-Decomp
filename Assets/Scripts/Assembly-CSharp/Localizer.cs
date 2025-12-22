@@ -3,6 +3,8 @@ using UnityEngine;
 
 public static class Localizer
 {
+	private static readonly bool KEYS_ONLY = false;
+
 	private static readonly Dictionary<string, string> english = new Dictionary<string, string>
 	{
 		{ "phone_toriel_0_0_0", "tori_neutral`snd_txttor`* Hello.\n^10* This is TORIEL." },
@@ -379,11 +381,49 @@ public static class Localizer
 		{ "music/mus_showdown", "Showdown!`From UNDERTALE Yellow\nBy MasterSwordRemix" },
 		{ "music/mus_guns_blazing", "Guns Blazing`From UNDERTALE Yellow\nBy MasterSwordRemix & MyNewSoundtrack" },
 		{ "music/mus_end_of_the_line", "END OF THE LINE_`From UNDERTALE Yellow\nBy Figburn" },
-		{ "music/mus_some_point_of_no_return", "Some Point of No Return`From UNDERTALE Yellow\nBy MasterSwordRemix & MyNewSoundtrack" }
+		{ "music/mus_some_point_of_no_return", "Some Point of No Return`From UNDERTALE Yellow\nBy MasterSwordRemix & MyNewSoundtrack" },
+		{ "phone_random_0_0", "* (...)^05\n* (Nothing happens.)" },
+		{ "phone_random_1_0", "* (...)^05\n* (Someone's picking up...!)" },
+		{ "phone_random_1_1", "`snd_txtsans`* uhh...^05 hello?^05 who is this?" },
+		{ "phone_random_1_2", "`snd_txtsans`* ... hmm." },
+		{ "phone_random_1_3", "`snd_txtsans`* well,^05 you sound a lot like this\n  idiot baby i knew." },
+		{ "phone_random_1_4", "`snd_txtsans`* why don't you stop by my place\n  later?" },
+		{ "phone_random_1_5", "* (Click...)" },
+		{ "phone_random_2_0", "* (...)^05\n* (Someone's picking up...!)" },
+		{ "phone_random_2_1", "`snd_txtness`* Hello?^05\n* Is this a spam call?" },
+		{ "phone_random_2_2", "`snd_txtness`* ...^05\n* ...Oh,^05 you're randomly dialing\n  numbers?" },
+		{ "phone_random_2_3", "`snd_txtness`* That makes sense...^05 my phone\n  can only receive calls." },
+		{ "phone_random_2_4", "`snd_txtness`* Well,^05 I'm busy,^05 so I can't\n  talk.^05\n* Later!" },
+		{ "phone_random_2_5", "* (Click...)" },
+		{ "phone_random_3_0", "* (...)^05\n* (Someone's picking up...!)" },
+		{ "phone_random_3_1", "`snd_txtpap`GREETINGS!^05 YOU HAVE\nREACHED THE NUMBER OF\nTHE GREAT PAPYRUS!" },
+		{ "phone_random_3_2", "`snd_txtpap`IF YOU HAVE GOTTEN THIS\nMESSAGE,^05 I AM BUSY\nCALIBRATING PUZZLES." },
+		{ "phone_random_3_3", "`snd_txtpap`PLEASE LEAVE A MESSAGE\nFOR MY VOICE MAIL!" },
+		{ "phone_random_3_4", "`snd_txtpap`I WILL CALL BACK WHEN\nI CAN!" },
+		{ "phone_random_3_5", "* (...)^05\n* (You whispered something into\n  the receiver...)" },
+		{ "phone_random_3_6", "su_side_sweat`snd_txtsus`* Uhh,^05 what the hell did\n  you just whisper into\n  your phone?" },
+		{ "phone_random_4_0", "* ...^10\n* You can hear a nearby phone\n  ringing." },
+		{ "phone_random_4_1", "* You choose to hang up." },
+		{ "phone_random_5_0", "* You hear someone hurriedly\n  picking up and quickly\n  disconnect." },
+		{ "phone_random_6_0", "* (...)^05\n* (Someone's picking up...!)" },
+		{ "phone_random_6_1", "* Ness,^10 is that you?^10\n* It's your dad. " },
+		{ "phone_random_6_2", "* You’ve been out there\n  for a long time now... " },
+		{ "phone_random_6_3", "* It may be none of my\n  business,^10 but--" },
+		{ "phone_random_6_4", "* Oh?^10 You aren't Ness?^10\n* You were dialing randomly...^10\n  and called me?" },
+		{ "phone_random_6_5", "* Oh well,^10 it’s okay...^10\n* Just remember not to\n  strain yourself." },
+		{ "phone_random_6_6", "* Good luck...^10 whoever\n  you are." },
+		{ "phone_random_6_7", "* Oh,^10 and if you\n  see Ness..." },
+		{ "phone_random_6_8", "* Tell him I've deposited $347\n  into his bank account..." },
+		{ "phone_random_6_9", "* And that he should call his\n  dear old dad sometime." },
+		{ "phone_random_6_10", "* (Click...)" }
 	};
 
 	public static string GetText(string key, params string[] formatting)
 	{
+		if (KEYS_ONLY)
+		{
+			return key;
+		}
 		if (english.ContainsKey(key))
 		{
 			return string.Format(english[key], formatting);

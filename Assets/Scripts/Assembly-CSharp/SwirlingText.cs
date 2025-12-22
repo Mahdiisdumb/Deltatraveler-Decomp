@@ -25,7 +25,7 @@ public class SwirlingText : MonoBehaviour
 		{
 			if (text.font.name == focusFont)
 			{
-				text.GetComponent<LetterSpacing>().ForceSwirl(true);
+				text.GetComponent<LetterSpacing>().ForceSwirl(forceSwirl: true);
 			}
 		}
 	}
@@ -38,7 +38,7 @@ public class SwirlingText : MonoBehaviour
 		{
 			if (text.font.name == focusFont)
 			{
-				text.GetComponent<LetterSpacing>().ForceSwirl(true);
+				text.GetComponent<LetterSpacing>().ForceSwirl(forceSwirl: true);
 			}
 		}
 		this.focusFont = focusFont;
@@ -51,7 +51,7 @@ public class SwirlingText : MonoBehaviour
 		{
 			if (text.font.name == focusFont)
 			{
-				text.GetComponent<LetterSpacing>().ForceSwirl(false);
+				text.GetComponent<LetterSpacing>().ForceSwirl(forceSwirl: false);
 			}
 		}
 		isPlaying = false;

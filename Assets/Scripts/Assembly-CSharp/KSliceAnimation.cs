@@ -22,16 +22,16 @@ public class KSliceAnimation : PlayerAttackAnimation
 		}
 	}
 
-	public override void AssignValues(EnemyBase enemy, int partyMember, float targetExcellence, int partySize)
+	public override void AssignValues(EnemyBase enemy, int partyMember, float targetExcellence, int partySize, int slot)
 	{
 		float num = 0.35f;
 		float num2 = (0f - num) * ((float)partySize / 2f);
-		base.transform.position = enemy.GetEnemyObject().transform.Find("atkpos").position + new Vector3(num2 + num * (float)partyMember + 0.15f, 0f);
-		GetComponent<SpriteRenderer>().color = PartyPanels.defaultColors[partyMember];
-		base.transform.GetChild(0).GetComponent<SpriteRenderer>().color = PartyPanels.defaultColors[partyMember];
-		if ((bool)Object.FindObjectOfType<FightTargetBarKatana>())
+		base.transform.position = enemy.GetEnemyObject().transform.Find("atkpos").position + new Vector3(num2 + num * (float)slot + 0.15f, 0f);
+		GetComponent<SpriteRenderer>().color = PartyMembers.GetMemberNeonColor(partyMember);
+		base.transform.GetChild(0).GetComponent<SpriteRenderer>().color = PartyMembers.GetMemberNeonColor(partyMember);
+		if ((bool)Util.FindObjectOfType<FightTargetBarKatana>())
 		{
-			missedOneBar = Object.FindObjectOfType<FightTargetBarKatana>().MissedOneBar();
+			missedOneBar = Util.FindObjectOfType<FightTargetBarKatana>().MissedOneBar();
 		}
 		if (targetExcellence == 20f)
 		{

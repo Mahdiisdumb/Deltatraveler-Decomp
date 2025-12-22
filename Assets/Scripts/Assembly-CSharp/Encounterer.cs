@@ -19,7 +19,7 @@ public class Encounterer : MonoBehaviour
 
 	private void Awake()
 	{
-		player = Object.FindObjectOfType<OverworldPlayer>();
+		player = Util.OverworldPlayer();
 		holdingHoriz = false;
 		holdingVert = false;
 		dir = 0;
@@ -37,14 +37,14 @@ public class Encounterer : MonoBehaviour
 
 	private void Start()
 	{
-		Object.FindObjectOfType<GameManager>().DisablePlayerMovement(true);
+		Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
 	}
 
 	private void Update()
 	{
 		if ((bool)player && player.CanMove())
 		{
-			Object.FindObjectOfType<GameManager>().DisablePlayerMovement(true);
+			Util.GameManager().DisablePlayerMovement(deactivatePartyMembers: true);
 		}
 		if (UTInput.GetAxis("Horizontal") == -1f && !holdingHoriz)
 		{
@@ -92,7 +92,7 @@ public class Encounterer : MonoBehaviour
 		}
 		else if (UTInput.GetButtonDown("C"))
 		{
-			Object.FindObjectOfType<OverworldPlayer>().InitiateBattle(curEncounter);
+			Util.OverworldPlayer().InitiateBattle(curEncounter);
 			Object.Destroy(base.gameObject);
 		}
 	}

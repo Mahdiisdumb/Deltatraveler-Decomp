@@ -12,13 +12,13 @@ public class PlayerAttackAnimation : MonoBehaviour
 		}
 	}
 
-	public virtual void AssignValues(EnemyBase enemy, int partyMember, float targetExcellence, int partySize)
+	public virtual void AssignValues(EnemyBase enemy, int partyMember, float targetExcellence, int partySize, int slot)
 	{
 		float num = 0.35f;
 		float num2 = (0f - num) * ((float)partySize / 2f);
-		base.transform.position = enemy.GetEnemyObject().transform.Find("atkpos").position + new Vector3(num2 + num * (float)partyMember + 0.15f, 0f);
-		GetComponent<SpriteRenderer>().color = PartyPanels.defaultColors[partyMember];
-		if (partyMember == 0 && (int)Util.GameManager().GetFlag(107) == 1 && (int)Util.GameManager().GetFlag(108) == 1)
+		base.transform.position = enemy.GetEnemyObject().transform.Find("atkpos").position + new Vector3(num2 + num * (float)slot + 0.15f, 0f);
+		GetComponent<SpriteRenderer>().color = PartyMembers.GetMemberNeonColor(partyMember);
+		if (partyMember == 6 && (int)Util.GameManager().GetFlag(108) == 1)
 		{
 			GetComponent<SpriteRenderer>().color = new Color32(byte.MaxValue, 105, 105, byte.MaxValue);
 		}

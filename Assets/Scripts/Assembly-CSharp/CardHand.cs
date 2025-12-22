@@ -61,7 +61,7 @@ public class CardHand : MonoBehaviour
 		for (int i = 0; i < cards.Count; i++)
 		{
 			float num = (doShow ? (-0.72f) : (-1.62f));
-			cards[i].transform.position = Vector3.Lerp(cards[i].transform.position, new Vector3(CalculateXValue(i, false), num + base.transform.position.y), 0.25f);
+			cards[i].transform.position = Vector3.Lerp(cards[i].transform.position, new Vector3(CalculateXValue(i, center: false), num + base.transform.position.y), 0.25f);
 		}
 	}
 
@@ -69,7 +69,7 @@ public class CardHand : MonoBehaviour
 	{
 		for (int i = 0; i < cards.Count; i++)
 		{
-			cards[i].transform.position = new Vector3(CalculateXValue(i, true), (highlight == i) ? (-1.7f) : (-2.2f));
+			cards[i].transform.position = new Vector3(CalculateXValue(i, center: true), (highlight == i) ? (-1.7f) : (-2.2f));
 		}
 	}
 
@@ -119,7 +119,7 @@ public class CardHand : MonoBehaviour
 	{
 		onBoard = false;
 		show = true;
-		AlignCardsInHand(1f, true);
+		AlignCardsInHand(1f, doShow: true);
 	}
 
 	public bool CardsAreOnBoard()

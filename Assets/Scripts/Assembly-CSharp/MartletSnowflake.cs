@@ -65,7 +65,7 @@ public class MartletSnowflake : MonoBehaviour
 		nonAnglePos.y = Mathf.Round(nonAnglePos.y * 48f) / 48f;
 		float num3 = (nonAnglePos.x - startPos.x) * 48f / (float)maxRise;
 		angle = 270f + (float)maxAngle * num3;
-		base.transform.position = nonAnglePos + new Vector3(Mathf.Cos(angle * ((float)Math.PI / 360f)), Mathf.Sin(angle * ((float)Math.PI / 360f))) * angleRad / 48f;
+		base.transform.position = nonAnglePos + new Vector3(Mathf.Cos(angle * (MathF.PI / 360f)), Mathf.Sin(angle * (MathF.PI / 360f))) * angleRad / 48f;
 		base.transform.eulerAngles += new Vector3(0f, 0f, (float)angleInc * num3);
 		if (base.transform.position.y <= 0f - startPos.y)
 		{

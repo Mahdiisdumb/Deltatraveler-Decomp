@@ -35,8 +35,8 @@ public class FroggitWhimsunAttack : AttackBase
 		}
 		if (frames % 9 == 1 && whimsun == 1)
 		{
-			Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/ruins/ButterflyFallBullet"), base.transform).transform.position = new Vector3(Object.FindObjectOfType<SOUL>().transform.position.x - 1f, -2.74f);
-			Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/ruins/ButterflyFallBullet"), base.transform).transform.position = new Vector3(Object.FindObjectOfType<SOUL>().transform.position.x + 1f, -2.74f);
+			Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/ruins/ButterflyFallBullet"), base.transform).transform.position = new Vector3(Util.FindObjectOfType<SOUL>().transform.position.x - 1f, -2.74f);
+			Object.Instantiate(Resources.Load<GameObject>("battle/attacks/bullets/ruins/ButterflyFallBullet"), base.transform).transform.position = new Vector3(Util.FindObjectOfType<SOUL>().transform.position.x + 1f, -2.74f);
 		}
 	}
 

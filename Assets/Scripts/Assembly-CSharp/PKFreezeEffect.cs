@@ -56,7 +56,7 @@ public class PKFreezeEffect : SpecialAttackEffect
 	{
 		if ((bool)enemy)
 		{
-			enemy.Hit(3, 35f, false);
+			enemy.Hit(3, 35f, playSound: false);
 		}
 	}
 }
