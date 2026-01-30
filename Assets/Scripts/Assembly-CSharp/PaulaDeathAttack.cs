@@ -164,7 +164,7 @@ public class PaulaDeathAttack : AttackBase
 					componentsInChildren5[i].enabled = false;
 				}
 				paulaNessSoul = new GameObject("SOUL").AddComponent<SOUL>();
-				paulaNessSoul.GetComponent<SOUL>().CreateSOUL(new Color(1f, 0f, 0f), monster: false, player: false);
+				paulaNessSoul.GetComponent<SOUL>().CreateSOUL(new Color(0f, 1f, 0f), monster: false, player: false);
 			}
 			if (frames >= 90 && frames <= 180)
 			{
